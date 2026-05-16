@@ -1,0 +1,159 @@
+from __future__ import annotations
+
+import asyncio
+from collections.abc import Coroutine
+from datetime import UTC
+from datetime import datetime
+
+import httpx
+
+from metabaseapi.client import MetabaseClient
+from metabaseapi.metabase.models import Card
+from metabaseapi.metabase.models import CreateDatabaseRequest
+from metabaseapi.metabase.models import CurrentUserRequest
+from metabaseapi.metabase.models import CurrentUserResponse
+from metabaseapi.metabase.models import Dashboard
+from metabaseapi.metabase.models import Database
+from metabaseapi.metabase.models import GetCardRequest
+from metabaseapi.metabase.models import GetDashboardRequest
+from metabaseapi.metabase.models import ListDatabasesRequest
+from metabaseapi.metabase.models import ListDatabasesResponse
+
+
+class _StubClient:
+    def __init__(self, response: object) -> None:
+        self.response = response
+        self.calls: list[tuple[str, str, dict[str, str | int | bool | float | None], object | None]] = []
+
+    async def request(
+        self,
+        method: str,
+        path: str,
+        *,
+        params: dict[str, str | int | bool | float | None] | None = None,
+        json_data: object | None = None,
+    ) -> object:
+        self.calls.append((method, path, params or {}, json_data))
+        return self.response
+
+
+def test_current_user_response_validates_epoch_datetime() -> None:
+    payload = {"id": 1, "email": "alice@example.com", "created_at": 1_697_653_800_557}
+
+    model = CurrentUserResponse.model_validate(payload)
+
+    assert model.id == 1
+    assert model.email == "alice@example.com"
+    assert isinstance(model.created_at, datetime)
+    assert model.created_at.tzinfo == UTC
+
+
+def test_current_user_request_parses_response_model() -> None:
+    payload = {"id": 1, "email": "alice@example.com"}
+    client = _StubClient(payload)
+
+    result = CurrentUserRequest().do_sync(client)
+
+    assert isinstance(result, CurrentUserResponse)
+    assert result.id == 1
+    assert result.email == "alice@example.com"
+    assert client.calls == [("GET", "/api/user/current", {}, None)]
+
+
+def test_list_databases_response_normalizes_payload() -> None:
+    sample_list = [
+        {"id": 1, "name": "db1", "engine": "postgres"},
+        {"id": "uuid", "name": "db2", "engine": "mysql"},
+    ]
+
+    result = ListDatabasesResponse.model_validate(sample_list)
+
+    assert len(result.databases) == 2
+    assert result.databases[0].name == "db1"
+    assert result.databases[1].engine == "mysql"
+
+
+def test_list_databases_request_posts_to_expected_endpoint() -> None:
+    payload = {"data": [{"id": 1, "name": "db"}]}
+    client = _StubClient(payload)
+
+    request = ListDatabasesRequest()
+    response = request.do_sync(client)
+
+    assert isinstance(response, ListDatabasesResponse)
+    assert len(response.databases) == 1
+    assert response.databases[0].name == "db"
+    assert client.calls == [("GET", "/api/database", {}, None)]
+
+
+def test_create_database_request_includes_body_for_post() -> None:
+    payload = {"id": 1, "name": "analytics", "engine": "postgres", "details": {"host": "db.local"}}
+    client = _StubClient(payload)
+
+    request = CreateDatabaseRequest(name="analytics", engine="postgres", details={"host": "db.local"})
+    response = request.do_sync(client)
+
+    assert isinstance(response, Database)
+    assert response.name == "analytics"
+    assert response.engine == "postgres"
+    assert client.calls == [
+        (
+            "POST",
+            "/api/database",
+            {},
+            {"name": "analytics", "engine": "postgres", "details": {"host": "db.local"}},
+        ),
+    ]
+
+
+def test_get_card_and_dashboard_requests_use_path_parameters() -> None:
+    card_client = _StubClient({"id": 7, "name": "card", "display": "table"})
+    dashboard_client = _StubClient({"id": 8, "name": "dashboard", "collection_id": 3})
+
+    card_result = GetCardRequest(card_id=7).do_sync(card_client)
+    dashboard_result = GetDashboardRequest(dashboard_id=8).do_sync(dashboard_client)
+
+    assert card_result.id == 7
+    assert card_client.calls[0][0] == "GET"
+    assert card_client.calls[0][1] == "/api/card/7"
+    assert dashboard_result.id == 8
+    assert dashboard_client.calls[0][1] == "/api/dashboard/8"
+
+
+def _run[T](coro: Coroutine[object, object, T]) -> T:
+    return asyncio.run(coro)
+
+
+def test_typed_methods_in_client_return_models() -> None:
+    async def handler(request: httpx.Request) -> httpx.Response:
+        assert request.headers.get("X-API-Key") == "abc"
+        if request.url.path == "/api/user/current":
+            return httpx.Response(200, json={"id": 9, "email": "client@example.com"})
+        if request.url.path == "/api/card/11":
+            return httpx.Response(200, json={"id": 11, "name": "card", "display": "bar"})
+        if request.url.path == "/api/database" and request.method == "GET":
+            return httpx.Response(200, json={"data": [{"id": 2, "name": "main", "engine": "postgres"}]})
+        if request.url.path == "/api/database" and request.method == "POST":
+            return httpx.Response(200, json={"id": 9, "name": "analytics", "engine": "postgres"})
+        return httpx.Response(200, json={"id": 3, "name": "dash"})
+
+    client = MetabaseClient(
+        base_url="http://localhost:3000",
+        api_key="abc",
+        client=httpx.AsyncClient(transport=httpx.MockTransport(handler), verify=False),
+    )
+
+    current_user = _run(client.current_user_typed())
+    dashboard = _run(client.get_dashboard_typed(3))
+    card = _run(client.get_card_typed(11))
+    databases = _run(client.list_databases_typed())
+    db = _run(client.create_database_typed(name="analytics", engine="postgres", details={"host": "localhost"}))
+
+    assert isinstance(current_user, CurrentUserResponse)
+    assert current_user.email == "client@example.com"
+    assert isinstance(dashboard, Dashboard)
+    assert dashboard.id == 3
+    assert isinstance(card, Card)
+    assert isinstance(databases, ListDatabasesResponse)
+    assert databases.databases[0].engine == "postgres"
+    assert db.name == "analytics"

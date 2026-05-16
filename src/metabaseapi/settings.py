@@ -13,3 +13,6 @@ class Settings(BaseSettings):
 
     METABASE_URL: str = Field(default="http://localhost:3000")
     METABASE_API_KEY: str = Field(...)
+
+
+settings = Settings()

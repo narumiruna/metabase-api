@@ -1,23 +1,26 @@
 [project]
-name            = "pythontemplate"
+name            = "metabaseapi"
 version         = "0.0.0"
 description     = ""
 readme          = "README.md"
 requires-python = ">=3.12"
 authors         = [{ name = "narumi", email = "toucans-cutouts0f@icloud.com" }]
 dependencies    = [
-  "typer>=0.24.1",
+  "httpx>=0.28.1",
+  "pydantic>=2.13.4",
+  "pydantic-settings>=2.14.1",
+  "typer>=0.25.1",
 ]
 
 [project.scripts]
-pythontemplate = "pythontemplate.cli:app"
+metabaseapi = "metabaseapi.cli:app"
 
 [dependency-groups]
 dev = [
   "pytest>=9.0.3",
   "pytest-cov>=7.1.0",
-  "ruff>=0.15.9",
-  "ty>=0.0.29",
+  "ruff>=0.15.13",
+  "ty>=0.0.37",
 ]
 
 [build-system]

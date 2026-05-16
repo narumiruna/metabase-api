@@ -1,1 +1,1 @@
-# python-template
+# Metabase API

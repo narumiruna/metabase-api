@@ -3,7 +3,7 @@ name            = "metabaseapi"
 version         = "0.0.0"
 description     = ""
 readme          = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.14"
 authors         = [{ name = "narumi", email = "toucans-cutouts0f@icloud.com" }]
 dependencies    = [
   "httpx>=0.28.1",

@@ -37,6 +37,8 @@ metabaseapi current-user
 metabaseapi list-databases
 metabaseapi get-dashboard 1
 metabaseapi get-card 2
+metabaseapi get-database 1
+metabaseapi create-database my_db postgres --details '{"host":"localhost","port":5432}'
 ```
 
 所有輸出都會以可讀 JSON（縮排、排序）輸出，便於 AI / 腳本處理。

@@ -191,5 +191,45 @@ def get_card(ctx: typer.Context, card_id: int = typer.Argument(...)) -> None:
     _run_and_print(do_request())
 
 
+@app.command("get-database")
+def get_database(ctx: typer.Context, database_id: int = typer.Argument(...)) -> None:
+    """Get a database by ID."""
+
+    async def do_request() -> JSONValue:
+        async with create_client(_get_settings(ctx)) as client:
+            return await client.get(f"/api/database/{database_id}")
+
+    _run_and_print(do_request())
+
+
+@app.command("create-database")
+def create_database(
+    ctx: typer.Context,
+    name: str = typer.Argument(..., help="Name of the database to create"),
+    engine: str = typer.Argument(..., help="Database engine type"),
+    details: str | None = typer.Option(None, "--details", "-d", help="Database details JSON object"),
+) -> None:
+    """Create a new database."""
+
+    details_payload: dict[str, object] | None
+    if details is None:
+        details_payload = None
+    else:
+        parsed = _parse_json_body(details)
+        if parsed is not None and not isinstance(parsed, dict):
+            raise typer.BadParameter("details must be a JSON object")
+        details_payload = parsed
+
+    body: dict[str, object] = {"name": name, "engine": engine}
+    if details_payload is not None:
+        body["details"] = details_payload
+
+    async def do_request() -> JSONValue:
+        async with create_client(_get_settings(ctx)) as client:
+            return await client.post("/api/database", body=body)
+
+    _run_and_print(do_request())
+
+
 if __name__ == "__main__":
     app()

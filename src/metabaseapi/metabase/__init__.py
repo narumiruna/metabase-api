@@ -22,7 +22,6 @@ from .requests import ListCardsRequest
 from .requests import ListCollectionsRequest
 from .requests import ListDashboardsRequest
 from .requests import ListDatabasesRequest
-from .requests import ListFieldsRequest
 from .requests import ListTablesRequest
 from .requests import ListUsersRequest
 from .requests import MetabaseRequestClient
@@ -30,7 +29,6 @@ from .responses import ListCardsResponse
 from .responses import ListCollectionsResponse
 from .responses import ListDashboardsResponse
 from .responses import ListDatabasesResponse
-from .responses import ListFieldsResponse
 from .responses import ListTablesResponse
 from .responses import ListUsersResponse
 
@@ -58,8 +56,6 @@ __all__ = [
     "ListDashboardsResponse",
     "ListDatabasesRequest",
     "ListDatabasesResponse",
-    "ListFieldsRequest",
-    "ListFieldsResponse",
     "ListTablesRequest",
     "ListTablesResponse",
     "ListUsersRequest",

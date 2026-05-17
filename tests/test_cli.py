@@ -148,9 +148,6 @@ class _ConvenienceClient(_ClientWithRequestMethods):
     async def get_table(self, table_id: str) -> dict[str, object]:
         return {"method": "GET", "path": f"/api/table/{table_id}"}
 
-    async def list_fields(self) -> dict[str, object]:
-        return {"method": "GET", "path": "/api/field"}
-
     async def get_field(self, field_id: str) -> dict[str, object]:
         return {"method": "GET", "path": f"/api/field/{field_id}"}
 
@@ -235,7 +232,6 @@ def test_help_lists_every_convenience_command() -> None:
         "get-collection",
         "list-tables",
         "get-table",
-        "list-fields",
         "get-field",
     ]:
         assert command in result.stdout
@@ -288,7 +284,6 @@ def test_get_database_command_outputs_json(monkeypatch: pytest.MonkeyPatch) -> N
         (["list-users"], "/api/user"),
         (["list-collections"], "/api/collection"),
         (["list-tables"], "/api/table"),
-        (["list-fields"], "/api/field"),
         (["get-database", "12"], "/api/database/12"),
         (["get-card", "13"], "/api/card/13"),
         (["get-dashboard", "14"], "/api/dashboard/14"),

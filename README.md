@@ -53,7 +53,6 @@ metabaseapi list-collections
 metabaseapi get-collection root
 metabaseapi list-tables
 metabaseapi get-table 8
-metabaseapi list-fields
 metabaseapi get-field 9
 ```
 

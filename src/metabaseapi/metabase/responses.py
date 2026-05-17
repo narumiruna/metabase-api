@@ -12,7 +12,6 @@ from metabaseapi.metabase.entities import Card
 from metabaseapi.metabase.entities import Collection
 from metabaseapi.metabase.entities import Dashboard
 from metabaseapi.metabase.entities import Database
-from metabaseapi.metabase.entities import MetabaseField
 from metabaseapi.metabase.entities import Table
 from metabaseapi.metabase.entities import User
 from metabaseapi.models import JSONValue
@@ -84,17 +83,6 @@ class ListTablesResponse(BaseModel):
         return _normalize_list_payload(values, "tables")
 
 
-class ListFieldsResponse(BaseModel):
-    fields: list[MetabaseField] = PydanticField(default_factory=list)
-    raw: JSONValue | None = None
-    model_config = ConfigDict(extra="allow")
-
-    @model_validator(mode="before")
-    @classmethod
-    def normalize_payload(cls, values: object) -> dict[str, Any]:
-        return _normalize_list_payload(values, "fields")
-
-
 def _normalize_list_payload(values: object, list_key: str) -> dict[str, Any]:
     if values is None:
         return {list_key: []}
@@ -124,7 +112,6 @@ __all__ = [
     "ListCollectionsResponse",
     "ListDashboardsResponse",
     "ListDatabasesResponse",
-    "ListFieldsResponse",
     "ListTablesResponse",
     "ListUsersResponse",
 ]

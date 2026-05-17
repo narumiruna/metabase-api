@@ -148,7 +148,6 @@ def test_convenience_paths_cover_handwritten_endpoint_surface() -> None:
         (client.get_collection("root"), ("GET", "/api/collection/root", None)),
         (client.list_tables(), ("GET", "/api/table", None)),
         (client.get_table(16), ("GET", "/api/table/16", None)),
-        (client.list_fields(), ("GET", "/api/field", None)),
         (client.get_field(17), ("GET", "/api/field/17", None)),
     ]
 

@@ -32,8 +32,6 @@ from metabaseapi.metabase import ListDashboardsRequest
 from metabaseapi.metabase import ListDashboardsResponse
 from metabaseapi.metabase import ListDatabasesRequest
 from metabaseapi.metabase import ListDatabasesResponse
-from metabaseapi.metabase import ListFieldsRequest
-from metabaseapi.metabase import ListFieldsResponse
 from metabaseapi.metabase import ListTablesRequest
 from metabaseapi.metabase import ListTablesResponse
 from metabaseapi.metabase import ListUsersRequest
@@ -350,9 +348,6 @@ class MetabaseClient:
     async def get_table(self, table_id: int | str) -> JSONValue | None:
         return await self.get(f"/api/table/{table_id}")
 
-    async def list_fields(self) -> JSONValue | None:
-        return await self.get("/api/field")
-
     async def get_field(self, field_id: int | str) -> JSONValue | None:
         return await self.get(f"/api/field/{field_id}")
 
@@ -379,9 +374,6 @@ class MetabaseClient:
 
     async def list_tables_typed(self) -> ListTablesResponse:
         return await self.run(ListTablesRequest())
-
-    async def list_fields_typed(self) -> ListFieldsResponse:
-        return await self.run(ListFieldsRequest())
 
     async def create_database_typed(
         self,

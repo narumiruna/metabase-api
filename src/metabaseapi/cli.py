@@ -266,13 +266,6 @@ def list_tables(ctx: typer.Context) -> None:
     _run_and_print(_run_client_call(ctx, lambda client: client.list_tables()))
 
 
-@app.command("list-fields")
-def list_fields(ctx: typer.Context) -> None:
-    """List fields."""
-
-    _run_and_print(_run_client_call(ctx, lambda client: client.list_fields()))
-
-
 @app.command("get-database")
 def get_database(ctx: typer.Context, database_id: str = typer.Argument(...)) -> None:
     """Get a database by ID."""

@@ -23,7 +23,6 @@ from metabaseapi.metabase.responses import ListCardsResponse
 from metabaseapi.metabase.responses import ListCollectionsResponse
 from metabaseapi.metabase.responses import ListDashboardsResponse
 from metabaseapi.metabase.responses import ListDatabasesResponse
-from metabaseapi.metabase.responses import ListFieldsResponse
 from metabaseapi.metabase.responses import ListTablesResponse
 from metabaseapi.metabase.responses import ListUsersResponse
 from metabaseapi.models import JSONValue
@@ -287,17 +286,6 @@ class GetTableRequest(_BaseMetabaseRequest[Table]):
         return f"/api/table/{self.table_id}"
 
 
-class ListFieldsRequest(_BaseMetabaseRequest[ListFieldsResponse]):
-    endpoint_method: ClassVar[str] = "GET"
-    endpoint_path: ClassVar[str] = "/api/field"
-
-    async def do(self, client: MetabaseRequestClient) -> ListFieldsResponse:
-        return await self.execute(client, ListFieldsResponse)
-
-    def do_sync(self, client: MetabaseRequestClient) -> ListFieldsResponse:
-        return self.execute_sync(client, ListFieldsResponse)
-
-
 class GetFieldRequest(_BaseMetabaseRequest[MetabaseField]):
     field_id: int | str
 
@@ -329,7 +317,6 @@ __all__ = [
     "ListCollectionsRequest",
     "ListDashboardsRequest",
     "ListDatabasesRequest",
-    "ListFieldsRequest",
     "ListTablesRequest",
     "ListUsersRequest",
     "MetabaseRequestClient",

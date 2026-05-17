@@ -30,8 +30,6 @@ from metabaseapi.metabase import ListCollectionsResponse
 from metabaseapi.metabase import ListDashboardsResponse
 from metabaseapi.metabase import ListDatabasesRequest
 from metabaseapi.metabase import ListDatabasesResponse
-from metabaseapi.metabase import ListFieldsRequest
-from metabaseapi.metabase import ListFieldsResponse
 from metabaseapi.metabase import ListTablesRequest
 from metabaseapi.metabase import ListTablesResponse
 from metabaseapi.metabase import ListUsersRequest
@@ -187,7 +185,6 @@ def test_list_requests_use_expected_paths() -> None:
         (ListUsersRequest(), ListUsersResponse, "/api/user"),
         (ListCollectionsRequest(), ListCollectionsResponse, "/api/collection"),
         (ListTablesRequest(), ListTablesResponse, "/api/table"),
-        (ListFieldsRequest(), ListFieldsResponse, "/api/field"),
     ]:
         stub = _StubClient({"data": []})
         response = request_model.do_sync(stub)
@@ -244,7 +241,6 @@ def _build_mock_endpoint_responses() -> dict[tuple[str, str], dict[str, object]]
         ("GET", "/api/user"): {"data": [{"id": 4, "email": "user@example.com", "first_name": "Ada"}]},
         ("GET", "/api/collection"): {"data": [{"id": 7, "name": "collection"}]},
         ("GET", "/api/table"): {"data": [{"id": 8, "name": "table", "schema": "public", "db_id": 1}]},
-        ("GET", "/api/field"): {"data": [{"id": 9, "name": "field", "table_id": 8}]},
         ("GET", "/api/database/4"): {"id": 4, "name": "db4", "engine": "postgres"},
         ("GET", "/api/user/10"): {"id": 10, "email": "u10@example.com", "first_name": "Turing"},
         ("GET", "/api/collection/c1"): {"id": "c1", "name": "col"},
@@ -286,7 +282,6 @@ def test_typed_methods_in_client_return_models() -> None:
     users = _run(client.list_users_typed())
     collections = _run(client.list_collections_typed())
     tables = _run(client.list_tables_typed())
-    fields = _run(client.list_fields_typed())
     db = _run(client.get_database_typed(4))
     user = _run(client.get_user_typed(10))
     collection = _run(client.get_collection_typed("c1"))
@@ -307,7 +302,6 @@ def test_typed_methods_in_client_return_models() -> None:
     assert isinstance(users, ListUsersResponse)
     assert isinstance(collections, ListCollectionsResponse)
     assert isinstance(tables, ListTablesResponse)
-    assert isinstance(fields, ListFieldsResponse)
     assert db.name == "db4"
     assert isinstance(user, User)
     assert user.id == 10

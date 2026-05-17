@@ -37,6 +37,7 @@ from .requests import DeleteActionRequest
 from .requests import DeleteAlertSubscriptionRequest
 from .requests import DeleteApiKeyRequest
 from .requests import DeleteBookmarkRequest
+from .requests import DeleteCacheRequest
 from .requests import ExecuteActionRequest
 from .requests import GetActionExecuteRequest
 from .requests import GetActionRequest
@@ -48,6 +49,7 @@ from .requests import GetAlertRequest
 from .requests import GetAnonymousStatsRequest
 from .requests import GetBugReportingConnectionPoolDetailsRequest
 from .requests import GetBugReportingDetailsRequest
+from .requests import GetCacheRequest
 from .requests import GetCardRequest
 from .requests import GetCollectionRequest
 from .requests import GetDashboardRequest
@@ -56,6 +58,7 @@ from .requests import GetFieldRequest
 from .requests import GetMostRecentlyViewedDashboardRequest
 from .requests import GetTableRequest
 from .requests import GetUserRequest
+from .requests import InvalidateCacheRequest
 from .requests import ListActionsRequest
 from .requests import ListAlertsRequest
 from .requests import ListApiKeysRequest
@@ -71,6 +74,7 @@ from .requests import ListRecentViewsRequest
 from .requests import ListTablesRequest
 from .requests import ListUsersRequest
 from .requests import MetabaseRequestClient
+from .requests import PutCacheRequest
 from .requests import RegenerateApiKeyRequest
 from .requests import UpdateActionRequest
 from .requests import UpdateApiKeyRequest
@@ -129,6 +133,7 @@ __all__ = [
     "DeleteAlertSubscriptionRequest",
     "DeleteApiKeyRequest",
     "DeleteBookmarkRequest",
+    "DeleteCacheRequest",
     "ExecuteActionRequest",
     "GenericOperationResponse",
     "GetActionExecuteRequest",
@@ -141,6 +146,7 @@ __all__ = [
     "GetAnonymousStatsRequest",
     "GetBugReportingConnectionPoolDetailsRequest",
     "GetBugReportingDetailsRequest",
+    "GetCacheRequest",
     "GetCardRequest",
     "GetCollectionRequest",
     "GetDashboardRequest",
@@ -149,6 +155,7 @@ __all__ = [
     "GetMostRecentlyViewedDashboardRequest",
     "GetTableRequest",
     "GetUserRequest",
+    "InvalidateCacheRequest",
     "ListActionsRequest",
     "ListActionsResponse",
     "ListActivityItemsResponse",
@@ -176,6 +183,7 @@ __all__ = [
     "ListUsersResponse",
     "MetabaseField",
     "MetabaseRequestClient",
+    "PutCacheRequest",
     "RegenerateApiKeyRequest",
     "Table",
     "UpdateActionRequest",

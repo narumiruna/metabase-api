@@ -47,6 +47,7 @@ from metabaseapi.metabase import DeleteActionRequest
 from metabaseapi.metabase import DeleteAlertSubscriptionRequest
 from metabaseapi.metabase import DeleteApiKeyRequest
 from metabaseapi.metabase import DeleteBookmarkRequest
+from metabaseapi.metabase import DeleteCacheRequest
 from metabaseapi.metabase import ExecuteActionRequest
 from metabaseapi.metabase import GenericOperationResponse
 from metabaseapi.metabase import GetActionExecuteRequest
@@ -59,6 +60,7 @@ from metabaseapi.metabase import GetAlertRequest
 from metabaseapi.metabase import GetAnonymousStatsRequest
 from metabaseapi.metabase import GetBugReportingConnectionPoolDetailsRequest
 from metabaseapi.metabase import GetBugReportingDetailsRequest
+from metabaseapi.metabase import GetCacheRequest
 from metabaseapi.metabase import GetCardRequest
 from metabaseapi.metabase import GetCollectionRequest
 from metabaseapi.metabase import GetDashboardRequest
@@ -67,6 +69,7 @@ from metabaseapi.metabase import GetFieldRequest
 from metabaseapi.metabase import GetMostRecentlyViewedDashboardRequest
 from metabaseapi.metabase import GetTableRequest
 from metabaseapi.metabase import GetUserRequest
+from metabaseapi.metabase import InvalidateCacheRequest
 from metabaseapi.metabase import ListActionsRequest
 from metabaseapi.metabase import ListActionsResponse
 from metabaseapi.metabase import ListActivityItemsResponse
@@ -93,6 +96,7 @@ from metabaseapi.metabase import ListTablesResponse
 from metabaseapi.metabase import ListUsersRequest
 from metabaseapi.metabase import ListUsersResponse
 from metabaseapi.metabase import MetabaseField
+from metabaseapi.metabase import PutCacheRequest
 from metabaseapi.metabase import RegenerateApiKeyRequest
 from metabaseapi.metabase import Table
 from metabaseapi.metabase import UpdateActionRequest
@@ -361,6 +365,34 @@ class MetabaseClient:
 
     async def bug_reporting_details(self) -> JSONValue | None:
         return await self.get("/api/bug-reporting/details")
+
+    async def get_cache(
+        self,
+        *,
+        limit: int | None = None,
+        offset: int | None = None,
+        sort_column: str | None = None,
+        sort_direction: str | None = None,
+    ) -> JSONValue | None:
+        params = {
+            "limit": limit,
+            "offset": offset,
+            "sort_column": sort_column,
+            "sort_direction": sort_direction,
+        }
+        params = {key: value for key, value in params.items() if value is not None}
+        return await self.get("/api/cache", params=params)
+
+    async def put_cache(self, body: Mapping[str, object]) -> JSONValue | None:
+        return await self.put("/api/cache", body=dict(body))
+
+    async def delete_cache(self, body: Mapping[str, object] | None = None) -> JSONValue | None:
+        if body is None:
+            return await self.delete("/api/cache")
+        return await self.delete("/api/cache", body=dict(body))
+
+    async def invalidate_cache(self, params: Mapping[str, QueryParamValue]) -> JSONValue | None:
+        return await self.post("/api/cache/invalidate", params=dict(params))
 
     async def automagic_database_candidates(self, database_id: int | str) -> JSONValue | None:
         return await self.get(f"/api/automagic-dashboards/database/{database_id}/candidates")
@@ -691,6 +723,32 @@ class MetabaseClient:
 
     async def bug_reporting_details_typed(self) -> GenericOperationResponse:
         return await self.run(GetBugReportingDetailsRequest())
+
+    async def get_cache_typed(
+        self,
+        *,
+        limit: int | None = None,
+        offset: int | None = None,
+        sort_column: str | None = None,
+        sort_direction: str | None = None,
+    ) -> GenericOperationResponse:
+        return await self.run(
+            GetCacheRequest(
+                limit=limit,
+                offset=offset,
+                sort_column=sort_column,
+                sort_direction=sort_direction,
+            ),
+        )
+
+    async def put_cache_typed(self, body: dict[str, object]) -> GenericOperationResponse:
+        return await self.run(PutCacheRequest(body=body))
+
+    async def delete_cache_typed(self, body: dict[str, object] | None = None) -> GenericOperationResponse:
+        return await self.run(DeleteCacheRequest(body=body or {}))
+
+    async def invalidate_cache_typed(self, params: dict[str, QueryParamValue]) -> GenericOperationResponse:
+        return await self.run(InvalidateCacheRequest(params=dict(params)))
 
     async def automagic_database_candidates_typed(self, database_id: int | str) -> GenericOperationResponse:
         return await self.run(AutomagicDatabaseCandidatesRequest(database_id=database_id))

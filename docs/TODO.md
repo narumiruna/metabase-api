@@ -15,8 +15,8 @@ This file is a static implementation checklist derived from the latest Metabase 
 ## Coverage summary
 
 - Documented operations: 600
-- Complete hand-written endpoint implementations: 69
-- Remaining documented operations: 531
+- Complete hand-written endpoint implementations: 73
+- Remaining documented operations: 527
 - Raw `request` / `invoke`: disabled for CLI users and does not count toward TODO completion.
 
 ## Endpoint checklist
@@ -104,12 +104,12 @@ This file is a static implementation checklist derived from the latest Metabase 
 - [x] `GET /api/bug-reporting/connection-pool-details` — `get-api-bug-reporting-connection-pool-details` — Returns database connection pool info for the current Metabase instance.
 - [x] `GET /api/bug-reporting/details` — `get-api-bug-reporting-details` — Returns version and system information relevant to filing a bug report against Metabase.
 
-### /api/cache (0/4 complete)
+### /api/cache (4/4 complete)
 
-- [ ] `GET /api/cache` — `get-api-cache` — Return cache configuration. Supports pagination via `limit` and `offset` query parameters, and sorting via `sort_column` and `sort_direction`.
-- [ ] `PUT /api/cache` — `put-api-cache` — Store cache configuration.
-- [ ] `DELETE /api/cache` — `delete-api-cache` — Delete cache configurations.
-- [ ] `POST /api/cache/invalidate` — `post-api-cache-invalidate` — Invalidate cache entries. Use it like `/api/cache/invalidate?database=1&dashboard=15` (any number of database/dashboard/question can be supplied). `&include=...
+- [x] `GET /api/cache` — `get-api-cache` — Return cache configuration. Supports pagination via `limit` and `offset` query parameters, and sorting via `sort_column` and `sort_direction`.
+- [x] `PUT /api/cache` — `put-api-cache` — Store cache configuration.
+- [x] `DELETE /api/cache` — `delete-api-cache` — Delete cache configurations.
+- [x] `POST /api/cache/invalidate` — `post-api-cache-invalidate` — Invalidate cache entries. Use it like `/api/cache/invalidate?database=1&dashboard=15` (any number of database/dashboard/question can be supplied). `&include=...
 
 ### /api/card (3/20 complete)
 

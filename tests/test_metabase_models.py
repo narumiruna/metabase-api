@@ -22,9 +22,12 @@ from metabaseapi.metabase import Dashboard
 from metabaseapi.metabase import Database
 from metabaseapi.metabase import DeleteActionPublicLinkRequest
 from metabaseapi.metabase import DeleteActionRequest
+from metabaseapi.metabase import DeleteCacheRequest
 from metabaseapi.metabase import ExecuteActionRequest
+from metabaseapi.metabase import GenericOperationResponse
 from metabaseapi.metabase import GetActionExecuteRequest
 from metabaseapi.metabase import GetActionRequest
+from metabaseapi.metabase import GetCacheRequest
 from metabaseapi.metabase import GetCardRequest
 from metabaseapi.metabase import GetCollectionRequest
 from metabaseapi.metabase import GetDashboardRequest
@@ -32,6 +35,7 @@ from metabaseapi.metabase import GetDatabaseRequest
 from metabaseapi.metabase import GetFieldRequest
 from metabaseapi.metabase import GetTableRequest
 from metabaseapi.metabase import GetUserRequest
+from metabaseapi.metabase import InvalidateCacheRequest
 from metabaseapi.metabase import ListActionsRequest
 from metabaseapi.metabase import ListActionsResponse
 from metabaseapi.metabase import ListCardsRequest
@@ -47,6 +51,7 @@ from metabaseapi.metabase import ListTablesResponse
 from metabaseapi.metabase import ListUsersRequest
 from metabaseapi.metabase import ListUsersResponse
 from metabaseapi.metabase import MetabaseField
+from metabaseapi.metabase import PutCacheRequest
 from metabaseapi.metabase import Table
 from metabaseapi.metabase import UpdateActionRequest
 from metabaseapi.metabase import User
@@ -219,6 +224,22 @@ def test_action_requests_use_expected_paths_and_payloads() -> None:
             DeleteActionPublicLinkRequest(action_id=5),
             ActionExecutionResponse,
             ("DELETE", "/api/action/5/public_link", {}, None),
+        ),
+        (
+            GetCacheRequest(limit=10, offset=20, sort_column="name", sort_direction="asc"),
+            GenericOperationResponse,
+            ("GET", "/api/cache", {"limit": 10, "offset": 20, "sort_column": "name", "sort_direction": "asc"}, None),
+        ),
+        (PutCacheRequest(body={"type": "lru"}), GenericOperationResponse, ("PUT", "/api/cache", {}, {"type": "lru"})),
+        (
+            DeleteCacheRequest(body={"status": "all"}),
+            GenericOperationResponse,
+            ("DELETE", "/api/cache", {}, {"status": "all"}),
+        ),
+        (
+            InvalidateCacheRequest(params={"dashboard": [15], "include": ["question"]}),
+            GenericOperationResponse,
+            ("POST", "/api/cache/invalidate", {"dashboard": [15], "include": ["question"]}, None),
         ),
     ]
 

@@ -76,6 +76,39 @@ class _ConvenienceClient(_ClientWithRequestMethods):
     async def bug_reporting_details(self) -> dict[str, object]:
         return {"method": "GET", "path": "/api/bug-reporting/details"}
 
+    async def get_cache(
+        self,
+        *,
+        limit: int | None = None,
+        offset: int | None = None,
+        sort_column: str | None = None,
+        sort_direction: str | None = None,
+    ) -> dict[str, object]:
+        return {
+            "method": "GET",
+            "path": "/api/cache",
+            "params": {
+                k: v
+                for k, v in {
+                    "limit": limit,
+                    "offset": offset,
+                    "sort_column": sort_column,
+                    "sort_direction": sort_direction,
+                }.items()
+                if v is not None
+            }
+            or None,
+        }
+
+    async def put_cache(self, body: dict[str, object]) -> dict[str, object]:
+        return {"method": "PUT", "path": "/api/cache", "body": body}
+
+    async def delete_cache(self, body: dict[str, object]) -> dict[str, object]:
+        return {"method": "DELETE", "path": "/api/cache", "body": body}
+
+    async def invalidate_cache(self, params: dict[str, object]) -> dict[str, object]:
+        return {"method": "POST", "path": "/api/cache/invalidate", "params": params}
+
     async def automagic_database_candidates(self, database_id: str) -> dict[str, object]:
         return {"method": "GET", "path": f"/api/automagic-dashboards/database/{database_id}/candidates"}
 
@@ -380,6 +413,10 @@ def test_help_lists_every_convenience_command() -> None:
         "delete-bookmark",
         "bug-reporting-connection-pool-details",
         "bug-reporting-details",
+        "get-cache",
+        "put-cache",
+        "delete-cache",
+        "invalidate-cache",
         "automagic-database-candidates",
         "automagic-model-index-primary-key",
         "automagic-entity",
@@ -486,6 +523,7 @@ def test_get_database_command_outputs_json(monkeypatch: pytest.MonkeyPatch) -> N
         (["list-bookmarks"], "/api/bookmark"),
         (["bug-reporting-connection-pool-details"], "/api/bug-reporting/connection-pool-details"),
         (["bug-reporting-details"], "/api/bug-reporting/details"),
+        (["get-cache"], "/api/cache"),
         (["automagic-database-candidates", "1"], "/api/automagic-dashboards/database/1/candidates"),
         (["automagic-model-index-primary-key", "2", "3"], "/api/automagic-dashboards/model_index/2/primary_key/3"),
         (["automagic-entity", "table", "4"], "/api/automagic-dashboards/table/4"),
@@ -565,6 +603,14 @@ def test_read_endpoint_commands_cover_handwritten_surface(
         (["create-action-public-link", "11"], "POST", "/api/action/11/public_link"),
         (["delete-action-public-link", "11"], "DELETE", "/api/action/11/public_link"),
         (["update-bookmark-ordering", '{"ids":[1]}'], "PUT", "/api/bookmark/ordering"),
+        (
+            ["get-cache", "--limit", "10", "--offset", "20", "--sort-column", "name", "--sort-direction", "asc"],
+            "GET",
+            "/api/cache",
+        ),
+        (["put-cache", '{"type":"lru"}'], "PUT", "/api/cache"),
+        (["delete-cache"], "DELETE", "/api/cache"),
+        (["invalidate-cache", '{"dashboard":[15],"include":["question"]}'], "POST", "/api/cache/invalidate"),
         (["create-bookmark", "card", "1"], "POST", "/api/bookmark/card/1"),
         (["delete-bookmark", "card", "1"], "DELETE", "/api/bookmark/card/1"),
         (["create-api-key", '{"name":"key","group_id":1}'], "POST", "/api/api-key"),

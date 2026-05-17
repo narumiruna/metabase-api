@@ -148,7 +148,7 @@ Every command outputs pretty-printed, sorted JSON — suitable for AI agents, sh
 **Current status: 152 / 600 endpoints fully implemented.**
 
 An endpoint counts as complete when it has:
-1. A client method on `MetabaseClient`
+1. A hand-written endpoint request model runnable with `MetabaseClient.run(...)`
 2. A typed `pydantic.BaseModel` for both request and response
 3. A corresponding CLI command
 

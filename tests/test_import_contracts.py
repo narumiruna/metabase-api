@@ -284,7 +284,7 @@ def test_cli_command_package_exposes_no_registry_api() -> None:
     assert not hasattr(metabaseapi.cli.commands, "register_commands")
 
 
-def test_cli_command_registry_matches_package_files() -> None:
+def test_cli_command_inventory_matches_package_files() -> None:
     module_names = tuple(module.__name__.rsplit(".", maxsplit=1)[-1] for module in _command_modules())
     assert module_names == _command_module_names()
 
@@ -423,7 +423,7 @@ def test_endpoints_response_package_does_not_reexport_response_classes() -> None
     assert not hasattr(metabaseapi.endpoints.responses, "ListCardsResponse")
 
 
-def test_endpoints_response_registry_matches_package_files() -> None:
+def test_endpoints_response_inventory_matches_package_files() -> None:
     response_package_path = Path(metabaseapi.endpoints.responses.__file__).parent
     response_module_files = tuple(
         sorted(path.stem for path in response_package_path.glob("*.py") if path.stem != "__init__")
@@ -450,7 +450,7 @@ def test_endpoints_request_modules_own_request_classes() -> None:
             assert getattr(domain_module, request_name).__module__ == domain_module.__name__
 
 
-def test_endpoints_request_registry_matches_package_files() -> None:
+def test_endpoints_request_inventory_matches_package_files() -> None:
     endpoint_package_path = Path(metabaseapi.endpoints.requests.__file__).parent
     endpoint_module_files = tuple(
         sorted(path.stem for path in endpoint_package_path.glob("*.py") if path.stem != "__init__")

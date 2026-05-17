@@ -1,4 +1,4 @@
-"""Domain-sliced endpoint request model registry."""
+"""Domain-sliced endpoint request modules."""
 
 from __future__ import annotations
 

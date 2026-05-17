@@ -6,20 +6,28 @@ from metabaseapi.cli.runtime import _parse_json_body
 from metabaseapi.cli.runtime import _run_and_print
 from metabaseapi.cli.runtime import _run_client_call
 from metabaseapi.cli.runtime import app
+from metabaseapi.client.raw import database as _raw_database
 
 
 @app.command("list-databases")
 def list_databases(ctx: typer.Context) -> None:
     """List configured databases."""
 
-    _run_and_print(_run_client_call(ctx, lambda client: client.list_databases()))
+    _run_and_print(
+        _run_client_call(
+            ctx,
+            lambda client: _raw_database.list_databases(
+                client,
+            ),
+        )
+    )
 
 
 @app.command("get-database")
 def get_database(ctx: typer.Context, database_id: str = typer.Argument(...)) -> None:
     """Get a database by ID."""
 
-    _run_and_print(_run_client_call(ctx, lambda client: client.get_database(database_id)))
+    _run_and_print(_run_client_call(ctx, lambda client: _raw_database.get_database(client, database_id)))
 
 
 @app.command("create-database")
@@ -43,6 +51,6 @@ def create_database(
     _run_and_print(
         _run_client_call(
             ctx,
-            lambda client: client.create_database(name=name, engine=engine, details=details_payload),
+            lambda client: _raw_database.create_database(client, name=name, engine=engine, details=details_payload),
         ),
     )

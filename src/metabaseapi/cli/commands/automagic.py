@@ -5,11 +5,14 @@ import typer
 from metabaseapi.cli.runtime import _run_and_print
 from metabaseapi.cli.runtime import _run_client_call
 from metabaseapi.cli.runtime import app
+from metabaseapi.client.raw import automagic as _raw_automagic
 
 
 @app.command("automagic-database-candidates")
 def automagic_database_candidates(ctx: typer.Context, database_id: str = typer.Argument(...)) -> None:
-    _run_and_print(_run_client_call(ctx, lambda client: client.automagic_database_candidates(database_id)))
+    _run_and_print(
+        _run_client_call(ctx, lambda client: _raw_automagic.automagic_database_candidates(client, database_id))
+    )
 
 
 @app.command("automagic-model-index-primary-key")
@@ -19,24 +22,30 @@ def automagic_model_index_primary_key(
     primary_key_id: str = typer.Argument(...),
 ) -> None:
     _run_and_print(
-        _run_client_call(ctx, lambda client: client.automagic_model_index_primary_key(model_index_id, primary_key_id)),
+        _run_client_call(
+            ctx, lambda client: _raw_automagic.automagic_model_index_primary_key(client, model_index_id, primary_key_id)
+        ),
     )
 
 
 @app.command("automagic-dashboard-path")
 def automagic_dashboard_path(ctx: typer.Context, path: str = typer.Argument(...)) -> None:
-    _run_and_print(_run_client_call(ctx, lambda client: client.automagic_dashboard_path(path)))
+    _run_and_print(_run_client_call(ctx, lambda client: _raw_automagic.automagic_dashboard_path(client, path)))
 
 
 @app.command("automagic-entity")
 def automagic_entity(ctx: typer.Context, entity: str, entity_id_or_query: str) -> None:
-    _run_and_print(_run_client_call(ctx, lambda client: client.automagic_entity(entity, entity_id_or_query)))
+    _run_and_print(
+        _run_client_call(ctx, lambda client: _raw_automagic.automagic_entity(client, entity, entity_id_or_query))
+    )
 
 
 @app.command("automagic-entity-cell")
 def automagic_entity_cell(ctx: typer.Context, entity: str, entity_id_or_query: str, cell_query: str) -> None:
     _run_and_print(
-        _run_client_call(ctx, lambda client: client.automagic_entity_cell(entity, entity_id_or_query, cell_query))
+        _run_client_call(
+            ctx, lambda client: _raw_automagic.automagic_entity_cell(client, entity, entity_id_or_query, cell_query)
+        )
     )
 
 
@@ -52,7 +61,8 @@ def automagic_entity_cell_compare(
     _run_and_print(
         _run_client_call(
             ctx,
-            lambda client: client.automagic_entity_cell_compare(
+            lambda client: _raw_automagic.automagic_entity_cell_compare(
+                client,
                 entity,
                 entity_id_or_query,
                 cell_query,
@@ -75,8 +85,8 @@ def automagic_entity_cell_rule(
     _run_and_print(
         _run_client_call(
             ctx,
-            lambda client: client.automagic_entity_cell_rule(
-                entity, entity_id_or_query, cell_query, prefix, dashboard_template
+            lambda client: _raw_automagic.automagic_entity_cell_rule(
+                client, entity, entity_id_or_query, cell_query, prefix, dashboard_template
             ),
         ),
     )
@@ -96,7 +106,8 @@ def automagic_entity_cell_rule_compare(
     _run_and_print(
         _run_client_call(
             ctx,
-            lambda client: client.automagic_entity_cell_rule_compare(
+            lambda client: _raw_automagic.automagic_entity_cell_rule_compare(
+                client,
                 entity,
                 entity_id_or_query,
                 cell_query,
@@ -120,7 +131,8 @@ def automagic_entity_compare(
     _run_and_print(
         _run_client_call(
             ctx,
-            lambda client: client.automagic_entity_compare(
+            lambda client: _raw_automagic.automagic_entity_compare(
+                client,
                 entity,
                 entity_id_or_query,
                 comparison_entity,
@@ -133,7 +145,9 @@ def automagic_entity_compare(
 @app.command("automagic-entity-query-metadata")
 def automagic_entity_query_metadata(ctx: typer.Context, entity: str, entity_id_or_query: str) -> None:
     _run_and_print(
-        _run_client_call(ctx, lambda client: client.automagic_entity_query_metadata(entity, entity_id_or_query))
+        _run_client_call(
+            ctx, lambda client: _raw_automagic.automagic_entity_query_metadata(client, entity, entity_id_or_query)
+        )
     )
 
 
@@ -148,7 +162,9 @@ def automagic_entity_rule(
     _run_and_print(
         _run_client_call(
             ctx,
-            lambda client: client.automagic_entity_rule(entity, entity_id_or_query, prefix, dashboard_template),
+            lambda client: _raw_automagic.automagic_entity_rule(
+                client, entity, entity_id_or_query, prefix, dashboard_template
+            ),
         ),
     )
 
@@ -166,7 +182,8 @@ def automagic_entity_rule_compare(
     _run_and_print(
         _run_client_call(
             ctx,
-            lambda client: client.automagic_entity_rule_compare(
+            lambda client: _raw_automagic.automagic_entity_rule_compare(
+                client,
                 entity,
                 entity_id_or_query,
                 prefix,

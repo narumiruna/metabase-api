@@ -9,13 +9,21 @@ from metabaseapi.cli.runtime import _parse_optional_json_object
 from metabaseapi.cli.runtime import _run_and_print
 from metabaseapi.cli.runtime import _run_client_call
 from metabaseapi.cli.runtime import app
+from metabaseapi.client.raw import card as _raw_card
 
 
 @app.command("list-cards")
 def list_cards(ctx: typer.Context) -> None:
     """List cards."""
 
-    _run_and_print(_run_client_call(ctx, lambda client: client.list_cards()))
+    _run_and_print(
+        _run_client_call(
+            ctx,
+            lambda client: _raw_card.list_cards(
+                client,
+            ),
+        )
+    )
 
 
 @app.command("create-card")
@@ -48,7 +56,8 @@ def create_card(
     _run_and_print(
         _run_client_call(
             ctx,
-            lambda client: client.create_card(
+            lambda client: _raw_card.create_card(
+                client,
                 name=name,
                 dataset_query=dataset_query_payload,
                 display=display,
@@ -92,7 +101,8 @@ def create_question(
     _run_and_print(
         _run_client_call(
             ctx,
-            lambda client: client.create_question(
+            lambda client: _raw_card.create_question(
+                client,
                 name=name,
                 dataset_query=dataset_query_payload,
                 display=display,
@@ -110,7 +120,7 @@ def create_question(
 def get_card(ctx: typer.Context, card_id: str = typer.Argument(...)) -> None:
     """Get a card by ID."""
 
-    _run_and_print(_run_client_call(ctx, lambda client: client.get_card(card_id)))
+    _run_and_print(_run_client_call(ctx, lambda client: _raw_card.get_card(client, card_id)))
 
 
 @app.command("card-collections")
@@ -121,55 +131,71 @@ def card_collections(
 ) -> None:
     ids: list[int | str]
     ids = [card_id if not card_id.isdigit() else int(card_id) for card_id in card_ids.split(",") if card_id]
-    _run_and_print(_run_client_call(ctx, lambda client: client.card_collections(ids, collection_id=collection_id)))
+    _run_and_print(
+        _run_client_call(ctx, lambda client: _raw_card.card_collections(client, ids, collection_id=collection_id))
+    )
 
 
 @app.command("list-embeddable-cards")
 def list_embeddable_cards(ctx: typer.Context) -> None:
     """List embeddable cards."""
 
-    _run_and_print(_run_client_call(ctx, lambda client: client.list_embeddable_cards()))
+    _run_and_print(
+        _run_client_call(
+            ctx,
+            lambda client: _raw_card.list_embeddable_cards(
+                client,
+            ),
+        )
+    )
 
 
 @app.command("list-public-cards")
 def list_public_cards(ctx: typer.Context) -> None:
     """List publicly shared cards."""
 
-    _run_and_print(_run_client_call(ctx, lambda client: client.list_public_cards()))
+    _run_and_print(
+        _run_client_call(
+            ctx,
+            lambda client: _raw_card.list_public_cards(
+                client,
+            ),
+        )
+    )
 
 
 @app.command("create-card-public-link")
 def create_card_public_link(ctx: typer.Context, card_id: str = typer.Argument(...)) -> None:
     """Create a public link for a card."""
 
-    _run_and_print(_run_client_call(ctx, lambda client: client.create_card_public_link(card_id)))
+    _run_and_print(_run_client_call(ctx, lambda client: _raw_card.create_card_public_link(client, card_id)))
 
 
 @app.command("delete-card-public-link")
 def delete_card_public_link(ctx: typer.Context, card_id: str = typer.Argument(...)) -> None:
     """Delete a public link for a card."""
 
-    _run_and_print(_run_client_call(ctx, lambda client: client.delete_card_public_link(card_id)))
+    _run_and_print(_run_client_call(ctx, lambda client: _raw_card.delete_card_public_link(client, card_id)))
 
 
 @app.command("update-card")
 def update_card(ctx: typer.Context, card_id: str = typer.Argument(...), body: str = typer.Argument(...)) -> None:
     payload = _parse_json_object(body, "body")
-    _run_and_print(_run_client_call(ctx, lambda client: client.update_card(card_id, payload)))
+    _run_and_print(_run_client_call(ctx, lambda client: _raw_card.update_card(client, card_id, payload)))
 
 
 @app.command("delete-card")
 def delete_card(ctx: typer.Context, card_id: str = typer.Argument(...)) -> None:
     """Delete a card."""
 
-    _run_and_print(_run_client_call(ctx, lambda client: client.delete_card(card_id)))
+    _run_and_print(_run_client_call(ctx, lambda client: _raw_card.delete_card(client, card_id)))
 
 
 @app.command("copy-card")
 def copy_card(ctx: typer.Context, card_id: str = typer.Argument(...)) -> None:
     """Copy a card."""
 
-    _run_and_print(_run_client_call(ctx, lambda client: client.copy_card(card_id)))
+    _run_and_print(_run_client_call(ctx, lambda client: _raw_card.copy_card(client, card_id)))
 
 
 @app.command("move-cards")
@@ -177,4 +203,4 @@ def move_cards(ctx: typer.Context, body: str = typer.Argument(..., help="Move pa
     payload = _parse_json_body(body)
     if not isinstance(payload, dict):
         raise typer.BadParameter("body must be a JSON object")
-    _run_and_print(_run_client_call(ctx, lambda client: client.move_cards(payload)))
+    _run_and_print(_run_client_call(ctx, lambda client: _raw_card.move_cards(client, payload)))

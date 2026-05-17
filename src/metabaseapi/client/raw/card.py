@@ -58,7 +58,8 @@ async def create_question(
     parameters: list[object] | None = None,
     result_metadata: list[object] | None = None,
 ) -> JSONValue | None:
-    return await client.create_card(
+    return await create_card(
+        client,
         name=name,
         dataset_query=dataset_query,
         display=display,

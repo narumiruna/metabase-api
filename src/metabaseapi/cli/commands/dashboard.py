@@ -7,25 +7,33 @@ from metabaseapi.cli.runtime import _parse_optional_json_object
 from metabaseapi.cli.runtime import _run_and_print
 from metabaseapi.cli.runtime import _run_client_call
 from metabaseapi.cli.runtime import app
+from metabaseapi.client.raw import dashboard as _raw_dashboard
 
 
 @app.command("list-dashboards")
 def list_dashboards(ctx: typer.Context) -> None:
     """List dashboards."""
 
-    _run_and_print(_run_client_call(ctx, lambda client: client.list_dashboards()))
+    _run_and_print(
+        _run_client_call(
+            ctx,
+            lambda client: _raw_dashboard.list_dashboards(
+                client,
+            ),
+        )
+    )
 
 
 @app.command("create-dashboard")
 def create_dashboard(ctx: typer.Context, body: str = typer.Argument(..., help="Dashboard body JSON object")) -> None:
     payload = _parse_json_object(body, "body")
-    _run_and_print(_run_client_call(ctx, lambda client: client.create_dashboard(payload)))
+    _run_and_print(_run_client_call(ctx, lambda client: _raw_dashboard.create_dashboard(client, payload)))
 
 
 @app.command("save-dashboard")
 def save_dashboard(ctx: typer.Context, body: str = typer.Argument(..., help="Dashboard save JSON object")) -> None:
     payload = _parse_json_object(body, "body")
-    _run_and_print(_run_client_call(ctx, lambda client: client.save_dashboard(payload)))
+    _run_and_print(_run_client_call(ctx, lambda client: _raw_dashboard.save_dashboard(client, payload)))
 
 
 @app.command("save-dashboard-to-collection")
@@ -36,7 +44,9 @@ def save_dashboard_to_collection(
 ) -> None:
     payload = _parse_json_object(body, "body")
     _run_and_print(
-        _run_client_call(ctx, lambda client: client.save_dashboard_to_collection(parent_collection_id, payload))
+        _run_client_call(
+            ctx, lambda client: _raw_dashboard.save_dashboard_to_collection(client, parent_collection_id, payload)
+        )
     )
 
 
@@ -44,14 +54,18 @@ def save_dashboard_to_collection(
 def create_dashboard_public_link(ctx: typer.Context, dashboard_id: str = typer.Argument(...)) -> None:
     """Create a public link for a dashboard."""
 
-    _run_and_print(_run_client_call(ctx, lambda client: client.create_dashboard_public_link(dashboard_id)))
+    _run_and_print(
+        _run_client_call(ctx, lambda client: _raw_dashboard.create_dashboard_public_link(client, dashboard_id))
+    )
 
 
 @app.command("delete-dashboard-public-link")
 def delete_dashboard_public_link(ctx: typer.Context, dashboard_id: str = typer.Argument(...)) -> None:
     """Delete a public link for a dashboard."""
 
-    _run_and_print(_run_client_call(ctx, lambda client: client.delete_dashboard_public_link(dashboard_id)))
+    _run_and_print(
+        _run_client_call(ctx, lambda client: _raw_dashboard.delete_dashboard_public_link(client, dashboard_id))
+    )
 
 
 @app.command("copy-dashboard")
@@ -61,14 +75,16 @@ def copy_dashboard(
     body: str | None = typer.Argument(None, help="Optional copy payload JSON object"),
 ) -> None:
     payload = _parse_optional_json_object(body, "body") if body else None
-    _run_and_print(_run_client_call(ctx, lambda client: client.copy_dashboard(from_dashboard_id, payload)))
+    _run_and_print(
+        _run_client_call(ctx, lambda client: _raw_dashboard.copy_dashboard(client, from_dashboard_id, payload))
+    )
 
 
 @app.command("delete-dashboard")
 def delete_dashboard(ctx: typer.Context, dashboard_id: str = typer.Argument(...)) -> None:
     """Delete a dashboard."""
 
-    _run_and_print(_run_client_call(ctx, lambda client: client.delete_dashboard(dashboard_id)))
+    _run_and_print(_run_client_call(ctx, lambda client: _raw_dashboard.delete_dashboard(client, dashboard_id)))
 
 
 @app.command("update-dashboard")
@@ -76,7 +92,7 @@ def update_dashboard(
     ctx: typer.Context, dashboard_id: str = typer.Argument(...), body: str = typer.Argument(...)
 ) -> None:
     payload = _parse_json_object(body, "body")
-    _run_and_print(_run_client_call(ctx, lambda client: client.update_dashboard(dashboard_id, payload)))
+    _run_and_print(_run_client_call(ctx, lambda client: _raw_dashboard.update_dashboard(client, dashboard_id, payload)))
 
 
 @app.command("update-dashboard-cards")
@@ -86,11 +102,13 @@ def update_dashboard_cards(
     body: str = typer.Argument(..., help="Dashboard cards JSON object"),
 ) -> None:
     payload = _parse_json_object(body, "body")
-    _run_and_print(_run_client_call(ctx, lambda client: client.update_dashboard_cards(dashboard_id, payload)))
+    _run_and_print(
+        _run_client_call(ctx, lambda client: _raw_dashboard.update_dashboard_cards(client, dashboard_id, payload))
+    )
 
 
 @app.command("get-dashboard-items")
 def get_dashboard_items(ctx: typer.Context, dashboard_id: str = typer.Argument(...)) -> None:
     """Get dashboard items."""
 
-    _run_and_print(_run_client_call(ctx, lambda client: client.get_dashboard_items(dashboard_id)))
+    _run_and_print(_run_client_call(ctx, lambda client: _raw_dashboard.get_dashboard_items(client, dashboard_id)))

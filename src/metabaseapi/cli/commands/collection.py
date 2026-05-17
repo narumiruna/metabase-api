@@ -6,13 +6,21 @@ from metabaseapi.cli.runtime import _parse_json_object
 from metabaseapi.cli.runtime import _run_and_print
 from metabaseapi.cli.runtime import _run_client_call
 from metabaseapi.cli.runtime import app
+from metabaseapi.client.raw import collection as _raw_collection
 
 
 @app.command("list-collections")
 def list_collections(ctx: typer.Context) -> None:
     """List collections."""
 
-    _run_and_print(_run_client_call(ctx, lambda client: client.list_collections()))
+    _run_and_print(
+        _run_client_call(
+            ctx,
+            lambda client: _raw_collection.list_collections(
+                client,
+            ),
+        )
+    )
 
 
 @app.command("create-collection")
@@ -20,14 +28,14 @@ def create_collection(ctx: typer.Context, body: str = typer.Argument(..., help="
     """Create a collection."""
 
     payload = _parse_json_object(body, "body")
-    _run_and_print(_run_client_call(ctx, lambda client: client.create_collection(payload)))
+    _run_and_print(_run_client_call(ctx, lambda client: _raw_collection.create_collection(client, payload)))
 
 
 @app.command("get-collection")
 def get_collection(ctx: typer.Context, collection_id: str = typer.Argument(...)) -> None:
     """Get a collection by ID."""
 
-    _run_and_print(_run_client_call(ctx, lambda client: client.get_collection(collection_id)))
+    _run_and_print(_run_client_call(ctx, lambda client: _raw_collection.get_collection(client, collection_id)))
 
 
 @app.command("update-collection")
@@ -39,14 +47,16 @@ def update_collection(
     """Update a collection."""
 
     payload = _parse_json_object(body, "body")
-    _run_and_print(_run_client_call(ctx, lambda client: client.update_collection(collection_id, payload)))
+    _run_and_print(
+        _run_client_call(ctx, lambda client: _raw_collection.update_collection(client, collection_id, payload))
+    )
 
 
 @app.command("delete-collection")
 def delete_collection(ctx: typer.Context, collection_id: str = typer.Argument(...)) -> None:
     """Delete a collection."""
 
-    _run_and_print(_run_client_call(ctx, lambda client: client.delete_collection(collection_id)))
+    _run_and_print(_run_client_call(ctx, lambda client: _raw_collection.delete_collection(client, collection_id)))
 
 
 @app.command("get-collection-dashboard-question-candidates")
@@ -56,7 +66,7 @@ def get_collection_dashboard_question_candidates(ctx: typer.Context, collection_
     _run_and_print(
         _run_client_call(
             ctx,
-            lambda client: client.get_collection_dashboard_question_candidates(collection_id),
+            lambda client: _raw_collection.get_collection_dashboard_question_candidates(client, collection_id),
         )
     )
 
@@ -65,28 +75,49 @@ def get_collection_dashboard_question_candidates(ctx: typer.Context, collection_
 def get_collection_items(ctx: typer.Context, collection_id: str = typer.Argument(...)) -> None:
     """Fetch a collection's items."""
 
-    _run_and_print(_run_client_call(ctx, lambda client: client.get_collection_items(collection_id)))
+    _run_and_print(_run_client_call(ctx, lambda client: _raw_collection.get_collection_items(client, collection_id)))
 
 
 @app.command("get-collection-root")
 def get_collection_root(ctx: typer.Context) -> None:
     """Get the root collection."""
 
-    _run_and_print(_run_client_call(ctx, lambda client: client.get_collection_root()))
+    _run_and_print(
+        _run_client_call(
+            ctx,
+            lambda client: _raw_collection.get_collection_root(
+                client,
+            ),
+        )
+    )
 
 
 @app.command("get-collection-root-dashboard-question-candidates")
 def get_collection_root_dashboard_question_candidates(ctx: typer.Context) -> None:
     """Find cards in root collection that can be moved into dashboards."""
 
-    _run_and_print(_run_client_call(ctx, lambda client: client.get_collection_root_dashboard_question_candidates()))
+    _run_and_print(
+        _run_client_call(
+            ctx,
+            lambda client: _raw_collection.get_collection_root_dashboard_question_candidates(
+                client,
+            ),
+        )
+    )
 
 
 @app.command("get-collection-root-items")
 def get_collection_root_items(ctx: typer.Context) -> None:
     """Fetch objects that the current user should see at root level."""
 
-    _run_and_print(_run_client_call(ctx, lambda client: client.get_collection_root_items()))
+    _run_and_print(
+        _run_client_call(
+            ctx,
+            lambda client: _raw_collection.get_collection_root_items(
+                client,
+            ),
+        )
+    )
 
 
 @app.command("post-collection-root-move-dashboard-question-candidates")
@@ -97,7 +128,9 @@ def post_collection_root_move_dashboard_question_candidates(
 
     payload = _parse_json_object(body, "body")
     _run_and_print(
-        _run_client_call(ctx, lambda client: client.post_collection_root_move_dashboard_question_candidates(payload))
+        _run_client_call(
+            ctx, lambda client: _raw_collection.post_collection_root_move_dashboard_question_candidates(client, payload)
+        )
     )
 
 
@@ -113,7 +146,9 @@ def post_collection_move_dashboard_question_candidates(
     _run_and_print(
         _run_client_call(
             ctx,
-            lambda client: client.post_collection_move_dashboard_question_candidates(collection_id, payload),
+            lambda client: _raw_collection.post_collection_move_dashboard_question_candidates(
+                client, collection_id, payload
+            ),
         )
     )
 
@@ -122,21 +157,42 @@ def post_collection_move_dashboard_question_candidates(
 def get_collection_trash(ctx: typer.Context) -> None:
     """Fetch the trash collection."""
 
-    _run_and_print(_run_client_call(ctx, lambda client: client.get_collection_trash()))
+    _run_and_print(
+        _run_client_call(
+            ctx,
+            lambda client: _raw_collection.get_collection_trash(
+                client,
+            ),
+        )
+    )
 
 
 @app.command("get-collection-tree")
 def get_collection_tree(ctx: typer.Context) -> None:
     """Fetch collections in a tree structure."""
 
-    _run_and_print(_run_client_call(ctx, lambda client: client.get_collection_tree()))
+    _run_and_print(
+        _run_client_call(
+            ctx,
+            lambda client: _raw_collection.get_collection_tree(
+                client,
+            ),
+        )
+    )
 
 
 @app.command("get-collection-graph")
 def get_collection_graph(ctx: typer.Context) -> None:
     """Fetch the collection permissions graph."""
 
-    _run_and_print(_run_client_call(ctx, lambda client: client.get_collection_graph()))
+    _run_and_print(
+        _run_client_call(
+            ctx,
+            lambda client: _raw_collection.get_collection_graph(
+                client,
+            ),
+        )
+    )
 
 
 @app.command("put-collection-graph")
@@ -146,4 +202,4 @@ def put_collection_graph(
     """Update collection permissions via graph payload."""
 
     payload = _parse_json_object(body, "body")
-    _run_and_print(_run_client_call(ctx, lambda client: client.put_collection_graph(payload)))
+    _run_and_print(_run_client_call(ctx, lambda client: _raw_collection.put_collection_graph(client, payload)))

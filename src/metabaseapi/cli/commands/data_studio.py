@@ -6,6 +6,7 @@ from metabaseapi.cli.runtime import _parse_json_object
 from metabaseapi.cli.runtime import _run_and_print
 from metabaseapi.cli.runtime import _run_client_call
 from metabaseapi.cli.runtime import app
+from metabaseapi.client.raw import data_studio as _raw_data_studio
 
 
 @app.command("data-studio-table-discard-values")
@@ -16,7 +17,9 @@ def data_studio_table_discard_values(
     """Discard saved field values for selected tables."""
 
     payload = _parse_json_object(body, "body")
-    _run_and_print(_run_client_call(ctx, lambda client: client.data_studio_table_discard_values(payload)))
+    _run_and_print(
+        _run_client_call(ctx, lambda client: _raw_data_studio.data_studio_table_discard_values(client, payload))
+    )
 
 
 @app.command("data-studio-table-edit")
@@ -27,7 +30,7 @@ def data_studio_table_edit(
     """Bulk update selected tables."""
 
     payload = _parse_json_object(body, "body")
-    _run_and_print(_run_client_call(ctx, lambda client: client.data_studio_table_edit(payload)))
+    _run_and_print(_run_client_call(ctx, lambda client: _raw_data_studio.data_studio_table_edit(client, payload)))
 
 
 @app.command("data-studio-table-rescan-values")
@@ -38,7 +41,9 @@ def data_studio_table_rescan_values(
     """Rescan field values for selected tables."""
 
     payload = _parse_json_object(body, "body")
-    _run_and_print(_run_client_call(ctx, lambda client: client.data_studio_table_rescan_values(payload)))
+    _run_and_print(
+        _run_client_call(ctx, lambda client: _raw_data_studio.data_studio_table_rescan_values(client, payload))
+    )
 
 
 @app.command("data-studio-table-selection")
@@ -49,7 +54,7 @@ def data_studio_table_selection(
     """Fetch information about selected tables."""
 
     payload = _parse_json_object(body, "body")
-    _run_and_print(_run_client_call(ctx, lambda client: client.data_studio_table_selection(payload)))
+    _run_and_print(_run_client_call(ctx, lambda client: _raw_data_studio.data_studio_table_selection(client, payload)))
 
 
 @app.command("data-studio-table-sync-schema")
@@ -60,4 +65,6 @@ def data_studio_table_sync_schema(
     """Sync schema for selected tables."""
 
     payload = _parse_json_object(body, "body")
-    _run_and_print(_run_client_call(ctx, lambda client: client.data_studio_table_sync_schema(payload)))
+    _run_and_print(
+        _run_client_call(ctx, lambda client: _raw_data_studio.data_studio_table_sync_schema(client, payload))
+    )

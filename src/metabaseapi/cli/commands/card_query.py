@@ -6,6 +6,7 @@ from metabaseapi.cli.runtime import _parse_optional_json_object
 from metabaseapi.cli.runtime import _run_and_print
 from metabaseapi.cli.runtime import _run_client_call
 from metabaseapi.cli.runtime import app
+from metabaseapi.client.raw import card as _raw_card
 
 
 @app.command("pivot-query")
@@ -15,7 +16,7 @@ def pivot_query(
     body: str = typer.Argument(None, help="Optional query body JSON object"),
 ) -> None:
     payload = _parse_optional_json_object(body, "body") if body else None
-    _run_and_print(_run_client_call(ctx, lambda client: client.pivot_query(card_id, body=payload)))
+    _run_and_print(_run_client_call(ctx, lambda client: _raw_card.pivot_query(client, card_id, body=payload)))
 
 
 @app.command("query-card")
@@ -25,7 +26,7 @@ def query_card(
     body: str = typer.Argument(None, help="Optional query payload JSON object"),
 ) -> None:
     payload = _parse_optional_json_object(body, "body") if body else None
-    _run_and_print(_run_client_call(ctx, lambda client: client.query_card(card_id, body=payload)))
+    _run_and_print(_run_client_call(ctx, lambda client: _raw_card.query_card(client, card_id, body=payload)))
 
 
 @app.command("query-card-export")
@@ -41,7 +42,8 @@ def query_card_export(
     _run_and_print(
         _run_client_call(
             ctx,
-            lambda client: client.query_card_export(
+            lambda client: _raw_card.query_card_export(
+                client,
                 card_id,
                 export_format,
                 body=payload,
@@ -56,12 +58,12 @@ def query_card_export(
 def cards_dashboards(ctx: typer.Context, card_ids: str = typer.Argument(..., help="Comma-separated card IDs")) -> None:
     ids: list[int | str]
     ids = [card_id if not card_id.isdigit() else int(card_id) for card_id in card_ids.split(",") if card_id]
-    _run_and_print(_run_client_call(ctx, lambda client: client.cards_dashboards(ids)))
+    _run_and_print(_run_client_call(ctx, lambda client: _raw_card.cards_dashboards(client, ids)))
 
 
 @app.command("get-card-dashboards")
 def get_card_dashboards(ctx: typer.Context, card_id: str = typer.Argument(...)) -> None:
-    _run_and_print(_run_client_call(ctx, lambda client: client.get_card_dashboards(card_id)))
+    _run_and_print(_run_client_call(ctx, lambda client: _raw_card.get_card_dashboards(client, card_id)))
 
 
 @app.command("get-card-param-search")
@@ -71,28 +73,30 @@ def get_card_param_search_values(
     param_key: str = typer.Argument(...),
     query: str = typer.Argument(...),
 ) -> None:
-    _run_and_print(_run_client_call(ctx, lambda client: client.get_card_param_search_values(card_id, param_key, query)))
+    _run_and_print(
+        _run_client_call(ctx, lambda client: _raw_card.get_card_param_search_values(client, card_id, param_key, query))
+    )
 
 
 @app.command("get-card-param-values")
 def get_card_param_values(
     ctx: typer.Context, card_id: str = typer.Argument(...), param_key: str = typer.Argument(...)
 ) -> None:
-    _run_and_print(_run_client_call(ctx, lambda client: client.get_card_param_values(card_id, param_key)))
+    _run_and_print(_run_client_call(ctx, lambda client: _raw_card.get_card_param_values(client, card_id, param_key)))
 
 
 @app.command("get-card-param-remapping")
 def get_card_param_remapping(
     ctx: typer.Context, card_id: str = typer.Argument(...), param_key: str = typer.Argument(...)
 ) -> None:
-    _run_and_print(_run_client_call(ctx, lambda client: client.get_card_param_remapping(card_id, param_key)))
+    _run_and_print(_run_client_call(ctx, lambda client: _raw_card.get_card_param_remapping(client, card_id, param_key)))
 
 
 @app.command("get-card-query-metadata")
 def get_card_query_metadata(ctx: typer.Context, card_id: str = typer.Argument(...)) -> None:
-    _run_and_print(_run_client_call(ctx, lambda client: client.get_card_query_metadata(card_id)))
+    _run_and_print(_run_client_call(ctx, lambda client: _raw_card.get_card_query_metadata(client, card_id)))
 
 
 @app.command("get-card-series")
 def get_card_series(ctx: typer.Context, card_id: str = typer.Argument(...)) -> None:
-    _run_and_print(_run_client_call(ctx, lambda client: client.get_card_series(card_id)))
+    _run_and_print(_run_client_call(ctx, lambda client: _raw_card.get_card_series(client, card_id)))

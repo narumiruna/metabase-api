@@ -76,7 +76,8 @@ async def create_question_typed(
     parameters: list[object] | None = None,
     result_metadata: list[object] | None = None,
 ) -> Card:
-    return await client.create_card_typed(
+    return await create_card_typed(
+        client,
         name=name,
         dataset_query=dataset_query,
         display=display,

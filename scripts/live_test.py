@@ -4,9 +4,11 @@ import asyncio
 import sys
 
 from metabaseapi.client import MetabaseClient
+from metabaseapi.client.raw import user as raw_user
+from metabaseapi.client.typed import user as typed_user
 from metabaseapi.errors import MetabaseError
-from metabaseapi.models import JSONValue
 from metabaseapi.settings import Settings
+from metabaseapi.wire import JSONValue
 
 IDENTITY_KEYS = frozenset({"common_name", "email", "id"})
 
@@ -40,10 +42,10 @@ async def run_live_test() -> None:
     settings.requires_api_key()
 
     async with MetabaseClient.from_settings(settings) as client:
-        current_user = await client.current_user()
-        _print_payload_check("convenience current-user", current_user)
+        current_user = await raw_user.current_user(client)
+        _print_payload_check("raw current-user", current_user)
 
-        typed_current_user = await client.current_user_typed()
+        typed_current_user = await typed_user.current_user_typed(client)
         fields = ", ".join(sorted(typed_current_user.model_fields_set))
         identity_hint = any(
             value is not None

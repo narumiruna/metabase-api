@@ -25,7 +25,7 @@ async def automagic_dashboard_path(client: MetabaseClient, path: str) -> JSONVal
 
 
 async def automagic_entity(client: MetabaseClient, entity: str, entity_id_or_query: str) -> JSONValue | None:
-    return await client.automagic_dashboard_path(f"{entity}/{entity_id_or_query}")
+    return await automagic_dashboard_path(client, f"{entity}/{entity_id_or_query}")
 
 
 async def automagic_entity_cell(
@@ -34,7 +34,7 @@ async def automagic_entity_cell(
     entity_id_or_query: str,
     cell_query: str,
 ) -> JSONValue | None:
-    return await client.automagic_dashboard_path(f"{entity}/{entity_id_or_query}/cell/{cell_query}")
+    return await automagic_dashboard_path(client, f"{entity}/{entity_id_or_query}/cell/{cell_query}")
 
 
 async def automagic_entity_cell_compare(
@@ -45,8 +45,9 @@ async def automagic_entity_cell_compare(
     comparison_entity: str,
     comparison_entity_id_or_query: str,
 ) -> JSONValue | None:
-    return await client.automagic_dashboard_path(
-        f"{entity}/{entity_id_or_query}/cell/{cell_query}/compare/{comparison_entity}/{comparison_entity_id_or_query}"
+    return await automagic_dashboard_path(
+        client,
+        f"{entity}/{entity_id_or_query}/cell/{cell_query}/compare/{comparison_entity}/{comparison_entity_id_or_query}",
     )
 
 
@@ -58,8 +59,8 @@ async def automagic_entity_cell_rule(
     prefix: str,
     dashboard_template: str,
 ) -> JSONValue | None:
-    return await client.automagic_dashboard_path(
-        f"{entity}/{entity_id_or_query}/cell/{cell_query}/rule/{prefix}/{dashboard_template}"
+    return await automagic_dashboard_path(
+        client, f"{entity}/{entity_id_or_query}/cell/{cell_query}/rule/{prefix}/{dashboard_template}"
     )
 
 
@@ -73,8 +74,9 @@ async def automagic_entity_cell_rule_compare(
     comparison_entity: str,
     comparison_entity_id_or_query: str,
 ) -> JSONValue | None:
-    return await client.automagic_dashboard_path(
-        f"{entity}/{entity_id_or_query}/cell/{cell_query}/rule/{prefix}/{dashboard_template}/compare/{comparison_entity}/{comparison_entity_id_or_query}"
+    return await automagic_dashboard_path(
+        client,
+        f"{entity}/{entity_id_or_query}/cell/{cell_query}/rule/{prefix}/{dashboard_template}/compare/{comparison_entity}/{comparison_entity_id_or_query}",
     )
 
 
@@ -85,8 +87,8 @@ async def automagic_entity_compare(
     comparison_entity: str,
     comparison_entity_id_or_query: str,
 ) -> JSONValue | None:
-    return await client.automagic_dashboard_path(
-        f"{entity}/{entity_id_or_query}/compare/{comparison_entity}/{comparison_entity_id_or_query}"
+    return await automagic_dashboard_path(
+        client, f"{entity}/{entity_id_or_query}/compare/{comparison_entity}/{comparison_entity_id_or_query}"
     )
 
 
@@ -95,7 +97,7 @@ async def automagic_entity_query_metadata(
     entity: str,
     entity_id_or_query: str,
 ) -> JSONValue | None:
-    return await client.automagic_dashboard_path(f"{entity}/{entity_id_or_query}/query_metadata")
+    return await automagic_dashboard_path(client, f"{entity}/{entity_id_or_query}/query_metadata")
 
 
 async def automagic_entity_rule(
@@ -105,7 +107,7 @@ async def automagic_entity_rule(
     prefix: str,
     dashboard_template: str,
 ) -> JSONValue | None:
-    return await client.automagic_dashboard_path(f"{entity}/{entity_id_or_query}/rule/{prefix}/{dashboard_template}")
+    return await automagic_dashboard_path(client, f"{entity}/{entity_id_or_query}/rule/{prefix}/{dashboard_template}")
 
 
 async def automagic_entity_rule_compare(
@@ -117,8 +119,9 @@ async def automagic_entity_rule_compare(
     comparison_entity: str,
     comparison_entity_id_or_query: str,
 ) -> JSONValue | None:
-    return await client.automagic_dashboard_path(
-        f"{entity}/{entity_id_or_query}/rule/{prefix}/{dashboard_template}/compare/{comparison_entity}/{comparison_entity_id_or_query}"
+    return await automagic_dashboard_path(
+        client,
+        f"{entity}/{entity_id_or_query}/rule/{prefix}/{dashboard_template}/compare/{comparison_entity}/{comparison_entity_id_or_query}",
     )
 
 

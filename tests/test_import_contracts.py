@@ -528,6 +528,7 @@ def test_endpoint_requests_use_base_execution_methods() -> None:
         for request_name in REQUEST_MODULE_CONTRACTS[module.__name__.rsplit(".", maxsplit=1)[-1]]:
             request_class = getattr(module, request_name)
             assert "response_model" in request_class.__dict__
+            assert "execute" not in request_class.__dict__
             assert "do" not in request_class.__dict__
             assert "do_sync" not in request_class.__dict__
 

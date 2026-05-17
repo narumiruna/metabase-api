@@ -43,7 +43,7 @@ class EndpointRequest[ResponseT](BaseModel):
     def request_body(self) -> JSONValue | None:
         return None
 
-    async def execute(self, client: MetabaseRequestClient) -> ResponseT:
+    async def do(self, client: MetabaseRequestClient) -> ResponseT:
         payload = await client.request(
             self.endpoint_method,
             self.resolve_path(),
@@ -52,9 +52,6 @@ class EndpointRequest[ResponseT](BaseModel):
         )
         response_model = cast(type[BaseModel], self.response_model)
         return cast(ResponseT, response_model.model_validate(payload or {}))
-
-    async def do(self, client: MetabaseRequestClient) -> ResponseT:
-        return await self.execute(client)
 
     def do_sync(self, client: MetabaseRequestClient) -> ResponseT:
         return asyncio.run(self.do(client))

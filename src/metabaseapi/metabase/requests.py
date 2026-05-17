@@ -1556,6 +1556,22 @@ class GetCollectionRootItemsRequest(_BaseMetabaseRequest[GenericOperationRespons
         return self.execute_sync(client, GenericOperationResponse)
 
 
+class GetCollectionDashboardQuestionCandidatesRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+    collection_id: int | str
+
+    endpoint_method: ClassVar[str] = "GET"
+    endpoint_path: ClassVar[str] = "/api/collection/{collection_id}/dashboard-question-candidates"
+
+    async def do(self, client: MetabaseRequestClient) -> GenericOperationResponse:
+        return await self.execute(client, GenericOperationResponse)
+
+    def do_sync(self, client: MetabaseRequestClient) -> GenericOperationResponse:
+        return self.execute_sync(client, GenericOperationResponse)
+
+    def resolve_path(self) -> str:
+        return f"/api/collection/{self.collection_id}/dashboard-question-candidates"
+
+
 class GetCollectionTrashRequest(_BaseMetabaseRequest[Collection]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/collection/trash"
@@ -1714,6 +1730,7 @@ __all__ = [
     "GetCardSeriesRequest",
     "GetChannelRequest",
     "GetCloudMigrationRequest",
+    "GetCollectionDashboardQuestionCandidatesRequest",
     "GetCollectionGraphRequest",
     "GetCollectionRequest",
     "GetCollectionRootDashboardQuestionCandidatesRequest",

@@ -73,6 +73,7 @@ from .requests import GetCardRequest
 from .requests import GetCardSeriesRequest
 from .requests import GetChannelRequest
 from .requests import GetCloudMigrationRequest
+from .requests import GetCollectionDashboardQuestionCandidatesRequest
 from .requests import GetCollectionGraphRequest
 from .requests import GetCollectionRequest
 from .requests import GetCollectionRootDashboardQuestionCandidatesRequest
@@ -209,6 +210,7 @@ __all__ = [
     "GetCardSeriesRequest",
     "GetChannelRequest",
     "GetCloudMigrationRequest",
+    "GetCollectionDashboardQuestionCandidatesRequest",
     "GetCollectionGraphRequest",
     "GetCollectionRequest",
     "GetCollectionRootDashboardQuestionCandidatesRequest",

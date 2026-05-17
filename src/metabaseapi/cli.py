@@ -1040,6 +1040,18 @@ def get_collection(ctx: typer.Context, collection_id: str = typer.Argument(...))
     _run_and_print(_run_client_call(ctx, lambda client: client.get_collection(collection_id)))
 
 
+@app.command("get-collection-dashboard-question-candidates")
+def get_collection_dashboard_question_candidates(ctx: typer.Context, collection_id: str = typer.Argument(...)) -> None:
+    """Find cards in a collection that can be moved into dashboards."""
+
+    _run_and_print(
+        _run_client_call(
+            ctx,
+            lambda client: client.get_collection_dashboard_question_candidates(collection_id),
+        )
+    )
+
+
 @app.command("get-collection-root")
 def get_collection_root(ctx: typer.Context) -> None:
     """Get the root collection."""

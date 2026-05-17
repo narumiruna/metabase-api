@@ -1,185 +1,139 @@
-# metabase-api
+# metabaseapi: Async Python Client and CLI for the Metabase API
 
-> Async-first Python client and CLI for the [Metabase](https://www.metabase.com/) REST API.
+`metabaseapi` is a typed, async Python client and command-line interface for the
+[Metabase](https://www.metabase.com/) API. It wraps Metabase endpoints with
+Pydantic request and response models, uses `httpx` for async HTTP, and exposes a
+JSON-first `metabaseapi` CLI for automation, inspection, and scripting.
 
-[![Python 3.14+](https://img.shields.io/badge/python-3.14%2B-blue.svg)](https://www.python.org/downloads/)
-[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+Use this project when you need a Python Metabase API client for dashboards,
+cards, databases, collections, users, settings, permissions, embedding, search,
+and other Metabase administration workflows.
 
-**metabase-api** is a lightweight Python library and CLI for the Metabase REST API. Built on [httpx](https://www.python-httpx.org/) and [Typer](https://typer.tiangolo.com/), it gives you typed request/response models and a clean terminal interface — perfect for automation, scripting, and AI-driven data workflows.
+⚠️ This package is currently early-stage and versioned as `0.0.0`. Pin commits
+or tags when using it outside local development.
 
----
+## Features
 
-## 📚 Table of contents
+- Async Metabase API client built on `httpx.AsyncClient`.
+- Typed endpoint request models with Pydantic validation.
+- JSON CLI output designed for scripts and agent workflows.
+- Environment-based configuration via `METABASE_URL` and `METABASE_API_KEY`.
+- Coverage for many core, admin, and enterprise Metabase endpoint families.
+- Local tests for CLI behavior, settings, client transport, endpoint models, and
+  optional live Metabase smoke checks.
 
-- [✨ Features](#-features)
-- [📋 Requirements](#-requirements)
-- [📦 Installation](#-installation)
-- [⚙️ Configuration](#%EF%B8%8F-configuration)
-- [🚀 Quick start](#-quick-start)
-- [🖥️ CLI reference](#%EF%B8%8F-cli-reference)
-- [📊 API coverage](#-api-coverage)
-- [🛠️ Development](#%EF%B8%8F-development)
-- [📄 License](#-license)
+## Requirements
 
----
+- Python 3.14 or newer.
+- `uv` for local development and dependency management.
+- A Metabase instance plus an API key for real API calls.
 
-## ✨ Features
+## Installation
 
-- ⚡ **Async-first HTTP client** — powered by `httpx`, suitable for high-concurrency automation scripts.
-- 🔷 **Typed models** — every request and response is a `pydantic.BaseModel`; no code generation.
-- 🖥️ **Ergonomic CLI** — discover and run Metabase operations directly from the terminal with `metabaseapi <command>`.
-- 📄 **Pretty JSON output** — all CLI commands emit indented, sorted JSON, ready for use with `jq` or AI pipelines.
-- 🔑 **API key authentication** — uses Metabase's native API key header; no session tokens to manage.
-- 🔒 **TLS-aware** — configurable SSL verification for self-hosted deployments.
-
----
-
-## 📋 Requirements
-
-- 🐍 Python ≥ 3.14
-- 🗄️ A running Metabase instance (self-hosted or Metabase Cloud)
-- 🔑 A Metabase API key (Settings → Admin → API Keys)
-
----
-
-## 📦 Installation
-
-Install with [uv](https://docs.astral.sh/uv/) (recommended):
+Install directly from GitHub when consuming the project before a packaged
+release:
 
 ```bash
+uv tool install git+https://github.com/narumiruna/metabase-api.git
+```
+
+For development, clone the repository and sync dependencies:
+
+```bash
+git clone https://github.com/narumiruna/metabase-api.git
+cd metabase-api
 uv sync
 ```
 
-Or install from source with pip:
+## Quick Start
+
+Configure the Metabase connection with environment variables:
 
 ```bash
-pip install .
+export METABASE_URL="http://localhost:3000"
+export METABASE_API_KEY="mb_xxxxxxxxxxxxxxxxxxxx"
 ```
 
----
-
-## ⚙️ Configuration
-
-Set the following environment variables before running any command or using the client:
-
-| Variable | Description | Default |
-|---|---|---|
-| `METABASE_URL` | Base URL of your Metabase instance | `http://localhost:3000` |
-| `METABASE_API_KEY` | Metabase API key for authentication | *(required)* |
-| `METABASE_TIMEOUT_SECONDS` | HTTP request timeout in seconds | `30.0` |
-| `METABASE_VERIFY_SSL` | Verify TLS certificates (`true`/`false`) | `true` |
-
-Export them in your shell or add them to a `.env` file (see `.env.sample`):
+Inspect the CLI and run read-only API commands:
 
 ```bash
-export METABASE_URL=https://your-metabase.example.com
-export METABASE_API_KEY=your-api-key
-```
-
----
-
-## 🚀 Quick start
-
-```bash
-# Who am I?
+metabaseapi --help
 metabaseapi current-user
-
-# List all databases
 metabaseapi list-databases
-
-# Get a specific card (question)
-metabaseapi get-card 2
-
-# List dashboards
-metabaseapi list-dashboards
-```
-
-All output is valid JSON, so you can pipe it directly to `jq`:
-
-```bash
-metabaseapi list-databases | jq '.[].name'
-```
-
----
-
-## 🖥️ CLI reference
-
-Run `metabaseapi --help` to see all available commands. Common examples:
-
-```bash
-# Users & auth
-metabaseapi current-user
-metabaseapi list-users
-metabaseapi get-user 4
-
-# Databases
-metabaseapi list-databases
-metabaseapi get-database 1
-metabaseapi create-database my_db postgres --details '{"host":"localhost","port":5432}'
-
-# Cards (questions / models)
 metabaseapi list-cards
-metabaseapi get-card 2
-metabaseapi create-card Orders '{"database":1,"type":"query","query":{"source-table":2}}' --type question
-metabaseapi create-question Orders '{"database":1,"type":"query","query":{"source-table":2}}'
-
-# Dashboards
 metabaseapi list-dashboards
-metabaseapi get-dashboard 1
-
-# Collections
-metabaseapi list-collections
-metabaseapi get-collection root
-
-# Tables & fields
-metabaseapi list-tables
-metabaseapi get-table 8
-metabaseapi get-field 9
 ```
 
-Every command outputs pretty-printed, sorted JSON — suitable for AI agents, shell scripts, and CI pipelines.
+All successful CLI responses are rendered as formatted JSON. API and validation
+errors are printed to stderr as JSON error payloads and return exit code `1`.
 
----
+## Python API Example
 
-## 📊 API coverage
+```python
+import asyncio
 
-`docs/TODO.md` tracks implementation status against the official Metabase API documentation (600 documented operations).
+from metabaseapi.client import MetabaseClient
+from metabaseapi.endpoints.requests.user import CurrentUserRequest
+from metabaseapi.settings import Settings
 
-**Current status: 152 / 600 endpoints fully implemented.**
 
-An endpoint counts as complete when it has:
-1. A hand-written endpoint request model runnable with `MetabaseClient.run(...)`
-2. A typed `pydantic.BaseModel` for both request and response
-3. A corresponding CLI command
+async def main() -> None:
+    settings = Settings()
+    async with MetabaseClient.from_settings(settings) as client:
+        current_user = await client.run(CurrentUserRequest())
+        print(current_user.model_dump(mode="json", exclude_none=True))
 
-Raw `request` / `invoke` passthroughs are intentionally excluded — every operation must be explicitly modelled.
 
----
+asyncio.run(main())
+```
 
-## 🛠️ Development
+Endpoint requests live under `metabaseapi.endpoints.requests.<domain>`, for
+example `user`, `database`, `card`, `dashboard`, `collection`, `table`, and
+`search`.
+
+## Configuration
+
+`metabaseapi` reads `.env` and process environment values through Pydantic
+settings:
+
+| Variable | Default | Purpose |
+| --- | --- | --- |
+| `METABASE_URL` | `http://localhost:3000` | Base URL for the Metabase instance. |
+| `METABASE_API_KEY` | none | Required API key for real requests. |
+| `METABASE_TIMEOUT_SECONDS` | `30.0` | HTTP timeout in seconds. |
+| `METABASE_VERIFY_SSL` | `true` | Enable or disable TLS verification. |
+
+Use `.env.sample` as the local template. Do not commit real API keys.
+
+## Development
+
+Common repository commands:
 
 ```bash
-# Install all dependencies (including dev)
-uv sync
+just format      # format Python code with Ruff
+just lint        # run Ruff lint fixes
+just type        # run `ty` type checking
+just test        # run pytest with coverage
+just all         # run format, lint, type, and tests
+```
 
-# Lint
-uv run ruff check .
+🧪 Optional live checks are read-only and require a configured Metabase instance:
 
-# Type-check
-uv run ty check .
-
-# Run tests
-uv run pytest -v -s --cov=src --cov-report=xml tests
-
-# Full gate (lint + type-check + tests + coverage)
-just all
-
-# Low-risk read-only live smoke test (requires .env)
+```bash
 just live-test
 ```
 
----
+## Project Layout
 
-## 📄 License
+```text
+src/metabaseapi/
+  client/                 async HTTP client
+  cli/                    Typer CLI runtime and commands
+  endpoints/              request models, response models, and execution contract
+  settings.py             environment-backed configuration
+tests/                    unit, CLI, endpoint, and optional live tests
+```
 
-[MIT](LICENSE) © narumi
+## License
+
+This project is licensed under the terms in [LICENSE](LICENSE).

@@ -49,14 +49,6 @@ async def post_collection_move_dashboard_question_candidates(
     return await client.post(f"/api/collection/{collection_id}/move-dashboard-question-candidates", body=dict(body))
 
 
-async def get_collection_graph(client: MetabaseClient) -> JSONValue | None:
-    return await client.get("/api/collection/graph")
-
-
-async def put_collection_graph(client: MetabaseClient, body: dict[str, object]) -> JSONValue | None:
-    return await client.put("/api/collection/graph", body=dict(body))
-
-
 async def get_collection_root(client: MetabaseClient) -> JSONValue | None:
     return await client.get("/api/collection/root")
 
@@ -89,7 +81,6 @@ __all__ = [
     "delete_collection",
     "get_collection",
     "get_collection_dashboard_question_candidates",
-    "get_collection_graph",
     "get_collection_items",
     "get_collection_root",
     "get_collection_root_dashboard_question_candidates",
@@ -99,6 +90,5 @@ __all__ = [
     "list_collections",
     "post_collection_move_dashboard_question_candidates",
     "post_collection_root_move_dashboard_question_candidates",
-    "put_collection_graph",
     "update_collection",
 ]

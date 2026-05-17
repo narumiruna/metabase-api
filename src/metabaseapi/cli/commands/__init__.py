@@ -21,6 +21,7 @@ COMMENT_COMMAND_MODULE = "comment"
 USER_COMMAND_MODULE = "user"
 USER_KEY_VALUE_COMMAND_MODULE = "user_key_value"
 COLLECTION_COMMAND_MODULE = "collection"
+COLLECTION_GRAPH_COMMAND_MODULE = "collection_graph"
 CARD_COMMAND_MODULE = "card"
 CARD_QUERY_COMMAND_MODULE = "card_query"
 DATABASE_COMMAND_MODULE = "database"
@@ -63,6 +64,7 @@ COMMAND_MODULE_REGISTRY: Final[tuple[CommandModuleSpec, ...]] = (
     CommandModuleSpec(USER_COMMAND_MODULE, "asset_authoring"),
     CommandModuleSpec(USER_KEY_VALUE_COMMAND_MODULE, "asset_authoring"),
     CommandModuleSpec(COLLECTION_COMMAND_MODULE, "asset_authoring"),
+    CommandModuleSpec(COLLECTION_GRAPH_COMMAND_MODULE, "asset_authoring"),
     CommandModuleSpec(DATABASE_COMMAND_MODULE, "asset_authoring"),
     CommandModuleSpec(CARD_COMMAND_MODULE, "asset_authoring"),
     CommandModuleSpec(CARD_QUERY_COMMAND_MODULE, "asset_authoring"),
@@ -152,6 +154,7 @@ __all__ = [
     "CARD_COMMAND_MODULE",
     "CARD_QUERY_COMMAND_MODULE",
     "COLLECTION_COMMAND_MODULE",
+    "COLLECTION_GRAPH_COMMAND_MODULE",
     "COMMAND_MODULES",
     "COMMAND_MODULES_IMPORT_PATHS",
     "COMMAND_MODULES_OBJECTS",

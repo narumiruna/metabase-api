@@ -20,6 +20,7 @@ REQUEST_MODULES = (
     "comment",
     "cloud_migration",
     "collection",
+    "collection_graph",
     "database",
     "data_studio",
     "dashboard",

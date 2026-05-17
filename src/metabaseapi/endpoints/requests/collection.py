@@ -29,33 +29,6 @@ class CreateCollectionRequest(EndpointRequest[Collection]):
         return self.body
 
 
-class GetCollectionGraphRequest(EndpointRequest[GenericOperationResponse]):
-    endpoint_method: ClassVar[str] = "GET"
-    endpoint_path: ClassVar[str] = "/api/collection/graph"
-
-    async def do(self, client: MetabaseRequestClient) -> GenericOperationResponse:
-        return await self.execute(client, GenericOperationResponse)
-
-    def do_sync(self, client: MetabaseRequestClient) -> GenericOperationResponse:
-        return self.execute_sync(client, GenericOperationResponse)
-
-
-class PutCollectionGraphRequest(EndpointRequest[GenericOperationResponse]):
-    body: dict[str, Any] = PydanticField(default_factory=dict)
-
-    endpoint_method: ClassVar[str] = "PUT"
-    endpoint_path: ClassVar[str] = "/api/collection/graph"
-
-    async def do(self, client: MetabaseRequestClient) -> GenericOperationResponse:
-        return await self.execute(client, GenericOperationResponse)
-
-    def do_sync(self, client: MetabaseRequestClient) -> GenericOperationResponse:
-        return self.execute_sync(client, GenericOperationResponse)
-
-    def request_body(self) -> JSONValue:
-        return self.body
-
-
 class GetCollectionRootRequest(EndpointRequest[Collection]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/collection/root"

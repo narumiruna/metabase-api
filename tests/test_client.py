@@ -24,6 +24,7 @@ from metabaseapi.client.raw import card_query as raw_card_query
 from metabaseapi.client.raw import channel as raw_channel
 from metabaseapi.client.raw import cloud_migration as raw_cloud_migration
 from metabaseapi.client.raw import collection as raw_collection
+from metabaseapi.client.raw import collection_graph as raw_collection_graph
 from metabaseapi.client.raw import comment as raw_comment
 from metabaseapi.client.raw import dashboard as raw_dashboard
 from metabaseapi.client.raw import dashboard_query as raw_dashboard_query
@@ -265,9 +266,9 @@ def test_raw_paths_cover_handwritten_endpoint_surface() -> None:
             ("PUT", "/api/collection/7", {"name": "Updated"}),
         ),
         (raw_collection.delete_collection(client, "7"), ("DELETE", "/api/collection/7", None)),
-        (raw_collection.get_collection_graph(client), ("GET", "/api/collection/graph", None)),
+        (raw_collection_graph.get_collection_graph(client), ("GET", "/api/collection/graph", None)),
         (
-            raw_collection.put_collection_graph(client, {"groups": ["admin"]}),
+            raw_collection_graph.put_collection_graph(client, {"groups": ["admin"]}),
             ("PUT", "/api/collection/graph", {"groups": ["admin"]}),
         ),
         (raw_collection.get_collection_root(client), ("GET", "/api/collection/root", None)),

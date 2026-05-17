@@ -159,24 +159,3 @@ def get_collection_tree(ctx: typer.Context) -> None:
         ),
     )
 
-
-@app.command("get-collection-graph")
-def get_collection_graph(ctx: typer.Context) -> None:
-    """Fetch the collection permissions graph."""
-
-    run_client_command(
-        ctx,
-        lambda client: _raw_collection.get_collection_graph(
-            client,
-        ),
-    )
-
-
-@app.command("put-collection-graph")
-def put_collection_graph(
-    ctx: typer.Context, body: str = typer.Argument(..., help="Collection graph JSON object")
-) -> None:
-    """Update collection permissions via graph payload."""
-
-    payload = parse_json_object(body, "body")
-    run_client_command(ctx, lambda client: _raw_collection.put_collection_graph(client, payload))

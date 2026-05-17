@@ -19,6 +19,7 @@ RAW_MODULES = (
     "channel",
     "cloud_migration",
     "collection",
+    "collection_graph",
     "comment",
     "dashboard",
     "dashboard_query",

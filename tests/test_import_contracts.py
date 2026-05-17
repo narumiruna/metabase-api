@@ -36,6 +36,7 @@ import metabaseapi.endpoints.requests.card_query
 import metabaseapi.endpoints.requests.channel
 import metabaseapi.endpoints.requests.cloud_migration
 import metabaseapi.endpoints.requests.collection
+import metabaseapi.endpoints.requests.collection_graph
 import metabaseapi.endpoints.requests.comment
 import metabaseapi.endpoints.requests.dashboard
 import metabaseapi.endpoints.requests.dashboard_query
@@ -180,8 +181,6 @@ REQUEST_MODULE_CONTRACTS = {
     ),
     "collection": (
         "CreateCollectionRequest",
-        "GetCollectionGraphRequest",
-        "PutCollectionGraphRequest",
         "GetCollectionRootRequest",
         "GetCollectionTreeRequest",
         "GetCollectionRootDashboardQuestionCandidatesRequest",
@@ -195,6 +194,10 @@ REQUEST_MODULE_CONTRACTS = {
         "GetCollectionRequest",
         "PutCollectionRequest",
         "DeleteCollectionRequest",
+    ),
+    "collection_graph": (
+        "GetCollectionGraphRequest",
+        "PutCollectionGraphRequest",
     ),
     "database": (
         "ListDatabasesRequest",
@@ -289,6 +292,7 @@ def test_cli_command_modules_import_from_package() -> None:
     assert metabaseapi.cli.commands.CARD_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
     assert metabaseapi.cli.commands.CARD_QUERY_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
     assert metabaseapi.cli.commands.COLLECTION_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
+    assert metabaseapi.cli.commands.COLLECTION_GRAPH_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
     assert metabaseapi.cli.commands.DATABASE_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
     assert metabaseapi.cli.commands.DASHBOARD_QUERY_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
     assert metabaseapi.cli.commands.USER_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
@@ -426,6 +430,7 @@ def test_client_domain_modules_use_singular_names() -> None:
         "channel",
         "cloud_migration",
         "collection",
+        "collection_graph",
         "comment",
         "dashboard",
         "database",
@@ -627,6 +632,14 @@ def test_resource_list_commands_live_with_resource_modules() -> None:
     assert "list-dashboards" in command_names[metabaseapi.cli.commands.DASHBOARD_COMMAND_MODULE]
     assert "list-users" in command_names[metabaseapi.cli.commands.USER_COMMAND_MODULE]
     assert "list-tables" in command_names[metabaseapi.cli.commands.TABLE_COMMAND_MODULE]
+
+
+def test_collection_graph_commands_live_with_collection_graph_module() -> None:
+    command_names = _command_names_by_module()
+    assert "get-collection-graph" in command_names[metabaseapi.cli.commands.COLLECTION_GRAPH_COMMAND_MODULE]
+    assert "put-collection-graph" in command_names[metabaseapi.cli.commands.COLLECTION_GRAPH_COMMAND_MODULE]
+    assert "get-collection-graph" not in command_names[metabaseapi.cli.commands.COLLECTION_COMMAND_MODULE]
+    assert "put-collection-graph" not in command_names[metabaseapi.cli.commands.COLLECTION_COMMAND_MODULE]
 
 
 def test_field_commands_live_with_field_module() -> None:

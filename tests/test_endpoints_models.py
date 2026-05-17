@@ -64,7 +64,6 @@ from metabaseapi.endpoints.requests.cloud_migration import GetCloudMigrationRequ
 from metabaseapi.endpoints.requests.collection import CreateCollectionRequest
 from metabaseapi.endpoints.requests.collection import DeleteCollectionRequest
 from metabaseapi.endpoints.requests.collection import GetCollectionDashboardQuestionCandidatesRequest
-from metabaseapi.endpoints.requests.collection import GetCollectionGraphRequest
 from metabaseapi.endpoints.requests.collection import GetCollectionItemsRequest
 from metabaseapi.endpoints.requests.collection import GetCollectionRequest
 from metabaseapi.endpoints.requests.collection import GetCollectionRootDashboardQuestionCandidatesRequest
@@ -75,8 +74,9 @@ from metabaseapi.endpoints.requests.collection import GetCollectionTreeRequest
 from metabaseapi.endpoints.requests.collection import ListCollectionsRequest
 from metabaseapi.endpoints.requests.collection import PostCollectionMoveDashboardQuestionCandidatesRequest
 from metabaseapi.endpoints.requests.collection import PostCollectionRootMoveDashboardQuestionCandidatesRequest
-from metabaseapi.endpoints.requests.collection import PutCollectionGraphRequest
 from metabaseapi.endpoints.requests.collection import PutCollectionRequest
+from metabaseapi.endpoints.requests.collection_graph import GetCollectionGraphRequest
+from metabaseapi.endpoints.requests.collection_graph import PutCollectionGraphRequest
 from metabaseapi.endpoints.requests.comment import DeleteCommentRequest
 from metabaseapi.endpoints.requests.comment import GetCommentMentionsRequest
 from metabaseapi.endpoints.requests.comment import GetCommentRequest

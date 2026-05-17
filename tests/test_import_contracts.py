@@ -325,6 +325,7 @@ def test_legacy_wire_module_name_is_not_importable() -> None:
 def test_client_public_exports_use_http_implementation() -> None:
     assert metabaseapi.client.__all__ == ["MetabaseClient"]
     assert metabaseapi.client.MetabaseClient is metabaseapi.client.http.MetabaseClient
+    assert _client_module_stems(metabaseapi.client) == ("http",)
     assert not hasattr(metabaseapi.client, "_MetabaseClientRawMixin")
     assert not hasattr(metabaseapi.client, "_MetabaseClientTypedMixin")
     assert not hasattr(metabaseapi.client.MetabaseClient, "get")

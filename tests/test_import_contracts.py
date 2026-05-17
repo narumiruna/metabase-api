@@ -62,6 +62,7 @@ import metabaseapi.endpoints.responses.dashboard
 import metabaseapi.endpoints.responses.database
 import metabaseapi.endpoints.responses.table
 import metabaseapi.endpoints.responses.user
+import metabaseapi.endpoints.responses.user_key_value
 import metabaseapi.wire
 
 REQUEST_MODULE_CONTRACTS = {
@@ -292,6 +293,12 @@ RESPONSE_MODULE_CONTRACTS = {
     "database": ("ListDatabasesResponse",),
     "table": ("ListTablesResponse",),
     "user": ("ListUsersResponse",),
+    "user_key_value": (
+        "DeleteUserKeyValueResponse",
+        "UserKeyValueNamespaceResponse",
+        "UserKeyValueResponse",
+        "UserKeyValueStoreResponse",
+    ),
 }
 
 

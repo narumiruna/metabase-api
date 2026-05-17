@@ -164,6 +164,10 @@ from metabaseapi.endpoints.responses.dashboard import ListDashboardsResponse
 from metabaseapi.endpoints.responses.database import ListDatabasesResponse
 from metabaseapi.endpoints.responses.table import ListTablesResponse
 from metabaseapi.endpoints.responses.user import ListUsersResponse
+from metabaseapi.endpoints.responses.user_key_value import DeleteUserKeyValueResponse
+from metabaseapi.endpoints.responses.user_key_value import UserKeyValueNamespaceResponse
+from metabaseapi.endpoints.responses.user_key_value import UserKeyValueResponse
+from metabaseapi.endpoints.responses.user_key_value import UserKeyValueStoreResponse
 from metabaseapi.wire import QueryParamValue
 
 
@@ -699,22 +703,22 @@ def test_action_requests_use_expected_paths_and_payloads() -> None:
         (GetCardSeriesRequest(card_id=13), GenericOperationResponse, ("GET", "/api/card/13/series", {}, None)),
         (
             GetUserKeyValueNamespaceRequest(namespace="user"),
-            GenericOperationResponse,
+            UserKeyValueNamespaceResponse,
             ("GET", "/api/user-key-value/namespace/user", {}, None),
         ),
         (
             PutUserKeyValueNamespaceKeyRequest(namespace="user", key="foo", body={"value": "bar"}),
-            GenericOperationResponse,
+            UserKeyValueStoreResponse,
             ("PUT", "/api/user-key-value/namespace/user/key/foo", {}, {"value": "bar"}),
         ),
         (
             GetUserKeyValueNamespaceKeyRequest(namespace="user", key="foo"),
-            GenericOperationResponse,
+            UserKeyValueResponse,
             ("GET", "/api/user-key-value/namespace/user/key/foo", {}, None),
         ),
         (
             DeleteUserKeyValueNamespaceKeyRequest(namespace="user", key="foo"),
-            GenericOperationResponse,
+            DeleteUserKeyValueResponse,
             ("DELETE", "/api/user-key-value/namespace/user/key/foo", {}, None),
         ),
     ]
@@ -751,12 +755,12 @@ def test_get_path_based_requests_use_expected_paths() -> None:
         (
             GetUserKeyValueNamespaceRequest(namespace="user"),
             "/api/user-key-value/namespace/user",
-            GenericOperationResponse,
+            UserKeyValueNamespaceResponse,
         ),
         (
             GetUserKeyValueNamespaceKeyRequest(namespace="user", key="foo"),
             "/api/user-key-value/namespace/user/key/foo",
-            GenericOperationResponse,
+            UserKeyValueResponse,
         ),
         (GetCollectionRequest(collection_id="c1"), "/api/collection/c1", Collection),
         (GetTableRequest(table_id=11), "/api/table/11", Table),
@@ -1056,10 +1060,10 @@ def test_client_run_endpoint_requests_return_models() -> None:
     assert isinstance(updated_comment, GenericOperationResponse)
     assert isinstance(reaction_comment, GenericOperationResponse)
     assert isinstance(deleted_comment, GenericOperationResponse)
-    assert isinstance(user_key_values, GenericOperationResponse)
-    assert isinstance(put_user_key_value, GenericOperationResponse)
-    assert isinstance(get_user_key_value, GenericOperationResponse)
-    assert isinstance(delete_user_key_value, GenericOperationResponse)
+    assert isinstance(user_key_values, UserKeyValueNamespaceResponse)
+    assert isinstance(put_user_key_value, UserKeyValueStoreResponse)
+    assert isinstance(get_user_key_value, UserKeyValueResponse)
+    assert isinstance(delete_user_key_value, DeleteUserKeyValueResponse)
     assert isinstance(collection_graph, CollectionGraphResponse)
     assert isinstance(collection_graph_update, CollectionGraphResponse)
     assert isinstance(collection_root, Collection)

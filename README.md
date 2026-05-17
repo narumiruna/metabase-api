@@ -5,21 +5,21 @@
 [![Python 3.14+](https://img.shields.io/badge/python-3.14%2B-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
-**metabase-api** is a lightweight Python library and command-line tool for interacting with the Metabase REST API. It provides typed request/response models, an async HTTP client built on [httpx](https://www.python-httpx.org/), and a [Typer](https://typer.tiangolo.com/) CLI — making it easy to automate, script, and integrate Metabase into your data workflows.
+**metabase-api** is a lightweight Python library and CLI for the Metabase REST API. Built on [httpx](https://www.python-httpx.org/) and [Typer](https://typer.tiangolo.com/), it gives you typed request/response models and a clean terminal interface — perfect for automation, scripting, and AI-driven data workflows.
 
 ---
 
-## Table of contents
+## 📚 Table of contents
 
-- [Features](#features)
-- [Requirements](#requirements)
-- [Installation](#installation)
-- [Configuration](#configuration)
-- [Quick start](#quick-start)
-- [CLI reference](#cli-reference)
-- [API coverage](#api-coverage)
-- [Development](#development)
-- [License](#license)
+- [✨ Features](#-features)
+- [📋 Requirements](#-requirements)
+- [📦 Installation](#-installation)
+- [⚙️ Configuration](#%EF%B8%8F-configuration)
+- [🚀 Quick start](#-quick-start)
+- [🖥️ CLI reference](#%EF%B8%8F-cli-reference)
+- [📊 API coverage](#-api-coverage)
+- [🛠️ Development](#%EF%B8%8F-development)
+- [📄 License](#-license)
 
 ---
 
@@ -36,9 +36,9 @@
 
 ## 📋 Requirements
 
-- Python ≥ 3.14
-- A running Metabase instance (self-hosted or Metabase Cloud)
-- A Metabase API key (Settings → Admin → API Keys)
+- 🐍 Python ≥ 3.14
+- 🗄️ A running Metabase instance (self-hosted or Metabase Cloud)
+- 🔑 A Metabase API key (Settings → Admin → API Keys)
 
 ---
 

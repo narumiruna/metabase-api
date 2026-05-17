@@ -621,8 +621,15 @@ def test_create_question_command_posts_card_json(monkeypatch: pytest.MonkeyPatch
 
     assert result.exit_code == 0
     _assert_json_contains(result.stdout, {"method": "POST", "path": "/api/card"})
-    assert '\n    "type": "question"' in result.stdout
-    assert '\n    "collection_id": "root"' in result.stdout
+    assert _LAST_CALL["body"] == {
+        "name": "Orders",
+        "dataset_query": {"database": 1, "type": "query", "query": {"source-table": 2}},
+        "display": "table",
+        "visualization_settings": {"table.pivot": False},
+        "type": "question",
+        "collection_id": "root",
+        "description": "Orders question",
+    }
 
 
 def test_create_card_command_preserves_card_type(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -692,7 +699,11 @@ def test_create_database_command_posts_json(monkeypatch: pytest.MonkeyPatch) -> 
 
     assert result.exit_code == 0
     _assert_json_contains(result.stdout, {"method": "POST", "path": "/api/database"})
-    assert '\n  "body"' in result.stdout
+    assert _LAST_CALL["body"] == {
+        "name": "analytics",
+        "engine": "postgres",
+        "details": {"host": "db.local", "port": 5432},
+    }
 
 
 def test_create_database_command_invalid_details_fails(monkeypatch: pytest.MonkeyPatch) -> None:

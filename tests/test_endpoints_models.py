@@ -246,6 +246,13 @@ def test_current_user_response_validates_epoch_datetime() -> None:
     assert model.created_at.tzinfo == UTC
 
 
+def test_entity_models_ignore_unknown_response_fields() -> None:
+    card = Card.model_validate({"id": 1, "name": "Orders", "unexpected": "ignored"})
+
+    assert card.model_dump(exclude_none=True) == {"id": 1, "name": "Orders"}
+    assert not hasattr(card, "unexpected")
+
+
 def test_current_user_request_parses_response_model() -> None:
     payload = {"id": 1, "email": "alice@example.com"}
     client = _StubClient(payload)

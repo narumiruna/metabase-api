@@ -8,10 +8,18 @@ from pydantic import BaseModel
 from pydantic import ConfigDict
 from pydantic import Field as PydanticField
 from pydantic import field_validator
+from pydantic import model_validator
+
+from metabaseapi.endpoints._response_payload import normalize_model_fields_payload
 
 
 class _MetabaseResponseBase(BaseModel):
-    model_config = ConfigDict(extra="allow")
+    model_config = ConfigDict(extra="forbid")
+
+    @model_validator(mode="before")
+    @classmethod
+    def normalize_payload(cls, values: object) -> dict[str, Any]:
+        return normalize_model_fields_payload(values, cls.model_fields)
 
     @field_validator("created_at", "updated_at", mode="before", check_fields=False)
     @classmethod
@@ -71,7 +79,7 @@ class ActivityItem(_MetabaseEntity):
 class AgentResource(_MetabaseResponseBase):
     id: int | str | None = None
     name: str | None = None
-    raw: dict[str, Any] = PydanticField(default_factory=dict)
+    type: str | None = None
 
 
 class Alert(_MetabaseEntity):

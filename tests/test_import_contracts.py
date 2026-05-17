@@ -386,7 +386,11 @@ def test_client_public_exports_use_http_implementation() -> None:
 
 
 def test_client_raw_package_does_not_reexport_aggregate_mixins() -> None:
-    assert metabaseapi.client.raw.__all__ == []
+    assert metabaseapi.client.raw.__all__ == [
+        "RAW_MODULES",
+        "raw_module_names",
+        "raw_module_paths",
+    ]
     assert not hasattr(metabaseapi.client.raw, "_MetabaseClientRawMixin")
 
 
@@ -452,28 +456,10 @@ def _client_module_stems(package: object) -> tuple[str, ...]:
 def test_client_raw_module_names_match_registry() -> None:
     raw_modules = _client_module_stems(metabaseapi.client.raw)
 
-    assert raw_modules == (
-        "action",
-        "activity",
-        "agent",
-        "alert",
-        "analytics",
-        "api_key",
-        "automagic",
-        "bookmark",
-        "bug_reporting",
-        "cache",
-        "card",
-        "channel",
-        "cloud_migration",
-        "collection",
-        "comment",
-        "dashboard",
-        "data_studio",
-        "database",
-        "schema",
-        "user",
-        "user_key_value",
+    assert raw_modules == tuple(sorted(metabaseapi.client.raw.RAW_MODULES))
+    assert metabaseapi.client.raw.raw_module_names() == metabaseapi.client.raw.RAW_MODULES
+    assert metabaseapi.client.raw.raw_module_paths() == tuple(
+        f"metabaseapi.client.raw.{module_name}" for module_name in metabaseapi.client.raw.RAW_MODULES
     )
 
 

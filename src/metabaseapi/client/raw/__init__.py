@@ -2,4 +2,41 @@
 
 from __future__ import annotations
 
-__all__: list[str] = []
+RAW_MODULES = (
+    "action",
+    "activity",
+    "agent",
+    "alert",
+    "analytics",
+    "api_key",
+    "automagic",
+    "bookmark",
+    "bug_reporting",
+    "cache",
+    "card",
+    "channel",
+    "cloud_migration",
+    "collection",
+    "comment",
+    "dashboard",
+    "data_studio",
+    "database",
+    "schema",
+    "user",
+    "user_key_value",
+)
+
+
+def raw_module_names() -> tuple[str, ...]:
+    return RAW_MODULES
+
+
+def raw_module_paths() -> tuple[str, ...]:
+    return tuple(f"{__name__}.{module_name}" for module_name in RAW_MODULES)
+
+
+__all__ = [
+    "RAW_MODULES",
+    "raw_module_names",
+    "raw_module_paths",
+]

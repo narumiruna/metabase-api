@@ -4,7 +4,7 @@
 
 - `src/metabaseapi/cli.py` is the Typer CLI entry point; every CLI command should map to an explicit function.
 - `src/metabaseapi/client.py` owns async Metabase HTTP calls; use `httpx.AsyncClient` `get`/`post`/`put`/`patch`/`delete` methods directly.
-- `src/metabaseapi/models.py` contains generic raw request/response wrappers; `src/metabaseapi/metabase/models.py` contains hand-written typed endpoint models.
+- `src/metabaseapi/models.py` contains generic raw request/response wrappers; `src/metabaseapi/metabase/` contains hand-written typed endpoint models and request helpers split by concern.
 - Do not reintroduce `api.json`, OpenAPI snapshot fixtures, runtime endpoint registries, or file-scanning behavior to decide API capabilities.
 
 ## Commands

@@ -1,8 +1,6 @@
 from __future__ import annotations
 
 import asyncio
-from datetime import UTC
-from datetime import datetime
 from typing import Any
 from typing import ClassVar
 from typing import Protocol
@@ -12,10 +10,24 @@ from typing import cast
 from pydantic import BaseModel
 from pydantic import ConfigDict
 from pydantic import Field as PydanticField
-from pydantic import field_validator
-from pydantic import model_validator
 
 from metabaseapi.models import JSONValue
+
+from .entities import Card
+from .entities import Collection
+from .entities import CurrentUserResponse
+from .entities import Dashboard
+from .entities import Database
+from .entities import MetabaseField
+from .entities import Table
+from .entities import User
+from .responses import ListCardsResponse
+from .responses import ListCollectionsResponse
+from .responses import ListDashboardsResponse
+from .responses import ListDatabasesResponse
+from .responses import ListFieldsResponse
+from .responses import ListTablesResponse
+from .responses import ListUsersResponse
 
 
 class MetabaseRequestClient(Protocol):
@@ -29,186 +41,7 @@ class MetabaseRequestClient(Protocol):
     ) -> object: ...
 
 
-class _MetabaseResponseBase(BaseModel):
-    model_config = ConfigDict(extra="allow")
-
-    @field_validator("created_at", "updated_at", mode="before", check_fields=False)
-    @classmethod
-    def parse_epoch_datetime(cls, value: object) -> datetime | None:
-        if value is None:
-            return None
-        if isinstance(value, datetime):
-            return value
-        if isinstance(value, (int, float)):
-            seconds = value / 1000 if value > 10_000_000_000 else value
-            return datetime.fromtimestamp(seconds, tz=UTC)
-        if isinstance(value, str):
-            try:
-                normalized = value.replace("Z", "+00:00")
-                return datetime.fromisoformat(normalized)
-            except ValueError as exc:
-                msg = f"invalid timestamp: {value}"
-                raise TypeError(msg) from exc
-
-        msg = f"invalid timestamp: {value!r}"
-        raise TypeError(msg)
-
-
-class _MetabaseEntity(_MetabaseResponseBase):
-    id: int | str | None = None
-    name: str | None = None
-    created_at: datetime | None = None
-    updated_at: datetime | None = None
-
-
-class CurrentUserResponse(_MetabaseEntity):
-    email: str | None = None
-    first_name: str | None = None
-    last_name: str | None = None
-    common_name: str | None = None
-    is_superuser: bool | None = None
-    locale: str | None = None
-
-
-class Database(_MetabaseEntity):
-    engine: str | None = None
-    details: dict[str, Any] = PydanticField(default_factory=dict)
-
-
-class Card(_MetabaseEntity):
-    display: str | None = None
-    description: str | None = None
-    dataset_query: dict[str, Any] | None = None
-
-
-class Dashboard(_MetabaseEntity):
-    description: str | None = None
-    collection_id: int | str | None = None
-
-
 ResponseT = TypeVar("ResponseT", bound=BaseModel)
-
-
-class ListDatabasesResponse(BaseModel):
-    databases: list[Database] = PydanticField(default_factory=list)
-    raw: JSONValue | None = None
-    model_config = ConfigDict(extra="allow")
-
-    @model_validator(mode="before")
-    @classmethod
-    def normalize_payload(cls, values: object) -> dict[str, Any]:
-        return _normalize_list_payload(values, "databases")
-
-
-class User(_MetabaseEntity):
-    email: str | None = None
-    first_name: str | None = None
-    last_name: str | None = None
-    is_superuser: bool | None = None
-
-
-class Collection(_MetabaseEntity):
-    slug: str | None = None
-    authority_level: int | None = None
-
-
-class Table(_MetabaseEntity):
-    db_id: int | str | None = None
-    db_name: str | None = None
-
-
-class MetabaseField(_MetabaseEntity):
-    table_id: int | str | None = None
-
-
-class ListCardsResponse(BaseModel):
-    cards: list[Card] = PydanticField(default_factory=list)
-    raw: JSONValue | None = None
-    model_config = ConfigDict(extra="allow")
-
-    @model_validator(mode="before")
-    @classmethod
-    def normalize_payload(cls, values: object) -> dict[str, Any]:
-        return _normalize_list_payload(values, "cards")
-
-
-class ListDashboardsResponse(BaseModel):
-    dashboards: list[Dashboard] = PydanticField(default_factory=list)
-    raw: JSONValue | None = None
-    model_config = ConfigDict(extra="allow")
-
-    @model_validator(mode="before")
-    @classmethod
-    def normalize_payload(cls, values: object) -> dict[str, Any]:
-        return _normalize_list_payload(values, "dashboards")
-
-
-class ListUsersResponse(BaseModel):
-    users: list[User] = PydanticField(default_factory=list)
-    raw: JSONValue | None = None
-    model_config = ConfigDict(extra="allow")
-
-    @model_validator(mode="before")
-    @classmethod
-    def normalize_payload(cls, values: object) -> dict[str, Any]:
-        return _normalize_list_payload(values, "users")
-
-
-class ListCollectionsResponse(BaseModel):
-    collections: list[Collection] = PydanticField(default_factory=list)
-    raw: JSONValue | None = None
-    model_config = ConfigDict(extra="allow")
-
-    @model_validator(mode="before")
-    @classmethod
-    def normalize_payload(cls, values: object) -> dict[str, Any]:
-        return _normalize_list_payload(values, "collections")
-
-
-class ListTablesResponse(BaseModel):
-    tables: list[Table] = PydanticField(default_factory=list)
-    raw: JSONValue | None = None
-    model_config = ConfigDict(extra="allow")
-
-    @model_validator(mode="before")
-    @classmethod
-    def normalize_payload(cls, values: object) -> dict[str, Any]:
-        return _normalize_list_payload(values, "tables")
-
-
-class ListFieldsResponse(BaseModel):
-    fields: list[MetabaseField] = PydanticField(default_factory=list)
-    raw: JSONValue | None = None
-    model_config = ConfigDict(extra="allow")
-
-    @model_validator(mode="before")
-    @classmethod
-    def normalize_payload(cls, values: object) -> dict[str, Any]:
-        return _normalize_list_payload(values, "fields")
-
-
-def _normalize_list_payload(values: object, list_key: str) -> dict[str, Any]:
-    if values is None:
-        return {list_key: []}
-
-    if isinstance(values, list):
-        return {list_key: values}
-
-    if isinstance(values, dict):
-        dict_values = cast(dict[str, object], values)
-        if list_key in dict_values and isinstance(dict_values[list_key], list):
-            return dict_values
-        if "data" in dict_values and isinstance(dict_values["data"], list):
-            remainder = dict(dict_values)
-            del remainder["data"]
-            return {list_key: dict_values["data"], **remainder}
-        if "items" in dict_values and isinstance(dict_values["items"], list):
-            remainder = dict(dict_values)
-            del remainder["items"]
-            return {list_key: dict_values["items"], **remainder}
-        return {list_key: [], "raw": dict_values}
-
-    return {list_key: [], "raw": values}
 
 
 class _BaseMetabaseRequest[ResponseT](BaseModel):
@@ -455,3 +288,24 @@ class GetFieldRequest(_BaseMetabaseRequest[MetabaseField]):
 
     def resolve_path(self) -> str:
         return f"/api/field/{self.field_id}"
+
+
+__all__ = [
+    "CreateDatabaseRequest",
+    "CurrentUserRequest",
+    "GetCardRequest",
+    "GetCollectionRequest",
+    "GetDashboardRequest",
+    "GetDatabaseRequest",
+    "GetFieldRequest",
+    "GetTableRequest",
+    "GetUserRequest",
+    "ListCardsRequest",
+    "ListCollectionsRequest",
+    "ListDashboardsRequest",
+    "ListDatabasesRequest",
+    "ListFieldsRequest",
+    "ListTablesRequest",
+    "ListUsersRequest",
+    "MetabaseRequestClient",
+]

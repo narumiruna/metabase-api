@@ -1,35 +1,46 @@
-"""Metabase typed API models and request helpers."""
+"""Metabase typed endpoint models and request helpers."""
 
-from .models import Collection
-from .models import CreateDatabaseRequest
-from .models import CurrentUserRequest
-from .models import CurrentUserResponse
-from .models import Dashboard
-from .models import GetCardRequest
-from .models import GetCollectionRequest
-from .models import GetDashboardRequest
-from .models import GetDatabaseRequest
-from .models import GetFieldRequest
-from .models import GetTableRequest
-from .models import GetUserRequest
-from .models import ListCardsRequest
-from .models import ListCollectionsRequest
-from .models import ListDashboardsRequest
-from .models import ListDatabasesRequest
-from .models import ListDatabasesResponse
-from .models import ListFieldsRequest
-from .models import ListTablesRequest
-from .models import ListUsersRequest
-from .models import MetabaseField
-from .models import Table
-from .models import User
+from .entities import Card
+from .entities import Collection
+from .entities import CurrentUserResponse
+from .entities import Dashboard
+from .entities import Database
+from .entities import MetabaseField
+from .entities import Table
+from .entities import User
+from .requests import CreateDatabaseRequest
+from .requests import CurrentUserRequest
+from .requests import GetCardRequest
+from .requests import GetCollectionRequest
+from .requests import GetDashboardRequest
+from .requests import GetDatabaseRequest
+from .requests import GetFieldRequest
+from .requests import GetTableRequest
+from .requests import GetUserRequest
+from .requests import ListCardsRequest
+from .requests import ListCollectionsRequest
+from .requests import ListDashboardsRequest
+from .requests import ListDatabasesRequest
+from .requests import ListFieldsRequest
+from .requests import ListTablesRequest
+from .requests import ListUsersRequest
+from .requests import MetabaseRequestClient
+from .responses import ListCardsResponse
+from .responses import ListCollectionsResponse
+from .responses import ListDashboardsResponse
+from .responses import ListDatabasesResponse
+from .responses import ListFieldsResponse
+from .responses import ListTablesResponse
+from .responses import ListUsersResponse
 
 __all__ = [
+    "Card",
     "Collection",
     "CreateDatabaseRequest",
     "CurrentUserRequest",
     "CurrentUserResponse",
     "Dashboard",
+    "Database",
     "GetCardRequest",
     "GetCollectionRequest",
     "GetDashboardRequest",
@@ -38,14 +49,21 @@ __all__ = [
     "GetTableRequest",
     "GetUserRequest",
     "ListCardsRequest",
+    "ListCardsResponse",
     "ListCollectionsRequest",
+    "ListCollectionsResponse",
     "ListDashboardsRequest",
+    "ListDashboardsResponse",
     "ListDatabasesRequest",
     "ListDatabasesResponse",
     "ListFieldsRequest",
+    "ListFieldsResponse",
     "ListTablesRequest",
+    "ListTablesResponse",
     "ListUsersRequest",
+    "ListUsersResponse",
     "MetabaseField",
+    "MetabaseRequestClient",
     "Table",
     "User",
 ]

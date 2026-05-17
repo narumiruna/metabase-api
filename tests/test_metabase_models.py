@@ -8,36 +8,36 @@ from datetime import datetime
 import httpx
 
 from metabaseapi.client import MetabaseClient
-from metabaseapi.metabase.models import Card
-from metabaseapi.metabase.models import Collection
-from metabaseapi.metabase.models import CreateDatabaseRequest
-from metabaseapi.metabase.models import CurrentUserRequest
-from metabaseapi.metabase.models import CurrentUserResponse
-from metabaseapi.metabase.models import Dashboard
-from metabaseapi.metabase.models import Database
-from metabaseapi.metabase.models import GetCardRequest
-from metabaseapi.metabase.models import GetCollectionRequest
-from metabaseapi.metabase.models import GetDashboardRequest
-from metabaseapi.metabase.models import GetDatabaseRequest
-from metabaseapi.metabase.models import GetFieldRequest
-from metabaseapi.metabase.models import GetTableRequest
-from metabaseapi.metabase.models import GetUserRequest
-from metabaseapi.metabase.models import ListCardsRequest
-from metabaseapi.metabase.models import ListCardsResponse
-from metabaseapi.metabase.models import ListCollectionsRequest
-from metabaseapi.metabase.models import ListCollectionsResponse
-from metabaseapi.metabase.models import ListDashboardsResponse
-from metabaseapi.metabase.models import ListDatabasesRequest
-from metabaseapi.metabase.models import ListDatabasesResponse
-from metabaseapi.metabase.models import ListFieldsRequest
-from metabaseapi.metabase.models import ListFieldsResponse
-from metabaseapi.metabase.models import ListTablesRequest
-from metabaseapi.metabase.models import ListTablesResponse
-from metabaseapi.metabase.models import ListUsersRequest
-from metabaseapi.metabase.models import ListUsersResponse
-from metabaseapi.metabase.models import MetabaseField
-from metabaseapi.metabase.models import Table
-from metabaseapi.metabase.models import User
+from metabaseapi.metabase import Card
+from metabaseapi.metabase import Collection
+from metabaseapi.metabase import CreateDatabaseRequest
+from metabaseapi.metabase import CurrentUserRequest
+from metabaseapi.metabase import CurrentUserResponse
+from metabaseapi.metabase import Dashboard
+from metabaseapi.metabase import Database
+from metabaseapi.metabase import GetCardRequest
+from metabaseapi.metabase import GetCollectionRequest
+from metabaseapi.metabase import GetDashboardRequest
+from metabaseapi.metabase import GetDatabaseRequest
+from metabaseapi.metabase import GetFieldRequest
+from metabaseapi.metabase import GetTableRequest
+from metabaseapi.metabase import GetUserRequest
+from metabaseapi.metabase import ListCardsRequest
+from metabaseapi.metabase import ListCardsResponse
+from metabaseapi.metabase import ListCollectionsRequest
+from metabaseapi.metabase import ListCollectionsResponse
+from metabaseapi.metabase import ListDashboardsResponse
+from metabaseapi.metabase import ListDatabasesRequest
+from metabaseapi.metabase import ListDatabasesResponse
+from metabaseapi.metabase import ListFieldsRequest
+from metabaseapi.metabase import ListFieldsResponse
+from metabaseapi.metabase import ListTablesRequest
+from metabaseapi.metabase import ListTablesResponse
+from metabaseapi.metabase import ListUsersRequest
+from metabaseapi.metabase import ListUsersResponse
+from metabaseapi.metabase import MetabaseField
+from metabaseapi.metabase import Table
+from metabaseapi.metabase import User
 
 
 class _StubClient:

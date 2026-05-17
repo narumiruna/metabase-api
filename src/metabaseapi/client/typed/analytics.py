@@ -7,7 +7,7 @@ from metabaseapi.metabase import CreateAnalyticsEventBatchRequest
 from metabaseapi.metabase import GenericOperationResponse
 
 if TYPE_CHECKING:
-    from metabaseapi.client._legacy import MetabaseClient
+    from metabaseapi.client.http import MetabaseClient
 
 
 class _MetabaseClientTypedMixin:

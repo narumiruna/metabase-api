@@ -11,7 +11,7 @@ from metabaseapi.metabase import ListBookmarksResponse
 from metabaseapi.metabase import UpdateBookmarkOrderingRequest
 
 if TYPE_CHECKING:
-    from metabaseapi.client._legacy import MetabaseClient
+    from metabaseapi.client.http import MetabaseClient
 
 
 class _MetabaseClientTypedMixin:

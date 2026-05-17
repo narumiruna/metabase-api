@@ -12,7 +12,7 @@ from metabaseapi.metabase import ListRecentsRequest
 from metabaseapi.metabase import ListRecentViewsRequest
 
 if TYPE_CHECKING:
-    from metabaseapi.client._legacy import MetabaseClient
+    from metabaseapi.client.http import MetabaseClient
 
 
 class _MetabaseClientTypedMixin:

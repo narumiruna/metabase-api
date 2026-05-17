@@ -30,7 +30,7 @@ from metabaseapi.metabase import UpdateDashboardRequest
 from metabaseapi.models import QueryParamValue
 
 if TYPE_CHECKING:
-    from metabaseapi.client._legacy import MetabaseClient
+    from metabaseapi.client.http import MetabaseClient
 
 
 class _MetabaseClientTypedMixin:

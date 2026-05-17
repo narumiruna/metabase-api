@@ -9,7 +9,7 @@ from metabaseapi.metabase import ListDatabasesRequest
 from metabaseapi.metabase import ListDatabasesResponse
 
 if TYPE_CHECKING:
-    from metabaseapi.client._legacy import MetabaseClient
+    from metabaseapi.client.http import MetabaseClient
 
 
 class _MetabaseClientTypedMixin:

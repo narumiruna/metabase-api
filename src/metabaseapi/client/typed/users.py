@@ -16,7 +16,7 @@ from metabaseapi.metabase import User
 from metabaseapi.models import JSONValue
 
 if TYPE_CHECKING:
-    from metabaseapi.client._legacy import MetabaseClient
+    from metabaseapi.client.http import MetabaseClient
 
 
 class _MetabaseClientTypedMixin:

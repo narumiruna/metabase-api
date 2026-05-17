@@ -17,7 +17,7 @@ from metabaseapi.metabase import ListPublicActionsRequest
 from metabaseapi.metabase import UpdateActionRequest
 
 if TYPE_CHECKING:
-    from metabaseapi.client._legacy import MetabaseClient
+    from metabaseapi.client.http import MetabaseClient
 
 
 class _MetabaseClientTypedMixin:

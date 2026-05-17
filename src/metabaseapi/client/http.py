@@ -6,6 +6,7 @@ from typing import TypeVar
 
 import httpx
 
+from metabaseapi.client.raw.actions import _MetabaseClientRawMixin as _MetabaseClientActionsRawMixin
 from metabaseapi.client.raw.activity import _MetabaseClientRawMixin as _MetabaseClientActivityRawMixin
 from metabaseapi.client.raw.agent import _MetabaseClientRawMixin as _MetabaseClientAgentRawMixin
 from metabaseapi.client.raw.alerts import _MetabaseClientRawMixin as _MetabaseClientAlertsRawMixin
@@ -25,6 +26,7 @@ from metabaseapi.client.raw.databases import _MetabaseClientRawMixin as _Metabas
 from metabaseapi.client.raw.misc import _MetabaseClientRawMixin as _MetabaseClientMiscRawMixin
 from metabaseapi.client.raw.tables import _MetabaseClientRawMixin as _MetabaseClientTablesRawMixin
 from metabaseapi.client.raw.users import _MetabaseClientRawMixin as _MetabaseClientUsersRawMixin
+from metabaseapi.client.typed.actions import _MetabaseClientTypedMixin as _MetabaseClientActionsTypedMixin
 from metabaseapi.client.typed.activity import _MetabaseClientTypedMixin as _MetabaseClientActivityTypedMixin
 from metabaseapi.client.typed.agent import _MetabaseClientTypedMixin as _MetabaseClientAgentTypedMixin
 from metabaseapi.client.typed.alerts import _MetabaseClientTypedMixin as _MetabaseClientAlertsTypedMixin
@@ -55,6 +57,7 @@ from metabaseapi.settings import Settings
 
 
 class _MetabaseClientRawMixin(
+    _MetabaseClientActionsRawMixin,
     _MetabaseClientUsersRawMixin,
     _MetabaseClientAnalyticsRawMixin,
     _MetabaseClientAlertsRawMixin,
@@ -80,6 +83,7 @@ class _MetabaseClientRawMixin(
 
 class _MetabaseClientTypedMixin(
     _MetabaseClientRawMixin,
+    _MetabaseClientActionsTypedMixin,
     _MetabaseClientUsersTypedMixin,
     _MetabaseClientAnalyticsTypedMixin,
     _MetabaseClientAlertsTypedMixin,

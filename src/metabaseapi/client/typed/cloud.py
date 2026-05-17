@@ -8,7 +8,7 @@ from metabaseapi.metabase import GenericOperationResponse
 from metabaseapi.metabase import GetCloudMigrationRequest
 
 if TYPE_CHECKING:
-    from metabaseapi.client._legacy import MetabaseClient
+    from metabaseapi.client.http import MetabaseClient
 
 
 class _MetabaseClientTypedMixin:

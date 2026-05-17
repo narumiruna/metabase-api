@@ -1040,6 +1040,25 @@ def get_collection(ctx: typer.Context, collection_id: str = typer.Argument(...))
     _run_and_print(_run_client_call(ctx, lambda client: client.get_collection(collection_id)))
 
 
+@app.command("update-collection")
+def update_collection(
+    ctx: typer.Context,
+    collection_id: str = typer.Argument(...),
+    body: str = typer.Argument(..., help="Collection update payload JSON object"),
+) -> None:
+    """Update a collection."""
+
+    payload = _parse_json_object(body, "body")
+    _run_and_print(_run_client_call(ctx, lambda client: client.update_collection(collection_id, payload)))
+
+
+@app.command("delete-collection")
+def delete_collection(ctx: typer.Context, collection_id: str = typer.Argument(...)) -> None:
+    """Delete a collection."""
+
+    _run_and_print(_run_client_call(ctx, lambda client: client.delete_collection(collection_id)))
+
+
 @app.command("get-collection-dashboard-question-candidates")
 def get_collection_dashboard_question_candidates(ctx: typer.Context, collection_id: str = typer.Argument(...)) -> None:
     """Find cards in a collection that can be moved into dashboards."""
@@ -1089,6 +1108,23 @@ def post_collection_root_move_dashboard_question_candidates(
     payload = _parse_json_object(body, "body")
     _run_and_print(
         _run_client_call(ctx, lambda client: client.post_collection_root_move_dashboard_question_candidates(payload))
+    )
+
+
+@app.command("post-collection-move-dashboard-question-candidates")
+def post_collection_move_dashboard_question_candidates(
+    ctx: typer.Context,
+    collection_id: str = typer.Argument(...),
+    body: str = typer.Argument(..., help="Collection move payload JSON object"),
+) -> None:
+    """Move candidate cards to dashboards they appear in for a collection."""
+
+    payload = _parse_json_object(body, "body")
+    _run_and_print(
+        _run_client_call(
+            ctx,
+            lambda client: client.post_collection_move_dashboard_question_candidates(collection_id, payload),
+        )
     )
 
 

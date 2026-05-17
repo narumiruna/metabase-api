@@ -1615,6 +1615,26 @@ class PostCollectionRootMoveDashboardQuestionCandidatesRequest(_BaseMetabaseRequ
         return self.body
 
 
+class PostCollectionMoveDashboardQuestionCandidatesRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+    body: dict[str, Any] = PydanticField(default_factory=dict)
+    collection_id: int | str
+
+    endpoint_method: ClassVar[str] = "POST"
+    endpoint_path: ClassVar[str] = "/api/collection/{collection_id}/move-dashboard-question-candidates"
+
+    async def do(self, client: MetabaseRequestClient) -> GenericOperationResponse:
+        return await self.execute(client, GenericOperationResponse)
+
+    def do_sync(self, client: MetabaseRequestClient) -> GenericOperationResponse:
+        return self.execute_sync(client, GenericOperationResponse)
+
+    def resolve_path(self) -> str:
+        return f"/api/collection/{self.collection_id}/move-dashboard-question-candidates"
+
+    def request_body(self) -> JSONValue:
+        return self.body
+
+
 class ListCollectionsRequest(_BaseMetabaseRequest[ListCollectionsResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/collection"
@@ -1637,6 +1657,42 @@ class GetCollectionRequest(_BaseMetabaseRequest[Collection]):
 
     def do_sync(self, client: MetabaseRequestClient) -> Collection:
         return self.execute_sync(client, Collection)
+
+    def resolve_path(self) -> str:
+        return f"/api/collection/{self.collection_id}"
+
+
+class PutCollectionRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+    body: dict[str, Any]
+    collection_id: int | str
+
+    endpoint_method: ClassVar[str] = "PUT"
+    endpoint_path: ClassVar[str] = "/api/collection/{collection_id}"
+
+    async def do(self, client: MetabaseRequestClient) -> GenericOperationResponse:
+        return await self.execute(client, GenericOperationResponse)
+
+    def do_sync(self, client: MetabaseRequestClient) -> GenericOperationResponse:
+        return self.execute_sync(client, GenericOperationResponse)
+
+    def resolve_path(self) -> str:
+        return f"/api/collection/{self.collection_id}"
+
+    def request_body(self) -> JSONValue:
+        return self.body
+
+
+class DeleteCollectionRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+    collection_id: int | str
+
+    endpoint_method: ClassVar[str] = "DELETE"
+    endpoint_path: ClassVar[str] = "/api/collection/{collection_id}"
+
+    async def do(self, client: MetabaseRequestClient) -> GenericOperationResponse:
+        return await self.execute(client, GenericOperationResponse)
+
+    def do_sync(self, client: MetabaseRequestClient) -> GenericOperationResponse:
+        return self.execute_sync(client, GenericOperationResponse)
 
     def resolve_path(self) -> str:
         return f"/api/collection/{self.collection_id}"
@@ -1725,6 +1781,7 @@ __all__ = [
     "DeleteCacheRequest",
     "DeleteCardPublicLinkRequest",
     "DeleteCardRequest",
+    "DeleteCollectionRequest",
     "ExecuteActionRequest",
     "GetActionExecuteRequest",
     "GetActionRequest",
@@ -1780,9 +1837,11 @@ __all__ = [
     "MetabaseRequestClient",
     "MoveCardsRequest",
     "PostCardPivotQueryRequest",
+    "PostCollectionMoveDashboardQuestionCandidatesRequest",
     "PostCollectionRootMoveDashboardQuestionCandidatesRequest",
     "PutCacheRequest",
     "PutCollectionGraphRequest",
+    "PutCollectionRequest",
     "RegenerateApiKeyRequest",
     "TestChannelRequest",
     "UpdateActionRequest",

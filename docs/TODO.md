@@ -15,8 +15,8 @@ This file is a static implementation checklist derived from the latest Metabase 
 ## Coverage summary
 
 - Documented operations: 600
-- Complete hand-written endpoint implementations: 111
-- Remaining documented operations: 489
+- Complete hand-written endpoint implementations: 113
+- Remaining documented operations: 487
 - Raw `request` / `invoke`: disabled for CLI users and does not count toward TODO completion.
 
 ## Endpoint checklist
@@ -153,7 +153,7 @@ This file is a static implementation checklist derived from the latest Metabase 
 - [x] `GET /api/cloud-migration` — `get-api-cloud-migration` — Get the latest cloud migration, if any.
 - [x] `PUT /api/cloud-migration/cancel` — `put-api-cloud-migration-cancel` — Cancel any ongoing cloud migrations, if any.
 
-### /api/collection (13/16 complete)
+### /api/collection (15/16 complete)
 
 - [x] `GET /api/collection` — `get-api-collection` — Fetch a list of all Collections that the current user has read permissions for (`:can_write` is returned as an additional property of each Collection so you...
 - [x] `POST /api/collection` — `post-api-collection` — Create a new Collection.
@@ -166,11 +166,11 @@ This file is a static implementation checklist derived from the latest Metabase 
 - [x] `GET /api/collection/trash` — `get-api-collection-trash` — Fetch the trash collection, as in `/api/collection/:trash-id`
 - [x] `GET /api/collection/tree` — `get-api-collection-tree` — Similar to `GET /`, but returns Collections in a tree structure, e.g. ``` [{:name "A" :below #{:card :dataset} :children [{:name "B"} {:name "C" :here #{:dat...
 - [x] `GET /api/collection/{id}` — `get-api-collection-id` — Fetch a specific Collection with standard details added
-- [ ] `PUT /api/collection/{id}` — `put-api-collection-id` — Modify an existing Collection, including archiving or unarchiving it, or moving it.
+- [x] `PUT /api/collection/{id}` — `put-api-collection-id` — Modify an existing Collection, including archiving or unarchiving it, or moving it.
 - [ ] `DELETE /api/collection/{id}` — `delete-api-collection-id` — Deletes a collection permanently
 - [x] `GET /api/collection/{id}/dashboard-question-candidates` — `get-api-collection-id-dashboard-question-candidates` — Find cards in this collection that can be moved into dashboards in this collection. To be eligible, a card must only appear in one dashboard (which is also i...
 - [x] `GET /api/collection/{id}/items` — `get-api-collection-id-items` — Fetch a specific Collection's items with the following options: * `models` - only include objects of a specific set of `models`. If unspecified, returns obje...
-- [ ] `POST /api/collection/{id}/move-dashboard-question-candidates` — `post-api-collection-id-move-dashboard-question-candidates` — Move candidate cards to the dashboards they appear in.
+- [x] `POST /api/collection/{id}/move-dashboard-question-candidates` — `post-api-collection-id-move-dashboard-question-candidates` — Move candidate cards to the dashboards they appear in.
 
 ### /api/comment (0/6 complete)
 

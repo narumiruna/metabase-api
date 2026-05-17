@@ -38,6 +38,7 @@ from metabaseapi.metabase import DeleteActionRequest
 from metabaseapi.metabase import DeleteCacheRequest
 from metabaseapi.metabase import DeleteCardPublicLinkRequest
 from metabaseapi.metabase import DeleteCardRequest
+from metabaseapi.metabase import DeleteCollectionRequest
 from metabaseapi.metabase import ExecuteActionRequest
 from metabaseapi.metabase import GenericOperationResponse
 from metabaseapi.metabase import GetActionExecuteRequest
@@ -86,9 +87,11 @@ from metabaseapi.metabase import ListUsersResponse
 from metabaseapi.metabase import MetabaseField
 from metabaseapi.metabase import MoveCardsRequest
 from metabaseapi.metabase import PostCardPivotQueryRequest
+from metabaseapi.metabase import PostCollectionMoveDashboardQuestionCandidatesRequest
 from metabaseapi.metabase import PostCollectionRootMoveDashboardQuestionCandidatesRequest
 from metabaseapi.metabase import PutCacheRequest
 from metabaseapi.metabase import PutCollectionGraphRequest
+from metabaseapi.metabase import PutCollectionRequest
 from metabaseapi.metabase import Table
 from metabaseapi.metabase import TestChannelRequest
 from metabaseapi.metabase import UpdateActionRequest
@@ -315,6 +318,16 @@ def test_action_requests_use_expected_paths_and_payloads() -> None:
         ),
         (CreateCollectionRequest(body={"name": "New"}), Collection, ("POST", "/api/collection", {}, {"name": "New"})),
         (GetCollectionGraphRequest(), GenericOperationResponse, ("GET", "/api/collection/graph", {}, None)),
+        (
+            PutCollectionRequest(collection_id="7", body={"name": "Updated"}),
+            GenericOperationResponse,
+            ("PUT", "/api/collection/7", {}, {"name": "Updated"}),
+        ),
+        (
+            DeleteCollectionRequest(collection_id="7"),
+            GenericOperationResponse,
+            ("DELETE", "/api/collection/7", {}, None),
+        ),
         (GetCollectionRootRequest(), Collection, ("GET", "/api/collection/root", {}, None)),
         (
             GetCollectionRootDashboardQuestionCandidatesRequest(),
@@ -350,6 +363,11 @@ def test_action_requests_use_expected_paths_and_payloads() -> None:
             PostCollectionRootMoveDashboardQuestionCandidatesRequest(body={"card_ids": [1]}),
             GenericOperationResponse,
             ("POST", "/api/collection/root/move-dashboard-question-candidates", {}, {"card_ids": [1]}),
+        ),
+        (
+            PostCollectionMoveDashboardQuestionCandidatesRequest(collection_id="7", body={"card_ids": [1]}),
+            GenericOperationResponse,
+            ("POST", "/api/collection/7/move-dashboard-question-candidates", {}, {"card_ids": [1]}),
         ),
         (
             PutCollectionGraphRequest(body={"groups": ["admin"]}),
@@ -522,6 +540,9 @@ def _build_mock_endpoint_responses() -> dict[tuple[str, str], dict[str, object]]
         ("GET", "/api/collection/trash"): {"id": "trash", "name": "Trash"},
         ("GET", "/api/collection/tree"): {"id": "collections", "children": []},
         ("POST", "/api/collection/root/move-dashboard-question-candidates"): {"updated": True},
+        ("POST", "/api/collection/7/move-dashboard-question-candidates"): {"updated": True},
+        ("PUT", "/api/collection/7"): {"updated": True},
+        ("DELETE", "/api/collection/7"): {"ok": True},
         ("GET", "/api/table"): {"data": [{"id": 8, "name": "table", "schema": "public", "db_id": 1}]},
         ("GET", "/api/database/4"): {"id": 4, "name": "db4", "engine": "postgres"},
         ("GET", "/api/user/10"): {"id": 10, "email": "u10@example.com", "first_name": "Turing"},
@@ -578,6 +599,8 @@ def test_typed_methods_in_client_return_models() -> None:
     latest_cloud_migration = _run(client.get_cloud_migration_typed())
     canceled_cloud_migration = _run(client.cancel_cloud_migration_typed())
     created_collection = _run(client.create_collection_typed({"name": "New"}))
+    updated_collection = _run(client.update_collection_typed("7", {"name": "Updated"}))
+    deleted_collection = _run(client.delete_collection_typed("7"))
     collection_graph = _run(client.get_collection_graph_typed())
     collection_graph_update = _run(client.put_collection_graph_typed({"groups": ["admin"]}))
     collection_root = _run(client.get_collection_root_typed())
@@ -585,6 +608,9 @@ def test_typed_methods_in_client_return_models() -> None:
     collection_root_items = _run(client.get_collection_root_items_typed())
     collection_root_candidates_moved = _run(
         client.post_collection_root_move_dashboard_question_candidates_typed({"card_ids": [1]})
+    )
+    collection_move_candidates = _run(
+        client.post_collection_move_dashboard_question_candidates_typed("7", {"card_ids": [1]})
     )
     collection_dashboard_question_candidates = _run(client.get_collection_dashboard_question_candidates_typed("7"))
     collection_items = _run(client.get_collection_items_typed("7"))
@@ -632,6 +658,8 @@ def test_typed_methods_in_client_return_models() -> None:
     assert isinstance(canceled_cloud_migration, GenericOperationResponse)
     assert isinstance(created_collection, Collection)
     assert created_collection.name == "New"
+    assert isinstance(updated_collection, GenericOperationResponse)
+    assert isinstance(deleted_collection, GenericOperationResponse)
     assert isinstance(collection_graph, GenericOperationResponse)
     assert isinstance(collection_graph_update, GenericOperationResponse)
     assert isinstance(collection_root, Collection)
@@ -640,6 +668,7 @@ def test_typed_methods_in_client_return_models() -> None:
     assert isinstance(collection_root_candidates, GenericOperationResponse)
     assert isinstance(collection_root_items, GenericOperationResponse)
     assert isinstance(collection_root_candidates_moved, GenericOperationResponse)
+    assert isinstance(collection_move_candidates, GenericOperationResponse)
     assert isinstance(collection_dashboard_question_candidates, GenericOperationResponse)
     assert isinstance(collection_items, GenericOperationResponse)
     assert isinstance(collection_trash, Collection)

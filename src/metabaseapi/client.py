@@ -63,6 +63,7 @@ from metabaseapi.metabase import DeleteBookmarkRequest
 from metabaseapi.metabase import DeleteCacheRequest
 from metabaseapi.metabase import DeleteCardPublicLinkRequest
 from metabaseapi.metabase import DeleteCardRequest
+from metabaseapi.metabase import DeleteCollectionRequest
 from metabaseapi.metabase import ExecuteActionRequest
 from metabaseapi.metabase import GenericOperationResponse
 from metabaseapi.metabase import GetActionExecuteRequest
@@ -131,9 +132,11 @@ from metabaseapi.metabase import ListUsersResponse
 from metabaseapi.metabase import MetabaseField
 from metabaseapi.metabase import MoveCardsRequest
 from metabaseapi.metabase import PostCardPivotQueryRequest
+from metabaseapi.metabase import PostCollectionMoveDashboardQuestionCandidatesRequest
 from metabaseapi.metabase import PostCollectionRootMoveDashboardQuestionCandidatesRequest
 from metabaseapi.metabase import PutCacheRequest
 from metabaseapi.metabase import PutCollectionGraphRequest
+from metabaseapi.metabase import PutCollectionRequest
 from metabaseapi.metabase import RegenerateApiKeyRequest
 from metabaseapi.metabase import Table
 from metabaseapi.metabase import TestChannelRequest
@@ -816,11 +819,22 @@ class MetabaseClient:
     async def get_collection(self, collection_id: int | str) -> JSONValue | None:
         return await self.get(f"/api/collection/{collection_id}")
 
+    async def update_collection(self, collection_id: int | str, body: Mapping[str, object]) -> JSONValue | None:
+        return await self.put(f"/api/collection/{collection_id}", body=dict(body))
+
+    async def delete_collection(self, collection_id: int | str) -> JSONValue | None:
+        return await self.delete(f"/api/collection/{collection_id}")
+
     async def get_collection_dashboard_question_candidates(self, collection_id: int | str) -> JSONValue | None:
         return await self.get(f"/api/collection/{collection_id}/dashboard-question-candidates")
 
     async def get_collection_items(self, collection_id: int | str) -> JSONValue | None:
         return await self.get(f"/api/collection/{collection_id}/items")
+
+    async def post_collection_move_dashboard_question_candidates(
+        self, collection_id: int | str, body: Mapping[str, object]
+    ) -> JSONValue | None:
+        return await self.post(f"/api/collection/{collection_id}/move-dashboard-question-candidates", body=dict(body))
 
     async def get_collection_graph(self) -> JSONValue | None:
         return await self.get("/api/collection/graph")
@@ -1082,6 +1096,16 @@ class MetabaseClient:
     async def create_collection_typed(self, body: dict[str, object]) -> Collection:
         return await self.run(CreateCollectionRequest(body=body))
 
+    async def update_collection_typed(
+        self,
+        collection_id: int | str,
+        body: dict[str, object],
+    ) -> GenericOperationResponse:
+        return await self.run(PutCollectionRequest(collection_id=collection_id, body=body))
+
+    async def delete_collection_typed(self, collection_id: int | str) -> GenericOperationResponse:
+        return await self.run(DeleteCollectionRequest(collection_id=collection_id))
+
     async def get_collection_graph_typed(self) -> GenericOperationResponse:
         return await self.run(GetCollectionGraphRequest())
 
@@ -1102,6 +1126,15 @@ class MetabaseClient:
         body: dict[str, object],
     ) -> GenericOperationResponse:
         return await self.run(PostCollectionRootMoveDashboardQuestionCandidatesRequest(body=body))
+
+    async def post_collection_move_dashboard_question_candidates_typed(
+        self,
+        collection_id: int | str,
+        body: dict[str, object],
+    ) -> GenericOperationResponse:
+        return await self.run(
+            PostCollectionMoveDashboardQuestionCandidatesRequest(collection_id=collection_id, body=body)
+        )
 
     async def get_collection_trash_typed(self) -> Collection:
         return await self.run(GetCollectionTrashRequest())

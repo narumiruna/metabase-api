@@ -476,6 +476,12 @@ class _ConvenienceClient(_ClientWithRequestMethods):
     async def get_collection(self, collection_id: str) -> dict[str, object]:
         return {"method": "GET", "path": f"/api/collection/{collection_id}"}
 
+    async def update_collection(self, collection_id: str, body: dict[str, object]) -> dict[str, object]:
+        return {"method": "PUT", "path": f"/api/collection/{collection_id}", "body": body}
+
+    async def delete_collection(self, collection_id: str) -> dict[str, object]:
+        return {"method": "DELETE", "path": f"/api/collection/{collection_id}"}
+
     async def get_collection_dashboard_question_candidates(self, collection_id: str) -> dict[str, object]:
         return {"method": "GET", "path": f"/api/collection/{collection_id}/dashboard-question-candidates"}
 
@@ -497,6 +503,15 @@ class _ConvenienceClient(_ClientWithRequestMethods):
         return {
             "method": "POST",
             "path": "/api/collection/root/move-dashboard-question-candidates",
+            "body": body,
+        }
+
+    async def post_collection_move_dashboard_question_candidates(
+        self, collection_id: str, body: dict[str, object]
+    ) -> dict[str, object]:
+        return {
+            "method": "POST",
+            "path": f"/api/collection/{collection_id}/move-dashboard-question-candidates",
             "body": body,
         }
 
@@ -638,6 +653,8 @@ def test_help_lists_every_convenience_command() -> None:
         "get-user",
         "list-collections",
         "get-collection",
+        "update-collection",
+        "delete-collection",
         "get-collection-dashboard-question-candidates",
         "get-collection-items",
         "list-tables",
@@ -648,6 +665,7 @@ def test_help_lists_every_convenience_command() -> None:
         "get-collection-root-dashboard-question-candidates",
         "get-collection-root-items",
         "post-collection-root-move-dashboard-question-candidates",
+        "post-collection-move-dashboard-question-candidates",
         "get-collection-trash",
         "get-collection-tree",
         "get-collection-graph",
@@ -762,6 +780,7 @@ def test_get_database_command_outputs_json(monkeypatch: pytest.MonkeyPatch) -> N
         (["get-card-series", "13"], "/api/card/13/series"),
         (["get-dashboard", "14"], "/api/dashboard/14"),
         (["get-user", "15"], "/api/user/15"),
+        (["get-collection", "7"], "/api/collection/7"),
         (["get-collection", "root"], "/api/collection/root"),
         (["get-collection-dashboard-question-candidates", "7"], "/api/collection/7/dashboard-question-candidates"),
         (["get-collection-items", "7"], "/api/collection/7/items"),
@@ -810,6 +829,13 @@ def test_read_endpoint_commands_cover_handwritten_surface(
             "POST",
             "/api/collection/root/move-dashboard-question-candidates",
         ),
+        (
+            ["post-collection-move-dashboard-question-candidates", "7", '{"card_ids":[1]}'],
+            "POST",
+            "/api/collection/7/move-dashboard-question-candidates",
+        ),
+        (["update-collection", "7", '{"name":"New"}'], "PUT", "/api/collection/7"),
+        (["delete-collection", "7"], "DELETE", "/api/collection/7"),
         (["delete-action", "11"], "DELETE", "/api/action/11"),
         (["card-collections", "1,2", "--collection-id", "root"], "POST", "/api/card/collections"),
         (["cards-dashboards", "1,2"], "POST", "/api/cards/dashboards"),

@@ -52,6 +52,7 @@ from .requests import DeleteBookmarkRequest
 from .requests import DeleteCacheRequest
 from .requests import DeleteCardPublicLinkRequest
 from .requests import DeleteCardRequest
+from .requests import DeleteCollectionRequest
 from .requests import ExecuteActionRequest
 from .requests import GetActionExecuteRequest
 from .requests import GetActionRequest
@@ -107,9 +108,11 @@ from .requests import ListUsersRequest
 from .requests import MetabaseRequestClient
 from .requests import MoveCardsRequest
 from .requests import PostCardPivotQueryRequest
+from .requests import PostCollectionMoveDashboardQuestionCandidatesRequest
 from .requests import PostCollectionRootMoveDashboardQuestionCandidatesRequest
 from .requests import PutCacheRequest
 from .requests import PutCollectionGraphRequest
+from .requests import PutCollectionRequest
 from .requests import RegenerateApiKeyRequest
 from .requests import TestChannelRequest
 from .requests import UpdateActionRequest
@@ -189,6 +192,7 @@ __all__ = [
     "DeleteCacheRequest",
     "DeleteCardPublicLinkRequest",
     "DeleteCardRequest",
+    "DeleteCollectionRequest",
     "ExecuteActionRequest",
     "GenericOperationResponse",
     "GetActionExecuteRequest",
@@ -258,9 +262,11 @@ __all__ = [
     "MetabaseRequestClient",
     "MoveCardsRequest",
     "PostCardPivotQueryRequest",
+    "PostCollectionMoveDashboardQuestionCandidatesRequest",
     "PostCollectionRootMoveDashboardQuestionCandidatesRequest",
     "PutCacheRequest",
     "PutCollectionGraphRequest",
+    "PutCollectionRequest",
     "RegenerateApiKeyRequest",
     "Table",
     "TestChannelRequest",

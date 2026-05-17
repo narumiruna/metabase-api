@@ -186,6 +186,9 @@ def test_convenience_paths_cover_handwritten_endpoint_surface() -> None:
         (client.get_cloud_migration(), ("GET", "/api/cloud-migration", None)),
         (client.cancel_cloud_migration(), ("PUT", "/api/cloud-migration/cancel", None)),
         (client.create_collection({"name": "New"}), ("POST", "/api/collection", {"name": "New"})),
+        (client.get_collection("7"), ("GET", "/api/collection/7", None)),
+        (client.update_collection("7", {"name": "Updated"}), ("PUT", "/api/collection/7", {"name": "Updated"})),
+        (client.delete_collection("7"), ("DELETE", "/api/collection/7", None)),
         (client.get_collection_graph(), ("GET", "/api/collection/graph", None)),
         (client.put_collection_graph({"groups": ["admin"]}), ("PUT", "/api/collection/graph", {"groups": ["admin"]})),
         (client.get_collection_root(), ("GET", "/api/collection/root", None)),
@@ -200,6 +203,10 @@ def test_convenience_paths_cover_handwritten_endpoint_surface() -> None:
         (
             client.post_collection_root_move_dashboard_question_candidates({"card_ids": [1]}),
             ("POST", "/api/collection/root/move-dashboard-question-candidates", {"card_ids": [1]}),
+        ),
+        (
+            client.post_collection_move_dashboard_question_candidates(7, {"card_ids": [1]}),
+            ("POST", "/api/collection/7/move-dashboard-question-candidates", {"card_ids": [1]}),
         ),
         (
             client.get_collection_dashboard_question_candidates(7),

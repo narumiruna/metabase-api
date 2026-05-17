@@ -98,6 +98,7 @@ from metabaseapi.metabase import GetCollectionTrashRequest
 from metabaseapi.metabase import GetCollectionTreeRequest
 from metabaseapi.metabase import GetCommentMentionsRequest
 from metabaseapi.metabase import GetCommentRequest
+from metabaseapi.metabase import GetDashboardEmbeddableRequest
 from metabaseapi.metabase import GetDashboardRequest
 from metabaseapi.metabase import GetDatabaseRequest
 from metabaseapi.metabase import GetFieldRequest
@@ -814,6 +815,9 @@ class MetabaseClient:
     async def get_dashboard(self, dashboard_id: int | str) -> JSONValue | None:
         return await self.get(f"/api/dashboard/{dashboard_id}")
 
+    async def get_dashboard_embeddable(self) -> JSONValue | None:
+        return await self.get("/api/dashboard/embeddable")
+
     async def list_users(self) -> JSONValue | None:
         return await self.get("/api/user")
 
@@ -1373,6 +1377,9 @@ class MetabaseClient:
 
     async def get_dashboard_typed(self, dashboard_id: int | str) -> Dashboard:
         return await self.run(GetDashboardRequest(dashboard_id=dashboard_id))
+
+    async def get_dashboard_embeddable_typed(self) -> GenericOperationResponse:
+        return await self.run(GetDashboardEmbeddableRequest())
 
     async def get_user_typed(self, user_id: int | str) -> User:
         return await self.run(GetUserRequest(user_id=user_id))

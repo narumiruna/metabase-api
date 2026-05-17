@@ -1061,6 +1061,13 @@ def get_dashboard(ctx: typer.Context, dashboard_id: str = typer.Argument(...)) -
     _run_and_print(_run_client_call(ctx, lambda client: client.get_dashboard(dashboard_id)))
 
 
+@app.command("get-dashboard-embeddable")
+def get_dashboard_embeddable(ctx: typer.Context) -> None:
+    """List embeddable dashboards."""
+
+    _run_and_print(_run_client_call(ctx, lambda client: client.get_dashboard_embeddable()))
+
+
 @app.command("create-dashboard")
 def create_dashboard(ctx: typer.Context, body: str = typer.Argument(..., help="Dashboard body JSON object")) -> None:
     payload = _parse_json_object(body, "body")

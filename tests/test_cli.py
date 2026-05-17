@@ -461,6 +461,9 @@ class _ConvenienceClient(_ClientWithRequestMethods):
     async def get_dashboard(self, dashboard_id: str) -> dict[str, object]:
         return {"method": "GET", "path": f"/api/dashboard/{dashboard_id}"}
 
+    async def get_dashboard_embeddable(self) -> dict[str, object]:
+        return {"method": "GET", "path": "/api/dashboard/embeddable"}
+
     async def list_users(self) -> dict[str, object]:
         return {"method": "GET", "path": "/api/user"}
 
@@ -671,6 +674,7 @@ def test_help_lists_every_convenience_command() -> None:
         "get-card-series",
         "list-dashboards",
         "get-dashboard",
+        "get-dashboard-embeddable",
         "create-dashboard",
         "list-users",
         "get-user",
@@ -809,6 +813,7 @@ def test_get_database_command_outputs_json(monkeypatch: pytest.MonkeyPatch) -> N
         (["get-card-query-metadata", "13"], "/api/card/13/query_metadata"),
         (["get-card-series", "13"], "/api/card/13/series"),
         (["get-dashboard", "14"], "/api/dashboard/14"),
+        (["get-dashboard-embeddable"], "/api/dashboard/embeddable"),
         (["get-user", "15"], "/api/user/15"),
         (["get-collection", "7"], "/api/collection/7"),
         (["get-collection", "root"], "/api/collection/root"),

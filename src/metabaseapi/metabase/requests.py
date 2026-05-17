@@ -1543,6 +1543,17 @@ class GetDashboardRequest(_BaseMetabaseRequest[Dashboard]):
         return f"/api/dashboard/{self.dashboard_id}"
 
 
+class GetDashboardEmbeddableRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+    endpoint_method: ClassVar[str] = "GET"
+    endpoint_path: ClassVar[str] = "/api/dashboard/embeddable"
+
+    async def do(self, client: MetabaseRequestClient) -> GenericOperationResponse:
+        return await self.execute(client, GenericOperationResponse)
+
+    def do_sync(self, client: MetabaseRequestClient) -> GenericOperationResponse:
+        return self.execute_sync(client, GenericOperationResponse)
+
+
 class ListUsersRequest(_BaseMetabaseRequest[ListUsersResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/user"
@@ -1936,6 +1947,7 @@ __all__ = [
     "GetCollectionTreeRequest",
     "GetCommentMentionsRequest",
     "GetCommentRequest",
+    "GetDashboardEmbeddableRequest",
     "GetDashboardRequest",
     "GetDatabaseRequest",
     "GetFieldRequest",

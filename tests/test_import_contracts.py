@@ -281,7 +281,11 @@ RESPONSE_MODULE_CONTRACTS = {
         "CloudMigrationStatusResponse",
         "CreateCloudMigrationResponse",
     ),
-    "collection": ("ListCollectionsResponse",),
+    "collection": (
+        "CollectionDashboardQuestionCandidatesResponse",
+        "CollectionMoveDashboardQuestionCandidatesResponse",
+        "ListCollectionsResponse",
+    ),
     "common": ("GenericOperationResponse",),
     "dashboard": ("ListDashboardsResponse",),
     "database": ("ListDatabasesResponse",),

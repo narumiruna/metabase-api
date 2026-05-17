@@ -7,6 +7,8 @@ from pydantic import Field as PydanticField
 
 from metabaseapi.endpoints.entities import Collection
 from metabaseapi.endpoints.execution import EndpointRequest
+from metabaseapi.endpoints.responses.collection import CollectionDashboardQuestionCandidatesResponse
+from metabaseapi.endpoints.responses.collection import CollectionMoveDashboardQuestionCandidatesResponse
 from metabaseapi.endpoints.responses.collection import ListCollectionsResponse
 from metabaseapi.endpoints.responses.common import GenericOperationResponse
 
@@ -25,12 +27,12 @@ class GetCollectionTreeRequest(EndpointRequest[GenericOperationResponse]):
     response_model = GenericOperationResponse
 
 
-class GetCollectionDashboardQuestionCandidatesRequest(EndpointRequest[GenericOperationResponse]):
+class GetCollectionDashboardQuestionCandidatesRequest(EndpointRequest[CollectionDashboardQuestionCandidatesResponse]):
     collection_id: int | str
 
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/collection/{collection_id}/dashboard-question-candidates"
-    response_model = GenericOperationResponse
+    response_model = CollectionDashboardQuestionCandidatesResponse
 
 
 class GetCollectionItemsRequest(EndpointRequest[GenericOperationResponse]):
@@ -47,13 +49,15 @@ class GetCollectionTrashRequest(EndpointRequest[Collection]):
     response_model = Collection
 
 
-class PostCollectionMoveDashboardQuestionCandidatesRequest(EndpointRequest[GenericOperationResponse]):
+class PostCollectionMoveDashboardQuestionCandidatesRequest(
+    EndpointRequest[CollectionMoveDashboardQuestionCandidatesResponse]
+):
     body: dict[str, Any] = PydanticField(default_factory=dict)
     collection_id: int | str
 
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/collection/{collection_id}/move-dashboard-question-candidates"
-    response_model = GenericOperationResponse
+    response_model = CollectionMoveDashboardQuestionCandidatesResponse
 
 
 class ListCollectionsRequest(EndpointRequest[ListCollectionsResponse]):

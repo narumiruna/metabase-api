@@ -155,6 +155,8 @@ from metabaseapi.endpoints.responses.channel import UpdateChannelResponse
 from metabaseapi.endpoints.responses.cloud_migration import CancelCloudMigrationResponse
 from metabaseapi.endpoints.responses.cloud_migration import CloudMigrationStatusResponse
 from metabaseapi.endpoints.responses.cloud_migration import CreateCloudMigrationResponse
+from metabaseapi.endpoints.responses.collection import CollectionDashboardQuestionCandidatesResponse
+from metabaseapi.endpoints.responses.collection import CollectionMoveDashboardQuestionCandidatesResponse
 from metabaseapi.endpoints.responses.collection import ListCollectionsResponse
 from metabaseapi.endpoints.responses.common import GenericOperationResponse
 from metabaseapi.endpoints.responses.dashboard import ListDashboardsResponse
@@ -578,7 +580,7 @@ def test_action_requests_use_expected_paths_and_payloads() -> None:
         (GetCollectionRootRequest(), Collection, ("GET", "/api/collection/root", {}, None)),
         (
             GetCollectionRootDashboardQuestionCandidatesRequest(),
-            GenericOperationResponse,
+            CollectionDashboardQuestionCandidatesResponse,
             ("GET", "/api/collection/root/dashboard-question-candidates", {}, None),
         ),
         (
@@ -593,7 +595,7 @@ def test_action_requests_use_expected_paths_and_payloads() -> None:
         ),
         (
             GetCollectionDashboardQuestionCandidatesRequest(collection_id="7"),
-            GenericOperationResponse,
+            CollectionDashboardQuestionCandidatesResponse,
             ("GET", "/api/collection/7/dashboard-question-candidates", {}, None),
         ),
         (
@@ -608,12 +610,12 @@ def test_action_requests_use_expected_paths_and_payloads() -> None:
         ),
         (
             PostCollectionRootMoveDashboardQuestionCandidatesRequest(body={"card_ids": [1]}),
-            GenericOperationResponse,
+            CollectionMoveDashboardQuestionCandidatesResponse,
             ("POST", "/api/collection/root/move-dashboard-question-candidates", {}, {"card_ids": [1]}),
         ),
         (
             PostCollectionMoveDashboardQuestionCandidatesRequest(collection_id="7", body={"card_ids": [1]}),
-            GenericOperationResponse,
+            CollectionMoveDashboardQuestionCandidatesResponse,
             ("POST", "/api/collection/7/move-dashboard-question-candidates", {}, {"card_ids": [1]}),
         ),
         (
@@ -1062,11 +1064,11 @@ def test_client_run_endpoint_requests_return_models() -> None:
     assert isinstance(collection_root, Collection)
     assert collection_root.id == "root"
     assert collection_root.name == "Root"
-    assert isinstance(collection_root_candidates, GenericOperationResponse)
+    assert isinstance(collection_root_candidates, CollectionDashboardQuestionCandidatesResponse)
     assert isinstance(collection_root_items, GenericOperationResponse)
-    assert isinstance(collection_root_candidates_moved, GenericOperationResponse)
-    assert isinstance(collection_move_candidates, GenericOperationResponse)
-    assert isinstance(collection_dashboard_question_candidates, GenericOperationResponse)
+    assert isinstance(collection_root_candidates_moved, CollectionMoveDashboardQuestionCandidatesResponse)
+    assert isinstance(collection_move_candidates, CollectionMoveDashboardQuestionCandidatesResponse)
+    assert isinstance(collection_dashboard_question_candidates, CollectionDashboardQuestionCandidatesResponse)
     assert isinstance(collection_items, GenericOperationResponse)
     assert isinstance(collection_trash, Collection)
     assert collection_trash.id == "trash"

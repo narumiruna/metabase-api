@@ -10,7 +10,7 @@
 - `src/metabaseapi/cli/commands` owns command implementations; command module filenames use domain/action stems such as `card.py`, `card_query.py`, and `cloud_migration.py`, without a redundant `_commands.py` suffix.
 - `src/metabaseapi/wire.py` contains HTTP wire types and generic HTTP request/response models; `src/metabaseapi/endpoints/` contains hand-written typed endpoint models and request helpers split by concern.
 - `src/metabaseapi/endpoints/__init__.py` exposes only endpoint submodules (`entities`, `execution`, `requests`, `responses`); do not re-export every endpoint symbol at the package top level.
-- `src/metabaseapi/endpoints/requests/__init__.py` owns only the request module registry; request classes must live in domain modules such as `endpoints/requests/card.py`.
+- `src/metabaseapi/endpoints/requests/__init__.py` is only the request package facade; request classes must live in domain modules such as `endpoints/requests/card.py`, and the facade must not re-export them.
 - Do not reintroduce `api.json`, OpenAPI snapshot fixtures, runtime endpoint registries, or file-scanning behavior to decide API capabilities.
 - This is a new project with no compatibility users; prefer breaking refactors that produce a cleaner interface over preserving shims or transitional APIs.
 - 命名規範：對外公開進入點只使用 `metabaseapi.cli`（package）、`metabaseapi.client` 與 `metabaseapi.endpoints`；`metabaseapi.client.http` 為唯一 concrete client 實作入口；endpoint 呼叫直接使用 `metabaseapi.endpoints.requests` 搭配 `MetabaseClient.run(...)`。

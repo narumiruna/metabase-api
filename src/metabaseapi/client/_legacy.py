@@ -162,6 +162,12 @@ from metabaseapi.models import QueryParamValue
 from metabaseapi.settings import Settings
 
 
+class _MetabaseClientRawMixin: ...
+
+
+class _MetabaseClientTypedMixin(_MetabaseClientRawMixin): ...
+
+
 class _ExecutableRequest[ResponseT](Protocol):
     async def do(self, client: MetabaseClient) -> ResponseT: ...
 

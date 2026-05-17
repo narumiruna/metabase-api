@@ -10,8 +10,8 @@ from collections.abc import Coroutine
 import typer
 
 from metabaseapi import settings
-from metabaseapi.cli_error_adapter import error_payload
-from metabaseapi.cli_output import render_payload
+from metabaseapi.cli.error_adapter import error_payload
+from metabaseapi.cli.output import render_payload
 from metabaseapi.client import MetabaseClient
 from metabaseapi.errors import MetabaseError
 from metabaseapi.models import JSONValue

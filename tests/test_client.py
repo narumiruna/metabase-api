@@ -297,6 +297,10 @@ def test_convenience_paths_cover_handwritten_endpoint_surface() -> None:
             ("POST", "/api/dashboard/14/dashcard/22/card/33/query", {"x": 1}),
         ),
         (
+            client.query_dashboard_card_export(14, "22", "33", "xlsx", {"x": 1}, pivot_results=True, format_rows=False),
+            ("POST", "/api/dashboard/14/dashcard/22/card/33/query/xlsx", {"x": 1}),
+        ),
+        (
             client.get_dashboard_params_valid_filter_fields(filtered=[11], filtering=[22]),
             ("GET", "/api/dashboard/params/valid-filter-fields", None),
         ),

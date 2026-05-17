@@ -474,6 +474,32 @@ class _ConvenienceClient(_ClientWithRequestMethods):
             "body": body,
         }
 
+    async def query_dashboard_card_export(
+        self,
+        dashboard_id: str,
+        dashcard_id: str,
+        card_id: str,
+        export_format: str,
+        body: dict[str, object] | None = None,
+        *,
+        pivot_results: bool | None = None,
+        format_rows: bool | None = None,
+    ) -> dict[str, object]:
+        response: dict[str, object] = {
+            "method": "POST",
+            "path": f"/api/dashboard/{dashboard_id}/dashcard/{dashcard_id}/card/{card_id}/query/{export_format}",
+        }
+        if body is not None:
+            response["body"] = body
+        params: dict[str, object] = {}
+        if pivot_results is not None:
+            params["pivot-results"] = pivot_results
+        if format_rows is not None:
+            params["format-rows"] = format_rows
+        if params:
+            response["params"] = params
+        return response
+
     async def get_dashboard_embeddable(self) -> dict[str, object]:
         return {"method": "GET", "path": "/api/dashboard/embeddable"}
 
@@ -703,6 +729,7 @@ def test_help_lists_every_convenience_command() -> None:
         "list-dashboards",
         "get-dashboard",
         "query-dashboard-card",
+        "query-dashboard-card-export",
         "get-dashboard-embeddable",
         "get-dashboard-public",
         "create-dashboard",
@@ -898,6 +925,11 @@ def test_read_endpoint_commands_cover_handwritten_surface(
         (["create-collection", '{"name":"New"}'], "POST", "/api/collection"),
         (["create-dashboard", '{"name":"Sales"}'], "POST", "/api/dashboard"),
         (["query-dashboard-card", "14", "22", "33", '{"x":1}'], "POST", "/api/dashboard/14/dashcard/22/card/33/query"),
+        (
+            ["query-dashboard-card-export", "14", "22", "33", "xlsx", '{"x":1}'],
+            "POST",
+            "/api/dashboard/14/dashcard/22/card/33/query/xlsx",
+        ),
         (["get-collection-graph"], "GET", "/api/collection/graph"),
         (["put-collection-graph", '{"groups":["admin"]}'], "PUT", "/api/collection/graph"),
         (

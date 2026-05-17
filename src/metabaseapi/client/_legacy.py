@@ -857,6 +857,29 @@ class MetabaseClient:
             body=payload,
         )
 
+    async def query_dashboard_card_export(
+        self,
+        dashboard_id: int | str,
+        dashcard_id: int | str,
+        card_id: int | str,
+        export_format: str,
+        body: Mapping[str, object] | None = None,
+        *,
+        pivot_results: bool | None = None,
+        format_rows: bool | None = None,
+    ) -> JSONValue | None:
+        payload = dict(body) if body is not None else None
+        params: dict[str, QueryParamValue] = {}
+        if pivot_results is not None:
+            params["pivot-results"] = pivot_results
+        if format_rows is not None:
+            params["format-rows"] = format_rows
+        return await self.post(
+            f"/api/dashboard/{dashboard_id}/dashcard/{dashcard_id}/card/{card_id}/query/{export_format}",
+            body=payload,
+            params=params or None,
+        )
+
     async def list_users(self) -> JSONValue | None:
         return await self.get("/api/user")
 

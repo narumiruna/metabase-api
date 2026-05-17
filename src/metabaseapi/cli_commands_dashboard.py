@@ -330,6 +330,34 @@ def query_dashboard_card(
     )
 
 
+@app.command("query-dashboard-card-export")
+def query_dashboard_card_export(
+    ctx: typer.Context,
+    dashboard_id: str = typer.Argument(...),
+    dashcard_id: str = typer.Argument(...),
+    card_id: str = typer.Argument(...),
+    export_format: str = typer.Argument(...),
+    body: str = typer.Argument(None, help="Optional query payload JSON object"),
+    pivot_results: bool | None = typer.Option(None, "--pivot-results"),
+    format_rows: bool | None = typer.Option(None, "--format-rows"),
+) -> None:
+    payload = _parse_optional_json_object(body, "body") if body else None
+    _run_and_print(
+        _run_client_call(
+            ctx,
+            lambda client: client.query_dashboard_card_export(
+                dashboard_id,
+                dashcard_id,
+                card_id,
+                export_format,
+                payload,
+                pivot_results=pivot_results,
+                format_rows=format_rows,
+            ),
+        )
+    )
+
+
 @app.command("create-dashboard")
 def create_dashboard(ctx: typer.Context, body: str = typer.Argument(..., help="Dashboard body JSON object")) -> None:
     payload = _parse_json_object(body, "body")

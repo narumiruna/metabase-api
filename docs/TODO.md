@@ -181,7 +181,7 @@ This file is a static implementation checklist derived from the latest Metabase 
 - [x] `DELETE /api/comment/{comment-id}` — `delete-api-comment-comment-id` — Soft delete a comment
 - [x] `POST /api/comment/{comment-id}/reaction` — `post-api-comment-comment-id-reaction` — Toggle a reaction on a comment
 
-### /api/dashboard (7/25 complete)
+### /api/dashboard (8/25 complete)
 
 - [x] `GET /api/dashboard` — `get-api-dashboard` — This endpoint is currently unused by the Metabase frontend and may be out of date with the rest of the application. It only exists for backwards compatibilit...
 - [x] `POST /api/dashboard` — `post-api-dashboard` — Create a new Dashboard.
@@ -192,7 +192,7 @@ This file is a static implementation checklist derived from the latest Metabase 
 - [ ] `POST /api/dashboard/save` — `post-api-dashboard-save` — Save a denormalized description of dashboard.
 - [ ] `POST /api/dashboard/save/collection/{parent-collection-id}` — `post-api-dashboard-save-collection-parent-collection-id` — Save a denormalized description of dashboard into collection with ID `:parent-collection-id`.
 - [x] `POST /api/dashboard/{dashboard-id}/dashcard/{dashcard-id}/card/{card-id}/query` — `post-api-dashboard-dashboard-id-dashcard-dashcard-id-card-card-id-query` — Run the query associated with a Saved Question (`Card`) in the context of a `Dashboard` that includes it.
-- [ ] `POST /api/dashboard/{dashboard-id}/dashcard/{dashcard-id}/card/{card-id}/query/{export-format}` — `post-api-dashboard-dashboard-id-dashcard-dashcard-id-card-card-id-query-export-format` — Run the query associated with a Saved Question (`Card`) in the context of a `Dashboard` that includes it, and return its results as a file in the specified f...
+- [x] `POST /api/dashboard/{dashboard-id}/dashcard/{dashcard-id}/card/{card-id}/query/{export-format}` — `post-api-dashboard-dashboard-id-dashcard-dashcard-id-card-card-id-query-export-format` — Run the query associated with a Saved Question (`Card`) in the context of a `Dashboard` that includes it, and return its results as a file in the specified f...
 - [ ] `GET /api/dashboard/{dashboard-id}/dashcard/{dashcard-id}/execute` — `get-api-dashboard-dashboard-id-dashcard-dashcard-id-execute` — Fetches the values for filling in execution parameters. Pass PK parameters and values to select.
 - [ ] `POST /api/dashboard/{dashboard-id}/dashcard/{dashcard-id}/execute` — `post-api-dashboard-dashboard-id-dashcard-dashcard-id-execute` — Execute the associated Action in the context of a `Dashboard` and `DashboardCard` that includes it. `parameters` should be the mapped dashboard parameters wi...
 - [ ] `POST /api/dashboard/{dashboard-id}/public_link` — `post-api-dashboard-dashboard-id-public_link` — Generate publicly-accessible links for this Dashboard. Returns UUID to be used in public links. (If this Dashboard has already been shared, it will return th...

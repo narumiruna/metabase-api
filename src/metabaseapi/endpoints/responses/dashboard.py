@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from typing import Any
+from typing import cast
 
 from pydantic import BaseModel
 from pydantic import ConfigDict
@@ -33,6 +34,22 @@ class _DashboardOperationResponse(BaseModel):
         return normalize_unstructured_payload(values)
 
 
+class _DashboardStatusResponse(BaseModel):
+    id: int | str | None = None
+    ok: bool | None = None
+    uuid: str | None = None
+    model_config = ConfigDict(extra="forbid")
+
+    @model_validator(mode="before")
+    @classmethod
+    def normalize_payload(cls, values: object) -> dict[str, Any]:
+        if not isinstance(values, dict):
+            return {}
+
+        dict_values = cast(dict[str, object], values)
+        return {key: dict_values[key] for key in cls.model_fields if key in dict_values}
+
+
 class DashboardEmbeddableResponse(BaseModel):
     dashboards: list[Dashboard] = PydanticField(default_factory=list)
     model_config = ConfigDict(extra="forbid")
@@ -47,27 +64,27 @@ class DashboardPublicResponse(DashboardEmbeddableResponse):
     pass
 
 
-class SaveDashboardResponse(_DashboardOperationResponse):
-    pass
+class SaveDashboardResponse(_DashboardStatusResponse):
+    id: int | str | None = None
 
 
-class SaveDashboardToCollectionResponse(_DashboardOperationResponse):
-    pass
+class SaveDashboardToCollectionResponse(_DashboardStatusResponse):
+    id: int | str | None = None
 
 
-class CreateDashboardPublicLinkResponse(_DashboardOperationResponse):
+class CreateDashboardPublicLinkResponse(_DashboardStatusResponse):
     uuid: str | None = None
 
 
-class DeleteDashboardPublicLinkResponse(_DashboardOperationResponse):
+class DeleteDashboardPublicLinkResponse(_DashboardStatusResponse):
     ok: bool | None = None
 
 
-class DeleteDashboardResponse(_DashboardOperationResponse):
+class DeleteDashboardResponse(_DashboardStatusResponse):
     ok: bool | None = None
 
 
-class UpdateDashboardCardsResponse(_DashboardOperationResponse):
+class UpdateDashboardCardsResponse(_DashboardStatusResponse):
     ok: bool | None = None
 
 

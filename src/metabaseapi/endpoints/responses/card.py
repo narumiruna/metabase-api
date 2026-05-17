@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from typing import Any
+from typing import cast
 
 from pydantic import BaseModel
 from pydantic import ConfigDict
@@ -44,6 +45,21 @@ class _CardOperationResponse(BaseModel):
         return normalize_unstructured_payload(values)
 
 
+class _CardStatusResponse(BaseModel):
+    ok: bool | None = None
+    uuid: str | None = None
+    model_config = ConfigDict(extra="forbid")
+
+    @model_validator(mode="before")
+    @classmethod
+    def normalize_payload(cls, values: object) -> dict[str, Any]:
+        if not isinstance(values, dict):
+            return {}
+
+        dict_values = cast(dict[str, object], values)
+        return {key: dict_values[key] for key in cls.model_fields if key in dict_values}
+
+
 class CardCollectionsResponse(_CardOperationResponse):
     pass
 
@@ -62,19 +78,19 @@ class CardPublicResponse(CardEmbeddableResponse):
     pass
 
 
-class CreateCardPublicLinkResponse(_CardOperationResponse):
+class CreateCardPublicLinkResponse(_CardStatusResponse):
     uuid: str | None = None
 
 
-class DeleteCardPublicLinkResponse(_CardOperationResponse):
+class DeleteCardPublicLinkResponse(_CardStatusResponse):
     ok: bool | None = None
 
 
-class DeleteCardResponse(_CardOperationResponse):
+class DeleteCardResponse(_CardStatusResponse):
     ok: bool | None = None
 
 
-class MoveCardsResponse(_CardOperationResponse):
+class MoveCardsResponse(_CardStatusResponse):
     ok: bool | None = None
 
 

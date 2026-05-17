@@ -5,7 +5,7 @@
 [![Python 3.14+](https://img.shields.io/badge/python-3.14%2B-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
-**metabase-api** is a lightweight, hand-written Python library and command-line tool for interacting with the Metabase REST API. It provides typed request/response models, an async HTTP client built on [httpx](https://www.python-httpx.org/), and a [Typer](https://typer.tiangolo.com/) CLI — making it easy to automate, script, and integrate Metabase into your data workflows.
+**metabase-api** is a lightweight Python library and command-line tool for interacting with the Metabase REST API. It provides typed request/response models, an async HTTP client built on [httpx](https://www.python-httpx.org/), and a [Typer](https://typer.tiangolo.com/) CLI — making it easy to automate, script, and integrate Metabase into your data workflows.
 
 ---
 
@@ -23,18 +23,18 @@
 
 ---
 
-## Features
+## ✨ Features
 
-- **Async-first HTTP client** — powered by `httpx`, suitable for high-concurrency automation scripts.
-- **Typed models** — every request and response is a hand-written `pydantic.BaseModel`; no code generation.
-- **Ergonomic CLI** — discover and run Metabase operations directly from the terminal with `metabaseapi <command>`.
-- **Pretty JSON output** — all CLI commands emit indented, sorted JSON, ready for use with `jq` or AI pipelines.
-- **API key authentication** — uses Metabase's native API key header; no session tokens to manage.
-- **TLS-aware** — configurable SSL verification for self-hosted deployments.
+- ⚡ **Async-first HTTP client** — powered by `httpx`, suitable for high-concurrency automation scripts.
+- 🔷 **Typed models** — every request and response is a `pydantic.BaseModel`; no code generation.
+- 🖥️ **Ergonomic CLI** — discover and run Metabase operations directly from the terminal with `metabaseapi <command>`.
+- 📄 **Pretty JSON output** — all CLI commands emit indented, sorted JSON, ready for use with `jq` or AI pipelines.
+- 🔑 **API key authentication** — uses Metabase's native API key header; no session tokens to manage.
+- 🔒 **TLS-aware** — configurable SSL verification for self-hosted deployments.
 
 ---
 
-## Requirements
+## 📋 Requirements
 
 - Python ≥ 3.14
 - A running Metabase instance (self-hosted or Metabase Cloud)
@@ -42,7 +42,7 @@
 
 ---
 
-## Installation
+## 📦 Installation
 
 Install with [uv](https://docs.astral.sh/uv/) (recommended):
 
@@ -58,7 +58,7 @@ pip install .
 
 ---
 
-## Configuration
+## ⚙️ Configuration
 
 Set the following environment variables before running any command or using the client:
 
@@ -78,7 +78,7 @@ export METABASE_API_KEY=your-api-key
 
 ---
 
-## Quick start
+## 🚀 Quick start
 
 ```bash
 # Who am I?
@@ -102,7 +102,7 @@ metabaseapi list-databases | jq '.[].name'
 
 ---
 
-## CLI reference
+## 🖥️ CLI reference
 
 Run `metabaseapi --help` to see all available commands. Common examples:
 
@@ -141,14 +141,14 @@ Every command outputs pretty-printed, sorted JSON — suitable for AI agents, sh
 
 ---
 
-## API coverage
+## 📊 API coverage
 
 `docs/TODO.md` tracks implementation status against the official Metabase API documentation (600 documented operations).
 
 **Current status: 152 / 600 endpoints fully implemented.**
 
 An endpoint counts as complete when it has:
-1. A hand-written client method on `MetabaseClient`
+1. A client method on `MetabaseClient`
 2. A typed `pydantic.BaseModel` for both request and response
 3. A corresponding CLI command
 
@@ -156,7 +156,7 @@ Raw `request` / `invoke` passthroughs are intentionally excluded — every opera
 
 ---
 
-## Development
+## 🛠️ Development
 
 ```bash
 # Install all dependencies (including dev)
@@ -180,6 +180,6 @@ just live-test
 
 ---
 
-## License
+## 📄 License
 
 [MIT](LICENSE) © narumi

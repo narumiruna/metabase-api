@@ -395,12 +395,20 @@ def test_legacy_endpoint_package_name_is_not_importable() -> None:
 
 def test_legacy_wire_module_name_is_not_importable() -> None:
     assert metabaseapi.wire.APIRequestModel.__module__ == "metabaseapi.wire"
+    assert metabaseapi.wire.__all__ == [
+        "APIRequestModel",
+        "APIResponseModel",
+        "JSONValue",
+        "QueryParamPrimitive",
+        "QueryParamValue",
+    ]
     with pytest.raises(ModuleNotFoundError):
         importlib.import_module("metabaseapi.models")
 
 
 def test_client_public_exports_use_http_implementation() -> None:
     assert metabaseapi.client.__all__ == ["MetabaseClient"]
+    assert metabaseapi.client.http.__all__ == ["MetabaseClient"]
     assert metabaseapi.client.MetabaseClient is metabaseapi.client.http.MetabaseClient
     assert _client_module_stems(metabaseapi.client) == ("http",)
     assert not hasattr(metabaseapi.client, "_MetabaseClientRawMixin")

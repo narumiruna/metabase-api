@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from typing import Any
-from typing import cast
 
 from pydantic import BaseModel
 from pydantic import ConfigDict
@@ -27,29 +26,12 @@ class ListCardsResponse(BaseModel):
 
 class CardsDashboardsResponse(BaseModel):
     cards: list[dict[str, Any]] = PydanticField(default_factory=list)
-    raw: JSONValue | None = None
-    model_config = ConfigDict(extra="allow")
+    model_config = ConfigDict(extra="forbid")
 
-    @classmethod
     @model_validator(mode="before")
+    @classmethod
     def normalize_payload(cls, values: object) -> dict[str, Any]:
-        if values is None:
-            return {"cards": []}
-
-        if isinstance(values, list):
-            return {"cards": values}
-
-        if isinstance(values, dict):
-            dict_values = cast(dict[str, object], values)
-            if isinstance(dict_values.get("cards"), list):
-                return cast(dict[str, Any], dict_values)
-            if "data" in dict_values and isinstance(dict_values["data"], list):
-                remainder = dict(dict_values)
-                del remainder["data"]
-                return {"cards": dict_values["data"], **remainder}
-            return {"cards": [], "raw": dict_values}
-
-        return {"cards": [], "raw": values}
+        return normalize_strict_list_payload(values, "cards")
 
 
 class _CardOperationResponse(BaseModel):

@@ -87,6 +87,7 @@ from .requests import GetCollectionTreeRequest
 from .requests import GetCommentMentionsRequest
 from .requests import GetCommentRequest
 from .requests import GetDashboardEmbeddableRequest
+from .requests import GetDashboardPublicRequest
 from .requests import GetDashboardRequest
 from .requests import GetDatabaseRequest
 from .requests import GetFieldRequest
@@ -236,6 +237,7 @@ __all__ = [
     "GetCommentMentionsRequest",
     "GetCommentRequest",
     "GetDashboardEmbeddableRequest",
+    "GetDashboardPublicRequest",
     "GetDashboardRequest",
     "GetDatabaseRequest",
     "GetFieldRequest",

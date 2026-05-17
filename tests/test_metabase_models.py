@@ -66,6 +66,7 @@ from metabaseapi.metabase import GetCollectionTreeRequest
 from metabaseapi.metabase import GetCommentMentionsRequest
 from metabaseapi.metabase import GetCommentRequest
 from metabaseapi.metabase import GetDashboardEmbeddableRequest
+from metabaseapi.metabase import GetDashboardPublicRequest
 from metabaseapi.metabase import GetDashboardRequest
 from metabaseapi.metabase import GetDatabaseRequest
 from metabaseapi.metabase import GetFieldRequest
@@ -363,6 +364,7 @@ def test_action_requests_use_expected_paths_and_payloads() -> None:
         ),
         (GetDashboardRequest(dashboard_id=9), Dashboard, ("GET", "/api/dashboard/9", {}, None)),
         (GetDashboardEmbeddableRequest(), GenericOperationResponse, ("GET", "/api/dashboard/embeddable", {}, None)),
+        (GetDashboardPublicRequest(), GenericOperationResponse, ("GET", "/api/dashboard/public", {}, None)),
         (PostDashboardRequest(body={"name": "Sales"}), Dashboard, ("POST", "/api/dashboard", {}, {"name": "Sales"})),
         (
             DeleteCommentRequest(comment_id="7"),
@@ -574,6 +576,7 @@ def _build_mock_endpoint_responses() -> dict[tuple[str, str], dict[str, object]]
         ("GET", "/api/card"): {"data": [{"id": 5, "name": "card", "display": "line"}]},
         ("GET", "/api/dashboard"): {"data": [{"id": 6, "name": "dash", "collection_id": 1}]},
         ("GET", "/api/dashboard/embeddable"): {"ok": True},
+        ("GET", "/api/dashboard/public"): {"ok": True},
         ("POST", "/api/dashboard"): {"id": 7, "name": "Sales", "collection_id": 1},
         ("GET", "/api/user"): {"data": [{"id": 4, "email": "user@example.com", "first_name": "Ada"}]},
         ("GET", "/api/collection"): {"data": [{"id": 7, "name": "collection"}]},
@@ -682,6 +685,7 @@ def test_typed_methods_in_client_return_models() -> None:
     moved_cards = _run(client.move_cards_typed({"card_ids": [1], "collection_id": "root"}))
     dashboards = _run(client.list_dashboards_typed())
     dashboard_embeddable = _run(client.get_dashboard_embeddable_typed())
+    dashboard_public = _run(client.get_dashboard_public_typed())
     users = _run(client.list_users_typed())
     collections = _run(client.list_collections_typed())
     tables = _run(client.list_tables_typed())
@@ -751,6 +755,7 @@ def test_typed_methods_in_client_return_models() -> None:
     assert isinstance(moved_cards, GenericOperationResponse)
     assert isinstance(dashboards, ListDashboardsResponse)
     assert isinstance(dashboard_embeddable, GenericOperationResponse)
+    assert isinstance(dashboard_public, GenericOperationResponse)
     assert isinstance(users, ListUsersResponse)
     assert isinstance(collections, ListCollectionsResponse)
     assert isinstance(tables, ListTablesResponse)

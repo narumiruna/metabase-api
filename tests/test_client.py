@@ -293,6 +293,7 @@ def test_convenience_paths_cover_handwritten_endpoint_surface() -> None:
         (client.list_dashboards(), ("GET", "/api/dashboard", None)),
         (client.get_dashboard(14), ("GET", "/api/dashboard/14", None)),
         (client.get_dashboard_embeddable(), ("GET", "/api/dashboard/embeddable", None)),
+        (client.get_dashboard_public(), ("GET", "/api/dashboard/public", None)),
         (client.list_users(), ("GET", "/api/user", None)),
         (client.get_user(15), ("GET", "/api/user/15", None)),
         (client.list_collections(), ("GET", "/api/collection", None)),

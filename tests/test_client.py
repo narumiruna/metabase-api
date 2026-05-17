@@ -28,6 +28,7 @@ from metabaseapi.client.raw import data_studio as raw_data_studio
 from metabaseapi.client.raw import database as raw_database
 from metabaseapi.client.raw import schema as raw_schema
 from metabaseapi.client.raw import user as raw_user
+from metabaseapi.client.raw import user_key_value as raw_user_key_value
 from metabaseapi.errors import MetabaseDecodeError
 from metabaseapi.errors import MetabaseHTTPStatusError
 from metabaseapi.errors import MetabaseNetworkError
@@ -422,17 +423,20 @@ def test_raw_paths_cover_handwritten_endpoint_surface() -> None:
         (raw_dashboard.get_dashboard_public(client), ("GET", "/api/dashboard/public", None)),
         (raw_user.list_users(client), ("GET", "/api/user", None)),
         (raw_user.get_user(client, 15), ("GET", "/api/user/15", None)),
-        (raw_user.get_user_key_value_namespace(client, "user"), ("GET", "/api/user-key-value/namespace/user", None)),
         (
-            raw_user.put_user_key_value_namespace_key(client, "user", "foo", {"value": "bar"}),
+            raw_user_key_value.get_user_key_value_namespace(client, "user"),
+            ("GET", "/api/user-key-value/namespace/user", None),
+        ),
+        (
+            raw_user_key_value.put_user_key_value_namespace_key(client, "user", "foo", {"value": "bar"}),
             ("PUT", "/api/user-key-value/namespace/user/key/foo", {"value": "bar"}),
         ),
         (
-            raw_user.get_user_key_value_namespace_key(client, "user", "foo"),
+            raw_user_key_value.get_user_key_value_namespace_key(client, "user", "foo"),
             ("GET", "/api/user-key-value/namespace/user/key/foo", None),
         ),
         (
-            raw_user.delete_user_key_value_namespace_key(client, "user", "foo"),
+            raw_user_key_value.delete_user_key_value_namespace_key(client, "user", "foo"),
             ("DELETE", "/api/user-key-value/namespace/user/key/foo", None),
         ),
         (raw_collection.list_collections(client), ("GET", "/api/collection", None)),

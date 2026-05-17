@@ -416,6 +416,7 @@ def test_client_domain_modules_use_singular_names() -> None:
         "database",
         "schema",
         "user",
+        "user_key_value",
     )
     legacy_domains = (
         "actions",
@@ -471,6 +472,7 @@ def test_client_raw_module_names_match_registry() -> None:
         "database",
         "schema",
         "user",
+        "user_key_value",
     )
 
 

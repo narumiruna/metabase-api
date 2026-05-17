@@ -40,9 +40,9 @@ from .metabase.models import ListUsersResponse
 from .metabase.models import MetabaseField
 from .metabase.models import Table
 from .metabase.models import User
+from .models import APIRequestModel
+from .models import APIResponseModel
 from .models import JSONValue
-from .models import get_request_model
-from .models import get_response_model
 from .settings import Settings
 
 
@@ -115,8 +115,7 @@ class MetabaseClient:
         params: Mapping[str, str | int | bool | float | None] | None = None,
         json_data: JSONValue | None = None,
     ) -> JSONValue | None:
-        request_model_type = get_request_model(method, path)
-        request_model = request_model_type(
+        request_model = APIRequestModel(
             method=method,
             path=path,
             params=dict(params or {}),
@@ -126,21 +125,41 @@ class MetabaseClient:
         url = self._request_url(request_model.path)
         headers = {"X-API-Key": self.api_key, "Accept": "application/json"}
         try:
-            response = await self._client.request(
-                request_model.method,
-                url,
-                params=request_model.params,
-                json=request_model.body,
-                headers=headers,
-            )
+            match request_model.method:
+                case "GET":
+                    response = await self._client.get(url, params=request_model.params, headers=headers)
+                case "POST":
+                    response = await self._client.post(
+                        url,
+                        params=request_model.params,
+                        json=request_model.body,
+                        headers=headers,
+                    )
+                case "PUT":
+                    response = await self._client.put(
+                        url,
+                        params=request_model.params,
+                        json=request_model.body,
+                        headers=headers,
+                    )
+                case "PATCH":
+                    response = await self._client.patch(
+                        url,
+                        params=request_model.params,
+                        json=request_model.body,
+                        headers=headers,
+                    )
+                case "DELETE":
+                    response = await self._client.delete(url, params=request_model.params, headers=headers)
+                case _:
+                    raise AssertionError("unsupported HTTP method after request validation")
         except httpx.TimeoutException as exc:
             raise MetabaseNetworkError("Metabase request timed out") from exc
         except httpx.NetworkError as exc:
             raise MetabaseNetworkError("Metabase network error") from exc
 
         payload = self._decode_response_payload(response)
-        response_model_type = get_response_model(request_model.method, request_model.path)
-        response_model = response_model_type(
+        response_model = APIResponseModel(
             status_code=response.status_code,
             payload=payload,
             content_type=response.headers.get("content-type", None),

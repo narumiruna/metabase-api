@@ -7,12 +7,13 @@ from collections.abc import Coroutine
 from typing import Annotated
 
 import typer
+from pydantic import ValidationError
 
 from . import settings
 from .client import MetabaseClient
 from .errors import MetabaseError
+from .models import APIRequestModel
 from .models import JSONValue
-from .models import get_request_model
 
 app = typer.Typer(help="Async Metabase API CLI")
 
@@ -102,10 +103,10 @@ def _run_raw_request(
     params = _parse_key_value_pairs(query)
     payload = _parse_json_body(body)
 
-    request_model = get_request_model(method, path)
-    api_request = request_model(method=method, path=path, params=params, body=payload)
-    if api_request.method not in {"GET", "POST", "PUT", "PATCH", "DELETE"}:
-        raise typer.BadParameter("method must be GET, POST, PUT, PATCH, or DELETE")
+    try:
+        api_request = APIRequestModel(method=method, path=path, params=params, body=payload)
+    except ValidationError as exc:
+        raise typer.BadParameter("method must be DELETE, GET, PATCH, POST, or PUT") from exc
 
     async def do_request() -> JSONValue | None:
         async with create_client(client_settings) as client:
@@ -141,12 +142,12 @@ def configure(
 @app.command()
 def request(
     ctx: typer.Context,
-    method: str = typer.Argument(..., help="HTTP method (GET, POST, PUT, PATCH, DELETE)"),
+    method: str = typer.Argument(..., help="HTTP method (DELETE, GET, PATCH, POST, PUT)"),
     path: str = typer.Argument(..., help="API path or absolute URL"),
     query: Annotated[
         list[str] | None, typer.Option("--query", "-q", help="Repeatable key=value query parameters")
     ] = None,
-    body: Annotated[str | None, typer.Option("--body", "-b", help="Raw JSON body for POST/PUT requests")] = None,
+    body: Annotated[str | None, typer.Option("--body", "-b", help="Raw JSON body for POST/PUT/PATCH requests")] = None,
 ) -> None:
     """Send a raw Metabase HTTP request."""
 
@@ -157,12 +158,12 @@ def request(
 @app.command("invoke")
 def invoke(
     ctx: typer.Context,
-    method: str = typer.Argument(..., help="HTTP method (GET, POST, PUT, PATCH, DELETE)"),
+    method: str = typer.Argument(..., help="HTTP method (DELETE, GET, PATCH, POST, PUT)"),
     path: str = typer.Argument(..., help="API path or absolute URL"),
     query: Annotated[
         list[str] | None, typer.Option("--query", "-q", help="Repeatable key=value query parameters")
     ] = None,
-    body: Annotated[str | None, typer.Option("--body", "-b", help="Raw JSON body for POST/PUT requests")] = None,
+    body: Annotated[str | None, typer.Option("--body", "-b", help="Raw JSON body for POST/PUT/PATCH requests")] = None,
 ) -> None:
     """Generic API invoke command for structured endpoint calls."""
 

@@ -9,7 +9,90 @@ from metabaseapi.endpoints.execution import EndpointRequest
 from metabaseapi.endpoints.execution import MetabaseRequestClient
 from metabaseapi.endpoints.responses.common import GenericOperationResponse
 from metabaseapi.wire import JSONValue
+from metabaseapi.wire import QueryParamPrimitive
 from metabaseapi.wire import QueryParamValue
+
+
+class DashboardParamsValidFilterFieldsRequest(EndpointRequest[GenericOperationResponse]):
+    filtered: list[QueryParamPrimitive] | None = None
+    filtering: list[QueryParamPrimitive] | None = None
+
+    endpoint_method: ClassVar[str] = "GET"
+    endpoint_path: ClassVar[str] = "/api/dashboard/params/valid-filter-fields"
+
+    async def do(self, client: MetabaseRequestClient) -> GenericOperationResponse:
+        return await self.execute(client, GenericOperationResponse)
+
+    def do_sync(self, client: MetabaseRequestClient) -> GenericOperationResponse:
+        return self.execute_sync(client, GenericOperationResponse)
+
+    def request_params(self) -> dict[str, QueryParamValue]:
+        params: dict[str, QueryParamValue] = {}
+        if self.filtered is not None:
+            params["filtered"] = self.filtered
+        if self.filtering is not None:
+            params["filtering"] = self.filtering
+        return params
+
+
+class DashboardCardQueryRequest(EndpointRequest[GenericOperationResponse]):
+    dashboard_id: int | str
+    dashcard_id: int | str
+    card_id: int | str
+    body: dict[str, Any] | None = None
+
+    endpoint_method: ClassVar[str] = "POST"
+    endpoint_path: ClassVar[str] = "/api/dashboard/{dashboard-id}/dashcard/{dashcard-id}/card/{card-id}/query"
+
+    async def do(self, client: MetabaseRequestClient) -> GenericOperationResponse:
+        return await self.execute(client, GenericOperationResponse)
+
+    def do_sync(self, client: MetabaseRequestClient) -> GenericOperationResponse:
+        return self.execute_sync(client, GenericOperationResponse)
+
+    def resolve_path(self) -> str:
+        return f"/api/dashboard/{self.dashboard_id}/dashcard/{self.dashcard_id}/card/{self.card_id}/query"
+
+    def request_body(self) -> JSONValue | None:
+        return self.body
+
+
+class DashboardCardQueryExportRequest(EndpointRequest[GenericOperationResponse]):
+    dashboard_id: int | str
+    dashcard_id: int | str
+    card_id: int | str
+    export_format: str
+    body: dict[str, Any] | None = None
+    pivot_results: bool | None = None
+    format_rows: bool | None = None
+
+    endpoint_method: ClassVar[str] = "POST"
+    endpoint_path: ClassVar[str] = (
+        "/api/dashboard/{dashboard-id}/dashcard/{dashcard-id}/card/{card-id}/query/{export-format}"
+    )
+
+    async def do(self, client: MetabaseRequestClient) -> GenericOperationResponse:
+        return await self.execute(client, GenericOperationResponse)
+
+    def do_sync(self, client: MetabaseRequestClient) -> GenericOperationResponse:
+        return self.execute_sync(client, GenericOperationResponse)
+
+    def resolve_path(self) -> str:
+        return (
+            f"/api/dashboard/{self.dashboard_id}/dashcard/{self.dashcard_id}/card/"
+            f"{self.card_id}/query/{self.export_format}"
+        )
+
+    def request_params(self) -> dict[str, QueryParamValue]:
+        params: dict[str, QueryParamValue] = {}
+        if self.pivot_results is not None:
+            params["pivot-results"] = self.pivot_results
+        if self.format_rows is not None:
+            params["format-rows"] = self.format_rows
+        return params
+
+    def request_body(self) -> JSONValue | None:
+        return self.body
 
 
 class PostDashboardPivotQueryRequest(EndpointRequest[GenericOperationResponse]):

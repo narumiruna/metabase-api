@@ -3,22 +3,28 @@ from __future__ import annotations
 import asyncio
 import json
 import logging
-from collections.abc import Awaitable
-from collections.abc import Callable
 from collections.abc import Coroutine
+from typing import Protocol
+from typing import TypeVar
+from typing import cast
 
-from pydantic import BaseModel
 import typer
+from pydantic import BaseModel
 
 from metabaseapi import settings
 from metabaseapi.cli.error_adapter import error_payload
 from metabaseapi.cli.output import render_payload
 from metabaseapi.client import MetabaseClient
-from metabaseapi.endpoints.execution import EndpointRequest
 from metabaseapi.errors import MetabaseError
 from metabaseapi.wire import JSONValue
 
 app = typer.Typer(help="Async Metabase API CLI")
+
+ResponseT = TypeVar("ResponseT")
+
+
+class EndpointCommandRequest(Protocol[ResponseT]):
+    async def do(self, client: MetabaseClient) -> ResponseT: ...
 
 
 def create_client(
@@ -80,11 +86,11 @@ def parse_optional_json_list(raw: str | None, parameter_name: str) -> list[objec
 
 def _json_payload(result: object) -> JSONValue | None:
     if isinstance(result, BaseModel):
-        return result.model_dump(mode="json", exclude_none=True)
-    return result  # type: ignore[return-value]
+        return cast("JSONValue", result.model_dump(mode="json", exclude_none=True))
+    return cast("JSONValue | None", result)
 
 
-def _run_async(coro: Coroutine[object, object, object]) -> JSONValue | None:
+def _run_async(coro: Coroutine[object, object, object]) -> object:
     return asyncio.run(coro)
 
 
@@ -105,28 +111,10 @@ def _get_settings(ctx: typer.Context) -> settings.Settings:
     return settings_obj
 
 
-def _client_call(
-    ctx: typer.Context,
-    call: Callable[[MetabaseClient], Awaitable[JSONValue | None]],
-) -> Coroutine[object, object, JSONValue | None]:
-    async def do_request() -> JSONValue | None:
-        async with create_client(_get_settings(ctx)) as client:
-            return await call(client)
-
-    return do_request()
-
-
-def run_client_command(
-    ctx: typer.Context,
-    call: Callable[[MetabaseClient], Awaitable[JSONValue | None]],
-) -> None:
-    _run_and_print(_client_call(ctx, call))
-
-
-def run_endpoint_command(ctx: typer.Context, request: EndpointRequest[object]) -> None:
+def run_endpoint_command(ctx: typer.Context, request: EndpointCommandRequest[object]) -> None:
     async def do_request() -> object:
         async with create_client(_get_settings(ctx)) as client:
-            return await client.run(request)
+            return await request.do(client)
 
     _run_and_print(do_request())
 

@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import json
+
 import pytest
 from typer.testing import CliRunner
 
@@ -7,6 +9,21 @@ from metabaseapi import cli
 from metabaseapi.errors import MetabaseHTTPStatusError
 
 runner = CliRunner()
+
+
+def _contains_mapping(payload: object, expected: dict[str, object]) -> bool:
+    if isinstance(payload, dict):
+        mapping = dict(payload)
+        if all(mapping.get(key) == value for key, value in expected.items()):
+            return True
+        return any(_contains_mapping(value, expected) for value in mapping.values())
+    if isinstance(payload, list):
+        return any(_contains_mapping(item, expected) for item in payload)
+    return False
+
+
+def _assert_json_contains(stdout: str, expected: dict[str, object]) -> None:
+    assert _contains_mapping(json.loads(stdout), expected)
 
 
 class _ClientWithRequestMethods:
@@ -20,6 +37,18 @@ class _ClientWithRequestMethods:
         if path == "/api/user/current":
             return {"name": "Alice"}
         return {"method": "GET", "path": path, "params": params}
+
+    async def request(
+        self,
+        method: str,
+        path: str,
+        *,
+        params: object | None = None,
+        json_data: object | None = None,
+    ) -> dict[str, object]:
+        if path == "/api/user/current":
+            return {"name": "Alice"}
+        return {"method": method, "path": path, "params": params, "body": json_data}
 
     async def post(
         self,
@@ -783,6 +812,9 @@ class _ConvenienceClient(_ClientWithRequestMethods):
 
 
 class _ErrorClient(_ClientWithRequestMethods):
+    async def request(self, *_: object, **__: object) -> dict[str, object]:
+        raise MetabaseHTTPStatusError(401, {"message": "unauthorized"})
+
     async def get(self, *_: object, **__: object) -> dict[str, object]:
         raise MetabaseHTTPStatusError(401, {"message": "unauthorized"})
 
@@ -990,8 +1022,7 @@ def test_get_database_command_outputs_json(monkeypatch: pytest.MonkeyPatch) -> N
     )
 
     assert result.exit_code == 0
-    assert '\n  "path": "/api/database/12"' in result.stdout
-    assert '\n  "method": "GET"' in result.stdout
+    _assert_json_contains(result.stdout, {"method": "GET", "path": "/api/database/12"})
 
 
 @pytest.mark.parametrize(
@@ -1105,8 +1136,7 @@ def test_read_endpoint_commands_cover_handwritten_surface(
     )
 
     assert result.exit_code == 0
-    assert '\n  "method": "GET"' in result.stdout
-    assert f'\n  "path": "{expected_path}"' in result.stdout
+    _assert_json_contains(result.stdout, {"method": "GET", "path": expected_path})
 
 
 @pytest.mark.parametrize(
@@ -1246,8 +1276,7 @@ def test_action_mutation_commands_cover_handwritten_surface(
     result = runner.invoke(cli.app, ["--base-url", "http://localhost:3000", "--api-key", "abc", *command])
 
     assert result.exit_code == 0
-    assert f'\n  "method": "{expected_method}"' in result.stdout
-    assert f'\n  "path": "{expected_path}"' in result.stdout
+    _assert_json_contains(result.stdout, {"method": expected_method, "path": expected_path})
 
 
 def test_create_question_command_posts_card_json(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -1275,8 +1304,7 @@ def test_create_question_command_posts_card_json(monkeypatch: pytest.MonkeyPatch
     )
 
     assert result.exit_code == 0
-    assert '\n  "method": "POST"' in result.stdout
-    assert '\n  "path": "/api/card"' in result.stdout
+    _assert_json_contains(result.stdout, {"method": "POST", "path": "/api/card"})
     assert '\n    "type": "question"' in result.stdout
     assert '\n    "collection_id": "root"' in result.stdout
 
@@ -1319,8 +1347,7 @@ def test_create_database_command_posts_json(monkeypatch: pytest.MonkeyPatch) -> 
     )
 
     assert result.exit_code == 0
-    assert '\n  "method": "POST"' in result.stdout
-    assert '\n  "path": "/api/database"' in result.stdout
+    _assert_json_contains(result.stdout, {"method": "POST", "path": "/api/database"})
     assert '\n  "body"' in result.stdout
 
 

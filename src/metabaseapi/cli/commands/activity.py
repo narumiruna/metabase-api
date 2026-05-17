@@ -4,51 +4,40 @@ import typer
 
 from metabaseapi.cli.runtime import app
 from metabaseapi.cli.runtime import parse_json_object
-from metabaseapi.cli.runtime import run_client_command
-from metabaseapi.client.raw import activity as _raw_activity
+from metabaseapi.cli.runtime import run_endpoint_command
+from metabaseapi.endpoints.requests.activity import CreateRecentRequest
+from metabaseapi.endpoints.requests.activity import GetMostRecentlyViewedDashboardRequest
+from metabaseapi.endpoints.requests.activity import ListPopularItemsRequest
+from metabaseapi.endpoints.requests.activity import ListRecentsRequest
+from metabaseapi.endpoints.requests.activity import ListRecentViewsRequest
 
 
 @app.command("most-recently-viewed-dashboard")
 def most_recently_viewed_dashboard(ctx: typer.Context) -> None:
     """Get the most recently viewed dashboard."""
 
-    run_client_command(
-        ctx,
-        lambda client: _raw_activity.most_recently_viewed_dashboard(
-            client,
-        ),
-    )
+    run_endpoint_command(ctx, GetMostRecentlyViewedDashboardRequest())
 
 
 @app.command("list-popular-items")
 def list_popular_items(ctx: typer.Context) -> None:
     """List popular items."""
 
-    run_client_command(
-        ctx,
-        lambda client: _raw_activity.list_popular_items(
-            client,
-        ),
-    )
+    run_endpoint_command(ctx, ListPopularItemsRequest())
 
 
 @app.command("list-recent-views")
 def list_recent_views(ctx: typer.Context) -> None:
     """List recent views."""
 
-    run_client_command(
-        ctx,
-        lambda client: _raw_activity.list_recent_views(
-            client,
-        ),
-    )
+    run_endpoint_command(ctx, ListRecentViewsRequest())
 
 
 @app.command("list-recents")
 def list_recents(ctx: typer.Context, context: str | None = typer.Option(None, "--context")) -> None:
     """List recents."""
 
-    run_client_command(ctx, lambda client: _raw_activity.list_recents(client, context=context))
+    run_endpoint_command(ctx, ListRecentsRequest(context=context))
 
 
 @app.command("create-recent")
@@ -56,4 +45,4 @@ def create_recent(ctx: typer.Context, body: str = typer.Argument(..., help="Rece
     """Add a recently selected item."""
 
     payload = parse_json_object(body, "body")
-    run_client_command(ctx, lambda client: _raw_activity.create_recent(client, payload))
+    run_endpoint_command(ctx, CreateRecentRequest(body=payload))

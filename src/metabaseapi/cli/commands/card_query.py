@@ -4,8 +4,17 @@ import typer
 
 from metabaseapi.cli.runtime import app
 from metabaseapi.cli.runtime import parse_optional_json_object
-from metabaseapi.cli.runtime import run_client_command
-from metabaseapi.client.raw import card_query as _raw_card_query
+from metabaseapi.cli.runtime import run_endpoint_command
+from metabaseapi.endpoints.requests.card_query import CardParamsSearchRequest
+from metabaseapi.endpoints.requests.card_query import CardParamsValuesRequest
+from metabaseapi.endpoints.requests.card_query import CardQueryExportRequest
+from metabaseapi.endpoints.requests.card_query import CardQueryRequest
+from metabaseapi.endpoints.requests.card_query import CardRemappingRequest
+from metabaseapi.endpoints.requests.card_query import CardsDashboardsRequest
+from metabaseapi.endpoints.requests.card_query import GetCardDashboardsRequest
+from metabaseapi.endpoints.requests.card_query import GetCardQueryMetadataRequest
+from metabaseapi.endpoints.requests.card_query import GetCardSeriesRequest
+from metabaseapi.endpoints.requests.card_query import PostCardPivotQueryRequest
 
 
 @app.command("pivot-query")
@@ -15,7 +24,7 @@ def pivot_query(
     body: str = typer.Argument(None, help="Optional query body JSON object"),
 ) -> None:
     payload = parse_optional_json_object(body, "body") if body else None
-    run_client_command(ctx, lambda client: _raw_card_query.pivot_query(client, card_id, body=payload))
+    run_endpoint_command(ctx, PostCardPivotQueryRequest(card_id=card_id, body=payload or {}))
 
 
 @app.command("query-card")
@@ -25,7 +34,7 @@ def query_card(
     body: str = typer.Argument(None, help="Optional query payload JSON object"),
 ) -> None:
     payload = parse_optional_json_object(body, "body") if body else None
-    run_client_command(ctx, lambda client: _raw_card_query.query_card(client, card_id, body=payload))
+    run_endpoint_command(ctx, CardQueryRequest(card_id=card_id, body=payload or {}))
 
 
 @app.command("query-card-export")
@@ -38,13 +47,12 @@ def query_card_export(
     format_rows: bool | None = typer.Option(None, "--format-rows"),
 ) -> None:
     payload = parse_optional_json_object(body, "body") if body else None
-    run_client_command(
+    run_endpoint_command(
         ctx,
-        lambda client: _raw_card_query.query_card_export(
-            client,
-            card_id,
-            export_format,
-            body=payload,
+        CardQueryExportRequest(
+            card_id=card_id,
+            export_format=export_format,
+            body=payload or {},
             pivot_results=pivot_results,
             format_rows=format_rows,
         ),
@@ -55,12 +63,12 @@ def query_card_export(
 def cards_dashboards(ctx: typer.Context, card_ids: str = typer.Argument(..., help="Comma-separated card IDs")) -> None:
     ids: list[int | str]
     ids = [card_id if not card_id.isdigit() else int(card_id) for card_id in card_ids.split(",") if card_id]
-    run_client_command(ctx, lambda client: _raw_card_query.cards_dashboards(client, ids))
+    run_endpoint_command(ctx, CardsDashboardsRequest(card_ids=ids))
 
 
 @app.command("get-card-dashboards")
 def get_card_dashboards(ctx: typer.Context, card_id: str = typer.Argument(...)) -> None:
-    run_client_command(ctx, lambda client: _raw_card_query.get_card_dashboards(client, card_id))
+    run_endpoint_command(ctx, GetCardDashboardsRequest(card_id=card_id))
 
 
 @app.command("get-card-param-search")
@@ -70,8 +78,9 @@ def get_card_param_search_values(
     param_key: str = typer.Argument(...),
     query: str = typer.Argument(...),
 ) -> None:
-    run_client_command(
-        ctx, lambda client: _raw_card_query.get_card_param_search_values(client, card_id, param_key, query)
+    run_endpoint_command(
+        ctx,
+        CardParamsSearchRequest(card_id=card_id, param_key=param_key, query=query),
     )
 
 
@@ -79,21 +88,21 @@ def get_card_param_search_values(
 def get_card_param_values(
     ctx: typer.Context, card_id: str = typer.Argument(...), param_key: str = typer.Argument(...)
 ) -> None:
-    run_client_command(ctx, lambda client: _raw_card_query.get_card_param_values(client, card_id, param_key))
+    run_endpoint_command(ctx, CardParamsValuesRequest(card_id=card_id, param_key=param_key))
 
 
 @app.command("get-card-param-remapping")
 def get_card_param_remapping(
     ctx: typer.Context, card_id: str = typer.Argument(...), param_key: str = typer.Argument(...)
 ) -> None:
-    run_client_command(ctx, lambda client: _raw_card_query.get_card_param_remapping(client, card_id, param_key))
+    run_endpoint_command(ctx, CardRemappingRequest(card_id=card_id, param_key=param_key))
 
 
 @app.command("get-card-query-metadata")
 def get_card_query_metadata(ctx: typer.Context, card_id: str = typer.Argument(...)) -> None:
-    run_client_command(ctx, lambda client: _raw_card_query.get_card_query_metadata(client, card_id))
+    run_endpoint_command(ctx, GetCardQueryMetadataRequest(card_id=card_id))
 
 
 @app.command("get-card-series")
 def get_card_series(ctx: typer.Context, card_id: str = typer.Argument(...)) -> None:
-    run_client_command(ctx, lambda client: _raw_card_query.get_card_series(client, card_id))
+    run_endpoint_command(ctx, GetCardSeriesRequest(card_id=card_id))

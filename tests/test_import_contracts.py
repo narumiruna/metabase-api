@@ -15,7 +15,6 @@ import metabaseapi.cli.commands
 import metabaseapi.cli.runtime
 import metabaseapi.client
 import metabaseapi.client.http
-import metabaseapi.client.raw
 import metabaseapi.endpoints
 import metabaseapi.endpoints.entities
 import metabaseapi.endpoints.execution
@@ -402,69 +401,9 @@ def test_client_public_exports_use_http_implementation() -> None:
         importlib.import_module("metabaseapi.client.mixins")
 
 
-def test_client_raw_package_does_not_reexport_aggregate_mixins() -> None:
-    assert metabaseapi.client.raw.__all__ == [
-        "RAW_MODULES",
-        "raw_module_names",
-        "raw_module_paths",
-    ]
-    assert not hasattr(metabaseapi.client.raw, "_MetabaseClientRawMixin")
-
-
 def test_client_typed_package_is_not_importable() -> None:
     with pytest.raises(ModuleNotFoundError):
         importlib.import_module("metabaseapi.client.typed")
-
-
-def test_client_data_studio_replaces_misc_module_name() -> None:
-    importlib.import_module("metabaseapi.client.raw.data_studio")
-    with pytest.raises(ModuleNotFoundError):
-        importlib.import_module("metabaseapi.client.raw.misc")
-    with pytest.raises(ModuleNotFoundError):
-        importlib.import_module("metabaseapi.client.typed.misc")
-
-
-def test_client_domain_modules_use_singular_names() -> None:
-    singular_domains = (
-        "action",
-        "alert",
-        "ai_entity_analysis",
-        "bookmark",
-        "card",
-        "channel",
-        "cloud_migration",
-        "collection",
-        "collection_graph",
-        "collection_root",
-        "comment",
-        "dashboard",
-        "database",
-        "field",
-        "table",
-        "user",
-        "user_key_value",
-    )
-    legacy_domains = (
-        "actions",
-        "alerts",
-        "bookmarks",
-        "cards",
-        "channels",
-        "cloud",
-        "collections",
-        "comments",
-        "dashboards",
-        "databases",
-        "tables",
-        "users",
-    )
-    for domain in singular_domains:
-        importlib.import_module(f"metabaseapi.client.raw.{domain}")
-    for domain in legacy_domains:
-        with pytest.raises(ModuleNotFoundError):
-            importlib.import_module(f"metabaseapi.client.raw.{domain}")
-        with pytest.raises(ModuleNotFoundError):
-            importlib.import_module(f"metabaseapi.client.typed.{domain}")
 
 
 def _client_module_stems(package: object) -> tuple[str, ...]:
@@ -474,16 +413,6 @@ def _client_module_stems(package: object) -> tuple[str, ...]:
     return tuple(sorted(path.stem for path in package_path.glob("*.py") if path.stem != "__init__"))
 
 
-def test_client_raw_module_names_match_registry() -> None:
-    raw_modules = _client_module_stems(metabaseapi.client.raw)
-
-    assert raw_modules == tuple(sorted(metabaseapi.client.raw.RAW_MODULES))
-    assert metabaseapi.client.raw.raw_module_names() == metabaseapi.client.raw.RAW_MODULES
-    assert metabaseapi.client.raw.raw_module_paths() == tuple(
-        f"metabaseapi.client.raw.{module_name}" for module_name in metabaseapi.client.raw.RAW_MODULES
-    )
-
-
 def test_cli_command_modules_depend_on_runtime_not_cli_facade() -> None:
     command_package_path = Path(metabaseapi.cli.commands.__file__).parent
     for source_path in command_package_path.glob("*.py"):
@@ -491,16 +420,6 @@ def test_cli_command_modules_depend_on_runtime_not_cli_facade() -> None:
             continue
         source = source_path.read_text(encoding="utf-8")
         assert "from metabaseapi.cli import " not in source
-
-
-def test_client_domain_modules_expose_functions_not_mixins() -> None:
-    package_path = Path(metabaseapi.client.raw.__file__).parent
-    for source_path in package_path.glob("*.py"):
-        if source_path.stem == "__init__":
-            continue
-        source = source_path.read_text(encoding="utf-8")
-        assert "class _" not in source
-        assert "Mixin" not in source
 
 
 def test_cli_entrypoint_importable() -> None:

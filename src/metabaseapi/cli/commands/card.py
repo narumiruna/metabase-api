@@ -7,20 +7,26 @@ from metabaseapi.cli.runtime import parse_json_body
 from metabaseapi.cli.runtime import parse_json_object
 from metabaseapi.cli.runtime import parse_optional_json_list
 from metabaseapi.cli.runtime import parse_optional_json_object
-from metabaseapi.cli.runtime import run_client_command
-from metabaseapi.client.raw import card as _raw_card
+from metabaseapi.cli.runtime import run_endpoint_command
+from metabaseapi.endpoints.requests.card import CopyCardRequest
+from metabaseapi.endpoints.requests.card import CreateCardPublicLinkRequest
+from metabaseapi.endpoints.requests.card import CreateCardRequest
+from metabaseapi.endpoints.requests.card import DeleteCardPublicLinkRequest
+from metabaseapi.endpoints.requests.card import DeleteCardRequest
+from metabaseapi.endpoints.requests.card import GetCardCollectionsRequest
+from metabaseapi.endpoints.requests.card import GetCardEmbeddableRequest
+from metabaseapi.endpoints.requests.card import GetCardPublicRequest
+from metabaseapi.endpoints.requests.card import GetCardRequest
+from metabaseapi.endpoints.requests.card import ListCardsRequest
+from metabaseapi.endpoints.requests.card import MoveCardsRequest
+from metabaseapi.endpoints.requests.card import UpdateCardRequest
 
 
 @app.command("list-cards")
 def list_cards(ctx: typer.Context) -> None:
     """List cards."""
 
-    run_client_command(
-        ctx,
-        lambda client: _raw_card.list_cards(
-            client,
-        ),
-    )
+    run_endpoint_command(ctx, ListCardsRequest())
 
 
 @app.command("create-card")
@@ -50,15 +56,14 @@ def create_card(
     parameters_payload = parse_optional_json_list(parameters, "parameters")
     result_metadata_payload = parse_optional_json_list(result_metadata, "result-metadata")
 
-    run_client_command(
+    run_endpoint_command(
         ctx,
-        lambda client: _raw_card.create_card(
-            client,
+        CreateCardRequest(
             name=name,
             dataset_query=dataset_query_payload,
             display=display,
-            visualization_settings=visualization_settings_payload,
-            card_type=card_type,
+            visualization_settings=visualization_settings_payload or {},
+            type=card_type,
             collection_id=collection_id,
             description=description,
             parameters=parameters_payload,
@@ -93,14 +98,14 @@ def create_question(
     parameters_payload = parse_optional_json_list(parameters, "parameters")
     result_metadata_payload = parse_optional_json_list(result_metadata, "result-metadata")
 
-    run_client_command(
+    run_endpoint_command(
         ctx,
-        lambda client: _raw_card.create_question(
-            client,
+        CreateCardRequest(
             name=name,
             dataset_query=dataset_query_payload,
             display=display,
-            visualization_settings=visualization_settings_payload,
+            visualization_settings=visualization_settings_payload or {},
+            type="question",
             collection_id=collection_id,
             description=description,
             parameters=parameters_payload,
@@ -113,7 +118,7 @@ def create_question(
 def get_card(ctx: typer.Context, card_id: str = typer.Argument(...)) -> None:
     """Get a card by ID."""
 
-    run_client_command(ctx, lambda client: _raw_card.get_card(client, card_id))
+    run_endpoint_command(ctx, GetCardRequest(card_id=card_id))
 
 
 @app.command("card-collections")
@@ -124,65 +129,55 @@ def card_collections(
 ) -> None:
     ids: list[int | str]
     ids = [card_id if not card_id.isdigit() else int(card_id) for card_id in card_ids.split(",") if card_id]
-    run_client_command(ctx, lambda client: _raw_card.card_collections(client, ids, collection_id=collection_id))
+    run_endpoint_command(ctx, GetCardCollectionsRequest(card_ids=ids, collection_id=collection_id))
 
 
 @app.command("list-embeddable-cards")
 def list_embeddable_cards(ctx: typer.Context) -> None:
     """List embeddable cards."""
 
-    run_client_command(
-        ctx,
-        lambda client: _raw_card.list_embeddable_cards(
-            client,
-        ),
-    )
+    run_endpoint_command(ctx, GetCardEmbeddableRequest())
 
 
 @app.command("list-public-cards")
 def list_public_cards(ctx: typer.Context) -> None:
     """List publicly shared cards."""
 
-    run_client_command(
-        ctx,
-        lambda client: _raw_card.list_public_cards(
-            client,
-        ),
-    )
+    run_endpoint_command(ctx, GetCardPublicRequest())
 
 
 @app.command("create-card-public-link")
 def create_card_public_link(ctx: typer.Context, card_id: str = typer.Argument(...)) -> None:
     """Create a public link for a card."""
 
-    run_client_command(ctx, lambda client: _raw_card.create_card_public_link(client, card_id))
+    run_endpoint_command(ctx, CreateCardPublicLinkRequest(card_id=card_id))
 
 
 @app.command("delete-card-public-link")
 def delete_card_public_link(ctx: typer.Context, card_id: str = typer.Argument(...)) -> None:
     """Delete a public link for a card."""
 
-    run_client_command(ctx, lambda client: _raw_card.delete_card_public_link(client, card_id))
+    run_endpoint_command(ctx, DeleteCardPublicLinkRequest(card_id=card_id))
 
 
 @app.command("update-card")
 def update_card(ctx: typer.Context, card_id: str = typer.Argument(...), body: str = typer.Argument(...)) -> None:
     payload = parse_json_object(body, "body")
-    run_client_command(ctx, lambda client: _raw_card.update_card(client, card_id, payload))
+    run_endpoint_command(ctx, UpdateCardRequest(card_id=card_id, body=payload))
 
 
 @app.command("delete-card")
 def delete_card(ctx: typer.Context, card_id: str = typer.Argument(...)) -> None:
     """Delete a card."""
 
-    run_client_command(ctx, lambda client: _raw_card.delete_card(client, card_id))
+    run_endpoint_command(ctx, DeleteCardRequest(card_id=card_id))
 
 
 @app.command("copy-card")
 def copy_card(ctx: typer.Context, card_id: str = typer.Argument(...)) -> None:
     """Copy a card."""
 
-    run_client_command(ctx, lambda client: _raw_card.copy_card(client, card_id))
+    run_endpoint_command(ctx, CopyCardRequest(card_id=card_id))
 
 
 @app.command("move-cards")
@@ -190,4 +185,4 @@ def move_cards(ctx: typer.Context, body: str = typer.Argument(..., help="Move pa
     payload = parse_json_body(body)
     if not isinstance(payload, dict):
         raise typer.BadParameter("body must be a JSON object")
-    run_client_command(ctx, lambda client: _raw_card.move_cards(client, payload))
+    run_endpoint_command(ctx, MoveCardsRequest(body=payload))

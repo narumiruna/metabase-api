@@ -4,8 +4,10 @@ import typer
 
 from metabaseapi.cli.runtime import app
 from metabaseapi.cli.runtime import parse_json_object
-from metabaseapi.cli.runtime import run_client_command
-from metabaseapi.client.raw import cloud_migration as _raw_cloud_migration
+from metabaseapi.cli.runtime import run_endpoint_command
+from metabaseapi.endpoints.requests.cloud_migration import CancelCloudMigrationRequest
+from metabaseapi.endpoints.requests.cloud_migration import CreateCloudMigrationRequest
+from metabaseapi.endpoints.requests.cloud_migration import GetCloudMigrationRequest
 
 
 @app.command("create-cloud-migration")
@@ -16,28 +18,18 @@ def create_cloud_migration(
     """Initiate a new cloud migration."""
 
     payload = parse_json_object(body, "body")
-    run_client_command(ctx, lambda client: _raw_cloud_migration.create_cloud_migration(client, payload))
+    run_endpoint_command(ctx, CreateCloudMigrationRequest(body=payload))
 
 
 @app.command("get-cloud-migration")
 def get_cloud_migration(ctx: typer.Context) -> None:
     """Get the latest cloud migration, if any."""
 
-    run_client_command(
-        ctx,
-        lambda client: _raw_cloud_migration.get_cloud_migration(
-            client,
-        ),
-    )
+    run_endpoint_command(ctx, GetCloudMigrationRequest())
 
 
 @app.command("cancel-cloud-migration")
 def cancel_cloud_migration(ctx: typer.Context) -> None:
     """Cancel any ongoing cloud migrations, if any."""
 
-    run_client_command(
-        ctx,
-        lambda client: _raw_cloud_migration.cancel_cloud_migration(
-            client,
-        ),
-    )
+    run_endpoint_command(ctx, CancelCloudMigrationRequest())

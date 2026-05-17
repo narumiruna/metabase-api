@@ -4,27 +4,24 @@ import typer
 
 from metabaseapi.cli.runtime import app
 from metabaseapi.cli.runtime import parse_json_body
-from metabaseapi.cli.runtime import run_client_command
-from metabaseapi.client.raw import database as _raw_database
+from metabaseapi.cli.runtime import run_endpoint_command
+from metabaseapi.endpoints.requests.database import CreateDatabaseRequest
+from metabaseapi.endpoints.requests.database import GetDatabaseRequest
+from metabaseapi.endpoints.requests.database import ListDatabasesRequest
 
 
 @app.command("list-databases")
 def list_databases(ctx: typer.Context) -> None:
     """List configured databases."""
 
-    run_client_command(
-        ctx,
-        lambda client: _raw_database.list_databases(
-            client,
-        ),
-    )
+    run_endpoint_command(ctx, ListDatabasesRequest())
 
 
 @app.command("get-database")
 def get_database(ctx: typer.Context, database_id: str = typer.Argument(...)) -> None:
     """Get a database by ID."""
 
-    run_client_command(ctx, lambda client: _raw_database.get_database(client, database_id))
+    run_endpoint_command(ctx, GetDatabaseRequest(database_id=database_id))
 
 
 @app.command("create-database")
@@ -45,7 +42,4 @@ def create_database(
             raise typer.BadParameter("details must be a JSON object")
         details_payload = parsed
 
-    run_client_command(
-        ctx,
-        lambda client: _raw_database.create_database(client, name=name, engine=engine, details=details_payload),
-    )
+    run_endpoint_command(ctx, CreateDatabaseRequest(name=name, engine=engine, details=details_payload or {}))

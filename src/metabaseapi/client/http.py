@@ -28,7 +28,7 @@ ResponseT = TypeVar("ResponseT")
 
 
 class MetabaseClient:
-    """Async Metabase API client with a small convenience API surface."""
+    """Async Metabase API client that runs endpoint requests over HTTP."""
 
     def __init__(
         self,
@@ -171,50 +171,6 @@ class MetabaseClient:
             "content_type": content_type or None,
             "text": response.text,
         }
-
-    async def get(
-        self,
-        path: str,
-        *,
-        params: Mapping[str, QueryParamValue] | None = None,
-    ) -> JSONValue | None:
-        return await self.request("GET", path, params=params)
-
-    async def post(
-        self,
-        path: str,
-        *,
-        params: Mapping[str, QueryParamValue] | None = None,
-        body: JSONValue | None = None,
-    ) -> JSONValue | None:
-        return await self.request("POST", path, params=params, json_data=body)
-
-    async def put(
-        self,
-        path: str,
-        *,
-        params: Mapping[str, QueryParamValue] | None = None,
-        body: JSONValue | None = None,
-    ) -> JSONValue | None:
-        return await self.request("PUT", path, params=params, json_data=body)
-
-    async def patch(
-        self,
-        path: str,
-        *,
-        params: Mapping[str, QueryParamValue] | None = None,
-        body: JSONValue | None = None,
-    ) -> JSONValue | None:
-        return await self.request("PATCH", path, params=params, json_data=body)
-
-    async def delete(
-        self,
-        path: str,
-        *,
-        params: Mapping[str, QueryParamValue] | None = None,
-        body: JSONValue | None = None,
-    ) -> JSONValue | None:
-        return await self.request("DELETE", path, params=params, json_data=body)
 
     async def run[ResponseT](self, request_model: _ExecutableRequest[ResponseT]) -> ResponseT:
         return await request_model.do(self)

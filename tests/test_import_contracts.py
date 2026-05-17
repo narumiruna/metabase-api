@@ -397,6 +397,11 @@ def test_client_public_exports_use_http_implementation() -> None:
     assert metabaseapi.client.MetabaseClient is metabaseapi.client.http.MetabaseClient
     assert not hasattr(metabaseapi.client, "_MetabaseClientRawMixin")
     assert not hasattr(metabaseapi.client, "_MetabaseClientTypedMixin")
+    assert not hasattr(metabaseapi.client.MetabaseClient, "get")
+    assert not hasattr(metabaseapi.client.MetabaseClient, "post")
+    assert not hasattr(metabaseapi.client.MetabaseClient, "put")
+    assert not hasattr(metabaseapi.client.MetabaseClient, "patch")
+    assert not hasattr(metabaseapi.client.MetabaseClient, "delete")
     with pytest.raises(ModuleNotFoundError):
         importlib.import_module("metabaseapi.client.mixins")
 

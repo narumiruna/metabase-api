@@ -38,6 +38,7 @@ import metabaseapi.endpoints.requests.cloud_migration
 import metabaseapi.endpoints.requests.collection
 import metabaseapi.endpoints.requests.comment
 import metabaseapi.endpoints.requests.dashboard
+import metabaseapi.endpoints.requests.dashboard_query
 import metabaseapi.endpoints.requests.data_studio
 import metabaseapi.endpoints.requests.database
 import metabaseapi.endpoints.requests.field
@@ -213,11 +214,8 @@ REQUEST_MODULE_CONTRACTS = {
         "GetDashboardRequest",
         "GetDashboardEmbeddableRequest",
         "GetDashboardPublicRequest",
-        "PostDashboardPivotQueryRequest",
         "SaveDashboardRequest",
         "SaveDashboardToCollectionRequest",
-        "GetDashboardDashcardExecuteRequest",
-        "ExecuteDashboardDashcardRequest",
         "CreateDashboardPublicLinkRequest",
         "DeleteDashboardPublicLinkRequest",
         "CopyDashboardRequest",
@@ -225,6 +223,11 @@ REQUEST_MODULE_CONTRACTS = {
         "UpdateDashboardRequest",
         "UpdateDashboardCardsRequest",
         "GetDashboardItemsRequest",
+    ),
+    "dashboard_query": (
+        "PostDashboardPivotQueryRequest",
+        "GetDashboardDashcardExecuteRequest",
+        "ExecuteDashboardDashcardRequest",
         "DashboardParamRemappingRequest",
         "DashboardParamSearchRequest",
         "DashboardParamValuesRequest",

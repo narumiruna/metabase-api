@@ -422,7 +422,6 @@ def test_endpoints_entities_public_exports_match_entity_models() -> None:
 
 def test_endpoints_response_package_does_not_reexport_response_classes() -> None:
     assert metabaseapi.endpoints.responses.__all__ == [
-        "RESPONSE_MODULES",
         "response_module_names",
         "response_module_paths",
     ]
@@ -434,11 +433,11 @@ def test_endpoints_response_registry_matches_package_files() -> None:
     response_module_files = tuple(
         sorted(path.stem for path in response_package_path.glob("*.py") if path.stem != "__init__")
     )
-    assert response_module_files == tuple(sorted(metabaseapi.endpoints.responses.RESPONSE_MODULES))
+    assert response_module_files == tuple(sorted(metabaseapi.endpoints.responses.response_module_names()))
     assert tuple(RESPONSE_MODULE_CONTRACTS) == metabaseapi.endpoints.responses.response_module_names()
     assert metabaseapi.endpoints.responses.response_module_paths() == tuple(
         f"metabaseapi.endpoints.responses.{module_name}"
-        for module_name in metabaseapi.endpoints.responses.RESPONSE_MODULES
+        for module_name in metabaseapi.endpoints.responses.response_module_names()
     )
 
 
@@ -451,7 +450,6 @@ def test_endpoints_response_modules_own_response_classes() -> None:
 
 def test_endpoints_request_package_does_not_reexport_request_classes() -> None:
     assert metabaseapi.endpoints.requests.__all__ == [
-        "REQUEST_MODULES",
         "request_module_names",
         "request_module_objects",
         "request_module_paths",
@@ -471,11 +469,11 @@ def test_endpoints_request_registry_matches_package_files() -> None:
     endpoint_module_files = tuple(
         sorted(path.stem for path in endpoint_package_path.glob("*.py") if path.stem != "__init__")
     )
-    assert endpoint_module_files == tuple(sorted(metabaseapi.endpoints.requests.REQUEST_MODULES))
+    assert endpoint_module_files == tuple(sorted(metabaseapi.endpoints.requests.request_module_names()))
     assert tuple(REQUEST_MODULE_CONTRACTS) == metabaseapi.endpoints.requests.request_module_names()
     assert metabaseapi.endpoints.requests.request_module_paths() == tuple(
         f"metabaseapi.endpoints.requests.{module_name}"
-        for module_name in metabaseapi.endpoints.requests.REQUEST_MODULES
+        for module_name in metabaseapi.endpoints.requests.request_module_names()
     )
 
 

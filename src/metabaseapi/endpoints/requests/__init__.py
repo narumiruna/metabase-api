@@ -5,7 +5,7 @@ from __future__ import annotations
 from importlib import import_module
 from types import ModuleType
 
-REQUEST_MODULES = (
+_REQUEST_MODULES = (
     "action",
     "activity",
     "ai_entity_analysis",
@@ -37,11 +37,11 @@ REQUEST_MODULES = (
 
 
 def request_module_names() -> tuple[str, ...]:
-    return REQUEST_MODULES
+    return _REQUEST_MODULES
 
 
 def request_module_paths() -> tuple[str, ...]:
-    return tuple(f"{__name__}.{module_name}" for module_name in REQUEST_MODULES)
+    return tuple(f"{__name__}.{module_name}" for module_name in _REQUEST_MODULES)
 
 
 def request_module_objects() -> tuple[ModuleType, ...]:
@@ -49,7 +49,6 @@ def request_module_objects() -> tuple[ModuleType, ...]:
 
 
 __all__ = [
-    "REQUEST_MODULES",
     "request_module_names",
     "request_module_objects",
     "request_module_paths",

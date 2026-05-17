@@ -485,6 +485,15 @@ class _ConvenienceClient(_ClientWithRequestMethods):
     async def get_collection_root_items(self) -> dict[str, object]:
         return {"method": "GET", "path": "/api/collection/root/items"}
 
+    async def post_collection_root_move_dashboard_question_candidates(
+        self, body: dict[str, object]
+    ) -> dict[str, object]:
+        return {
+            "method": "POST",
+            "path": "/api/collection/root/move-dashboard-question-candidates",
+            "body": body,
+        }
+
     async def get_collection_graph(self) -> dict[str, object]:
         return {"method": "GET", "path": "/api/collection/graph"}
 
@@ -624,6 +633,7 @@ def test_help_lists_every_convenience_command() -> None:
         "get-collection-root",
         "get-collection-root-dashboard-question-candidates",
         "get-collection-root-items",
+        "post-collection-root-move-dashboard-question-candidates",
         "get-collection-graph",
         "put-collection-graph",
     ]:
@@ -775,6 +785,11 @@ def test_read_endpoint_commands_cover_handwritten_surface(
         (["create-collection", '{"name":"New"}'], "POST", "/api/collection"),
         (["get-collection-graph"], "GET", "/api/collection/graph"),
         (["put-collection-graph", '{"groups":["admin"]}'], "PUT", "/api/collection/graph"),
+        (
+            ["post-collection-root-move-dashboard-question-candidates", '{"card_ids":[1]}'],
+            "POST",
+            "/api/collection/root/move-dashboard-question-candidates",
+        ),
         (["delete-action", "11"], "DELETE", "/api/action/11"),
         (["card-collections", "1,2", "--collection-id", "root"], "POST", "/api/card/collections"),
         (["cards-dashboards", "1,2"], "POST", "/api/cards/dashboards"),

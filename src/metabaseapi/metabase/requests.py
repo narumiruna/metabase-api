@@ -1545,6 +1545,22 @@ class GetCollectionRootItemsRequest(_BaseMetabaseRequest[GenericOperationRespons
         return self.execute_sync(client, GenericOperationResponse)
 
 
+class PostCollectionRootMoveDashboardQuestionCandidatesRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+    body: dict[str, Any] = PydanticField(default_factory=dict)
+
+    endpoint_method: ClassVar[str] = "POST"
+    endpoint_path: ClassVar[str] = "/api/collection/root/move-dashboard-question-candidates"
+
+    async def do(self, client: MetabaseRequestClient) -> GenericOperationResponse:
+        return await self.execute(client, GenericOperationResponse)
+
+    def do_sync(self, client: MetabaseRequestClient) -> GenericOperationResponse:
+        return self.execute_sync(client, GenericOperationResponse)
+
+    def request_body(self) -> JSONValue:
+        return self.body
+
+
 class ListCollectionsRequest(_BaseMetabaseRequest[ListCollectionsResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/collection"
@@ -1706,6 +1722,7 @@ __all__ = [
     "MetabaseRequestClient",
     "MoveCardsRequest",
     "PostCardPivotQueryRequest",
+    "PostCollectionRootMoveDashboardQuestionCandidatesRequest",
     "PutCacheRequest",
     "PutCollectionGraphRequest",
     "RegenerateApiKeyRequest",

@@ -82,6 +82,7 @@ from metabaseapi.metabase import ListUsersResponse
 from metabaseapi.metabase import MetabaseField
 from metabaseapi.metabase import MoveCardsRequest
 from metabaseapi.metabase import PostCardPivotQueryRequest
+from metabaseapi.metabase import PostCollectionRootMoveDashboardQuestionCandidatesRequest
 from metabaseapi.metabase import PutCacheRequest
 from metabaseapi.metabase import PutCollectionGraphRequest
 from metabaseapi.metabase import Table
@@ -322,6 +323,11 @@ def test_action_requests_use_expected_paths_and_payloads() -> None:
             ("GET", "/api/collection/root/items", {}, None),
         ),
         (
+            PostCollectionRootMoveDashboardQuestionCandidatesRequest(body={"card_ids": [1]}),
+            GenericOperationResponse,
+            ("POST", "/api/collection/root/move-dashboard-question-candidates", {}, {"card_ids": [1]}),
+        ),
+        (
             PutCollectionGraphRequest(body={"groups": ["admin"]}),
             GenericOperationResponse,
             ("PUT", "/api/collection/graph", {}, {"groups": ["admin"]}),
@@ -487,6 +493,7 @@ def _build_mock_endpoint_responses() -> dict[tuple[str, str], dict[str, object]]
         ("GET", "/api/collection/root"): {"id": "root", "name": "Root"},
         ("GET", "/api/collection/root/dashboard-question-candidates"): {"cards": [{"id": 1}]},
         ("GET", "/api/collection/root/items"): {"cards": [{"id": 2}]},
+        ("POST", "/api/collection/root/move-dashboard-question-candidates"): {"updated": True},
         ("GET", "/api/table"): {"data": [{"id": 8, "name": "table", "schema": "public", "db_id": 1}]},
         ("GET", "/api/database/4"): {"id": 4, "name": "db4", "engine": "postgres"},
         ("GET", "/api/user/10"): {"id": 10, "email": "u10@example.com", "first_name": "Turing"},
@@ -548,6 +555,9 @@ def test_typed_methods_in_client_return_models() -> None:
     collection_root = _run(client.get_collection_root_typed())
     collection_root_candidates = _run(client.get_collection_root_dashboard_question_candidates_typed())
     collection_root_items = _run(client.get_collection_root_items_typed())
+    collection_root_candidates_moved = _run(
+        client.post_collection_root_move_dashboard_question_candidates_typed({"card_ids": [1]})
+    )
     cards = _run(client.list_cards_typed())
     cards_dashboards = _run(client.cards_dashboards_typed([1, 2]))
     moved_cards = _run(client.move_cards_typed({"card_ids": [1], "collection_id": "root"}))
@@ -597,6 +607,7 @@ def test_typed_methods_in_client_return_models() -> None:
     assert collection_root.name == "Root"
     assert isinstance(collection_root_candidates, GenericOperationResponse)
     assert isinstance(collection_root_items, GenericOperationResponse)
+    assert isinstance(collection_root_candidates_moved, GenericOperationResponse)
     assert isinstance(cards, ListCardsResponse)
     assert isinstance(cards_dashboards, CardsDashboardsResponse)
     assert isinstance(moved_cards, GenericOperationResponse)

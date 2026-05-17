@@ -103,6 +103,7 @@ from .requests import ListUsersRequest
 from .requests import MetabaseRequestClient
 from .requests import MoveCardsRequest
 from .requests import PostCardPivotQueryRequest
+from .requests import PostCollectionRootMoveDashboardQuestionCandidatesRequest
 from .requests import PutCacheRequest
 from .requests import PutCollectionGraphRequest
 from .requests import RegenerateApiKeyRequest
@@ -249,6 +250,7 @@ __all__ = [
     "MetabaseRequestClient",
     "MoveCardsRequest",
     "PostCardPivotQueryRequest",
+    "PostCollectionRootMoveDashboardQuestionCandidatesRequest",
     "PutCacheRequest",
     "PutCollectionGraphRequest",
     "RegenerateApiKeyRequest",

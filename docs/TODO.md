@@ -15,8 +15,8 @@ This file is a static implementation checklist derived from the latest Metabase 
 ## Coverage summary
 
 - Documented operations: 600
-- Complete hand-written endpoint implementations: 106
-- Remaining documented operations: 494
+- Complete hand-written endpoint implementations: 107
+- Remaining documented operations: 493
 - Raw `request` / `invoke`: disabled for CLI users and does not count toward TODO completion.
 
 ## Endpoint checklist
@@ -153,7 +153,7 @@ This file is a static implementation checklist derived from the latest Metabase 
 - [x] `GET /api/cloud-migration` — `get-api-cloud-migration` — Get the latest cloud migration, if any.
 - [x] `PUT /api/cloud-migration/cancel` — `put-api-cloud-migration-cancel` — Cancel any ongoing cloud migrations, if any.
 
-### /api/collection (8/16 complete)
+### /api/collection (9/16 complete)
 
 - [x] `GET /api/collection` — `get-api-collection` — Fetch a list of all Collections that the current user has read permissions for (`:can_write` is returned as an additional property of each Collection so you...
 - [x] `POST /api/collection` — `post-api-collection` — Create a new Collection.
@@ -162,7 +162,7 @@ This file is a static implementation checklist derived from the latest Metabase 
 - [x] `GET /api/collection/root` — `get-api-collection-root` — Return the 'Root' Collection object with standard details added
 - [x] `GET /api/collection/root/dashboard-question-candidates` — `get-api-collection-root-dashboard-question-candidates` — Find cards in the root collection that can be moved into dashboards in the root collection. (Same as the above endpoint, but for the root collection)
 - [x] `GET /api/collection/root/items` — `get-api-collection-root-items` — Fetch objects that the user should see at their root level. As mentioned elsewhere, the 'Root' Collection doesn't actually exist as a row in the appl...
-- [ ] `POST /api/collection/root/move-dashboard-question-candidates` — `post-api-collection-root-move-dashboard-question-candidates` — Move candidate cards to the dashboards they appear in (for the root collection)
+- [x] `POST /api/collection/root/move-dashboard-question-candidates` — `post-api-collection-root-move-dashboard-question-candidates` — Move candidate cards to the dashboards they appear in (for the root collection)
 - [ ] `GET /api/collection/trash` — `get-api-collection-trash` — Fetch the trash collection, as in `/api/collection/:trash-id`
 - [ ] `GET /api/collection/tree` — `get-api-collection-tree` — Similar to `GET /`, but returns Collections in a tree structure, e.g. ``` [{:name "A" :below #{:card :dataset} :children [{:name "B"} {:name "C" :here #{:dat...
 - [x] `GET /api/collection/{id}` — `get-api-collection-id` — Fetch a specific Collection with standard details added

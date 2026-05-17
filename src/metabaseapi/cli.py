@@ -1061,6 +1061,18 @@ def get_collection_root_items(ctx: typer.Context) -> None:
     _run_and_print(_run_client_call(ctx, lambda client: client.get_collection_root_items()))
 
 
+@app.command("post-collection-root-move-dashboard-question-candidates")
+def post_collection_root_move_dashboard_question_candidates(
+    ctx: typer.Context, body: str = typer.Argument(..., help="Collection root move payload JSON object")
+) -> None:
+    """Move candidate cards to dashboards they appear in."""
+
+    payload = _parse_json_object(body, "body")
+    _run_and_print(
+        _run_client_call(ctx, lambda client: client.post_collection_root_move_dashboard_question_candidates(payload))
+    )
+
+
 @app.command("get-collection-graph")
 def get_collection_graph(ctx: typer.Context) -> None:
     """Fetch the collection permissions graph."""

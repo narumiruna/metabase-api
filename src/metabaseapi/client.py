@@ -127,6 +127,7 @@ from metabaseapi.metabase import ListUsersResponse
 from metabaseapi.metabase import MetabaseField
 from metabaseapi.metabase import MoveCardsRequest
 from metabaseapi.metabase import PostCardPivotQueryRequest
+from metabaseapi.metabase import PostCollectionRootMoveDashboardQuestionCandidatesRequest
 from metabaseapi.metabase import PutCacheRequest
 from metabaseapi.metabase import PutCollectionGraphRequest
 from metabaseapi.metabase import RegenerateApiKeyRequest
@@ -826,6 +827,11 @@ class MetabaseClient:
     async def get_collection_root_items(self) -> JSONValue | None:
         return await self.get("/api/collection/root/items")
 
+    async def post_collection_root_move_dashboard_question_candidates(
+        self, body: Mapping[str, object]
+    ) -> JSONValue | None:
+        return await self.post("/api/collection/root/move-dashboard-question-candidates", body=dict(body))
+
     async def list_tables(self) -> JSONValue | None:
         return await self.get("/api/table")
 
@@ -1074,6 +1080,12 @@ class MetabaseClient:
 
     async def get_collection_root_items_typed(self) -> GenericOperationResponse:
         return await self.run(GetCollectionRootItemsRequest())
+
+    async def post_collection_root_move_dashboard_question_candidates_typed(
+        self,
+        body: dict[str, object],
+    ) -> GenericOperationResponse:
+        return await self.run(PostCollectionRootMoveDashboardQuestionCandidatesRequest(body=body))
 
     async def list_tables_typed(self) -> ListTablesResponse:
         return await self.run(ListTablesRequest())

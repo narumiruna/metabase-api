@@ -27,6 +27,8 @@ from metabaseapi.endpoints.requests.action import GetActionRequest
 from metabaseapi.endpoints.requests.action import ListActionsRequest
 from metabaseapi.endpoints.requests.action import ListPublicActionsRequest
 from metabaseapi.endpoints.requests.action import UpdateActionRequest
+from metabaseapi.endpoints.requests.bug_reporting import GetBugReportingConnectionPoolDetailsRequest
+from metabaseapi.endpoints.requests.bug_reporting import GetBugReportingDetailsRequest
 from metabaseapi.endpoints.requests.cache import DeleteCacheRequest
 from metabaseapi.endpoints.requests.cache import GetCacheRequest
 from metabaseapi.endpoints.requests.cache import InvalidateCacheRequest
@@ -125,6 +127,8 @@ from metabaseapi.endpoints.requests.user_key_value import GetUserKeyValueNamespa
 from metabaseapi.endpoints.requests.user_key_value import PutUserKeyValueNamespaceKeyRequest
 from metabaseapi.endpoints.responses.action import ActionExecutionResponse
 from metabaseapi.endpoints.responses.action import ListActionsResponse
+from metabaseapi.endpoints.responses.bug_reporting import BugReportingConnectionPoolDetailsResponse
+from metabaseapi.endpoints.responses.bug_reporting import BugReportingDetailsResponse
 from metabaseapi.endpoints.responses.card import CardsDashboardsResponse
 from metabaseapi.endpoints.responses.card import ListCardsResponse
 from metabaseapi.endpoints.responses.channel import ListChannelsResponse
@@ -303,6 +307,16 @@ def test_action_requests_use_expected_paths_and_payloads() -> None:
             DeleteActionPublicLinkRequest(action_id=5),
             ActionExecutionResponse,
             ("DELETE", "/api/action/5/public_link", {}, None),
+        ),
+        (
+            GetBugReportingConnectionPoolDetailsRequest(),
+            BugReportingConnectionPoolDetailsResponse,
+            ("GET", "/api/bug-reporting/connection-pool-details", {}, None),
+        ),
+        (
+            GetBugReportingDetailsRequest(),
+            BugReportingDetailsResponse,
+            ("GET", "/api/bug-reporting/details", {}, None),
         ),
         (
             GetCacheRequest(limit=10, offset=20, sort_column="name", sort_direction="asc"),

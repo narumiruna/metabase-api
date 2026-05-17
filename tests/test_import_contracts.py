@@ -265,6 +265,7 @@ RESPONSE_MODULE_CONTRACTS = {
     "alert": ("ListAlertsResponse",),
     "api_key": ("ListApiKeysResponse",),
     "bookmark": ("ListBookmarksResponse",),
+    "bug_reporting": ("BugReportingConnectionPoolDetailsResponse", "BugReportingDetailsResponse"),
     "card": ("CardsDashboardsResponse", "ListCardsResponse"),
     "channel": ("ListChannelsResponse",),
     "collection": ("ListCollectionsResponse",),

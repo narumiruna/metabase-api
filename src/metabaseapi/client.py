@@ -90,6 +90,7 @@ from metabaseapi.metabase import GetCollectionRequest
 from metabaseapi.metabase import GetCollectionRootDashboardQuestionCandidatesRequest
 from metabaseapi.metabase import GetCollectionRootItemsRequest
 from metabaseapi.metabase import GetCollectionRootRequest
+from metabaseapi.metabase import GetCollectionTrashRequest
 from metabaseapi.metabase import GetDashboardRequest
 from metabaseapi.metabase import GetDatabaseRequest
 from metabaseapi.metabase import GetFieldRequest
@@ -832,6 +833,9 @@ class MetabaseClient:
     ) -> JSONValue | None:
         return await self.post("/api/collection/root/move-dashboard-question-candidates", body=dict(body))
 
+    async def get_collection_trash(self) -> JSONValue | None:
+        return await self.get("/api/collection/trash")
+
     async def list_tables(self) -> JSONValue | None:
         return await self.get("/api/table")
 
@@ -1086,6 +1090,9 @@ class MetabaseClient:
         body: dict[str, object],
     ) -> GenericOperationResponse:
         return await self.run(PostCollectionRootMoveDashboardQuestionCandidatesRequest(body=body))
+
+    async def get_collection_trash_typed(self) -> Collection:
+        return await self.run(GetCollectionTrashRequest())
 
     async def list_tables_typed(self) -> ListTablesResponse:
         return await self.run(ListTablesRequest())

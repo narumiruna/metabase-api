@@ -1073,6 +1073,13 @@ def post_collection_root_move_dashboard_question_candidates(
     )
 
 
+@app.command("get-collection-trash")
+def get_collection_trash(ctx: typer.Context) -> None:
+    """Fetch the trash collection."""
+
+    _run_and_print(_run_client_call(ctx, lambda client: client.get_collection_trash()))
+
+
 @app.command("get-collection-graph")
 def get_collection_graph(ctx: typer.Context) -> None:
     """Fetch the collection permissions graph."""

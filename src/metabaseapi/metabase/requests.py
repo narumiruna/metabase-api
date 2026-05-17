@@ -1545,6 +1545,17 @@ class GetCollectionRootItemsRequest(_BaseMetabaseRequest[GenericOperationRespons
         return self.execute_sync(client, GenericOperationResponse)
 
 
+class GetCollectionTrashRequest(_BaseMetabaseRequest[Collection]):
+    endpoint_method: ClassVar[str] = "GET"
+    endpoint_path: ClassVar[str] = "/api/collection/trash"
+
+    async def do(self, client: MetabaseRequestClient) -> Collection:
+        return await self.execute(client, Collection)
+
+    def do_sync(self, client: MetabaseRequestClient) -> Collection:
+        return self.execute_sync(client, Collection)
+
+
 class PostCollectionRootMoveDashboardQuestionCandidatesRequest(_BaseMetabaseRequest[GenericOperationResponse]):
     body: dict[str, Any] = PydanticField(default_factory=dict)
 
@@ -1697,6 +1708,7 @@ __all__ = [
     "GetCollectionRootDashboardQuestionCandidatesRequest",
     "GetCollectionRootItemsRequest",
     "GetCollectionRootRequest",
+    "GetCollectionTrashRequest",
     "GetDashboardRequest",
     "GetDatabaseRequest",
     "GetFieldRequest",

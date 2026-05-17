@@ -78,6 +78,7 @@ from .requests import GetCollectionRequest
 from .requests import GetCollectionRootDashboardQuestionCandidatesRequest
 from .requests import GetCollectionRootItemsRequest
 from .requests import GetCollectionRootRequest
+from .requests import GetCollectionTrashRequest
 from .requests import GetDashboardRequest
 from .requests import GetDatabaseRequest
 from .requests import GetFieldRequest
@@ -212,6 +213,7 @@ __all__ = [
     "GetCollectionRootDashboardQuestionCandidatesRequest",
     "GetCollectionRootItemsRequest",
     "GetCollectionRootRequest",
+    "GetCollectionTrashRequest",
     "GetDashboardRequest",
     "GetDatabaseRequest",
     "GetFieldRequest",

@@ -201,6 +201,7 @@ def test_convenience_paths_cover_handwritten_endpoint_surface() -> None:
             client.post_collection_root_move_dashboard_question_candidates({"card_ids": [1]}),
             ("POST", "/api/collection/root/move-dashboard-question-candidates", {"card_ids": [1]}),
         ),
+        (client.get_collection_trash(), ("GET", "/api/collection/trash", None)),
         (
             client.create_database(name="analytics", engine="postgres", details={"host": "db.local"}),
             (

@@ -9,9 +9,7 @@ from pydantic import Field as PydanticField
 from pydantic import model_validator
 
 from metabaseapi.endpoints._response_payload import normalize_strict_list_payload
-from metabaseapi.endpoints._response_payload import normalize_unstructured_payload
 from metabaseapi.endpoints.entities import ApiKey
-from metabaseapi.wire import JSONValue
 
 
 class ListApiKeysResponse(BaseModel):
@@ -26,8 +24,7 @@ class ListApiKeysResponse(BaseModel):
 
 class ApiKeyCountResponse(BaseModel):
     count: int | None = None
-    raw: JSONValue | None = None
-    model_config = ConfigDict(extra="allow")
+    model_config = ConfigDict(extra="forbid")
 
     @model_validator(mode="before")
     @classmethod
@@ -35,15 +32,21 @@ class ApiKeyCountResponse(BaseModel):
         if isinstance(values, int):
             return {"count": values}
         if isinstance(values, dict):
-            return cast("dict[str, Any]", values)
-        return {"raw": values}
+            dict_values = cast(dict[str, object], values)
+            count = dict_values.get("count")
+            return {"count": count} if isinstance(count, int) else {}
+        return {}
 
 
 class DeleteApiKeyResponse(BaseModel):
-    raw: JSONValue | None = None
-    model_config = ConfigDict(extra="allow")
+    ok: bool | None = None
+    model_config = ConfigDict(extra="forbid")
 
     @model_validator(mode="before")
     @classmethod
     def normalize_payload(cls, values: object) -> dict[str, Any]:
-        return normalize_unstructured_payload(values)
+        if isinstance(values, dict):
+            dict_values = cast(dict[str, object], values)
+            ok = dict_values.get("ok")
+            return {"ok": ok} if isinstance(ok, bool) else {}
+        return {}

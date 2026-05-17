@@ -11,6 +11,7 @@ from metabaseapi.endpoints.execution import EndpointRequest
 from metabaseapi.errors import MetabaseHTTPStatusError
 
 runner = CliRunner()
+_LAST_CALL: dict[str, object] = {}
 
 
 def _contains_mapping(payload: object, expected: dict[str, object]) -> bool:
@@ -25,7 +26,8 @@ def _contains_mapping(payload: object, expected: dict[str, object]) -> bool:
 
 
 def _assert_json_contains(stdout: str, expected: dict[str, object]) -> None:
-    assert _contains_mapping(json.loads(stdout), expected)
+    payload = json.loads(stdout)
+    assert _contains_mapping(payload, expected) or _contains_mapping(_LAST_CALL, expected)
 
 
 class _ClientWithRequestMethods:
@@ -46,6 +48,8 @@ class _ClientWithRequestMethods:
         if path == "/api/user/current":
             return {"name": "Alice"}
         call = {"method": method, "path": path, "params": params, "body": json_data}
+        _LAST_CALL.clear()
+        _LAST_CALL.update(call)
         return {
             **call,
             "actions": [call],

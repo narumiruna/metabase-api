@@ -3,7 +3,7 @@ from __future__ import annotations
 import typer
 
 from metabaseapi.cli.runtime import app
-from metabaseapi.cli.runtime import parse_optional_json_object
+from metabaseapi.cli.runtime import parse_optional_json_object_or_empty
 from metabaseapi.cli.runtime import run_endpoint_command
 from metabaseapi.endpoints.requests.database import CreateDatabaseRequest
 from metabaseapi.endpoints.requests.database import GetDatabaseRequest
@@ -35,5 +35,9 @@ def create_database(
 
     run_endpoint_command(
         ctx,
-        CreateDatabaseRequest(name=name, engine=engine, details=parse_optional_json_object(details, "details") or {}),
+        CreateDatabaseRequest(
+            name=name,
+            engine=engine,
+            details=parse_optional_json_object_or_empty(details, "details"),
+        ),
     )

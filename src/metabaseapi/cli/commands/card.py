@@ -6,7 +6,7 @@ from metabaseapi.cli.runtime import app
 from metabaseapi.cli.runtime import parse_id_csv
 from metabaseapi.cli.runtime import parse_json_object
 from metabaseapi.cli.runtime import parse_optional_json_list
-from metabaseapi.cli.runtime import parse_optional_json_object
+from metabaseapi.cli.runtime import parse_optional_json_object_or_empty
 from metabaseapi.cli.runtime import run_endpoint_command
 from metabaseapi.cli.runtime import run_json_body_endpoint_command
 from metabaseapi.endpoints.requests.card import CopyCardRequest
@@ -35,15 +35,11 @@ def _build_create_card_request(
     parameters: str | None,
     result_metadata: str | None,
 ) -> CreateCardRequest:
-    visualization_settings_payload = parse_optional_json_object(
-        visualization_settings,
-        "visualization-settings",
-    )
     return CreateCardRequest(
         name=name,
         dataset_query=parse_json_object(dataset_query, "dataset-query"),
         display=display,
-        visualization_settings=visualization_settings_payload or {},
+        visualization_settings=parse_optional_json_object_or_empty(visualization_settings, "visualization-settings"),
         type=card_type,
         collection_id=collection_id,
         description=description,

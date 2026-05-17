@@ -1,1 +1,1 @@
-# Client domain-locality tests live in the root and legacy modules for now.
+# Client domain-locality tests target public exports and the implementation seam in `metabaseapi.client.http`.

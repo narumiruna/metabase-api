@@ -55,8 +55,6 @@ from metabaseapi.metabase import CreateCollectionRequest
 from metabaseapi.metabase import CreateDashboardPublicLinkRequest
 from metabaseapi.metabase import CreateDatabaseRequest
 from metabaseapi.metabase import CreateRecentRequest
-from metabaseapi.metabase import CurrentUserRequest
-from metabaseapi.metabase import CurrentUserResponse
 from metabaseapi.metabase import Dashboard
 from metabaseapi.metabase import DashboardParamRemappingRequest
 from metabaseapi.metabase import DashboardParamSearchRequest
@@ -124,7 +122,6 @@ from metabaseapi.metabase import GetDatabaseRequest
 from metabaseapi.metabase import GetFieldRequest
 from metabaseapi.metabase import GetMostRecentlyViewedDashboardRequest
 from metabaseapi.metabase import GetTableRequest
-from metabaseapi.metabase import GetUserRequest
 from metabaseapi.metabase import InvalidateCacheRequest
 from metabaseapi.metabase import ListActionsRequest
 from metabaseapi.metabase import ListActionsResponse
@@ -151,8 +148,6 @@ from metabaseapi.metabase import ListRecentsRequest
 from metabaseapi.metabase import ListRecentViewsRequest
 from metabaseapi.metabase import ListTablesRequest
 from metabaseapi.metabase import ListTablesResponse
-from metabaseapi.metabase import ListUsersRequest
-from metabaseapi.metabase import ListUsersResponse
 from metabaseapi.metabase import MetabaseField
 from metabaseapi.metabase import MoveCardsRequest
 from metabaseapi.metabase import PostCardPivotQueryRequest
@@ -178,7 +173,6 @@ from metabaseapi.metabase import UpdateChannelRequest
 from metabaseapi.metabase import UpdateCommentRequest
 from metabaseapi.metabase import UpdateDashboardCardsRequest
 from metabaseapi.metabase import UpdateDashboardRequest
-from metabaseapi.metabase import User
 from metabaseapi.models import APIRequestModel
 from metabaseapi.models import APIResponseModel
 from metabaseapi.models import JSONValue
@@ -639,9 +633,6 @@ class MetabaseClient(_MetabaseClientTypedMixin):
     async def create_recent(self, body: Mapping[str, object]) -> JSONValue | None:
         return await self.post("/api/activity/recents", body=dict(body))
 
-    async def current_user(self) -> JSONValue | None:
-        return await self.get("/api/user/current")
-
     async def list_databases(self) -> JSONValue | None:
         return await self.get("/api/database")
 
@@ -1039,12 +1030,6 @@ class MetabaseClient(_MetabaseClientTypedMixin):
     async def data_studio_table_sync_schema(self, body: Mapping[str, object]) -> JSONValue | None:
         return await self.post("/api/data-studio/table/sync-schema", body=dict(body))
 
-    async def list_users(self) -> JSONValue | None:
-        return await self.get("/api/user")
-
-    async def get_user(self, user_id: int | str) -> JSONValue | None:
-        return await self.get(f"/api/user/{user_id}")
-
     async def list_collections(self) -> JSONValue | None:
         return await self.get("/api/collection")
 
@@ -1314,9 +1299,6 @@ class MetabaseClient(_MetabaseClientTypedMixin):
     async def create_recent_typed(self, body: dict[str, object]) -> ActivityMutationResponse:
         return await self.run(CreateRecentRequest(body=body))
 
-    async def current_user_typed(self) -> CurrentUserResponse:
-        return await self.run(CurrentUserRequest())
-
     async def list_databases_typed(self) -> ListDatabasesResponse:
         return await self.run(ListDatabasesRequest())
 
@@ -1352,9 +1334,6 @@ class MetabaseClient(_MetabaseClientTypedMixin):
 
     async def create_dashboard_typed(self, body: dict[str, object]) -> Dashboard:
         return await self.run(PostDashboardRequest(body=dict(body)))
-
-    async def list_users_typed(self) -> ListUsersResponse:
-        return await self.run(ListUsersRequest())
 
     async def list_collections_typed(self) -> ListCollectionsResponse:
         return await self.run(ListCollectionsRequest())
@@ -1757,9 +1736,6 @@ class MetabaseClient(_MetabaseClientTypedMixin):
 
     async def data_studio_table_sync_schema_typed(self, body: dict[str, object]) -> GenericOperationResponse:
         return await self.run(DataStudioTableSyncSchemaRequest(body=body))
-
-    async def get_user_typed(self, user_id: int | str) -> User:
-        return await self.run(GetUserRequest(user_id=user_id))
 
     async def get_collection_typed(self, collection_id: int | str) -> Collection:
         return await self.run(GetCollectionRequest(collection_id=collection_id))

@@ -11,6 +11,15 @@ if TYPE_CHECKING:
 class _MetabaseClientRawMixin:
     """Resource-scoped raw user helper methods."""
 
+    async def current_user(self: MetabaseClient) -> JSONValue | None:
+        return await self.get("/api/user/current")
+
+    async def list_users(self: MetabaseClient) -> JSONValue | None:
+        return await self.get("/api/user")
+
+    async def get_user(self: MetabaseClient, user_id: int | str) -> JSONValue | None:
+        return await self.get(f"/api/user/{user_id}")
+
     async def get_user_key_value_namespace(self: MetabaseClient, namespace: int | str) -> JSONValue | None:
         return await self.get(f"/api/user-key-value/namespace/{namespace}")
 

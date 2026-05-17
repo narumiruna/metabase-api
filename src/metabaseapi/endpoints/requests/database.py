@@ -7,6 +7,7 @@ from pydantic import Field as PydanticField
 
 from metabaseapi.endpoints.entities import Database
 from metabaseapi.endpoints.execution import EndpointRequest
+from metabaseapi.endpoints.execution import ResponseModel
 from metabaseapi.endpoints.responses.database import ListDatabasesResponse
 from metabaseapi.wire import JSONValue
 
@@ -14,7 +15,7 @@ from metabaseapi.wire import JSONValue
 class ListDatabasesRequest(EndpointRequest[ListDatabasesResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/database"
-    response_model: ClassVar[object] = ListDatabasesResponse
+    response_model: ClassVar[ResponseModel] = ListDatabasesResponse
 
 
 class CreateDatabaseRequest(EndpointRequest[Database]):
@@ -24,7 +25,7 @@ class CreateDatabaseRequest(EndpointRequest[Database]):
 
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/database"
-    response_model: ClassVar[object] = Database
+    response_model: ClassVar[ResponseModel] = Database
 
     def request_body(self) -> JSONValue:
         return self.model_dump(exclude_none=True)
@@ -35,7 +36,7 @@ class GetDatabaseRequest(EndpointRequest[Database]):
 
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/database/{id}"
-    response_model: ClassVar[object] = Database
+    response_model: ClassVar[ResponseModel] = Database
 
     def resolve_path(self) -> str:
         return f"/api/database/{self.database_id}"

@@ -25,6 +25,7 @@ class MetabaseRequestClient(Protocol):
 
 
 ResponseT = TypeVar("ResponseT", bound=BaseModel)
+ResponseModel = type[BaseModel]
 
 
 class EndpointRequest[ResponseT](BaseModel):
@@ -32,7 +33,7 @@ class EndpointRequest[ResponseT](BaseModel):
 
     endpoint_method: ClassVar[str]
     endpoint_path: ClassVar[str]
-    response_model: ClassVar[object]
+    response_model: ClassVar[ResponseModel]
 
     def resolve_path(self) -> str:
         return self.endpoint_path
@@ -50,8 +51,7 @@ class EndpointRequest[ResponseT](BaseModel):
             params=self.request_params(),
             json_data=self.request_body(),
         )
-        response_model = cast(type[BaseModel], self.response_model)
-        return cast(ResponseT, response_model.model_validate(payload or {}))
+        return cast(ResponseT, self.response_model.model_validate(payload or {}))
 
     def do_sync(self, client: MetabaseRequestClient) -> ResponseT:
         return asyncio.run(self.do(client))

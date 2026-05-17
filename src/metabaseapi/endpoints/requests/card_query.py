@@ -6,6 +6,7 @@ from typing import ClassVar
 from pydantic import Field as PydanticField
 
 from metabaseapi.endpoints.execution import EndpointRequest
+from metabaseapi.endpoints.execution import ResponseModel
 from metabaseapi.endpoints.responses.card import CardsDashboardsResponse
 from metabaseapi.endpoints.responses.common import GenericOperationResponse
 from metabaseapi.wire import JSONValue
@@ -18,7 +19,7 @@ class PostCardPivotQueryRequest(EndpointRequest[GenericOperationResponse]):
 
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/card/pivot/{card-id}/query"
-    response_model: ClassVar[object] = GenericOperationResponse
+    response_model: ClassVar[ResponseModel] = GenericOperationResponse
 
     def resolve_path(self) -> str:
         return f"/api/card/pivot/{self.card_id}/query"
@@ -34,7 +35,7 @@ class CardParamsSearchRequest(EndpointRequest[GenericOperationResponse]):
 
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/card/{card_id}/params/{param_key}/search/{query}"
-    response_model: ClassVar[object] = GenericOperationResponse
+    response_model: ClassVar[ResponseModel] = GenericOperationResponse
 
     def resolve_path(self) -> str:
         return f"/api/card/{self.card_id}/params/{self.param_key}/search/{self.query}"
@@ -46,7 +47,7 @@ class CardParamsValuesRequest(EndpointRequest[GenericOperationResponse]):
 
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/card/{card_id}/params/{param_key}/values"
-    response_model: ClassVar[object] = GenericOperationResponse
+    response_model: ClassVar[ResponseModel] = GenericOperationResponse
 
     def resolve_path(self) -> str:
         return f"/api/card/{self.card_id}/params/{self.param_key}/values"
@@ -58,7 +59,7 @@ class CardQueryRequest(EndpointRequest[GenericOperationResponse]):
 
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/card/{card_id}/query"
-    response_model: ClassVar[object] = GenericOperationResponse
+    response_model: ClassVar[ResponseModel] = GenericOperationResponse
 
     def resolve_path(self) -> str:
         return f"/api/card/{self.card_id}/query"
@@ -76,7 +77,7 @@ class CardQueryExportRequest(EndpointRequest[GenericOperationResponse]):
 
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/card/{card_id}/query/{export_format}"
-    response_model: ClassVar[object] = GenericOperationResponse
+    response_model: ClassVar[ResponseModel] = GenericOperationResponse
 
     def resolve_path(self) -> str:
         return f"/api/card/{self.card_id}/query/{self.export_format}"
@@ -98,7 +99,7 @@ class GetCardDashboardsRequest(EndpointRequest[GenericOperationResponse]):
 
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/card/{card_id}/dashboards"
-    response_model: ClassVar[object] = GenericOperationResponse
+    response_model: ClassVar[ResponseModel] = GenericOperationResponse
 
     def resolve_path(self) -> str:
         return f"/api/card/{self.card_id}/dashboards"
@@ -110,7 +111,7 @@ class CardRemappingRequest(EndpointRequest[GenericOperationResponse]):
 
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/card/{card_id}/params/{param_key}/remapping"
-    response_model: ClassVar[object] = GenericOperationResponse
+    response_model: ClassVar[ResponseModel] = GenericOperationResponse
 
     def resolve_path(self) -> str:
         return f"/api/card/{self.card_id}/params/{self.param_key}/remapping"
@@ -121,7 +122,7 @@ class GetCardQueryMetadataRequest(EndpointRequest[GenericOperationResponse]):
 
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/card/{card_id}/query_metadata"
-    response_model: ClassVar[object] = GenericOperationResponse
+    response_model: ClassVar[ResponseModel] = GenericOperationResponse
 
     def resolve_path(self) -> str:
         return f"/api/card/{self.card_id}/query_metadata"
@@ -132,7 +133,7 @@ class GetCardSeriesRequest(EndpointRequest[GenericOperationResponse]):
 
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/card/{card_id}/series"
-    response_model: ClassVar[object] = GenericOperationResponse
+    response_model: ClassVar[ResponseModel] = GenericOperationResponse
 
     def resolve_path(self) -> str:
         return f"/api/card/{self.card_id}/series"
@@ -143,7 +144,7 @@ class CardsDashboardsRequest(EndpointRequest[CardsDashboardsResponse]):
 
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/cards/dashboards"
-    response_model: ClassVar[object] = CardsDashboardsResponse
+    response_model: ClassVar[ResponseModel] = CardsDashboardsResponse
 
     def request_body(self) -> JSONValue:
         return {"card_ids": self.card_ids}

@@ -6,6 +6,7 @@ from typing import ClassVar
 from pydantic import Field as PydanticField
 
 from metabaseapi.endpoints.execution import EndpointRequest
+from metabaseapi.endpoints.execution import ResponseModel
 from metabaseapi.endpoints.responses.common import GenericOperationResponse
 from metabaseapi.wire import JSONValue
 
@@ -13,7 +14,7 @@ from metabaseapi.wire import JSONValue
 class GetCollectionGraphRequest(EndpointRequest[GenericOperationResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/collection/graph"
-    response_model: ClassVar[object] = GenericOperationResponse
+    response_model: ClassVar[ResponseModel] = GenericOperationResponse
 
 
 class PutCollectionGraphRequest(EndpointRequest[GenericOperationResponse]):
@@ -21,7 +22,7 @@ class PutCollectionGraphRequest(EndpointRequest[GenericOperationResponse]):
 
     endpoint_method: ClassVar[str] = "PUT"
     endpoint_path: ClassVar[str] = "/api/collection/graph"
-    response_model: ClassVar[object] = GenericOperationResponse
+    response_model: ClassVar[ResponseModel] = GenericOperationResponse
 
     def request_body(self) -> JSONValue:
         return self.body

@@ -35,7 +35,14 @@ class EndpointRequest[ResponseT](BaseModel):
     response_model: ClassVar[_ResponseModel]
 
     def resolve_path(self) -> str:
-        return self.endpoint_path
+        if "{" not in self.endpoint_path:
+            return self.endpoint_path
+        values = self.model_dump(mode="python", exclude_none=False)
+        format_values = values | {key.replace("_", "-"): value for key, value in values.items()}
+        try:
+            return self.endpoint_path.format_map(format_values)
+        except KeyError:
+            return self.endpoint_path
 
     def request_params(self) -> dict[str, QueryParamValue]:
         return {}

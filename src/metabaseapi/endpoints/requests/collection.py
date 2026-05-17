@@ -33,9 +33,6 @@ class GetCollectionDashboardQuestionCandidatesRequest(EndpointRequest[GenericOpe
     endpoint_path: ClassVar[str] = "/api/collection/{collection_id}/dashboard-question-candidates"
     response_model: ClassVar[_ResponseModel] = GenericOperationResponse
 
-    def resolve_path(self) -> str:
-        return f"/api/collection/{self.collection_id}/dashboard-question-candidates"
-
 
 class GetCollectionItemsRequest(EndpointRequest[GenericOperationResponse]):
     collection_id: int | str
@@ -43,9 +40,6 @@ class GetCollectionItemsRequest(EndpointRequest[GenericOperationResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/collection/{collection_id}/items"
     response_model: ClassVar[_ResponseModel] = GenericOperationResponse
-
-    def resolve_path(self) -> str:
-        return f"/api/collection/{self.collection_id}/items"
 
 
 class GetCollectionTrashRequest(EndpointRequest[Collection]):
@@ -62,9 +56,6 @@ class PostCollectionMoveDashboardQuestionCandidatesRequest(EndpointRequest[Gener
     endpoint_path: ClassVar[str] = "/api/collection/{collection_id}/move-dashboard-question-candidates"
     response_model: ClassVar[_ResponseModel] = GenericOperationResponse
 
-    def resolve_path(self) -> str:
-        return f"/api/collection/{self.collection_id}/move-dashboard-question-candidates"
-
 
 class ListCollectionsRequest(EndpointRequest[ListCollectionsResponse]):
     endpoint_method: ClassVar[str] = "GET"
@@ -79,9 +70,6 @@ class GetCollectionRequest(EndpointRequest[Collection]):
     endpoint_path: ClassVar[str] = "/api/collection/{collection_id}"
     response_model: ClassVar[_ResponseModel] = Collection
 
-    def resolve_path(self) -> str:
-        return f"/api/collection/{self.collection_id}"
-
 
 class PutCollectionRequest(EndpointRequest[GenericOperationResponse]):
     body: dict[str, Any]
@@ -91,9 +79,6 @@ class PutCollectionRequest(EndpointRequest[GenericOperationResponse]):
     endpoint_path: ClassVar[str] = "/api/collection/{collection_id}"
     response_model: ClassVar[_ResponseModel] = GenericOperationResponse
 
-    def resolve_path(self) -> str:
-        return f"/api/collection/{self.collection_id}"
-
 
 class DeleteCollectionRequest(EndpointRequest[GenericOperationResponse]):
     collection_id: int | str
@@ -101,6 +86,3 @@ class DeleteCollectionRequest(EndpointRequest[GenericOperationResponse]):
     endpoint_method: ClassVar[str] = "DELETE"
     endpoint_path: ClassVar[str] = "/api/collection/{collection_id}"
     response_model: ClassVar[_ResponseModel] = GenericOperationResponse
-
-    def resolve_path(self) -> str:
-        return f"/api/collection/{self.collection_id}"

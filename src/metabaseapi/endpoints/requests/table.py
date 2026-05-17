@@ -20,6 +20,3 @@ class GetTableRequest(EndpointRequest[Table]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/table/{table_id}"
     response_model: ClassVar[_ResponseModel] = Table
-
-    def resolve_path(self) -> str:
-        return f"/api/table/{self.table_id}"

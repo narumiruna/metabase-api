@@ -33,9 +33,6 @@ class GetDashboardRequest(EndpointRequest[Dashboard]):
     endpoint_path: ClassVar[str] = "/api/dashboard/{dashboard-id}"
     response_model: ClassVar[_ResponseModel] = Dashboard
 
-    def resolve_path(self) -> str:
-        return f"/api/dashboard/{self.dashboard_id}"
-
 
 class GetDashboardEmbeddableRequest(EndpointRequest[GenericOperationResponse]):
     endpoint_method: ClassVar[str] = "GET"
@@ -65,9 +62,6 @@ class SaveDashboardToCollectionRequest(EndpointRequest[GenericOperationResponse]
     endpoint_path: ClassVar[str] = "/api/dashboard/save/collection/{parent-collection-id}"
     response_model: ClassVar[_ResponseModel] = GenericOperationResponse
 
-    def resolve_path(self) -> str:
-        return f"/api/dashboard/save/collection/{self.parent_collection_id}"
-
 
 class CreateDashboardPublicLinkRequest(EndpointRequest[GenericOperationResponse]):
     dashboard_id: int | str
@@ -75,9 +69,6 @@ class CreateDashboardPublicLinkRequest(EndpointRequest[GenericOperationResponse]
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/dashboard/{dashboard-id}/public_link"
     response_model: ClassVar[_ResponseModel] = GenericOperationResponse
-
-    def resolve_path(self) -> str:
-        return f"/api/dashboard/{self.dashboard_id}/public_link"
 
 
 class DeleteDashboardPublicLinkRequest(EndpointRequest[GenericOperationResponse]):
@@ -87,9 +78,6 @@ class DeleteDashboardPublicLinkRequest(EndpointRequest[GenericOperationResponse]
     endpoint_path: ClassVar[str] = "/api/dashboard/{dashboard-id}/public_link"
     response_model: ClassVar[_ResponseModel] = GenericOperationResponse
 
-    def resolve_path(self) -> str:
-        return f"/api/dashboard/{self.dashboard_id}/public_link"
-
 
 class CopyDashboardRequest(EndpointRequest[Dashboard]):
     from_dashboard_id: int | str
@@ -98,9 +86,6 @@ class CopyDashboardRequest(EndpointRequest[Dashboard]):
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/dashboard/{from-dashboard-id}/copy"
     response_model: ClassVar[_ResponseModel] = Dashboard
-
-    def resolve_path(self) -> str:
-        return f"/api/dashboard/{self.from_dashboard_id}/copy"
 
 
 class DeleteDashboardRequest(EndpointRequest[GenericOperationResponse]):

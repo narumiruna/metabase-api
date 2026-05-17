@@ -27,6 +27,3 @@ class GetUserRequest(EndpointRequest[User]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/user/{user_id}"
     response_model: ClassVar[_ResponseModel] = User
-
-    def resolve_path(self) -> str:
-        return f"/api/user/{self.user_id}"

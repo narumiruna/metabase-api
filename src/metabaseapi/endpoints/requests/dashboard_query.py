@@ -40,9 +40,6 @@ class DashboardCardQueryRequest(EndpointRequest[GenericOperationResponse]):
     endpoint_path: ClassVar[str] = "/api/dashboard/{dashboard-id}/dashcard/{dashcard-id}/card/{card-id}/query"
     response_model: ClassVar[_ResponseModel] = GenericOperationResponse
 
-    def resolve_path(self) -> str:
-        return f"/api/dashboard/{self.dashboard_id}/dashcard/{self.dashcard_id}/card/{self.card_id}/query"
-
 
 class DashboardCardQueryExportRequest(EndpointRequest[GenericOperationResponse]):
     dashboard_id: int | str
@@ -58,12 +55,6 @@ class DashboardCardQueryExportRequest(EndpointRequest[GenericOperationResponse])
         "/api/dashboard/{dashboard-id}/dashcard/{dashcard-id}/card/{card-id}/query/{export-format}"
     )
     response_model: ClassVar[_ResponseModel] = GenericOperationResponse
-
-    def resolve_path(self) -> str:
-        return (
-            f"/api/dashboard/{self.dashboard_id}/dashcard/{self.dashcard_id}/card/"
-            f"{self.card_id}/query/{self.export_format}"
-        )
 
     def request_params(self) -> dict[str, QueryParamValue]:
         params: dict[str, QueryParamValue] = {}
@@ -84,9 +75,6 @@ class PostDashboardPivotQueryRequest(EndpointRequest[GenericOperationResponse]):
     endpoint_path: ClassVar[str] = "/api/dashboard/pivot/{dashboard-id}/dashcard/{dashcard-id}/card/{card-id}/query"
     response_model: ClassVar[_ResponseModel] = GenericOperationResponse
 
-    def resolve_path(self) -> str:
-        return f"/api/dashboard/pivot/{self.dashboard_id}/dashcard/{self.dashcard_id}/card/{self.card_id}/query"
-
 
 class GetDashboardDashcardExecuteRequest(EndpointRequest[GenericOperationResponse]):
     dashboard_id: int | str
@@ -96,9 +84,6 @@ class GetDashboardDashcardExecuteRequest(EndpointRequest[GenericOperationRespons
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/dashboard/{dashboard-id}/dashcard/{dashcard-id}/execute"
     response_model: ClassVar[_ResponseModel] = GenericOperationResponse
-
-    def resolve_path(self) -> str:
-        return f"/api/dashboard/{self.dashboard_id}/dashcard/{self.dashcard_id}/execute"
 
     def request_params(self) -> dict[str, QueryParamValue]:
         return self.parameters
@@ -112,9 +97,6 @@ class ExecuteDashboardDashcardRequest(EndpointRequest[GenericOperationResponse])
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/dashboard/{dashboard-id}/dashcard/{dashcard-id}/execute"
     response_model: ClassVar[_ResponseModel] = GenericOperationResponse
-
-    def resolve_path(self) -> str:
-        return f"/api/dashboard/{self.dashboard_id}/dashcard/{self.dashcard_id}/execute"
 
     def request_body(self) -> JSONValue:
         return {"parameters": self.parameters}

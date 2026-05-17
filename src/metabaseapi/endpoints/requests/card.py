@@ -45,9 +45,6 @@ class GetCardRequest(EndpointRequest[Card]):
     endpoint_path: ClassVar[str] = "/api/card/{card_id}"
     response_model: ClassVar[_ResponseModel] = Card
 
-    def resolve_path(self) -> str:
-        return f"/api/card/{self.card_id}"
-
 
 class GetCardCollectionsRequest(EndpointRequest[GenericOperationResponse]):
     card_ids: list[int | str] | None = None
@@ -85,9 +82,6 @@ class CreateCardPublicLinkRequest(EndpointRequest[GenericOperationResponse]):
     endpoint_path: ClassVar[str] = "/api/card/{card_id}/public_link"
     response_model: ClassVar[_ResponseModel] = GenericOperationResponse
 
-    def resolve_path(self) -> str:
-        return f"/api/card/{self.card_id}/public_link"
-
 
 class DeleteCardPublicLinkRequest(EndpointRequest[GenericOperationResponse]):
     card_id: int | str
@@ -95,9 +89,6 @@ class DeleteCardPublicLinkRequest(EndpointRequest[GenericOperationResponse]):
     endpoint_method: ClassVar[str] = "DELETE"
     endpoint_path: ClassVar[str] = "/api/card/{card_id}/public_link"
     response_model: ClassVar[_ResponseModel] = GenericOperationResponse
-
-    def resolve_path(self) -> str:
-        return f"/api/card/{self.card_id}/public_link"
 
 
 class UpdateCardRequest(EndpointRequest[Card]):
@@ -108,9 +99,6 @@ class UpdateCardRequest(EndpointRequest[Card]):
     endpoint_path: ClassVar[str] = "/api/card/{card_id}"
     response_model: ClassVar[_ResponseModel] = Card
 
-    def resolve_path(self) -> str:
-        return f"/api/card/{self.card_id}"
-
 
 class DeleteCardRequest(EndpointRequest[GenericOperationResponse]):
     card_id: int | str
@@ -118,9 +106,6 @@ class DeleteCardRequest(EndpointRequest[GenericOperationResponse]):
     endpoint_method: ClassVar[str] = "DELETE"
     endpoint_path: ClassVar[str] = "/api/card/{card_id}"
     response_model: ClassVar[_ResponseModel] = GenericOperationResponse
-
-    def resolve_path(self) -> str:
-        return f"/api/card/{self.card_id}"
 
 
 class CopyCardRequest(EndpointRequest[Card]):
@@ -130,9 +115,6 @@ class CopyCardRequest(EndpointRequest[Card]):
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/card/{card_id}/copy"
     response_model: ClassVar[_ResponseModel] = Card
-
-    def resolve_path(self) -> str:
-        return f"/api/card/{self.card_id}/copy"
 
     def request_body(self) -> JSONValue:
         return self.body or None

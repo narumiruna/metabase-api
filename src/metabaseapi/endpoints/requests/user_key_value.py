@@ -15,9 +15,6 @@ class GetUserKeyValueNamespaceRequest(EndpointRequest[GenericOperationResponse])
     endpoint_path: ClassVar[str] = "/api/user-key-value/namespace/{namespace}"
     response_model: ClassVar[_ResponseModel] = GenericOperationResponse
 
-    def resolve_path(self) -> str:
-        return f"/api/user-key-value/namespace/{self.namespace}"
-
 
 class PutUserKeyValueNamespaceKeyRequest(EndpointRequest[GenericOperationResponse]):
     namespace: str
@@ -28,9 +25,6 @@ class PutUserKeyValueNamespaceKeyRequest(EndpointRequest[GenericOperationRespons
     endpoint_path: ClassVar[str] = "/api/user-key-value/namespace/{namespace}/key/{key}"
     response_model: ClassVar[_ResponseModel] = GenericOperationResponse
 
-    def resolve_path(self) -> str:
-        return f"/api/user-key-value/namespace/{self.namespace}/key/{self.key}"
-
 
 class GetUserKeyValueNamespaceKeyRequest(EndpointRequest[GenericOperationResponse]):
     namespace: str
@@ -40,9 +34,6 @@ class GetUserKeyValueNamespaceKeyRequest(EndpointRequest[GenericOperationRespons
     endpoint_path: ClassVar[str] = "/api/user-key-value/namespace/{namespace}/key/{key}"
     response_model: ClassVar[_ResponseModel] = GenericOperationResponse
 
-    def resolve_path(self) -> str:
-        return f"/api/user-key-value/namespace/{self.namespace}/key/{self.key}"
-
 
 class DeleteUserKeyValueNamespaceKeyRequest(EndpointRequest[GenericOperationResponse]):
     namespace: str
@@ -51,6 +42,3 @@ class DeleteUserKeyValueNamespaceKeyRequest(EndpointRequest[GenericOperationResp
     endpoint_method: ClassVar[str] = "DELETE"
     endpoint_path: ClassVar[str] = "/api/user-key-value/namespace/{namespace}/key/{key}"
     response_model: ClassVar[_ResponseModel] = GenericOperationResponse
-
-    def resolve_path(self) -> str:
-        return f"/api/user-key-value/namespace/{self.namespace}/key/{self.key}"

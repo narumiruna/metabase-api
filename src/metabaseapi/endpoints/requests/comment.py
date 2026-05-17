@@ -25,9 +25,6 @@ class UpdateCommentRequest(EndpointRequest[GenericOperationResponse]):
     endpoint_path: ClassVar[str] = "/api/comment/{comment_id}"
     response_model: ClassVar[_ResponseModel] = GenericOperationResponse
 
-    def resolve_path(self) -> str:
-        return self.endpoint_path.format(comment_id=self.comment_id)
-
 
 class GetCommentRequest(EndpointRequest[GenericOperationResponse]):
     model: str | None = None
@@ -61,9 +58,6 @@ class DeleteCommentRequest(EndpointRequest[GenericOperationResponse]):
     endpoint_path: ClassVar[str] = "/api/comment/{comment_id}"
     response_model: ClassVar[_ResponseModel] = GenericOperationResponse
 
-    def resolve_path(self) -> str:
-        return f"/api/comment/{self.comment_id}"
-
 
 class PostCommentReactionRequest(EndpointRequest[GenericOperationResponse]):
     comment_id: int | str
@@ -72,6 +66,3 @@ class PostCommentReactionRequest(EndpointRequest[GenericOperationResponse]):
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/comment/{comment_id}/reaction"
     response_model: ClassVar[_ResponseModel] = GenericOperationResponse
-
-    def resolve_path(self) -> str:
-        return self.endpoint_path.format(comment_id=self.comment_id)

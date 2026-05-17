@@ -124,6 +124,7 @@ from .requests import UpdateApiKeyRequest
 from .requests import UpdateBookmarkOrderingRequest
 from .requests import UpdateCardRequest
 from .requests import UpdateChannelRequest
+from .requests import UpdateCommentRequest
 from .responses import ActionExecutionResponse
 from .responses import ActivityMutationResponse
 from .responses import AgentResponse
@@ -283,5 +284,6 @@ __all__ = [
     "UpdateBookmarkOrderingRequest",
     "UpdateCardRequest",
     "UpdateChannelRequest",
+    "UpdateCommentRequest",
     "User",
 ]

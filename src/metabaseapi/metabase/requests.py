@@ -378,6 +378,26 @@ class GetCommentMentionsRequest(_BaseMetabaseRequest[GenericOperationResponse]):
         return self.execute_sync(client, GenericOperationResponse)
 
 
+class UpdateCommentRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+    comment_id: int | str
+    body: dict[str, Any] = PydanticField(default_factory=dict)
+
+    endpoint_method: ClassVar[str] = "PUT"
+    endpoint_path: ClassVar[str] = "/api/comment/{comment_id}"
+
+    async def do(self, client: MetabaseRequestClient) -> GenericOperationResponse:
+        return await self.execute(client, GenericOperationResponse)
+
+    def do_sync(self, client: MetabaseRequestClient) -> GenericOperationResponse:
+        return self.execute_sync(client, GenericOperationResponse)
+
+    def resolve_path(self) -> str:
+        return self.endpoint_path.format(comment_id=self.comment_id)
+
+    def request_body(self) -> JSONValue:
+        return self.body
+
+
 class GetCommentRequest(_BaseMetabaseRequest[GenericOperationResponse]):
     model: str | None = None
     model_id: int | str | None = None
@@ -1918,4 +1938,5 @@ __all__ = [
     "UpdateBookmarkOrderingRequest",
     "UpdateCardRequest",
     "UpdateChannelRequest",
+    "UpdateCommentRequest",
 ]

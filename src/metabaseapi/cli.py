@@ -548,6 +548,14 @@ def create_comment(ctx: typer.Context, body: str = typer.Argument(..., help="Com
     _run_and_print(_run_client_call(ctx, lambda client: client.create_comment(payload)))
 
 
+@app.command("update-comment")
+def update_comment(
+    ctx: typer.Context, comment_id: str, body: str = typer.Argument(..., help="Comment body JSON object")
+) -> None:
+    payload = _parse_json_object(body, "body")
+    _run_and_print(_run_client_call(ctx, lambda client: client.update_comment(comment_id, payload)))
+
+
 @app.command("delete-comment")
 def delete_comment(ctx: typer.Context, comment_id: str = typer.Argument(...)) -> None:
     """Delete a comment."""

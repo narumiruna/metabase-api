@@ -149,6 +149,7 @@ from metabaseapi.metabase import UpdateApiKeyRequest
 from metabaseapi.metabase import UpdateBookmarkOrderingRequest
 from metabaseapi.metabase import UpdateCardRequest
 from metabaseapi.metabase import UpdateChannelRequest
+from metabaseapi.metabase import UpdateCommentRequest
 from metabaseapi.metabase import User
 from metabaseapi.models import APIRequestModel
 from metabaseapi.models import APIResponseModel
@@ -848,6 +849,9 @@ class MetabaseClient:
     async def create_comment(self, body: Mapping[str, object]) -> JSONValue | None:
         return await self.post("/api/comment", body=dict(body))
 
+    async def update_comment(self, comment_id: int | str, body: Mapping[str, object]) -> JSONValue | None:
+        return await self.put(f"/api/comment/{comment_id}", body=dict(body))
+
     async def delete_comment(self, comment_id: int | str) -> JSONValue | None:
         return await self.delete(f"/api/comment/{comment_id}")
 
@@ -1137,6 +1141,9 @@ class MetabaseClient:
 
     async def get_comment_mentions_typed(self) -> GenericOperationResponse:
         return await self.run(GetCommentMentionsRequest())
+
+    async def update_comment_typed(self, comment_id: int | str, body: dict[str, object]) -> GenericOperationResponse:
+        return await self.run(UpdateCommentRequest(comment_id=comment_id, body=dict(body)))
 
     async def get_comment_typed(
         self,

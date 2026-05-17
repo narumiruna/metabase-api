@@ -270,6 +270,11 @@ RESPONSE_MODULE_CONTRACTS = {
     "bug_reporting": ("BugReportingConnectionPoolDetailsResponse", "BugReportingDetailsResponse"),
     "card": ("CardsDashboardsResponse", "ListCardsResponse"),
     "channel": ("ListChannelsResponse",),
+    "cloud_migration": (
+        "CancelCloudMigrationResponse",
+        "CloudMigrationStatusResponse",
+        "CreateCloudMigrationResponse",
+    ),
     "collection": ("ListCollectionsResponse",),
     "common": ("GenericOperationResponse",),
     "dashboard": ("ListDashboardsResponse",),

@@ -138,6 +138,9 @@ from metabaseapi.endpoints.responses.bug_reporting import BugReportingDetailsRes
 from metabaseapi.endpoints.responses.card import CardsDashboardsResponse
 from metabaseapi.endpoints.responses.card import ListCardsResponse
 from metabaseapi.endpoints.responses.channel import ListChannelsResponse
+from metabaseapi.endpoints.responses.cloud_migration import CancelCloudMigrationResponse
+from metabaseapi.endpoints.responses.cloud_migration import CloudMigrationStatusResponse
+from metabaseapi.endpoints.responses.cloud_migration import CreateCloudMigrationResponse
 from metabaseapi.endpoints.responses.collection import ListCollectionsResponse
 from metabaseapi.endpoints.responses.common import GenericOperationResponse
 from metabaseapi.endpoints.responses.dashboard import ListDashboardsResponse
@@ -370,17 +373,17 @@ def test_action_requests_use_expected_paths_and_payloads() -> None:
         ),
         (
             CreateCloudMigrationRequest(body={"environment": "prod"}),
-            GenericOperationResponse,
+            CreateCloudMigrationResponse,
             ("POST", "/api/cloud-migration", {}, {"environment": "prod"}),
         ),
         (
             GetCloudMigrationRequest(),
-            GenericOperationResponse,
+            CloudMigrationStatusResponse,
             ("GET", "/api/cloud-migration", {}, None),
         ),
         (
             CancelCloudMigrationRequest(),
-            GenericOperationResponse,
+            CancelCloudMigrationResponse,
             ("PUT", "/api/cloud-migration/cancel", {}, None),
         ),
         (CreateCollectionRequest(body={"name": "New"}), Collection, ("POST", "/api/collection", {}, {"name": "New"})),
@@ -761,6 +764,9 @@ def _build_mock_endpoint_responses() -> dict[tuple[str, str], dict[str, object]]
         ("GET", "/api/user/current"): {"id": 9, "email": "client@example.com"},
         ("GET", "/api/card/11"): {"id": 11, "name": "card", "display": "bar"},
         ("GET", "/api/database"): {"data": [{"id": 2, "name": "main", "engine": "postgres"}]},
+        ("POST", "/api/cloud-migration"): {"id": "migration-1", "status": "created"},
+        ("GET", "/api/cloud-migration"): {"id": "migration-1", "status": "ready"},
+        ("PUT", "/api/cloud-migration/cancel"): {"id": "migration-1", "status": "canceled"},
         ("POST", "/api/database"): {"id": 9, "name": "analytics", "engine": "postgres"},
         ("POST", "/api/card"): {"id": 12, "name": "Orders", "display": "table", "type": "question"},
         ("GET", "/api/card"): {"data": [{"id": 5, "name": "card", "display": "line"}]},
@@ -991,9 +997,9 @@ def test_client_run_endpoint_requests_return_models() -> None:
     assert isinstance(test_channel, GenericOperationResponse)
     assert isinstance(channel, GenericOperationResponse)
     assert isinstance(updated_channel, GenericOperationResponse)
-    assert isinstance(cloud_migration, GenericOperationResponse)
-    assert isinstance(latest_cloud_migration, GenericOperationResponse)
-    assert isinstance(canceled_cloud_migration, GenericOperationResponse)
+    assert isinstance(cloud_migration, CreateCloudMigrationResponse)
+    assert isinstance(latest_cloud_migration, CloudMigrationStatusResponse)
+    assert isinstance(canceled_cloud_migration, CancelCloudMigrationResponse)
     assert isinstance(created_collection, Collection)
     assert created_collection.name == "New"
     assert isinstance(created_dashboard, Dashboard)

@@ -21,6 +21,7 @@ RAW_MODULES = (
     "collection",
     "comment",
     "dashboard",
+    "dashboard_query",
     "data_studio",
     "database",
     "schema",

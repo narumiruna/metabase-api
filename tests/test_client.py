@@ -26,6 +26,7 @@ from metabaseapi.client.raw import cloud_migration as raw_cloud_migration
 from metabaseapi.client.raw import collection as raw_collection
 from metabaseapi.client.raw import comment as raw_comment
 from metabaseapi.client.raw import dashboard as raw_dashboard
+from metabaseapi.client.raw import dashboard_query as raw_dashboard_query
 from metabaseapi.client.raw import data_studio as raw_data_studio
 from metabaseapi.client.raw import database as raw_database
 from metabaseapi.client.raw import schema as raw_schema
@@ -367,17 +368,17 @@ def test_raw_paths_cover_handwritten_endpoint_surface() -> None:
         (raw_dashboard.list_dashboards(client), ("GET", "/api/dashboard", None)),
         (raw_dashboard.get_dashboard(client, 14), ("GET", "/api/dashboard/14", None)),
         (
-            raw_dashboard.query_dashboard_card(client, 14, "22", "33", {"x": 1}),
+            raw_dashboard_query.query_dashboard_card(client, 14, "22", "33", {"x": 1}),
             ("POST", "/api/dashboard/14/dashcard/22/card/33/query", {"x": 1}),
         ),
         (
-            raw_dashboard.query_dashboard_card_export(
+            raw_dashboard_query.query_dashboard_card_export(
                 client, 14, "22", "33", "xlsx", {"x": 1}, pivot_results=True, format_rows=False
             ),
             ("POST", "/api/dashboard/14/dashcard/22/card/33/query/xlsx", {"x": 1}),
         ),
         (
-            raw_dashboard.query_dashboard_card_pivot(client, 14, "22", "33", {"x": 1}),
+            raw_dashboard_query.query_dashboard_card_pivot(client, 14, "22", "33", {"x": 1}),
             ("POST", "/api/dashboard/pivot/14/dashcard/22/card/33/query", {"x": 1}),
         ),
         (raw_dashboard.save_dashboard(client, {"name": "Sales"}), ("POST", "/api/dashboard/save", {"name": "Sales"})),
@@ -386,11 +387,11 @@ def test_raw_paths_cover_handwritten_endpoint_surface() -> None:
             ("POST", "/api/dashboard/save/collection/root", {"name": "Sales"}),
         ),
         (
-            raw_dashboard.get_dashboard_dashcard_execute(client, 14, "22", parameters={"id": 1}),
+            raw_dashboard_query.get_dashboard_dashcard_execute(client, 14, "22", parameters={"id": 1}),
             ("GET", "/api/dashboard/14/dashcard/22/execute", None),
         ),
         (
-            raw_dashboard.execute_dashboard_dashcard(client, 14, "22", parameters={"id": 1}),
+            raw_dashboard_query.execute_dashboard_dashcard(client, 14, "22", parameters={"id": 1}),
             ("POST", "/api/dashboard/14/dashcard/22/execute", {"parameters": {"id": 1}}),
         ),
         (raw_dashboard.create_dashboard_public_link(client, 14), ("POST", "/api/dashboard/14/public_link", None)),
@@ -407,21 +408,24 @@ def test_raw_paths_cover_handwritten_endpoint_surface() -> None:
         ),
         (raw_dashboard.get_dashboard_items(client, 14), ("GET", "/api/dashboard/14/items", None)),
         (
-            raw_dashboard.get_dashboard_param_remapping(client, 14, "abc"),
+            raw_dashboard_query.get_dashboard_param_remapping(client, 14, "abc"),
             ("GET", "/api/dashboard/14/params/abc/remapping", None),
         ),
         (
-            raw_dashboard.get_dashboard_param_search_values(client, 14, "abc", "Orange"),
+            raw_dashboard_query.get_dashboard_param_search_values(client, 14, "abc", "Orange"),
             ("GET", "/api/dashboard/14/params/abc/search/Orange", None),
         ),
         (
-            raw_dashboard.get_dashboard_param_values(client, 14, "abc"),
+            raw_dashboard_query.get_dashboard_param_values(client, 14, "abc"),
             ("GET", "/api/dashboard/14/params/abc/values", None),
         ),
-        (raw_dashboard.get_dashboard_query_metadata(client, 14), ("GET", "/api/dashboard/14/query_metadata", None)),
-        (raw_dashboard.get_dashboard_related(client, 14), ("GET", "/api/dashboard/14/related", None)),
         (
-            raw_dashboard.get_dashboard_params_valid_filter_fields(client, filtered=[11], filtering=[22]),
+            raw_dashboard_query.get_dashboard_query_metadata(client, 14),
+            ("GET", "/api/dashboard/14/query_metadata", None),
+        ),
+        (raw_dashboard_query.get_dashboard_related(client, 14), ("GET", "/api/dashboard/14/related", None)),
+        (
+            raw_dashboard_query.get_dashboard_params_valid_filter_fields(client, filtered=[11], filtering=[22]),
             ("GET", "/api/dashboard/params/valid-filter-fields", None),
         ),
         (raw_dashboard.get_dashboard_embeddable(client), ("GET", "/api/dashboard/embeddable", None)),

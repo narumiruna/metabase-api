@@ -295,7 +295,7 @@ def test_cli_command_registry_matches_package_files() -> None:
     command_module_files = tuple(
         sorted(path.stem for path in command_package_path.glob("*.py") if path.stem != "__init__")
     )
-    assert command_module_files == tuple(sorted(metabaseapi.cli.commands.COMMAND_MODULES))
+    assert command_module_files == tuple(sorted(metabaseapi.cli.commands.command_module_names()))
 
 
 def test_cli_command_legacy_shims_are_not_importable() -> None:
@@ -672,7 +672,11 @@ def test_cli_command_modules_importable_in_multiple_orders() -> None:
             """
             from metabaseapi.cli.commands import *  # noqa: F401
             import metabaseapi.cli
-            print(len(COMMAND_MODULES), len(command_module_objects()), len(metabaseapi.cli.app.registered_commands))
+            print(
+                len(command_module_names()),
+                len(command_module_objects()),
+                len(metabaseapi.cli.app.registered_commands),
+            )
             """
         ).strip(),
     ]

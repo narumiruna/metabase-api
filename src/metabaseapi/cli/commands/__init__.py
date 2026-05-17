@@ -4,7 +4,7 @@ from importlib import import_module
 from types import ModuleType
 from typing import Final
 
-COMMAND_MODULES: Final[tuple[str, ...]] = (
+_COMMAND_MODULES: Final[tuple[str, ...]] = (
     "action",
     "activity",
     "ai_entity_analysis",
@@ -34,7 +34,7 @@ COMMAND_MODULES: Final[tuple[str, ...]] = (
     "cloud_migration",
 )
 
-_COMMAND_MODULE_IMPORT_PATHS = tuple(f"metabaseapi.cli.commands.{module}" for module in COMMAND_MODULES)
+_COMMAND_MODULE_IMPORT_PATHS = tuple(f"metabaseapi.cli.commands.{module}" for module in _COMMAND_MODULES)
 
 
 def command_module_objects() -> tuple[ModuleType, ...]:
@@ -44,7 +44,7 @@ def command_module_objects() -> tuple[ModuleType, ...]:
 
 def command_module_names() -> tuple[str, ...]:
     """Return CLI command module suffix names."""
-    return COMMAND_MODULES
+    return _COMMAND_MODULES
 
 
 def command_module_paths() -> tuple[str, ...]:
@@ -58,7 +58,6 @@ def register_commands() -> None:
 
 
 __all__ = [
-    "COMMAND_MODULES",
     "command_module_names",
     "command_module_objects",
     "command_module_paths",

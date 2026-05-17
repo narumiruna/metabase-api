@@ -50,3 +50,13 @@ metabaseapi create-database my_db postgres --details '{"host":"localhost","port"
 ```
 
 所有輸出都會以可讀 JSON（縮排、排序）輸出，便於 AI / 腳本處理。
+
+## Live test
+
+`.env` 設好 `METABASE_URL` 與 `METABASE_API_KEY` 後，可以執行低風險唯讀 live checks：
+
+```bash
+just live-test
+```
+
+此命令只檢查 current-user 的 raw、convenience、typed 路徑，輸出欄位名稱與狀態，不輸出 API key。

@@ -18,6 +18,46 @@ class _ClientWithRequestMethods:
 
 
 class _ConvenienceClient(_ClientWithRequestMethods):
+    async def list_actions(self, *, model_id: str | None = None) -> dict[str, object]:
+        return {"method": "GET", "path": "/api/action", "params": {"model-id": model_id} if model_id else None}
+
+    async def create_action(self, body: dict[str, object]) -> dict[str, object]:
+        return {"method": "POST", "path": "/api/action", "body": body}
+
+    async def list_public_actions(self) -> dict[str, object]:
+        return {"method": "GET", "path": "/api/action/public"}
+
+    async def get_action(self, action_id: str) -> dict[str, object]:
+        return {"method": "GET", "path": f"/api/action/{action_id}"}
+
+    async def delete_action(self, action_id: str) -> dict[str, object]:
+        return {"method": "DELETE", "path": f"/api/action/{action_id}"}
+
+    async def get_action_execute(
+        self,
+        action_id: str,
+        *,
+        parameters: dict[str, object] | None = None,
+    ) -> dict[str, object]:
+        return {"method": "GET", "path": f"/api/action/{action_id}/execute", "params": parameters}
+
+    async def update_action(self, action_id: str, body: dict[str, object]) -> dict[str, object]:
+        return {"method": "PUT", "path": f"/api/action/{action_id}", "body": body}
+
+    async def execute_action(
+        self,
+        action_id: str,
+        *,
+        parameters: dict[str, object] | None = None,
+    ) -> dict[str, object]:
+        return {"method": "POST", "path": f"/api/action/{action_id}/execute", "body": {"parameters": parameters or {}}}
+
+    async def create_action_public_link(self, action_id: str) -> dict[str, object]:
+        return {"method": "POST", "path": f"/api/action/{action_id}/public_link"}
+
+    async def delete_action_public_link(self, action_id: str) -> dict[str, object]:
+        return {"method": "DELETE", "path": f"/api/action/{action_id}/public_link"}
+
     async def current_user(self) -> dict[str, str]:
         return {"name": "Alice"}
 
@@ -149,6 +189,16 @@ def test_help_lists_every_convenience_command() -> None:
 
     assert result.exit_code == 0
     for command in [
+        "list-actions",
+        "create-action",
+        "list-public-actions",
+        "get-action",
+        "delete-action",
+        "get-action-execute",
+        "update-action",
+        "execute-action",
+        "create-action-public-link",
+        "delete-action-public-link",
         "current-user",
         "list-databases",
         "create-database",
@@ -211,6 +261,10 @@ def test_get_database_command_outputs_json(monkeypatch: pytest.MonkeyPatch) -> N
 @pytest.mark.parametrize(
     ("command", "expected_path"),
     [
+        (["list-actions"], "/api/action"),
+        (["list-public-actions"], "/api/action/public"),
+        (["get-action", "11"], "/api/action/11"),
+        (["get-action-execute", "11"], "/api/action/11/execute"),
         (["list-databases"], "/api/database"),
         (["list-cards"], "/api/card"),
         (["list-dashboards"], "/api/dashboard"),
@@ -240,6 +294,32 @@ def test_read_endpoint_commands_cover_handwritten_surface(
 
     assert result.exit_code == 0
     assert '\n  "method": "GET"' in result.stdout
+    assert f'\n  "path": "{expected_path}"' in result.stdout
+
+
+@pytest.mark.parametrize(
+    ("command", "expected_method", "expected_path"),
+    [
+        (["create-action", '{"name":"action"}'], "POST", "/api/action"),
+        (["delete-action", "11"], "DELETE", "/api/action/11"),
+        (["update-action", "11", '{"name":"action"}'], "PUT", "/api/action/11"),
+        (["execute-action", "11", "--parameters", '{"id":1}'], "POST", "/api/action/11/execute"),
+        (["create-action-public-link", "11"], "POST", "/api/action/11/public_link"),
+        (["delete-action-public-link", "11"], "DELETE", "/api/action/11/public_link"),
+    ],
+)
+def test_action_mutation_commands_cover_handwritten_surface(
+    monkeypatch: pytest.MonkeyPatch,
+    command: list[str],
+    expected_method: str,
+    expected_path: str,
+) -> None:
+    monkeypatch.setattr(cli, "create_client", lambda _settings: _ConvenienceClient())
+
+    result = runner.invoke(cli.app, ["--base-url", "http://localhost:3000", "--api-key", "abc", *command])
+
+    assert result.exit_code == 0
+    assert f'\n  "method": "{expected_method}"' in result.stdout
     assert f'\n  "path": "{expected_path}"' in result.stdout
 
 

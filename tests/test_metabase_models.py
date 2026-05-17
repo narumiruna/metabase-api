@@ -8,14 +8,23 @@ from datetime import datetime
 import httpx
 
 from metabaseapi.client import MetabaseClient
+from metabaseapi.metabase import Action
+from metabaseapi.metabase import ActionExecutionResponse
 from metabaseapi.metabase import Card
 from metabaseapi.metabase import Collection
+from metabaseapi.metabase import CreateActionPublicLinkRequest
+from metabaseapi.metabase import CreateActionRequest
 from metabaseapi.metabase import CreateCardRequest
 from metabaseapi.metabase import CreateDatabaseRequest
 from metabaseapi.metabase import CurrentUserRequest
 from metabaseapi.metabase import CurrentUserResponse
 from metabaseapi.metabase import Dashboard
 from metabaseapi.metabase import Database
+from metabaseapi.metabase import DeleteActionPublicLinkRequest
+from metabaseapi.metabase import DeleteActionRequest
+from metabaseapi.metabase import ExecuteActionRequest
+from metabaseapi.metabase import GetActionExecuteRequest
+from metabaseapi.metabase import GetActionRequest
 from metabaseapi.metabase import GetCardRequest
 from metabaseapi.metabase import GetCollectionRequest
 from metabaseapi.metabase import GetDashboardRequest
@@ -23,6 +32,8 @@ from metabaseapi.metabase import GetDatabaseRequest
 from metabaseapi.metabase import GetFieldRequest
 from metabaseapi.metabase import GetTableRequest
 from metabaseapi.metabase import GetUserRequest
+from metabaseapi.metabase import ListActionsRequest
+from metabaseapi.metabase import ListActionsResponse
 from metabaseapi.metabase import ListCardsRequest
 from metabaseapi.metabase import ListCardsResponse
 from metabaseapi.metabase import ListCollectionsRequest
@@ -30,12 +41,14 @@ from metabaseapi.metabase import ListCollectionsResponse
 from metabaseapi.metabase import ListDashboardsResponse
 from metabaseapi.metabase import ListDatabasesRequest
 from metabaseapi.metabase import ListDatabasesResponse
+from metabaseapi.metabase import ListPublicActionsRequest
 from metabaseapi.metabase import ListTablesRequest
 from metabaseapi.metabase import ListTablesResponse
 from metabaseapi.metabase import ListUsersRequest
 from metabaseapi.metabase import ListUsersResponse
 from metabaseapi.metabase import MetabaseField
 from metabaseapi.metabase import Table
+from metabaseapi.metabase import UpdateActionRequest
 from metabaseapi.metabase import User
 from metabaseapi.models import QueryParamValue
 
@@ -179,6 +192,44 @@ def test_list_response_models_handle_wrapped_and_unwrapped_payloads() -> None:
     assert unwrapped.cards[0].id == 2
 
 
+def test_action_requests_use_expected_paths_and_payloads() -> None:
+    cases = [
+        (ListActionsRequest(model_id=42), ListActionsResponse, ("GET", "/api/action", {"model-id": 42}, None)),
+        (CreateActionRequest(body={"name": "a"}), Action, ("POST", "/api/action", {}, {"name": "a"})),
+        (ListPublicActionsRequest(), ListActionsResponse, ("GET", "/api/action/public", {}, None)),
+        (GetActionRequest(action_id=5), Action, ("GET", "/api/action/5", {}, None)),
+        (DeleteActionRequest(action_id=5), ActionExecutionResponse, ("DELETE", "/api/action/5", {}, None)),
+        (
+            GetActionExecuteRequest(action_id=5, parameters={"id": 1}),
+            ActionExecutionResponse,
+            ("GET", "/api/action/5/execute", {"id": 1}, None),
+        ),
+        (UpdateActionRequest(action_id=5, body={"name": "b"}), Action, ("PUT", "/api/action/5", {}, {"name": "b"})),
+        (
+            ExecuteActionRequest(action_id=5, parameters={"id": 1}),
+            ActionExecutionResponse,
+            ("POST", "/api/action/5/execute", {}, {"parameters": {"id": 1}}),
+        ),
+        (
+            CreateActionPublicLinkRequest(action_id=5),
+            ActionExecutionResponse,
+            ("POST", "/api/action/5/public_link", {}, None),
+        ),
+        (
+            DeleteActionPublicLinkRequest(action_id=5),
+            ActionExecutionResponse,
+            ("DELETE", "/api/action/5/public_link", {}, None),
+        ),
+    ]
+
+    for request_model, response_type, expected_call in cases:
+        stub = _StubClient({"id": 5, "name": "action"})
+        response = request_model.do_sync(stub)
+
+        assert isinstance(response, response_type)
+        assert stub.calls == [expected_call]
+
+
 def test_list_requests_use_expected_paths() -> None:
     for request_model, response_type, expected_path in [
         (ListCardsRequest(), ListCardsResponse, "/api/card"),
@@ -231,6 +282,16 @@ def _run[T](coro: Coroutine[object, object, T]) -> T:
 
 def _build_mock_endpoint_responses() -> dict[tuple[str, str], dict[str, object]]:
     return {
+        ("GET", "/api/action"): {"data": [{"id": 1, "name": "action"}]},
+        ("POST", "/api/action"): {"id": 2, "name": "created action"},
+        ("GET", "/api/action/public"): {"data": [{"id": 3, "name": "public"}]},
+        ("GET", "/api/action/5"): {"id": 5, "name": "action5"},
+        ("DELETE", "/api/action/5"): {"ok": True},
+        ("GET", "/api/action/5/execute"): {"values": []},
+        ("PUT", "/api/action/5"): {"id": 5, "name": "updated action"},
+        ("POST", "/api/action/5/execute"): {"ok": True},
+        ("POST", "/api/action/5/public_link"): {"uuid": "abc"},
+        ("DELETE", "/api/action/5/public_link"): {"ok": True},
         ("GET", "/api/user/current"): {"id": 9, "email": "client@example.com"},
         ("GET", "/api/card/11"): {"id": 11, "name": "card", "display": "bar"},
         ("GET", "/api/database"): {"data": [{"id": 2, "name": "main", "engine": "postgres"}]},
@@ -266,6 +327,16 @@ def test_typed_methods_in_client_return_models() -> None:
         client=httpx.AsyncClient(transport=httpx.MockTransport(handler), verify=False),
     )
 
+    actions = _run(client.list_actions_typed())
+    created_action = _run(client.create_action_typed({"name": "created action"}))
+    public_actions = _run(client.list_public_actions_typed())
+    action = _run(client.get_action_typed(5))
+    deleted_action = _run(client.delete_action_typed(5))
+    action_execute = _run(client.get_action_execute_typed(5, parameters={"id": 1}))
+    updated_action = _run(client.update_action_typed(5, {"name": "updated action"}))
+    executed_action = _run(client.execute_action_typed(5, parameters={"id": 1}))
+    action_public_link = _run(client.create_action_public_link_typed(5))
+    deleted_action_public_link = _run(client.delete_action_public_link_typed(5))
     current_user = _run(client.current_user_typed())
     dashboard = _run(client.get_dashboard_typed(3))
     card = _run(client.get_card_typed(11))
@@ -288,6 +359,16 @@ def test_typed_methods_in_client_return_models() -> None:
     table = _run(client.get_table_typed(11))
     field = _run(client.get_field_typed(12))
 
+    assert isinstance(actions, ListActionsResponse)
+    assert isinstance(created_action, Action)
+    assert isinstance(public_actions, ListActionsResponse)
+    assert isinstance(action, Action)
+    assert isinstance(deleted_action, ActionExecutionResponse)
+    assert isinstance(action_execute, ActionExecutionResponse)
+    assert isinstance(updated_action, Action)
+    assert isinstance(executed_action, ActionExecutionResponse)
+    assert isinstance(action_public_link, ActionExecutionResponse)
+    assert isinstance(deleted_action_public_link, ActionExecutionResponse)
     assert isinstance(current_user, CurrentUserResponse)
     assert current_user.email == "client@example.com"
     assert isinstance(dashboard, Dashboard)

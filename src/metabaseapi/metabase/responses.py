@@ -8,6 +8,7 @@ from pydantic import ConfigDict
 from pydantic import Field as PydanticField
 from pydantic import model_validator
 
+from metabaseapi.metabase.entities import Action
 from metabaseapi.metabase.entities import Card
 from metabaseapi.metabase.entities import Collection
 from metabaseapi.metabase.entities import Dashboard
@@ -15,6 +16,29 @@ from metabaseapi.metabase.entities import Database
 from metabaseapi.metabase.entities import Table
 from metabaseapi.metabase.entities import User
 from metabaseapi.models import JSONValue
+
+
+class ActionExecutionResponse(BaseModel):
+    raw: JSONValue | None = None
+    model_config = ConfigDict(extra="allow")
+
+    @model_validator(mode="before")
+    @classmethod
+    def normalize_payload(cls, values: object) -> dict[str, Any]:
+        if isinstance(values, dict):
+            return cast(dict[str, Any], values)
+        return {"raw": values}
+
+
+class ListActionsResponse(BaseModel):
+    actions: list[Action] = PydanticField(default_factory=list)
+    raw: JSONValue | None = None
+    model_config = ConfigDict(extra="allow")
+
+    @model_validator(mode="before")
+    @classmethod
+    def normalize_payload(cls, values: object) -> dict[str, Any]:
+        return _normalize_list_payload(values, "actions")
 
 
 class ListDatabasesResponse(BaseModel):
@@ -108,6 +132,8 @@ def _normalize_list_payload(values: object, list_key: str) -> dict[str, Any]:
 
 
 __all__ = [
+    "ActionExecutionResponse",
+    "ListActionsResponse",
     "ListCardsResponse",
     "ListCollectionsResponse",
     "ListDashboardsResponse",

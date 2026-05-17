@@ -15,24 +15,24 @@ This file is a static implementation checklist derived from the latest Metabase 
 ## Coverage summary
 
 - Documented operations: 600
-- Complete hand-written endpoint implementations: 16
-- Remaining documented operations: 584
+- Complete hand-written endpoint implementations: 26
+- Remaining documented operations: 574
 - Raw `request` / `invoke`: disabled for CLI users and does not count toward TODO completion.
 
 ## Endpoint checklist
 
-### /api/action (0/10 complete)
+### /api/action (10/10 complete)
 
-- [ ] `GET /api/action` — `get-api-action` — Returns actions that can be used for QueryActions. By default lists all viewable actions. Pass optional `?model-id=<model-id>` to limit to actions on a parti...
-- [ ] `POST /api/action` — `post-api-action` — Create a new action.
-- [ ] `GET /api/action/public` — `get-api-action-public` — Fetch a list of Actions with public UUIDs. These actions are publicly-accessible *if* public sharing is enabled.
-- [ ] `GET /api/action/{action-id}` — `get-api-action-action-id` — Fetch an Action.
-- [ ] `DELETE /api/action/{action-id}` — `delete-api-action-action-id` — Delete an Action.
-- [ ] `GET /api/action/{action-id}/execute` — `get-api-action-action-id-execute` — Fetches the values for filling in execution parameters. Pass PK parameters and values to select.
-- [ ] `PUT /api/action/{id}` — `put-api-action-id` — Update an Action.
-- [ ] `POST /api/action/{id}/execute` — `post-api-action-id-execute` — Execute the Action. `parameters` should be the mapped dashboard parameters with values.
-- [ ] `POST /api/action/{id}/public_link` — `post-api-action-id-public_link` — Generate publicly-accessible links for this Action. Returns UUID to be used in public links. (If this Action has already been shared, it will return the exis...
-- [ ] `DELETE /api/action/{id}/public_link` — `delete-api-action-id-public_link` — Delete the publicly-accessible link to this Dashboard.
+- [x] `GET /api/action` — `get-api-action` — Returns actions that can be used for QueryActions. By default lists all viewable actions. Pass optional `?model-id=<model-id>` to limit to actions on a parti...
+- [x] `POST /api/action` — `post-api-action` — Create a new action.
+- [x] `GET /api/action/public` — `get-api-action-public` — Fetch a list of Actions with public UUIDs. These actions are publicly-accessible *if* public sharing is enabled.
+- [x] `GET /api/action/{action-id}` — `get-api-action-action-id` — Fetch an Action.
+- [x] `DELETE /api/action/{action-id}` — `delete-api-action-action-id` — Delete an Action.
+- [x] `GET /api/action/{action-id}/execute` — `get-api-action-action-id-execute` — Fetches the values for filling in execution parameters. Pass PK parameters and values to select.
+- [x] `PUT /api/action/{id}` — `put-api-action-id` — Update an Action.
+- [x] `POST /api/action/{id}/execute` — `post-api-action-id-execute` — Execute the Action. `parameters` should be the mapped dashboard parameters with values.
+- [x] `POST /api/action/{id}/public_link` — `post-api-action-id-public_link` — Generate publicly-accessible links for this Action. Returns UUID to be used in public links. (If this Action has already been shared, it will return the exis...
+- [x] `DELETE /api/action/{id}/public_link` — `delete-api-action-id-public_link` — Delete the publicly-accessible link to this Dashboard.
 
 ### /api/activity (0/5 complete)
 

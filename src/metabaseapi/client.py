@@ -3,20 +3,30 @@ from __future__ import annotations
 from collections.abc import Mapping
 from typing import Protocol
 from typing import TypeVar
+from typing import cast
 
 import httpx
 
 from metabaseapi.errors import MetabaseDecodeError
 from metabaseapi.errors import MetabaseHTTPStatusError
 from metabaseapi.errors import MetabaseNetworkError
+from metabaseapi.metabase import Action
+from metabaseapi.metabase import ActionExecutionResponse
 from metabaseapi.metabase import Card
 from metabaseapi.metabase import Collection
+from metabaseapi.metabase import CreateActionPublicLinkRequest
+from metabaseapi.metabase import CreateActionRequest
 from metabaseapi.metabase import CreateCardRequest
 from metabaseapi.metabase import CreateDatabaseRequest
 from metabaseapi.metabase import CurrentUserRequest
 from metabaseapi.metabase import CurrentUserResponse
 from metabaseapi.metabase import Dashboard
 from metabaseapi.metabase import Database
+from metabaseapi.metabase import DeleteActionPublicLinkRequest
+from metabaseapi.metabase import DeleteActionRequest
+from metabaseapi.metabase import ExecuteActionRequest
+from metabaseapi.metabase import GetActionExecuteRequest
+from metabaseapi.metabase import GetActionRequest
 from metabaseapi.metabase import GetCardRequest
 from metabaseapi.metabase import GetCollectionRequest
 from metabaseapi.metabase import GetDashboardRequest
@@ -24,6 +34,8 @@ from metabaseapi.metabase import GetDatabaseRequest
 from metabaseapi.metabase import GetFieldRequest
 from metabaseapi.metabase import GetTableRequest
 from metabaseapi.metabase import GetUserRequest
+from metabaseapi.metabase import ListActionsRequest
+from metabaseapi.metabase import ListActionsResponse
 from metabaseapi.metabase import ListCardsRequest
 from metabaseapi.metabase import ListCardsResponse
 from metabaseapi.metabase import ListCollectionsRequest
@@ -32,12 +44,14 @@ from metabaseapi.metabase import ListDashboardsRequest
 from metabaseapi.metabase import ListDashboardsResponse
 from metabaseapi.metabase import ListDatabasesRequest
 from metabaseapi.metabase import ListDatabasesResponse
+from metabaseapi.metabase import ListPublicActionsRequest
 from metabaseapi.metabase import ListTablesRequest
 from metabaseapi.metabase import ListTablesResponse
 from metabaseapi.metabase import ListUsersRequest
 from metabaseapi.metabase import ListUsersResponse
 from metabaseapi.metabase import MetabaseField
 from metabaseapi.metabase import Table
+from metabaseapi.metabase import UpdateActionRequest
 from metabaseapi.metabase import User
 from metabaseapi.models import APIRequestModel
 from metabaseapi.models import APIResponseModel
@@ -242,6 +256,48 @@ class MetabaseClient:
     ) -> JSONValue | None:
         return await self.request("DELETE", path, params=params, json_data=body)
 
+    async def list_actions(self, *, model_id: int | str | None = None) -> JSONValue | None:
+        params = {"model-id": model_id} if model_id is not None else None
+        return await self.get("/api/action", params=params)
+
+    async def create_action(self, body: Mapping[str, object]) -> JSONValue | None:
+        return await self.post("/api/action", body=dict(body))
+
+    async def list_public_actions(self) -> JSONValue | None:
+        return await self.get("/api/action/public")
+
+    async def get_action(self, action_id: int | str) -> JSONValue | None:
+        return await self.get(f"/api/action/{action_id}")
+
+    async def delete_action(self, action_id: int | str) -> JSONValue | None:
+        return await self.delete(f"/api/action/{action_id}")
+
+    async def get_action_execute(
+        self,
+        action_id: int | str,
+        *,
+        parameters: Mapping[str, object] | None = None,
+    ) -> JSONValue | None:
+        query_params = cast(Mapping[str, QueryParamValue] | None, parameters)
+        return await self.get(f"/api/action/{action_id}/execute", params=query_params)
+
+    async def update_action(self, action_id: int | str, body: Mapping[str, object]) -> JSONValue | None:
+        return await self.put(f"/api/action/{action_id}", body=dict(body))
+
+    async def execute_action(
+        self,
+        action_id: int | str,
+        *,
+        parameters: Mapping[str, object] | None = None,
+    ) -> JSONValue | None:
+        return await self.post(f"/api/action/{action_id}/execute", body={"parameters": dict(parameters or {})})
+
+    async def create_action_public_link(self, action_id: int | str) -> JSONValue | None:
+        return await self.post(f"/api/action/{action_id}/public_link")
+
+    async def delete_action_public_link(self, action_id: int | str) -> JSONValue | None:
+        return await self.delete(f"/api/action/{action_id}/public_link")
+
     async def current_user(self) -> JSONValue | None:
         return await self.get("/api/user/current")
 
@@ -353,6 +409,46 @@ class MetabaseClient:
 
     async def run[ResponseT](self, request_model: _ExecutableRequest[ResponseT]) -> ResponseT:
         return await request_model.do(self)
+
+    async def list_actions_typed(self, *, model_id: int | str | None = None) -> ListActionsResponse:
+        return await self.run(ListActionsRequest(model_id=model_id))
+
+    async def create_action_typed(self, body: dict[str, object]) -> Action:
+        return await self.run(CreateActionRequest(body=body))
+
+    async def list_public_actions_typed(self) -> ListActionsResponse:
+        return await self.run(ListPublicActionsRequest())
+
+    async def get_action_typed(self, action_id: int | str) -> Action:
+        return await self.run(GetActionRequest(action_id=action_id))
+
+    async def delete_action_typed(self, action_id: int | str) -> ActionExecutionResponse:
+        return await self.run(DeleteActionRequest(action_id=action_id))
+
+    async def get_action_execute_typed(
+        self,
+        action_id: int | str,
+        *,
+        parameters: dict[str, object] | None = None,
+    ) -> ActionExecutionResponse:
+        return await self.run(GetActionExecuteRequest(action_id=action_id, parameters=parameters or {}))
+
+    async def update_action_typed(self, action_id: int | str, body: dict[str, object]) -> Action:
+        return await self.run(UpdateActionRequest(action_id=action_id, body=body))
+
+    async def execute_action_typed(
+        self,
+        action_id: int | str,
+        *,
+        parameters: dict[str, object] | None = None,
+    ) -> ActionExecutionResponse:
+        return await self.run(ExecuteActionRequest(action_id=action_id, parameters=parameters or {}))
+
+    async def create_action_public_link_typed(self, action_id: int | str) -> ActionExecutionResponse:
+        return await self.run(CreateActionPublicLinkRequest(action_id=action_id))
+
+    async def delete_action_public_link_typed(self, action_id: int | str) -> ActionExecutionResponse:
+        return await self.run(DeleteActionPublicLinkRequest(action_id=action_id))
 
     async def current_user_typed(self) -> CurrentUserResponse:
         return await self.run(CurrentUserRequest())

@@ -56,6 +56,12 @@ class Database(_MetabaseEntity):
     details: dict[str, Any] = PydanticField(default_factory=dict)
 
 
+class Action(_MetabaseEntity):
+    model_id: int | str | None = None
+    type: str | None = None
+    description: str | None = None
+
+
 class Card(_MetabaseEntity):
     display: str | None = None
     description: str | None = None
@@ -89,6 +95,7 @@ class MetabaseField(_MetabaseEntity):
 
 
 __all__ = [
+    "Action",
     "Card",
     "Collection",
     "CurrentUserResponse",

@@ -11,6 +11,7 @@ from pydantic import BaseModel
 from pydantic import ConfigDict
 from pydantic import Field as PydanticField
 
+from metabaseapi.metabase.entities import Action
 from metabaseapi.metabase.entities import Card
 from metabaseapi.metabase.entities import Collection
 from metabaseapi.metabase.entities import CurrentUserResponse
@@ -19,6 +20,8 @@ from metabaseapi.metabase.entities import Database
 from metabaseapi.metabase.entities import MetabaseField
 from metabaseapi.metabase.entities import Table
 from metabaseapi.metabase.entities import User
+from metabaseapi.metabase.responses import ActionExecutionResponse
+from metabaseapi.metabase.responses import ListActionsResponse
 from metabaseapi.metabase.responses import ListCardsResponse
 from metabaseapi.metabase.responses import ListCollectionsResponse
 from metabaseapi.metabase.responses import ListDashboardsResponse
@@ -69,6 +72,175 @@ class _BaseMetabaseRequest[ResponseT](BaseModel):
 
     def execute_sync(self, client: MetabaseRequestClient, response_model: type[BaseModel]) -> ResponseT:
         return asyncio.run(self.execute(client, response_model))
+
+
+class ListActionsRequest(_BaseMetabaseRequest[ListActionsResponse]):
+    model_id: int | str | None = None
+
+    endpoint_method: ClassVar[str] = "GET"
+    endpoint_path: ClassVar[str] = "/api/action"
+
+    async def do(self, client: MetabaseRequestClient) -> ListActionsResponse:
+        return await self.execute(client, ListActionsResponse)
+
+    def do_sync(self, client: MetabaseRequestClient) -> ListActionsResponse:
+        return self.execute_sync(client, ListActionsResponse)
+
+    def request_params(self) -> dict[str, QueryParamValue]:
+        if self.model_id is None:
+            return {}
+        return {"model-id": self.model_id}
+
+
+class CreateActionRequest(_BaseMetabaseRequest[Action]):
+    body: dict[str, Any]
+
+    endpoint_method: ClassVar[str] = "POST"
+    endpoint_path: ClassVar[str] = "/api/action"
+
+    async def do(self, client: MetabaseRequestClient) -> Action:
+        return await self.execute(client, Action)
+
+    def do_sync(self, client: MetabaseRequestClient) -> Action:
+        return self.execute_sync(client, Action)
+
+    def request_body(self) -> JSONValue:
+        return self.body
+
+
+class ListPublicActionsRequest(_BaseMetabaseRequest[ListActionsResponse]):
+    endpoint_method: ClassVar[str] = "GET"
+    endpoint_path: ClassVar[str] = "/api/action/public"
+
+    async def do(self, client: MetabaseRequestClient) -> ListActionsResponse:
+        return await self.execute(client, ListActionsResponse)
+
+    def do_sync(self, client: MetabaseRequestClient) -> ListActionsResponse:
+        return self.execute_sync(client, ListActionsResponse)
+
+
+class GetActionRequest(_BaseMetabaseRequest[Action]):
+    action_id: int | str
+
+    endpoint_method: ClassVar[str] = "GET"
+    endpoint_path: ClassVar[str] = "/api/action/{action-id}"
+
+    async def do(self, client: MetabaseRequestClient) -> Action:
+        return await self.execute(client, Action)
+
+    def do_sync(self, client: MetabaseRequestClient) -> Action:
+        return self.execute_sync(client, Action)
+
+    def resolve_path(self) -> str:
+        return f"/api/action/{self.action_id}"
+
+
+class DeleteActionRequest(_BaseMetabaseRequest[ActionExecutionResponse]):
+    action_id: int | str
+
+    endpoint_method: ClassVar[str] = "DELETE"
+    endpoint_path: ClassVar[str] = "/api/action/{action-id}"
+
+    async def do(self, client: MetabaseRequestClient) -> ActionExecutionResponse:
+        return await self.execute(client, ActionExecutionResponse)
+
+    def do_sync(self, client: MetabaseRequestClient) -> ActionExecutionResponse:
+        return self.execute_sync(client, ActionExecutionResponse)
+
+    def resolve_path(self) -> str:
+        return f"/api/action/{self.action_id}"
+
+
+class GetActionExecuteRequest(_BaseMetabaseRequest[ActionExecutionResponse]):
+    action_id: int | str
+    parameters: dict[str, Any] = PydanticField(default_factory=dict)
+
+    endpoint_method: ClassVar[str] = "GET"
+    endpoint_path: ClassVar[str] = "/api/action/{action-id}/execute"
+
+    async def do(self, client: MetabaseRequestClient) -> ActionExecutionResponse:
+        return await self.execute(client, ActionExecutionResponse)
+
+    def do_sync(self, client: MetabaseRequestClient) -> ActionExecutionResponse:
+        return self.execute_sync(client, ActionExecutionResponse)
+
+    def resolve_path(self) -> str:
+        return f"/api/action/{self.action_id}/execute"
+
+    def request_params(self) -> dict[str, QueryParamValue]:
+        return self.parameters
+
+
+class UpdateActionRequest(_BaseMetabaseRequest[Action]):
+    action_id: int | str
+    body: dict[str, Any]
+
+    endpoint_method: ClassVar[str] = "PUT"
+    endpoint_path: ClassVar[str] = "/api/action/{id}"
+
+    async def do(self, client: MetabaseRequestClient) -> Action:
+        return await self.execute(client, Action)
+
+    def do_sync(self, client: MetabaseRequestClient) -> Action:
+        return self.execute_sync(client, Action)
+
+    def resolve_path(self) -> str:
+        return f"/api/action/{self.action_id}"
+
+    def request_body(self) -> JSONValue:
+        return self.body
+
+
+class ExecuteActionRequest(_BaseMetabaseRequest[ActionExecutionResponse]):
+    action_id: int | str
+    parameters: dict[str, Any] = PydanticField(default_factory=dict)
+
+    endpoint_method: ClassVar[str] = "POST"
+    endpoint_path: ClassVar[str] = "/api/action/{id}/execute"
+
+    async def do(self, client: MetabaseRequestClient) -> ActionExecutionResponse:
+        return await self.execute(client, ActionExecutionResponse)
+
+    def do_sync(self, client: MetabaseRequestClient) -> ActionExecutionResponse:
+        return self.execute_sync(client, ActionExecutionResponse)
+
+    def resolve_path(self) -> str:
+        return f"/api/action/{self.action_id}/execute"
+
+    def request_body(self) -> JSONValue:
+        return {"parameters": self.parameters}
+
+
+class CreateActionPublicLinkRequest(_BaseMetabaseRequest[ActionExecutionResponse]):
+    action_id: int | str
+
+    endpoint_method: ClassVar[str] = "POST"
+    endpoint_path: ClassVar[str] = "/api/action/{id}/public_link"
+
+    async def do(self, client: MetabaseRequestClient) -> ActionExecutionResponse:
+        return await self.execute(client, ActionExecutionResponse)
+
+    def do_sync(self, client: MetabaseRequestClient) -> ActionExecutionResponse:
+        return self.execute_sync(client, ActionExecutionResponse)
+
+    def resolve_path(self) -> str:
+        return f"/api/action/{self.action_id}/public_link"
+
+
+class DeleteActionPublicLinkRequest(_BaseMetabaseRequest[ActionExecutionResponse]):
+    action_id: int | str
+
+    endpoint_method: ClassVar[str] = "DELETE"
+    endpoint_path: ClassVar[str] = "/api/action/{id}/public_link"
+
+    async def do(self, client: MetabaseRequestClient) -> ActionExecutionResponse:
+        return await self.execute(client, ActionExecutionResponse)
+
+    def do_sync(self, client: MetabaseRequestClient) -> ActionExecutionResponse:
+        return self.execute_sync(client, ActionExecutionResponse)
+
+    def resolve_path(self) -> str:
+        return f"/api/action/{self.action_id}/public_link"
 
 
 class CurrentUserRequest(_BaseMetabaseRequest[CurrentUserResponse]):
@@ -303,9 +475,16 @@ class GetFieldRequest(_BaseMetabaseRequest[MetabaseField]):
 
 
 __all__ = [
+    "CreateActionPublicLinkRequest",
+    "CreateActionRequest",
     "CreateCardRequest",
     "CreateDatabaseRequest",
     "CurrentUserRequest",
+    "DeleteActionPublicLinkRequest",
+    "DeleteActionRequest",
+    "ExecuteActionRequest",
+    "GetActionExecuteRequest",
+    "GetActionRequest",
     "GetCardRequest",
     "GetCollectionRequest",
     "GetDashboardRequest",
@@ -313,11 +492,14 @@ __all__ = [
     "GetFieldRequest",
     "GetTableRequest",
     "GetUserRequest",
+    "ListActionsRequest",
     "ListCardsRequest",
     "ListCollectionsRequest",
     "ListDashboardsRequest",
     "ListDatabasesRequest",
+    "ListPublicActionsRequest",
     "ListTablesRequest",
     "ListUsersRequest",
     "MetabaseRequestClient",
+    "UpdateActionRequest",
 ]

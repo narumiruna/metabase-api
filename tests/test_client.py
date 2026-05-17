@@ -104,6 +104,19 @@ def test_convenience_paths_cover_handwritten_endpoint_surface() -> None:
     )
 
     calls = [
+        (client.list_actions(), ("GET", "/api/action", None)),
+        (client.create_action({"name": "notify"}), ("POST", "/api/action", {"name": "notify"})),
+        (client.list_public_actions(), ("GET", "/api/action/public", None)),
+        (client.get_action(11), ("GET", "/api/action/11", None)),
+        (client.delete_action(11), ("DELETE", "/api/action/11", None)),
+        (client.get_action_execute(11, parameters={"id": 1}), ("GET", "/api/action/11/execute", None)),
+        (client.update_action(11, {"name": "notify"}), ("PUT", "/api/action/11", {"name": "notify"})),
+        (
+            client.execute_action(11, parameters={"id": 1}),
+            ("POST", "/api/action/11/execute", {"parameters": {"id": 1}}),
+        ),
+        (client.create_action_public_link(11), ("POST", "/api/action/11/public_link", None)),
+        (client.delete_action_public_link(11), ("DELETE", "/api/action/11/public_link", None)),
         (client.current_user(), ("GET", "/api/user/current", None)),
         (client.list_databases(), ("GET", "/api/database", None)),
         (

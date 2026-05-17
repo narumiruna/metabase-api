@@ -4,14 +4,14 @@ from typing import Any
 from typing import ClassVar
 
 from metabaseapi.endpoints.entities import Bookmark
+from metabaseapi.endpoints.execution import EndpointRequest
 from metabaseapi.endpoints.execution import MetabaseRequestClient
-from metabaseapi.endpoints.execution import _BaseMetabaseRequest
-from metabaseapi.endpoints.responses import GenericOperationResponse
-from metabaseapi.endpoints.responses import ListBookmarksResponse
+from metabaseapi.endpoints.responses.bookmark import ListBookmarksResponse
+from metabaseapi.endpoints.responses.common import GenericOperationResponse
 from metabaseapi.wire import JSONValue
 
 
-class ListBookmarksRequest(_BaseMetabaseRequest[ListBookmarksResponse]):
+class ListBookmarksRequest(EndpointRequest[ListBookmarksResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/bookmark"
 
@@ -22,7 +22,7 @@ class ListBookmarksRequest(_BaseMetabaseRequest[ListBookmarksResponse]):
         return self.execute_sync(client, ListBookmarksResponse)
 
 
-class UpdateBookmarkOrderingRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class UpdateBookmarkOrderingRequest(EndpointRequest[GenericOperationResponse]):
     body: dict[str, Any]
 
     endpoint_method: ClassVar[str] = "PUT"
@@ -38,7 +38,7 @@ class UpdateBookmarkOrderingRequest(_BaseMetabaseRequest[GenericOperationRespons
         return self.body
 
 
-class CreateBookmarkRequest(_BaseMetabaseRequest[Bookmark]):
+class CreateBookmarkRequest(EndpointRequest[Bookmark]):
     model: str
     item_id: int | str
 
@@ -55,7 +55,7 @@ class CreateBookmarkRequest(_BaseMetabaseRequest[Bookmark]):
         return f"/api/bookmark/{self.model}/{self.item_id}"
 
 
-class DeleteBookmarkRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class DeleteBookmarkRequest(EndpointRequest[GenericOperationResponse]):
     model: str
     item_id: int | str
 

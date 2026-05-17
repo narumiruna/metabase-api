@@ -98,6 +98,7 @@ from metabaseapi.endpoints.requests.dashboard import GetDashboardPublicRequest
 from metabaseapi.endpoints.requests.dashboard import GetDashboardQueryMetadataRequest
 from metabaseapi.endpoints.requests.dashboard import GetDashboardRelatedRequest
 from metabaseapi.endpoints.requests.dashboard import GetDashboardRequest
+from metabaseapi.endpoints.requests.dashboard import ListDashboardsRequest
 from metabaseapi.endpoints.requests.dashboard import PostDashboardPivotQueryRequest
 from metabaseapi.endpoints.requests.dashboard import PostDashboardRequest
 from metabaseapi.endpoints.requests.dashboard import SaveDashboardRequest
@@ -122,17 +123,17 @@ from metabaseapi.endpoints.requests.user_key_value import DeleteUserKeyValueName
 from metabaseapi.endpoints.requests.user_key_value import GetUserKeyValueNamespaceKeyRequest
 from metabaseapi.endpoints.requests.user_key_value import GetUserKeyValueNamespaceRequest
 from metabaseapi.endpoints.requests.user_key_value import PutUserKeyValueNamespaceKeyRequest
-from metabaseapi.endpoints.responses import ActionExecutionResponse
-from metabaseapi.endpoints.responses import CardsDashboardsResponse
-from metabaseapi.endpoints.responses import GenericOperationResponse
-from metabaseapi.endpoints.responses import ListActionsResponse
-from metabaseapi.endpoints.responses import ListCardsResponse
-from metabaseapi.endpoints.responses import ListChannelsResponse
-from metabaseapi.endpoints.responses import ListCollectionsResponse
-from metabaseapi.endpoints.responses import ListDashboardsResponse
-from metabaseapi.endpoints.responses import ListDatabasesResponse
-from metabaseapi.endpoints.responses import ListTablesResponse
-from metabaseapi.endpoints.responses import ListUsersResponse
+from metabaseapi.endpoints.responses.action import ActionExecutionResponse
+from metabaseapi.endpoints.responses.action import ListActionsResponse
+from metabaseapi.endpoints.responses.card import CardsDashboardsResponse
+from metabaseapi.endpoints.responses.card import ListCardsResponse
+from metabaseapi.endpoints.responses.channel import ListChannelsResponse
+from metabaseapi.endpoints.responses.collection import ListCollectionsResponse
+from metabaseapi.endpoints.responses.common import GenericOperationResponse
+from metabaseapi.endpoints.responses.dashboard import ListDashboardsResponse
+from metabaseapi.endpoints.responses.database import ListDatabasesResponse
+from metabaseapi.endpoints.responses.schema import ListTablesResponse
+from metabaseapi.endpoints.responses.user import ListUsersResponse
 from metabaseapi.wire import QueryParamValue
 
 
@@ -794,7 +795,7 @@ def _build_mock_endpoint_responses() -> dict[tuple[str, str], dict[str, object]]
     }
 
 
-def test_typed_methods_in_client_return_models() -> None:
+def test_client_run_endpoint_requests_return_models() -> None:
     mock_responses = _build_mock_endpoint_responses()
 
     async def handler(request: httpx.Request) -> httpx.Response:
@@ -810,102 +811,130 @@ def test_typed_methods_in_client_return_models() -> None:
         client=httpx.AsyncClient(transport=httpx.MockTransport(handler), verify=False),
     )
 
-    actions = _run(client.list_actions_typed())
-    created_action = _run(client.create_action_typed({"name": "created action"}))
-    public_actions = _run(client.list_public_actions_typed())
-    action = _run(client.get_action_typed(5))
-    deleted_action = _run(client.delete_action_typed(5))
-    action_execute = _run(client.get_action_execute_typed(5, parameters={"id": 1}))
-    updated_action = _run(client.update_action_typed(5, {"name": "updated action"}))
-    executed_action = _run(client.execute_action_typed(5, parameters={"id": 1}))
-    action_public_link = _run(client.create_action_public_link_typed(5))
-    deleted_action_public_link = _run(client.delete_action_public_link_typed(5))
-    current_user = _run(client.current_user_typed())
-    dashboard = _run(client.get_dashboard_typed(3))
-    card = _run(client.get_card_typed(11))
+    actions = _run(client.run(ListActionsRequest()))
+    created_action = _run(client.run(CreateActionRequest(body={"name": "created action"})))
+    public_actions = _run(client.run(ListPublicActionsRequest()))
+    action = _run(client.run(GetActionRequest(action_id=5)))
+    deleted_action = _run(client.run(DeleteActionRequest(action_id=5)))
+    action_execute = _run(client.run(GetActionExecuteRequest(action_id=5, parameters={"id": 1})))
+    updated_action = _run(client.run(UpdateActionRequest(action_id=5, body={"name": "updated action"})))
+    executed_action = _run(client.run(ExecuteActionRequest(action_id=5, parameters={"id": 1})))
+    action_public_link = _run(client.run(CreateActionPublicLinkRequest(action_id=5)))
+    deleted_action_public_link = _run(client.run(DeleteActionPublicLinkRequest(action_id=5)))
+    current_user = _run(client.run(CurrentUserRequest()))
+    dashboard = _run(client.run(GetDashboardRequest(dashboard_id=3)))
+    card = _run(client.run(GetCardRequest(card_id=11)))
     created_card = _run(
-        client.create_question_typed(
-            name="Orders",
-            dataset_query={"database": 1, "type": "query", "query": {"source-table": 2}},
-            display="table",
+        client.run(
+            CreateCardRequest(
+                name="Orders",
+                dataset_query={"database": 1, "type": "query", "query": {"source-table": 2}},
+                display="table",
+            ),
         ),
     )
-    databases = _run(client.list_databases_typed())
-    channels = _run(client.list_channels_typed())
-    create_channel = _run(client.create_channel_typed({"name": "Slack"}))
-    test_channel = _run(client.test_channel_typed({"name": "Slack"}))
-    channel = _run(client.get_channel_typed(11))
-    updated_channel = _run(client.update_channel_typed(11, {"name": "Slack"}))
-    cloud_migration = _run(client.create_cloud_migration_typed({"environment": "prod"}))
-    latest_cloud_migration = _run(client.get_cloud_migration_typed())
-    canceled_cloud_migration = _run(client.cancel_cloud_migration_typed())
-    created_collection = _run(client.create_collection_typed({"name": "New"}))
-    created_dashboard = _run(client.create_dashboard_typed({"name": "Sales"}))
-    updated_collection = _run(client.update_collection_typed("7", {"name": "Updated"}))
-    deleted_collection = _run(client.delete_collection_typed("7"))
-    comments = _run(client.get_comment_typed(model="card", model_id=13))
-    comments_mentions = _run(client.get_comment_mentions_typed())
-    created_comment = _run(client.create_comment_typed({"text": "Hi"}))
-    updated_comment = _run(client.update_comment_typed("7", {"text": "updated"}))
-    reaction_comment = _run(client.post_comment_reaction_typed("11", {"emoji": "👍"}))
-    deleted_comment = _run(client.delete_comment_typed("7"))
-    user_key_values = _run(client.get_user_key_value_namespace_typed("user"))
-    put_user_key_value = _run(client.put_user_key_value_namespace_key_typed("user", "foo", {"value": "bar"}))
-    get_user_key_value = _run(client.get_user_key_value_namespace_key_typed("user", "foo"))
-    delete_user_key_value = _run(client.delete_user_key_value_namespace_key_typed("user", "foo"))
-    collection_graph = _run(client.get_collection_graph_typed())
-    collection_graph_update = _run(client.put_collection_graph_typed({"groups": ["admin"]}))
-    collection_root = _run(client.get_collection_root_typed())
-    collection_root_candidates = _run(client.get_collection_root_dashboard_question_candidates_typed())
-    collection_root_items = _run(client.get_collection_root_items_typed())
+    databases = _run(client.run(ListDatabasesRequest()))
+    channels = _run(client.run(ListChannelsRequest()))
+    create_channel = _run(client.run(CreateChannelRequest(body={"name": "Slack"})))
+    test_channel = _run(client.run(TestChannelRequest(body={"name": "Slack"})))
+    channel = _run(client.run(GetChannelRequest(channel_id=11)))
+    updated_channel = _run(client.run(UpdateChannelRequest(channel_id=11, body={"name": "Slack"})))
+    cloud_migration = _run(client.run(CreateCloudMigrationRequest(body={"environment": "prod"})))
+    latest_cloud_migration = _run(client.run(GetCloudMigrationRequest()))
+    canceled_cloud_migration = _run(client.run(CancelCloudMigrationRequest()))
+    created_collection = _run(client.run(CreateCollectionRequest(body={"name": "New"})))
+    created_dashboard = _run(client.run(PostDashboardRequest(body={"name": "Sales"})))
+    updated_collection = _run(client.run(PutCollectionRequest(collection_id="7", body={"name": "Updated"})))
+    deleted_collection = _run(client.run(DeleteCollectionRequest(collection_id="7")))
+    comments = _run(client.run(GetCommentRequest(model="card", model_id=13)))
+    comments_mentions = _run(client.run(GetCommentMentionsRequest()))
+    created_comment = _run(client.run(PostCommentRequest(body={"text": "Hi"})))
+    updated_comment = _run(client.run(UpdateCommentRequest(comment_id="7", body={"text": "updated"})))
+    reaction_comment = _run(client.run(PostCommentReactionRequest(comment_id="11", body={"emoji": "👍"})))
+    deleted_comment = _run(client.run(DeleteCommentRequest(comment_id="7")))
+    user_key_values = _run(client.run(GetUserKeyValueNamespaceRequest(namespace="user")))
+    put_user_key_value = _run(
+        client.run(PutUserKeyValueNamespaceKeyRequest(namespace="user", key="foo", body={"value": "bar"}))
+    )
+    get_user_key_value = _run(client.run(GetUserKeyValueNamespaceKeyRequest(namespace="user", key="foo")))
+    delete_user_key_value = _run(client.run(DeleteUserKeyValueNamespaceKeyRequest(namespace="user", key="foo")))
+    collection_graph = _run(client.run(GetCollectionGraphRequest()))
+    collection_graph_update = _run(client.run(PutCollectionGraphRequest(body={"groups": ["admin"]})))
+    collection_root = _run(client.run(GetCollectionRootRequest()))
+    collection_root_candidates = _run(client.run(GetCollectionRootDashboardQuestionCandidatesRequest()))
+    collection_root_items = _run(client.run(GetCollectionRootItemsRequest()))
     collection_root_candidates_moved = _run(
-        client.post_collection_root_move_dashboard_question_candidates_typed({"card_ids": [1]})
+        client.run(PostCollectionRootMoveDashboardQuestionCandidatesRequest(body={"card_ids": [1]}))
     )
     collection_move_candidates = _run(
-        client.post_collection_move_dashboard_question_candidates_typed("7", {"card_ids": [1]})
+        client.run(PostCollectionMoveDashboardQuestionCandidatesRequest(collection_id="7", body={"card_ids": [1]}))
     )
-    collection_dashboard_question_candidates = _run(client.get_collection_dashboard_question_candidates_typed("7"))
-    collection_items = _run(client.get_collection_items_typed("7"))
-    collection_trash = _run(client.get_collection_trash_typed())
-    collection_tree = _run(client.get_collection_tree_typed())
-    cards = _run(client.list_cards_typed())
-    cards_dashboards = _run(client.cards_dashboards_typed([1, 2]))
-    moved_cards = _run(client.move_cards_typed({"card_ids": [1], "collection_id": "root"}))
-    dashboards = _run(client.list_dashboards_typed())
-    dashboard_embeddable = _run(client.get_dashboard_embeddable_typed())
-    dashboard_public = _run(client.get_dashboard_public_typed())
-    dashboard_pivot = _run(client.query_dashboard_card_pivot_typed(3, 4, 5, {"x": 1}))
-    saved_dashboard = _run(client.save_dashboard_typed({"name": "Sales"}))
-    saved_dashboard_to_collection = _run(client.save_dashboard_to_collection_typed("root", {"name": "Sales"}))
-    dashboard_dashcard_execute = _run(client.get_dashboard_dashcard_execute_typed(3, 4, parameters={"id": 1}))
-    executed_dashboard_dashcard = _run(client.execute_dashboard_dashcard_typed(3, 4, parameters={"id": 1}))
-    dashboard_public_link = _run(client.create_dashboard_public_link_typed(3))
-    deleted_dashboard_public_link = _run(client.delete_dashboard_public_link_typed(3))
-    copied_dashboard = _run(client.copy_dashboard_typed(3))
-    deleted_dashboard = _run(client.delete_dashboard_typed(3))
-    updated_dashboard = _run(client.update_dashboard_typed(3, {"name": "Updated"}))
-    updated_dashboard_cards = _run(client.update_dashboard_cards_typed(3, {"cards": []}))
-    dashboard_items = _run(client.get_dashboard_items_typed(3))
-    dashboard_param_remapping = _run(client.get_dashboard_param_remapping_typed(3, "abc", parameters={"value": 100}))
+    collection_dashboard_question_candidates = _run(
+        client.run(GetCollectionDashboardQuestionCandidatesRequest(collection_id="7"))
+    )
+    collection_items = _run(client.run(GetCollectionItemsRequest(collection_id="7")))
+    collection_trash = _run(client.run(GetCollectionTrashRequest()))
+    collection_tree = _run(client.run(GetCollectionTreeRequest()))
+    cards = _run(client.run(ListCardsRequest()))
+    cards_dashboards = _run(client.run(CardsDashboardsRequest(card_ids=[1, 2])))
+    moved_cards = _run(client.run(MoveCardsRequest(body={"card_ids": [1], "collection_id": "root"})))
+    dashboards = _run(client.run(ListDashboardsRequest()))
+    dashboard_embeddable = _run(client.run(GetDashboardEmbeddableRequest()))
+    dashboard_public = _run(client.run(GetDashboardPublicRequest()))
+    dashboard_pivot = _run(
+        client.run(PostDashboardPivotQueryRequest(dashboard_id=3, dashcard_id=4, card_id=5, body={"x": 1}))
+    )
+    saved_dashboard = _run(client.run(SaveDashboardRequest(body={"name": "Sales"})))
+    saved_dashboard_to_collection = _run(
+        client.run(SaveDashboardToCollectionRequest(parent_collection_id="root", body={"name": "Sales"}))
+    )
+    dashboard_dashcard_execute = _run(
+        client.run(GetDashboardDashcardExecuteRequest(dashboard_id=3, dashcard_id=4, parameters={"id": 1}))
+    )
+    executed_dashboard_dashcard = _run(
+        client.run(ExecuteDashboardDashcardRequest(dashboard_id=3, dashcard_id=4, parameters={"id": 1}))
+    )
+    dashboard_public_link = _run(client.run(CreateDashboardPublicLinkRequest(dashboard_id=3)))
+    deleted_dashboard_public_link = _run(client.run(DeleteDashboardPublicLinkRequest(dashboard_id=3)))
+    copied_dashboard = _run(client.run(CopyDashboardRequest(from_dashboard_id=3)))
+    deleted_dashboard = _run(client.run(DeleteDashboardRequest(dashboard_id=3)))
+    updated_dashboard = _run(client.run(UpdateDashboardRequest(dashboard_id=3, body={"name": "Updated"})))
+    updated_dashboard_cards = _run(client.run(UpdateDashboardCardsRequest(dashboard_id=3, body={"cards": []})))
+    dashboard_items = _run(client.run(GetDashboardItemsRequest(dashboard_id=3)))
+    dashboard_param_remapping = _run(
+        client.run(DashboardParamRemappingRequest(dashboard_id=3, param_key="abc", parameters={"value": 100}))
+    )
     dashboard_param_search = _run(
-        client.get_dashboard_param_search_values_typed(3, "abc", "Orange", parameters={"limit": 10})
+        client.run(
+            DashboardParamSearchRequest(dashboard_id=3, param_key="abc", query="Orange", parameters={"limit": 10})
+        )
     )
-    dashboard_param_values = _run(client.get_dashboard_param_values_typed(3, "abc", parameters={"limit": 10}))
-    dashboard_query_metadata = _run(client.get_dashboard_query_metadata_typed(3))
-    dashboard_related = _run(client.get_dashboard_related_typed(3))
-    data_studio_table_discard_values = _run(client.data_studio_table_discard_values_typed({"table_ids": [1]}))
-    data_studio_table_edit = _run(client.data_studio_table_edit_typed({"table_ids": [1]}))
-    data_studio_table_rescan_values = _run(client.data_studio_table_rescan_values_typed({"table_ids": [1]}))
-    data_studio_table_selection = _run(client.data_studio_table_selection_typed({"table_ids": [1]}))
-    data_studio_table_sync_schema = _run(client.data_studio_table_sync_schema_typed({"table_ids": [1]}))
-    users = _run(client.list_users_typed())
-    collections = _run(client.list_collections_typed())
-    tables = _run(client.list_tables_typed())
-    db = _run(client.get_database_typed(4))
-    user = _run(client.get_user_typed(10))
-    collection = _run(client.get_collection_typed("c1"))
-    table = _run(client.get_table_typed(11))
-    field = _run(client.get_field_typed(12))
+    dashboard_param_values = _run(
+        client.run(DashboardParamValuesRequest(dashboard_id=3, param_key="abc", parameters={"limit": 10}))
+    )
+    dashboard_query_metadata = _run(client.run(GetDashboardQueryMetadataRequest(dashboard_id=3)))
+    dashboard_related = _run(client.run(GetDashboardRelatedRequest(dashboard_id=3)))
+    data_studio_table_discard_values = _run(
+        client.run(DataStudioTableDiscardValuesRequest(body={"table_ids": [1]}))
+    )
+    data_studio_table_edit = _run(client.run(DataStudioTableEditRequest(body={"table_ids": [1]})))
+    data_studio_table_rescan_values = _run(
+        client.run(DataStudioTableRescanValuesRequest(body={"table_ids": [1]}))
+    )
+    data_studio_table_selection = _run(
+        client.run(DataStudioTableSelectionRequest(body={"table_ids": [1]}))
+    )
+    data_studio_table_sync_schema = _run(
+        client.run(DataStudioTableSyncSchemaRequest(body={"table_ids": [1]}))
+    )
+    users = _run(client.run(ListUsersRequest()))
+    collections = _run(client.run(ListCollectionsRequest()))
+    tables = _run(client.run(ListTablesRequest()))
+    db = _run(client.run(GetDatabaseRequest(database_id=4)))
+    user = _run(client.run(GetUserRequest(user_id=10)))
+    collection = _run(client.run(GetCollectionRequest(collection_id="c1")))
+    table = _run(client.run(GetTableRequest(table_id=11)))
+    field = _run(client.run(GetFieldRequest(field_id=12)))
 
     assert isinstance(actions, ListActionsResponse)
     assert isinstance(created_action, Action)

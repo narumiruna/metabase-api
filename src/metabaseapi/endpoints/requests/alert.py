@@ -3,14 +3,14 @@ from __future__ import annotations
 from typing import ClassVar
 
 from metabaseapi.endpoints.entities import Alert
+from metabaseapi.endpoints.execution import EndpointRequest
 from metabaseapi.endpoints.execution import MetabaseRequestClient
-from metabaseapi.endpoints.execution import _BaseMetabaseRequest
-from metabaseapi.endpoints.responses import GenericOperationResponse
-from metabaseapi.endpoints.responses import ListAlertsResponse
+from metabaseapi.endpoints.responses.alert import ListAlertsResponse
+from metabaseapi.endpoints.responses.common import GenericOperationResponse
 from metabaseapi.wire import QueryParamValue
 
 
-class ListAlertsRequest(_BaseMetabaseRequest[ListAlertsResponse]):
+class ListAlertsRequest(EndpointRequest[ListAlertsResponse]):
     user_id: int | str | None = None
 
     endpoint_method: ClassVar[str] = "GET"
@@ -28,7 +28,7 @@ class ListAlertsRequest(_BaseMetabaseRequest[ListAlertsResponse]):
         return {"user_id": self.user_id}
 
 
-class GetAlertRequest(_BaseMetabaseRequest[Alert]):
+class GetAlertRequest(EndpointRequest[Alert]):
     alert_id: int | str
 
     endpoint_method: ClassVar[str] = "GET"
@@ -44,7 +44,7 @@ class GetAlertRequest(_BaseMetabaseRequest[Alert]):
         return f"/api/alert/{self.alert_id}"
 
 
-class DeleteAlertSubscriptionRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class DeleteAlertSubscriptionRequest(EndpointRequest[GenericOperationResponse]):
     alert_id: int | str
 
     endpoint_method: ClassVar[str] = "DELETE"

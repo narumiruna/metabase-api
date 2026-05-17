@@ -6,15 +6,15 @@ from typing import ClassVar
 from pydantic import Field as PydanticField
 
 from metabaseapi.endpoints.entities import Action
+from metabaseapi.endpoints.execution import EndpointRequest
 from metabaseapi.endpoints.execution import MetabaseRequestClient
-from metabaseapi.endpoints.execution import _BaseMetabaseRequest
-from metabaseapi.endpoints.responses import ActionExecutionResponse
-from metabaseapi.endpoints.responses import ListActionsResponse
+from metabaseapi.endpoints.responses.action import ActionExecutionResponse
+from metabaseapi.endpoints.responses.action import ListActionsResponse
 from metabaseapi.wire import JSONValue
 from metabaseapi.wire import QueryParamValue
 
 
-class ListActionsRequest(_BaseMetabaseRequest[ListActionsResponse]):
+class ListActionsRequest(EndpointRequest[ListActionsResponse]):
     model_id: int | str | None = None
 
     endpoint_method: ClassVar[str] = "GET"
@@ -32,7 +32,7 @@ class ListActionsRequest(_BaseMetabaseRequest[ListActionsResponse]):
         return {"model-id": self.model_id}
 
 
-class CreateActionRequest(_BaseMetabaseRequest[Action]):
+class CreateActionRequest(EndpointRequest[Action]):
     body: dict[str, Any]
 
     endpoint_method: ClassVar[str] = "POST"
@@ -48,7 +48,7 @@ class CreateActionRequest(_BaseMetabaseRequest[Action]):
         return self.body
 
 
-class ListPublicActionsRequest(_BaseMetabaseRequest[ListActionsResponse]):
+class ListPublicActionsRequest(EndpointRequest[ListActionsResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/action/public"
 
@@ -59,7 +59,7 @@ class ListPublicActionsRequest(_BaseMetabaseRequest[ListActionsResponse]):
         return self.execute_sync(client, ListActionsResponse)
 
 
-class GetActionRequest(_BaseMetabaseRequest[Action]):
+class GetActionRequest(EndpointRequest[Action]):
     action_id: int | str
 
     endpoint_method: ClassVar[str] = "GET"
@@ -75,7 +75,7 @@ class GetActionRequest(_BaseMetabaseRequest[Action]):
         return f"/api/action/{self.action_id}"
 
 
-class DeleteActionRequest(_BaseMetabaseRequest[ActionExecutionResponse]):
+class DeleteActionRequest(EndpointRequest[ActionExecutionResponse]):
     action_id: int | str
 
     endpoint_method: ClassVar[str] = "DELETE"
@@ -91,7 +91,7 @@ class DeleteActionRequest(_BaseMetabaseRequest[ActionExecutionResponse]):
         return f"/api/action/{self.action_id}"
 
 
-class GetActionExecuteRequest(_BaseMetabaseRequest[ActionExecutionResponse]):
+class GetActionExecuteRequest(EndpointRequest[ActionExecutionResponse]):
     action_id: int | str
     parameters: dict[str, Any] = PydanticField(default_factory=dict)
 
@@ -111,7 +111,7 @@ class GetActionExecuteRequest(_BaseMetabaseRequest[ActionExecutionResponse]):
         return self.parameters
 
 
-class UpdateActionRequest(_BaseMetabaseRequest[Action]):
+class UpdateActionRequest(EndpointRequest[Action]):
     action_id: int | str
     body: dict[str, Any]
 
@@ -131,7 +131,7 @@ class UpdateActionRequest(_BaseMetabaseRequest[Action]):
         return self.body
 
 
-class ExecuteActionRequest(_BaseMetabaseRequest[ActionExecutionResponse]):
+class ExecuteActionRequest(EndpointRequest[ActionExecutionResponse]):
     action_id: int | str
     parameters: dict[str, Any] = PydanticField(default_factory=dict)
 
@@ -151,7 +151,7 @@ class ExecuteActionRequest(_BaseMetabaseRequest[ActionExecutionResponse]):
         return {"parameters": self.parameters}
 
 
-class CreateActionPublicLinkRequest(_BaseMetabaseRequest[ActionExecutionResponse]):
+class CreateActionPublicLinkRequest(EndpointRequest[ActionExecutionResponse]):
     action_id: int | str
 
     endpoint_method: ClassVar[str] = "POST"
@@ -167,7 +167,7 @@ class CreateActionPublicLinkRequest(_BaseMetabaseRequest[ActionExecutionResponse
         return f"/api/action/{self.action_id}/public_link"
 
 
-class DeleteActionPublicLinkRequest(_BaseMetabaseRequest[ActionExecutionResponse]):
+class DeleteActionPublicLinkRequest(EndpointRequest[ActionExecutionResponse]):
     action_id: int | str
 
     endpoint_method: ClassVar[str] = "DELETE"

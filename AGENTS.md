@@ -6,14 +6,14 @@
 - `src/metabaseapi/cli/runtime.py` owns the Typer app object, shared CLI parsing helpers, client execution helper, and callback configuration.
 - `src/metabaseapi/client/http.py` owns async Metabase HTTP calls and exports only the canonical concrete `MetabaseClient`.
 - `src/metabaseapi/client` exposes exactly one public client interface: `MetabaseClient`.
-- `src/metabaseapi/client/raw` and `src/metabaseapi/client/typed` contain internal module-level endpoint functions; do not expose or reintroduce client mixins.
+- `src/metabaseapi/client/raw` contains internal module-level JSON endpoint functions for the CLI; do not expose or reintroduce client mixins.
 - `src/metabaseapi/cli/commands` owns command implementations; command module filenames use domain/action stems such as `card.py`, `card_query.py`, and `cloud_migration.py`, without a redundant `_commands.py` suffix.
 - `src/metabaseapi/wire.py` contains HTTP wire types and generic raw request/response wrappers; `src/metabaseapi/endpoints/` contains hand-written typed endpoint models and request helpers split by concern.
 - `src/metabaseapi/endpoints/__init__.py` exposes only endpoint submodules (`entities`, `execution`, `requests`, `responses`); do not re-export every endpoint symbol at the package top level.
 - `src/metabaseapi/endpoints/requests/__init__.py` owns only the request module registry; request classes must live in domain modules such as `endpoints/requests/card.py`.
 - Do not reintroduce `api.json`, OpenAPI snapshot fixtures, runtime endpoint registries, or file-scanning behavior to decide API capabilities.
 - This is a new project with no compatibility users; prefer breaking refactors that produce a cleaner interface over preserving shims or transitional APIs.
-- 命名規範：對外公開進入點只使用 `metabaseapi.cli`（package）、`metabaseapi.client` 與 `metabaseapi.endpoints`；`metabaseapi.client.http` 為唯一 concrete client 實作入口；`metabaseapi.client.raw`、`metabaseapi.client.typed` 僅作模組化拆分，並不作向下相容入口。
+- 命名規範：對外公開進入點只使用 `metabaseapi.cli`（package）、`metabaseapi.client` 與 `metabaseapi.endpoints`；`metabaseapi.client.http` 為唯一 concrete client 實作入口；`metabaseapi.client.raw` 僅作 CLI 內部 JSON adapter，typed endpoint 呼叫直接使用 `metabaseapi.endpoints.requests` 搭配 `MetabaseClient.run(...)`。
 
 ## Commands
 
@@ -44,3 +44,17 @@
 - Keep entries short and reusable.
 - `MEMORY.md` must use `## GOTCHA` and `## TASTE` sections.
 - After a non-trivial error or discovery, add one concise entry if it will help future work.
+
+## Agent skills
+
+### Issue tracker
+
+Issues and PRDs are tracked in GitHub Issues for `narumiruna/metabase-api`. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Use the default five-label triage vocabulary: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context layout: root `CONTEXT.md` plus `docs/adr/`. See `docs/agents/domain.md`.

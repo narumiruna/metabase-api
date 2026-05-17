@@ -55,7 +55,7 @@ metabaseapi get-field 9
 - `docs/TODO.md` 追蹤官方 Metabase API 文件中的 600 個 operations。
 - 具備手寫 client method、request/response `BaseModel` 與 CLI 命令的 endpoint 會被標記為完成；測試可依風險補上。
 - CLI 不提供 raw `request` / `invoke`；未完成的 endpoint 必須先補齊手寫 surface。
-- typed endpoint models 維持手寫，不從 `api.json` 產生 runtime registry 或 generated endpoint modules。
+- endpoint request/response models 維持手寫，透過 `MetabaseClient.run(EndpointRequest(...))` 執行；不從 `api.json` 產生 runtime registry 或 generated endpoint modules。
 
 ## Live test
 
@@ -65,4 +65,4 @@ metabaseapi get-field 9
 just live-test
 ```
 
-此命令只檢查 current-user 的 convenience 與 typed 路徑，輸出欄位名稱與狀態，不輸出 API key。
+此命令只檢查 current-user 的 convenience 與 endpoint request 路徑，輸出欄位名稱與狀態，不輸出 API key。

@@ -16,6 +16,26 @@ class _ClientWithRequestMethods:
     async def __aexit__(self, *_: object) -> None:
         return None
 
+    async def get(self, path: str, *, params: object | None = None) -> dict[str, object]:
+        if path == "/api/user/current":
+            return {"name": "Alice"}
+        return {"method": "GET", "path": path, "params": params}
+
+    async def post(
+        self,
+        path: str,
+        *,
+        params: object | None = None,
+        body: object | None = None,
+    ) -> dict[str, object]:
+        return {"method": "POST", "path": path, "params": params, "body": body}
+
+    async def put(self, path: str, *, body: object | None = None) -> dict[str, object]:
+        return {"method": "PUT", "path": path, "body": body}
+
+    async def delete(self, path: str, *, body: object | None = None) -> dict[str, object]:
+        return {"method": "DELETE", "path": path, "body": body}
+
 
 class _ConvenienceClient(_ClientWithRequestMethods):
     async def list_actions(self, *, model_id: str | None = None) -> dict[str, object]:
@@ -763,7 +783,7 @@ class _ConvenienceClient(_ClientWithRequestMethods):
 
 
 class _ErrorClient(_ClientWithRequestMethods):
-    async def get(self, *_: object, **__: object) -> dict[str, str]:
+    async def get(self, *_: object, **__: object) -> dict[str, object]:
         raise MetabaseHTTPStatusError(401, {"message": "unauthorized"})
 
     async def current_user(self) -> dict[str, str]:
@@ -937,7 +957,7 @@ def test_help_lists_every_convenience_command() -> None:
 
 
 def test_current_user_command_outputs_json(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(cli, "create_client", lambda _settings: _ConvenienceClient())
+    monkeypatch.setattr(cli.runtime, "create_client", lambda _settings: _ConvenienceClient())
 
     result = runner.invoke(
         cli.app,
@@ -955,7 +975,7 @@ def test_current_user_command_outputs_json(monkeypatch: pytest.MonkeyPatch) -> N
 
 
 def test_get_database_command_outputs_json(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(cli, "create_client", lambda _settings: _ConvenienceClient())
+    monkeypatch.setattr(cli.runtime, "create_client", lambda _settings: _ConvenienceClient())
 
     result = runner.invoke(
         cli.app,
@@ -1077,7 +1097,7 @@ def test_read_endpoint_commands_cover_handwritten_surface(
     command: list[str],
     expected_path: str,
 ) -> None:
-    monkeypatch.setattr(cli, "create_client", lambda _settings: _ConvenienceClient())
+    monkeypatch.setattr(cli.runtime, "create_client", lambda _settings: _ConvenienceClient())
 
     result = runner.invoke(
         cli.app,
@@ -1221,7 +1241,7 @@ def test_action_mutation_commands_cover_handwritten_surface(
     expected_method: str,
     expected_path: str,
 ) -> None:
-    monkeypatch.setattr(cli, "create_client", lambda _settings: _ConvenienceClient())
+    monkeypatch.setattr(cli.runtime, "create_client", lambda _settings: _ConvenienceClient())
 
     result = runner.invoke(cli.app, ["--base-url", "http://localhost:3000", "--api-key", "abc", *command])
 
@@ -1231,7 +1251,7 @@ def test_action_mutation_commands_cover_handwritten_surface(
 
 
 def test_create_question_command_posts_card_json(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(cli, "create_client", lambda _settings: _ConvenienceClient())
+    monkeypatch.setattr(cli.runtime, "create_client", lambda _settings: _ConvenienceClient())
 
     result = runner.invoke(
         cli.app,
@@ -1262,7 +1282,7 @@ def test_create_question_command_posts_card_json(monkeypatch: pytest.MonkeyPatch
 
 
 def test_create_card_command_rejects_non_object_dataset_query(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(cli, "create_client", lambda _settings: _ConvenienceClient())
+    monkeypatch.setattr(cli.runtime, "create_client", lambda _settings: _ConvenienceClient())
 
     result = runner.invoke(
         cli.app,
@@ -1281,7 +1301,7 @@ def test_create_card_command_rejects_non_object_dataset_query(monkeypatch: pytes
 
 
 def test_create_database_command_posts_json(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(cli, "create_client", lambda _settings: _ConvenienceClient())
+    monkeypatch.setattr(cli.runtime, "create_client", lambda _settings: _ConvenienceClient())
 
     result = runner.invoke(
         cli.app,
@@ -1305,7 +1325,7 @@ def test_create_database_command_posts_json(monkeypatch: pytest.MonkeyPatch) -> 
 
 
 def test_create_database_command_invalid_details_fails(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(cli, "create_client", lambda _settings: _ConvenienceClient())
+    monkeypatch.setattr(cli.runtime, "create_client", lambda _settings: _ConvenienceClient())
 
     result = runner.invoke(
         cli.app,
@@ -1326,7 +1346,7 @@ def test_create_database_command_invalid_details_fails(monkeypatch: pytest.Monke
 
 
 def test_error_response_is_reported_as_json(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(cli, "create_client", lambda _settings: _ErrorClient())
+    monkeypatch.setattr(cli.runtime, "create_client", lambda _settings: _ErrorClient())
 
     result = runner.invoke(
         cli.app,
@@ -1347,7 +1367,7 @@ def test_missing_api_key_fails_fast(monkeypatch: pytest.MonkeyPatch) -> None:
     def should_not_be_called(_settings: object) -> None:
         raise AssertionError("create_client should not be used when API key is missing")
 
-    monkeypatch.setattr(cli, "create_client", should_not_be_called)
+    monkeypatch.setattr(cli.runtime, "create_client", should_not_be_called)
 
     result = runner.invoke(
         cli.app,

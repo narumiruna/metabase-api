@@ -16,7 +16,6 @@ import metabaseapi.cli.runtime
 import metabaseapi.client
 import metabaseapi.client.http
 import metabaseapi.client.raw
-import metabaseapi.client.typed
 import metabaseapi.endpoints
 import metabaseapi.endpoints.entities
 import metabaseapi.endpoints.execution
@@ -44,6 +43,20 @@ import metabaseapi.endpoints.requests.schema
 import metabaseapi.endpoints.requests.user
 import metabaseapi.endpoints.requests.user_key_value
 import metabaseapi.endpoints.responses
+import metabaseapi.endpoints.responses.action
+import metabaseapi.endpoints.responses.activity
+import metabaseapi.endpoints.responses.agent
+import metabaseapi.endpoints.responses.alert
+import metabaseapi.endpoints.responses.api_key
+import metabaseapi.endpoints.responses.bookmark
+import metabaseapi.endpoints.responses.card
+import metabaseapi.endpoints.responses.channel
+import metabaseapi.endpoints.responses.collection
+import metabaseapi.endpoints.responses.common
+import metabaseapi.endpoints.responses.dashboard
+import metabaseapi.endpoints.responses.database
+import metabaseapi.endpoints.responses.schema
+import metabaseapi.endpoints.responses.user
 import metabaseapi.wire
 
 REQUEST_MODULE_CONTRACTS = {
@@ -232,6 +245,23 @@ REQUEST_MODULE_CONTRACTS = {
     ),
 }
 
+RESPONSE_MODULE_CONTRACTS = {
+    "action": ("ActionExecutionResponse", "ListActionsResponse"),
+    "activity": ("ActivityMutationResponse", "ListActivityItemsResponse"),
+    "agent": ("AgentResponse",),
+    "alert": ("ListAlertsResponse",),
+    "api_key": ("ListApiKeysResponse",),
+    "bookmark": ("ListBookmarksResponse",),
+    "card": ("CardsDashboardsResponse", "ListCardsResponse"),
+    "channel": ("ListChannelsResponse",),
+    "collection": ("ListCollectionsResponse",),
+    "common": ("GenericOperationResponse",),
+    "dashboard": ("ListDashboardsResponse",),
+    "database": ("ListDatabasesResponse",),
+    "schema": ("ListTablesResponse",),
+    "user": ("ListUsersResponse",),
+}
+
 
 def test_cli_command_modules_import_from_package() -> None:
     assert len(metabaseapi.cli.commands.command_module_names()) == len(metabaseapi.cli.commands.command_module_paths())
@@ -245,6 +275,7 @@ def test_cli_command_modules_import_from_package() -> None:
     assert metabaseapi.cli.commands.API_KEY_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
     assert metabaseapi.cli.commands.AGENT_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
     assert metabaseapi.cli.commands.ALERT_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
+    assert metabaseapi.cli.commands.BOOKMARK_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
     assert metabaseapi.cli.commands.COMMENT_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
     assert metabaseapi.cli.commands.ANALYTICS_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
     assert metabaseapi.cli.commands.CARD_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
@@ -349,16 +380,18 @@ def test_client_public_exports_use_http_implementation() -> None:
         importlib.import_module("metabaseapi.client.mixins")
 
 
-def test_client_raw_and_typed_packages_do_not_reexport_aggregate_mixins() -> None:
+def test_client_raw_package_does_not_reexport_aggregate_mixins() -> None:
     assert metabaseapi.client.raw.__all__ == []
-    assert metabaseapi.client.typed.__all__ == []
     assert not hasattr(metabaseapi.client.raw, "_MetabaseClientRawMixin")
-    assert not hasattr(metabaseapi.client.typed, "_MetabaseClientTypedMixin")
+
+
+def test_client_typed_package_is_not_importable() -> None:
+    with pytest.raises(ModuleNotFoundError):
+        importlib.import_module("metabaseapi.client.typed")
 
 
 def test_client_data_studio_replaces_misc_module_name() -> None:
     importlib.import_module("metabaseapi.client.raw.data_studio")
-    importlib.import_module("metabaseapi.client.typed.data_studio")
     with pytest.raises(ModuleNotFoundError):
         importlib.import_module("metabaseapi.client.raw.misc")
     with pytest.raises(ModuleNotFoundError):
@@ -396,7 +429,6 @@ def test_client_domain_modules_use_singular_names() -> None:
     )
     for domain in singular_domains:
         importlib.import_module(f"metabaseapi.client.raw.{domain}")
-        importlib.import_module(f"metabaseapi.client.typed.{domain}")
     for domain in legacy_domains:
         with pytest.raises(ModuleNotFoundError):
             importlib.import_module(f"metabaseapi.client.raw.{domain}")
@@ -411,11 +443,9 @@ def _client_module_stems(package: object) -> tuple[str, ...]:
     return tuple(sorted(path.stem for path in package_path.glob("*.py") if path.stem != "__init__"))
 
 
-def test_client_raw_and_typed_module_names_match_registry() -> None:
+def test_client_raw_module_names_match_registry() -> None:
     raw_modules = _client_module_stems(metabaseapi.client.raw)
-    typed_modules = _client_module_stems(metabaseapi.client.typed)
 
-    assert raw_modules == typed_modules
     assert raw_modules == (
         "action",
         "activity",
@@ -440,15 +470,6 @@ def test_client_raw_and_typed_module_names_match_registry() -> None:
     )
 
 
-def test_typed_client_imports_endpoint_symbols_directly() -> None:
-    typed_package_path = Path(metabaseapi.client.typed.__file__).parent
-    for source_path in typed_package_path.glob("*.py"):
-        if source_path.stem == "__init__":
-            continue
-        source = source_path.read_text(encoding="utf-8")
-        assert not re.search(r"^from metabaseapi\\.endpoints import ", source, flags=re.MULTILINE)
-
-
 def test_cli_command_modules_depend_on_runtime_not_cli_facade() -> None:
     command_package_path = Path(metabaseapi.cli.commands.__file__).parent
     for source_path in command_package_path.glob("*.py"):
@@ -459,14 +480,13 @@ def test_cli_command_modules_depend_on_runtime_not_cli_facade() -> None:
 
 
 def test_client_domain_modules_expose_functions_not_mixins() -> None:
-    for package in (metabaseapi.client.raw, metabaseapi.client.typed):
-        package_path = Path(package.__file__).parent
-        for source_path in package_path.glob("*.py"):
-            if source_path.stem == "__init__":
-                continue
-            source = source_path.read_text(encoding="utf-8")
-            assert "class _" not in source
-            assert "Mixin" not in source
+    package_path = Path(metabaseapi.client.raw.__file__).parent
+    for source_path in package_path.glob("*.py"):
+        if source_path.stem == "__init__":
+            continue
+        source = source_path.read_text(encoding="utf-8")
+        assert "class _" not in source
+        assert "Mixin" not in source
 
 
 def test_cli_entrypoint_importable() -> None:
@@ -481,8 +501,14 @@ def test_client_public_module_exports_concrete_http_implementation() -> None:
 
 
 def test_endpoints_execution_owns_request_interface() -> None:
+    assert metabaseapi.endpoints.execution.__all__ == ["EndpointRequest", "MetabaseRequestClient"]
+    assert not hasattr(metabaseapi.endpoints.execution, "_BaseMetabaseRequest")
     assert metabaseapi.endpoints.requests.card.ListCardsRequest.__mro__[1].__module__ == (
         "metabaseapi.endpoints.execution"
+    )
+    assert (
+        metabaseapi.endpoints.requests.card.ListCardsRequest.__mro__[1].__name__
+        == "EndpointRequest[ListCardsResponse]"
     )
 
 
@@ -493,6 +519,33 @@ def test_endpoints_public_exports_are_submodules_only() -> None:
     assert metabaseapi.endpoints.requests is metabaseapi.endpoints.requests
     assert metabaseapi.endpoints.responses is metabaseapi.endpoints.responses
     assert not hasattr(metabaseapi.endpoints, "ListCardsRequest")
+
+
+def test_endpoints_response_package_does_not_reexport_response_classes() -> None:
+    assert metabaseapi.endpoints.responses.__all__ == [
+        "action",
+        "activity",
+        "agent",
+        "alert",
+        "api_key",
+        "bookmark",
+        "card",
+        "channel",
+        "collection",
+        "common",
+        "dashboard",
+        "database",
+        "schema",
+        "user",
+    ]
+    assert not hasattr(metabaseapi.endpoints.responses, "ListCardsResponse")
+
+
+def test_endpoints_response_modules_own_response_classes() -> None:
+    for module_name, response_names in RESPONSE_MODULE_CONTRACTS.items():
+        domain_module = importlib.import_module(f"metabaseapi.endpoints.responses.{module_name}")
+        for response_name in response_names:
+            assert getattr(domain_module, response_name).__module__ == domain_module.__name__
 
 
 def test_endpoints_request_package_does_not_reexport_request_classes() -> None:
@@ -587,6 +640,18 @@ def test_activity_commands_live_with_activity_module() -> None:
     ):
         assert command_name in command_names[metabaseapi.cli.commands.ACTIVITY_COMMAND_MODULE]
         assert command_name not in command_names[metabaseapi.cli.commands.ANALYTICS_COMMAND_MODULE]
+
+
+def test_bookmark_commands_live_with_bookmark_module() -> None:
+    command_names = _command_names_by_module()
+    for command_name in (
+        "list-bookmarks",
+        "update-bookmark-ordering",
+        "create-bookmark",
+        "delete-bookmark",
+    ):
+        assert command_name in command_names[metabaseapi.cli.commands.BOOKMARK_COMMAND_MODULE]
+        assert command_name not in command_names[metabaseapi.cli.commands.ACTION_COMMAND_MODULE]
 
 
 def test_cli_app_registers_all_declared_commands() -> None:

@@ -4,10 +4,9 @@ from typing import cast
 
 import typer
 
-from metabaseapi.cli.runtime import _parse_optional_json_object
-from metabaseapi.cli.runtime import _run_and_print
-from metabaseapi.cli.runtime import _run_client_call
 from metabaseapi.cli.runtime import app
+from metabaseapi.cli.runtime import parse_optional_json_object
+from metabaseapi.cli.runtime import run_client_command
 from metabaseapi.client.raw import dashboard as _raw_dashboard
 from metabaseapi.wire import QueryParamValue
 
@@ -16,7 +15,7 @@ _FILTERING_OPTION = typer.Option(None, "--filtering", help="Filtering field ID l
 
 
 def _parse_optional_query_params(raw: str | None) -> dict[str, QueryParamValue] | None:
-    payload = _parse_optional_json_object(raw, "params")
+    payload = parse_optional_json_object(raw, "params")
     return cast("dict[str, QueryParamValue] | None", payload)
 
 
@@ -24,7 +23,7 @@ def _parse_optional_query_params(raw: str | None) -> dict[str, QueryParamValue] 
 def get_dashboard(ctx: typer.Context, dashboard_id: str = typer.Argument(...)) -> None:
     """Get a dashboard by ID."""
 
-    _run_and_print(_run_client_call(ctx, lambda client: _raw_dashboard.get_dashboard(client, dashboard_id)))
+    run_client_command(ctx, lambda client: _raw_dashboard.get_dashboard(client, dashboard_id))
 
 
 @app.command("get-dashboard-params-valid-filter-fields")
@@ -37,15 +36,13 @@ def get_dashboard_params_valid_filter_fields(
 
     filtered_values = [int(item) if item.isdigit() else item for item in (filtered or [])]
     filtering_values = [int(item) if item.isdigit() else item for item in (filtering or [])]
-    _run_and_print(
-        _run_client_call(
-            ctx,
-            lambda client: _raw_dashboard.get_dashboard_params_valid_filter_fields(
-                client,
-                filtered=filtered_values or None,
-                filtering=filtering_values or None,
-            ),
-        )
+    run_client_command(
+        ctx,
+        lambda client: _raw_dashboard.get_dashboard_params_valid_filter_fields(
+            client,
+            filtered=filtered_values or None,
+            filtering=filtering_values or None,
+        ),
     )
 
 
@@ -53,13 +50,11 @@ def get_dashboard_params_valid_filter_fields(
 def get_dashboard_embeddable(ctx: typer.Context) -> None:
     """List embeddable dashboards."""
 
-    _run_and_print(
-        _run_client_call(
-            ctx,
-            lambda client: _raw_dashboard.get_dashboard_embeddable(
-                client,
-            ),
-        )
+    run_client_command(
+        ctx,
+        lambda client: _raw_dashboard.get_dashboard_embeddable(
+            client,
+        ),
     )
 
 
@@ -67,13 +62,11 @@ def get_dashboard_embeddable(ctx: typer.Context) -> None:
 def get_dashboard_public(ctx: typer.Context) -> None:
     """List public dashboards."""
 
-    _run_and_print(
-        _run_client_call(
-            ctx,
-            lambda client: _raw_dashboard.get_dashboard_public(
-                client,
-            ),
-        )
+    run_client_command(
+        ctx,
+        lambda client: _raw_dashboard.get_dashboard_public(
+            client,
+        ),
     )
 
 
@@ -85,18 +78,16 @@ def query_dashboard_card(
     card_id: str = typer.Argument(...),
     body: str = typer.Argument(None, help="Optional query payload JSON object"),
 ) -> None:
-    payload = _parse_optional_json_object(body, "body") if body else None
-    _run_and_print(
-        _run_client_call(
-            ctx,
-            lambda client: _raw_dashboard.query_dashboard_card(
-                client,
-                dashboard_id,
-                dashcard_id,
-                card_id,
-                payload,
-            ),
-        )
+    payload = parse_optional_json_object(body, "body") if body else None
+    run_client_command(
+        ctx,
+        lambda client: _raw_dashboard.query_dashboard_card(
+            client,
+            dashboard_id,
+            dashcard_id,
+            card_id,
+            payload,
+        ),
     )
 
 
@@ -111,21 +102,19 @@ def query_dashboard_card_export(
     pivot_results: bool | None = typer.Option(None, "--pivot-results"),
     format_rows: bool | None = typer.Option(None, "--format-rows"),
 ) -> None:
-    payload = _parse_optional_json_object(body, "body") if body else None
-    _run_and_print(
-        _run_client_call(
-            ctx,
-            lambda client: _raw_dashboard.query_dashboard_card_export(
-                client,
-                dashboard_id,
-                dashcard_id,
-                card_id,
-                export_format,
-                payload,
-                pivot_results=pivot_results,
-                format_rows=format_rows,
-            ),
-        )
+    payload = parse_optional_json_object(body, "body") if body else None
+    run_client_command(
+        ctx,
+        lambda client: _raw_dashboard.query_dashboard_card_export(
+            client,
+            dashboard_id,
+            dashcard_id,
+            card_id,
+            export_format,
+            payload,
+            pivot_results=pivot_results,
+            format_rows=format_rows,
+        ),
     )
 
 
@@ -137,18 +126,16 @@ def query_dashboard_card_pivot(
     card_id: str = typer.Argument(...),
     body: str | None = typer.Argument(None, help="Optional query payload JSON object"),
 ) -> None:
-    payload = _parse_optional_json_object(body, "body") if body else None
-    _run_and_print(
-        _run_client_call(
-            ctx,
-            lambda client: _raw_dashboard.query_dashboard_card_pivot(
-                client,
-                dashboard_id,
-                dashcard_id,
-                card_id,
-                payload,
-            ),
-        )
+    payload = parse_optional_json_object(body, "body") if body else None
+    run_client_command(
+        ctx,
+        lambda client: _raw_dashboard.query_dashboard_card_pivot(
+            client,
+            dashboard_id,
+            dashcard_id,
+            card_id,
+            payload,
+        ),
     )
 
 
@@ -160,16 +147,14 @@ def get_dashboard_dashcard_execute(
     params: str | None = typer.Option(None, "--params", help="Execution query parameters JSON object"),
 ) -> None:
     payload = _parse_optional_query_params(params)
-    _run_and_print(
-        _run_client_call(
-            ctx,
-            lambda client: _raw_dashboard.get_dashboard_dashcard_execute(
-                client,
-                dashboard_id,
-                dashcard_id,
-                parameters=payload,
-            ),
-        )
+    run_client_command(
+        ctx,
+        lambda client: _raw_dashboard.get_dashboard_dashcard_execute(
+            client,
+            dashboard_id,
+            dashcard_id,
+            parameters=payload,
+        ),
     )
 
 
@@ -180,17 +165,15 @@ def execute_dashboard_dashcard(
     dashcard_id: str = typer.Argument(...),
     parameters: str | None = typer.Option(None, "--parameters", help="Execution parameters JSON object"),
 ) -> None:
-    payload = _parse_optional_json_object(parameters, "parameters")
-    _run_and_print(
-        _run_client_call(
-            ctx,
-            lambda client: _raw_dashboard.execute_dashboard_dashcard(
-                client,
-                dashboard_id,
-                dashcard_id,
-                parameters=payload,
-            ),
-        )
+    payload = parse_optional_json_object(parameters, "parameters")
+    run_client_command(
+        ctx,
+        lambda client: _raw_dashboard.execute_dashboard_dashcard(
+            client,
+            dashboard_id,
+            dashcard_id,
+            parameters=payload,
+        ),
     )
 
 
@@ -202,13 +185,11 @@ def get_dashboard_param_remapping(
     params: str | None = typer.Option(None, "--params", help="Filter context JSON object"),
 ) -> None:
     payload = _parse_optional_query_params(params)
-    _run_and_print(
-        _run_client_call(
-            ctx,
-            lambda client: _raw_dashboard.get_dashboard_param_remapping(
-                client, dashboard_id, param_key, parameters=payload
-            ),
-        )
+    run_client_command(
+        ctx,
+        lambda client: _raw_dashboard.get_dashboard_param_remapping(
+            client, dashboard_id, param_key, parameters=payload
+        ),
     )
 
 
@@ -221,17 +202,15 @@ def get_dashboard_param_search_values(
     params: str | None = typer.Option(None, "--params", help="Filter context JSON object"),
 ) -> None:
     payload = _parse_optional_query_params(params)
-    _run_and_print(
-        _run_client_call(
-            ctx,
-            lambda client: _raw_dashboard.get_dashboard_param_search_values(
-                client,
-                dashboard_id,
-                param_key,
-                query,
-                parameters=payload,
-            ),
-        )
+    run_client_command(
+        ctx,
+        lambda client: _raw_dashboard.get_dashboard_param_search_values(
+            client,
+            dashboard_id,
+            param_key,
+            query,
+            parameters=payload,
+        ),
     )
 
 
@@ -243,23 +222,17 @@ def get_dashboard_param_values(
     params: str | None = typer.Option(None, "--params", help="Filter context JSON object"),
 ) -> None:
     payload = _parse_optional_query_params(params)
-    _run_and_print(
-        _run_client_call(
-            ctx,
-            lambda client: _raw_dashboard.get_dashboard_param_values(
-                client, dashboard_id, param_key, parameters=payload
-            ),
-        )
+    run_client_command(
+        ctx,
+        lambda client: _raw_dashboard.get_dashboard_param_values(client, dashboard_id, param_key, parameters=payload),
     )
 
 
 @app.command("get-dashboard-query-metadata")
 def get_dashboard_query_metadata(ctx: typer.Context, dashboard_id: str = typer.Argument(...)) -> None:
-    _run_and_print(
-        _run_client_call(ctx, lambda client: _raw_dashboard.get_dashboard_query_metadata(client, dashboard_id))
-    )
+    run_client_command(ctx, lambda client: _raw_dashboard.get_dashboard_query_metadata(client, dashboard_id))
 
 
 @app.command("get-dashboard-related")
 def get_dashboard_related(ctx: typer.Context, dashboard_id: str = typer.Argument(...)) -> None:
-    _run_and_print(_run_client_call(ctx, lambda client: _raw_dashboard.get_dashboard_related(client, dashboard_id)))
+    run_client_command(ctx, lambda client: _raw_dashboard.get_dashboard_related(client, dashboard_id))

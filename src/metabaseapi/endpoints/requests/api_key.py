@@ -4,14 +4,14 @@ from typing import Any
 from typing import ClassVar
 
 from metabaseapi.endpoints.entities import ApiKey
+from metabaseapi.endpoints.execution import EndpointRequest
 from metabaseapi.endpoints.execution import MetabaseRequestClient
-from metabaseapi.endpoints.execution import _BaseMetabaseRequest
-from metabaseapi.endpoints.responses import GenericOperationResponse
-from metabaseapi.endpoints.responses import ListApiKeysResponse
+from metabaseapi.endpoints.responses.api_key import ListApiKeysResponse
+from metabaseapi.endpoints.responses.common import GenericOperationResponse
 from metabaseapi.wire import JSONValue
 
 
-class CreateApiKeyRequest(_BaseMetabaseRequest[ApiKey]):
+class CreateApiKeyRequest(EndpointRequest[ApiKey]):
     body: dict[str, Any]
 
     endpoint_method: ClassVar[str] = "POST"
@@ -27,7 +27,7 @@ class CreateApiKeyRequest(_BaseMetabaseRequest[ApiKey]):
         return self.body
 
 
-class ListApiKeysRequest(_BaseMetabaseRequest[ListApiKeysResponse]):
+class ListApiKeysRequest(EndpointRequest[ListApiKeysResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/api-key"
 
@@ -38,7 +38,7 @@ class ListApiKeysRequest(_BaseMetabaseRequest[ListApiKeysResponse]):
         return self.execute_sync(client, ListApiKeysResponse)
 
 
-class CountApiKeysRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class CountApiKeysRequest(EndpointRequest[GenericOperationResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/api-key/count"
 
@@ -49,7 +49,7 @@ class CountApiKeysRequest(_BaseMetabaseRequest[GenericOperationResponse]):
         return self.execute_sync(client, GenericOperationResponse)
 
 
-class UpdateApiKeyRequest(_BaseMetabaseRequest[ApiKey]):
+class UpdateApiKeyRequest(EndpointRequest[ApiKey]):
     api_key_id: int | str
     body: dict[str, Any]
 
@@ -69,7 +69,7 @@ class UpdateApiKeyRequest(_BaseMetabaseRequest[ApiKey]):
         return self.body
 
 
-class DeleteApiKeyRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class DeleteApiKeyRequest(EndpointRequest[GenericOperationResponse]):
     api_key_id: int | str
 
     endpoint_method: ClassVar[str] = "DELETE"
@@ -85,7 +85,7 @@ class DeleteApiKeyRequest(_BaseMetabaseRequest[GenericOperationResponse]):
         return f"/api/api-key/{self.api_key_id}"
 
 
-class RegenerateApiKeyRequest(_BaseMetabaseRequest[ApiKey]):
+class RegenerateApiKeyRequest(EndpointRequest[ApiKey]):
     api_key_id: int | str
 
     endpoint_method: ClassVar[str] = "PUT"

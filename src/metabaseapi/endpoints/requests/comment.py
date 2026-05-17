@@ -5,14 +5,14 @@ from typing import ClassVar
 
 from pydantic import Field as PydanticField
 
+from metabaseapi.endpoints.execution import EndpointRequest
 from metabaseapi.endpoints.execution import MetabaseRequestClient
-from metabaseapi.endpoints.execution import _BaseMetabaseRequest
-from metabaseapi.endpoints.responses import GenericOperationResponse
+from metabaseapi.endpoints.responses.common import GenericOperationResponse
 from metabaseapi.wire import JSONValue
 from metabaseapi.wire import QueryParamValue
 
 
-class GetCommentMentionsRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class GetCommentMentionsRequest(EndpointRequest[GenericOperationResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/comment/mentions"
 
@@ -23,7 +23,7 @@ class GetCommentMentionsRequest(_BaseMetabaseRequest[GenericOperationResponse]):
         return self.execute_sync(client, GenericOperationResponse)
 
 
-class UpdateCommentRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class UpdateCommentRequest(EndpointRequest[GenericOperationResponse]):
     comment_id: int | str
     body: dict[str, Any] = PydanticField(default_factory=dict)
 
@@ -43,7 +43,7 @@ class UpdateCommentRequest(_BaseMetabaseRequest[GenericOperationResponse]):
         return self.body
 
 
-class GetCommentRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class GetCommentRequest(EndpointRequest[GenericOperationResponse]):
     model: str | None = None
     model_id: int | str | None = None
 
@@ -65,7 +65,7 @@ class GetCommentRequest(_BaseMetabaseRequest[GenericOperationResponse]):
         return params
 
 
-class PostCommentRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class PostCommentRequest(EndpointRequest[GenericOperationResponse]):
     body: dict[str, Any] = PydanticField(default_factory=dict)
 
     endpoint_method: ClassVar[str] = "POST"
@@ -81,7 +81,7 @@ class PostCommentRequest(_BaseMetabaseRequest[GenericOperationResponse]):
         return self.body
 
 
-class DeleteCommentRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class DeleteCommentRequest(EndpointRequest[GenericOperationResponse]):
     comment_id: int | str
 
     endpoint_method: ClassVar[str] = "DELETE"
@@ -97,7 +97,7 @@ class DeleteCommentRequest(_BaseMetabaseRequest[GenericOperationResponse]):
         return f"/api/comment/{self.comment_id}"
 
 
-class PostCommentReactionRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class PostCommentReactionRequest(EndpointRequest[GenericOperationResponse]):
     comment_id: int | str
     body: dict[str, Any] = PydanticField(default_factory=dict)
 

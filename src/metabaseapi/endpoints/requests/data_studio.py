@@ -5,13 +5,13 @@ from typing import ClassVar
 
 from pydantic import Field as PydanticField
 
+from metabaseapi.endpoints.execution import EndpointRequest
 from metabaseapi.endpoints.execution import MetabaseRequestClient
-from metabaseapi.endpoints.execution import _BaseMetabaseRequest
-from metabaseapi.endpoints.responses import GenericOperationResponse
+from metabaseapi.endpoints.responses.common import GenericOperationResponse
 from metabaseapi.wire import JSONValue
 
 
-class DataStudioTableDiscardValuesRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class DataStudioTableDiscardValuesRequest(EndpointRequest[GenericOperationResponse]):
     body: dict[str, Any] = PydanticField(default_factory=dict)
 
     endpoint_method: ClassVar[str] = "POST"
@@ -27,7 +27,7 @@ class DataStudioTableDiscardValuesRequest(_BaseMetabaseRequest[GenericOperationR
         return self.body
 
 
-class DataStudioTableEditRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class DataStudioTableEditRequest(EndpointRequest[GenericOperationResponse]):
     body: dict[str, Any] = PydanticField(default_factory=dict)
 
     endpoint_method: ClassVar[str] = "POST"
@@ -43,7 +43,7 @@ class DataStudioTableEditRequest(_BaseMetabaseRequest[GenericOperationResponse])
         return self.body
 
 
-class DataStudioTableRescanValuesRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class DataStudioTableRescanValuesRequest(EndpointRequest[GenericOperationResponse]):
     body: dict[str, Any] = PydanticField(default_factory=dict)
 
     endpoint_method: ClassVar[str] = "POST"
@@ -59,7 +59,7 @@ class DataStudioTableRescanValuesRequest(_BaseMetabaseRequest[GenericOperationRe
         return self.body
 
 
-class DataStudioTableSelectionRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class DataStudioTableSelectionRequest(EndpointRequest[GenericOperationResponse]):
     body: dict[str, Any] = PydanticField(default_factory=dict)
 
     endpoint_method: ClassVar[str] = "POST"
@@ -75,7 +75,7 @@ class DataStudioTableSelectionRequest(_BaseMetabaseRequest[GenericOperationRespo
         return self.body
 
 
-class DataStudioTableSyncSchemaRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class DataStudioTableSyncSchemaRequest(EndpointRequest[GenericOperationResponse]):
     body: dict[str, Any] = PydanticField(default_factory=dict)
 
     endpoint_method: ClassVar[str] = "POST"

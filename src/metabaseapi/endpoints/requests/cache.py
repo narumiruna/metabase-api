@@ -5,14 +5,14 @@ from typing import ClassVar
 
 from pydantic import Field as PydanticField
 
+from metabaseapi.endpoints.execution import EndpointRequest
 from metabaseapi.endpoints.execution import MetabaseRequestClient
-from metabaseapi.endpoints.execution import _BaseMetabaseRequest
-from metabaseapi.endpoints.responses import GenericOperationResponse
+from metabaseapi.endpoints.responses.common import GenericOperationResponse
 from metabaseapi.wire import JSONValue
 from metabaseapi.wire import QueryParamValue
 
 
-class GetCacheRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class GetCacheRequest(EndpointRequest[GenericOperationResponse]):
     limit: int | None = None
     offset: int | None = None
     sort_column: str | None = None
@@ -40,7 +40,7 @@ class GetCacheRequest(_BaseMetabaseRequest[GenericOperationResponse]):
         return params
 
 
-class PutCacheRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class PutCacheRequest(EndpointRequest[GenericOperationResponse]):
     body: dict[str, Any] = PydanticField(default_factory=dict)
 
     endpoint_method: ClassVar[str] = "PUT"
@@ -56,7 +56,7 @@ class PutCacheRequest(_BaseMetabaseRequest[GenericOperationResponse]):
         return self.body
 
 
-class DeleteCacheRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class DeleteCacheRequest(EndpointRequest[GenericOperationResponse]):
     body: dict[str, Any] = PydanticField(default_factory=dict)
 
     endpoint_method: ClassVar[str] = "DELETE"
@@ -72,7 +72,7 @@ class DeleteCacheRequest(_BaseMetabaseRequest[GenericOperationResponse]):
         return self.body or None
 
 
-class InvalidateCacheRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class InvalidateCacheRequest(EndpointRequest[GenericOperationResponse]):
     params: dict[str, QueryParamValue] = PydanticField(default_factory=dict)
 
     endpoint_method: ClassVar[str] = "POST"

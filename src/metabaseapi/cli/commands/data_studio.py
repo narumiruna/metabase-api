@@ -2,10 +2,9 @@ from __future__ import annotations
 
 import typer
 
-from metabaseapi.cli.runtime import _parse_json_object
-from metabaseapi.cli.runtime import _run_and_print
-from metabaseapi.cli.runtime import _run_client_call
 from metabaseapi.cli.runtime import app
+from metabaseapi.cli.runtime import parse_json_object
+from metabaseapi.cli.runtime import run_client_command
 from metabaseapi.client.raw import data_studio as _raw_data_studio
 
 
@@ -16,10 +15,8 @@ def data_studio_table_discard_values(
 ) -> None:
     """Discard saved field values for selected tables."""
 
-    payload = _parse_json_object(body, "body")
-    _run_and_print(
-        _run_client_call(ctx, lambda client: _raw_data_studio.data_studio_table_discard_values(client, payload))
-    )
+    payload = parse_json_object(body, "body")
+    run_client_command(ctx, lambda client: _raw_data_studio.data_studio_table_discard_values(client, payload))
 
 
 @app.command("data-studio-table-edit")
@@ -29,8 +26,8 @@ def data_studio_table_edit(
 ) -> None:
     """Bulk update selected tables."""
 
-    payload = _parse_json_object(body, "body")
-    _run_and_print(_run_client_call(ctx, lambda client: _raw_data_studio.data_studio_table_edit(client, payload)))
+    payload = parse_json_object(body, "body")
+    run_client_command(ctx, lambda client: _raw_data_studio.data_studio_table_edit(client, payload))
 
 
 @app.command("data-studio-table-rescan-values")
@@ -40,10 +37,8 @@ def data_studio_table_rescan_values(
 ) -> None:
     """Rescan field values for selected tables."""
 
-    payload = _parse_json_object(body, "body")
-    _run_and_print(
-        _run_client_call(ctx, lambda client: _raw_data_studio.data_studio_table_rescan_values(client, payload))
-    )
+    payload = parse_json_object(body, "body")
+    run_client_command(ctx, lambda client: _raw_data_studio.data_studio_table_rescan_values(client, payload))
 
 
 @app.command("data-studio-table-selection")
@@ -53,8 +48,8 @@ def data_studio_table_selection(
 ) -> None:
     """Fetch information about selected tables."""
 
-    payload = _parse_json_object(body, "body")
-    _run_and_print(_run_client_call(ctx, lambda client: _raw_data_studio.data_studio_table_selection(client, payload)))
+    payload = parse_json_object(body, "body")
+    run_client_command(ctx, lambda client: _raw_data_studio.data_studio_table_selection(client, payload))
 
 
 @app.command("data-studio-table-sync-schema")
@@ -64,7 +59,5 @@ def data_studio_table_sync_schema(
 ) -> None:
     """Sync schema for selected tables."""
 
-    payload = _parse_json_object(body, "body")
-    _run_and_print(
-        _run_client_call(ctx, lambda client: _raw_data_studio.data_studio_table_sync_schema(client, payload))
-    )
+    payload = parse_json_object(body, "body")
+    run_client_command(ctx, lambda client: _raw_data_studio.data_studio_table_sync_schema(client, payload))

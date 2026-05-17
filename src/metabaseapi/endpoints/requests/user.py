@@ -4,12 +4,12 @@ from typing import ClassVar
 
 from metabaseapi.endpoints.entities import CurrentUserResponse
 from metabaseapi.endpoints.entities import User
+from metabaseapi.endpoints.execution import EndpointRequest
 from metabaseapi.endpoints.execution import MetabaseRequestClient
-from metabaseapi.endpoints.execution import _BaseMetabaseRequest
-from metabaseapi.endpoints.responses import ListUsersResponse
+from metabaseapi.endpoints.responses.user import ListUsersResponse
 
 
-class CurrentUserRequest(_BaseMetabaseRequest[CurrentUserResponse]):
+class CurrentUserRequest(EndpointRequest[CurrentUserResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/user/current"
 
@@ -20,7 +20,7 @@ class CurrentUserRequest(_BaseMetabaseRequest[CurrentUserResponse]):
         return self.execute_sync(client, CurrentUserResponse)
 
 
-class ListUsersRequest(_BaseMetabaseRequest[ListUsersResponse]):
+class ListUsersRequest(EndpointRequest[ListUsersResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/user"
 
@@ -31,7 +31,7 @@ class ListUsersRequest(_BaseMetabaseRequest[ListUsersResponse]):
         return self.execute_sync(client, ListUsersResponse)
 
 
-class GetUserRequest(_BaseMetabaseRequest[User]):
+class GetUserRequest(EndpointRequest[User]):
     user_id: int | str
 
     endpoint_method: ClassVar[str] = "GET"

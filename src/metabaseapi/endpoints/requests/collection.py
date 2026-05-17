@@ -6,14 +6,14 @@ from typing import ClassVar
 from pydantic import Field as PydanticField
 
 from metabaseapi.endpoints.entities import Collection
+from metabaseapi.endpoints.execution import EndpointRequest
 from metabaseapi.endpoints.execution import MetabaseRequestClient
-from metabaseapi.endpoints.execution import _BaseMetabaseRequest
-from metabaseapi.endpoints.responses import GenericOperationResponse
-from metabaseapi.endpoints.responses import ListCollectionsResponse
+from metabaseapi.endpoints.responses.collection import ListCollectionsResponse
+from metabaseapi.endpoints.responses.common import GenericOperationResponse
 from metabaseapi.wire import JSONValue
 
 
-class CreateCollectionRequest(_BaseMetabaseRequest[Collection]):
+class CreateCollectionRequest(EndpointRequest[Collection]):
     body: dict[str, Any] = PydanticField(default_factory=dict)
 
     endpoint_method: ClassVar[str] = "POST"
@@ -29,7 +29,7 @@ class CreateCollectionRequest(_BaseMetabaseRequest[Collection]):
         return self.body
 
 
-class GetCollectionGraphRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class GetCollectionGraphRequest(EndpointRequest[GenericOperationResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/collection/graph"
 
@@ -40,7 +40,7 @@ class GetCollectionGraphRequest(_BaseMetabaseRequest[GenericOperationResponse]):
         return self.execute_sync(client, GenericOperationResponse)
 
 
-class PutCollectionGraphRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class PutCollectionGraphRequest(EndpointRequest[GenericOperationResponse]):
     body: dict[str, Any] = PydanticField(default_factory=dict)
 
     endpoint_method: ClassVar[str] = "PUT"
@@ -56,7 +56,7 @@ class PutCollectionGraphRequest(_BaseMetabaseRequest[GenericOperationResponse]):
         return self.body
 
 
-class GetCollectionRootRequest(_BaseMetabaseRequest[Collection]):
+class GetCollectionRootRequest(EndpointRequest[Collection]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/collection/root"
 
@@ -67,7 +67,7 @@ class GetCollectionRootRequest(_BaseMetabaseRequest[Collection]):
         return self.execute_sync(client, Collection)
 
 
-class GetCollectionTreeRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class GetCollectionTreeRequest(EndpointRequest[GenericOperationResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/collection/tree"
 
@@ -78,7 +78,7 @@ class GetCollectionTreeRequest(_BaseMetabaseRequest[GenericOperationResponse]):
         return self.execute_sync(client, GenericOperationResponse)
 
 
-class GetCollectionRootDashboardQuestionCandidatesRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class GetCollectionRootDashboardQuestionCandidatesRequest(EndpointRequest[GenericOperationResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/collection/root/dashboard-question-candidates"
 
@@ -89,7 +89,7 @@ class GetCollectionRootDashboardQuestionCandidatesRequest(_BaseMetabaseRequest[G
         return self.execute_sync(client, GenericOperationResponse)
 
 
-class GetCollectionRootItemsRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class GetCollectionRootItemsRequest(EndpointRequest[GenericOperationResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/collection/root/items"
 
@@ -100,7 +100,7 @@ class GetCollectionRootItemsRequest(_BaseMetabaseRequest[GenericOperationRespons
         return self.execute_sync(client, GenericOperationResponse)
 
 
-class GetCollectionDashboardQuestionCandidatesRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class GetCollectionDashboardQuestionCandidatesRequest(EndpointRequest[GenericOperationResponse]):
     collection_id: int | str
 
     endpoint_method: ClassVar[str] = "GET"
@@ -116,7 +116,7 @@ class GetCollectionDashboardQuestionCandidatesRequest(_BaseMetabaseRequest[Gener
         return f"/api/collection/{self.collection_id}/dashboard-question-candidates"
 
 
-class GetCollectionItemsRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class GetCollectionItemsRequest(EndpointRequest[GenericOperationResponse]):
     collection_id: int | str
 
     endpoint_method: ClassVar[str] = "GET"
@@ -132,7 +132,7 @@ class GetCollectionItemsRequest(_BaseMetabaseRequest[GenericOperationResponse]):
         return f"/api/collection/{self.collection_id}/items"
 
 
-class GetCollectionTrashRequest(_BaseMetabaseRequest[Collection]):
+class GetCollectionTrashRequest(EndpointRequest[Collection]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/collection/trash"
 
@@ -143,7 +143,7 @@ class GetCollectionTrashRequest(_BaseMetabaseRequest[Collection]):
         return self.execute_sync(client, Collection)
 
 
-class PostCollectionRootMoveDashboardQuestionCandidatesRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class PostCollectionRootMoveDashboardQuestionCandidatesRequest(EndpointRequest[GenericOperationResponse]):
     body: dict[str, Any] = PydanticField(default_factory=dict)
 
     endpoint_method: ClassVar[str] = "POST"
@@ -159,7 +159,7 @@ class PostCollectionRootMoveDashboardQuestionCandidatesRequest(_BaseMetabaseRequ
         return self.body
 
 
-class PostCollectionMoveDashboardQuestionCandidatesRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class PostCollectionMoveDashboardQuestionCandidatesRequest(EndpointRequest[GenericOperationResponse]):
     body: dict[str, Any] = PydanticField(default_factory=dict)
     collection_id: int | str
 
@@ -179,7 +179,7 @@ class PostCollectionMoveDashboardQuestionCandidatesRequest(_BaseMetabaseRequest[
         return self.body
 
 
-class ListCollectionsRequest(_BaseMetabaseRequest[ListCollectionsResponse]):
+class ListCollectionsRequest(EndpointRequest[ListCollectionsResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/collection"
 
@@ -190,7 +190,7 @@ class ListCollectionsRequest(_BaseMetabaseRequest[ListCollectionsResponse]):
         return self.execute_sync(client, ListCollectionsResponse)
 
 
-class GetCollectionRequest(_BaseMetabaseRequest[Collection]):
+class GetCollectionRequest(EndpointRequest[Collection]):
     collection_id: int | str
 
     endpoint_method: ClassVar[str] = "GET"
@@ -206,7 +206,7 @@ class GetCollectionRequest(_BaseMetabaseRequest[Collection]):
         return f"/api/collection/{self.collection_id}"
 
 
-class PutCollectionRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class PutCollectionRequest(EndpointRequest[GenericOperationResponse]):
     body: dict[str, Any]
     collection_id: int | str
 
@@ -226,7 +226,7 @@ class PutCollectionRequest(_BaseMetabaseRequest[GenericOperationResponse]):
         return self.body
 
 
-class DeleteCollectionRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class DeleteCollectionRequest(EndpointRequest[GenericOperationResponse]):
     collection_id: int | str
 
     endpoint_method: ClassVar[str] = "DELETE"

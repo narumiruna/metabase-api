@@ -45,7 +45,7 @@ def _configure_logging(verbose: bool) -> None:
         logging.basicConfig(level=logging.INFO)
 
 
-def _parse_json_body(raw: str | None) -> JSONValue | None:
+def parse_json_body(raw: str | None) -> JSONValue | None:
     if raw is None:
         return None
     try:
@@ -54,23 +54,23 @@ def _parse_json_body(raw: str | None) -> JSONValue | None:
         raise typer.BadParameter("Invalid JSON body") from exc
 
 
-def _parse_json_object(raw: str, parameter_name: str) -> dict[str, object]:
-    parsed = _parse_json_body(raw)
+def parse_json_object(raw: str, parameter_name: str) -> dict[str, object]:
+    parsed = parse_json_body(raw)
     if not isinstance(parsed, dict):
         raise typer.BadParameter(f"{parameter_name} must be a JSON object")
     return parsed
 
 
-def _parse_optional_json_object(raw: str | None, parameter_name: str) -> dict[str, object] | None:
+def parse_optional_json_object(raw: str | None, parameter_name: str) -> dict[str, object] | None:
     if raw is None:
         return None
-    return _parse_json_object(raw, parameter_name)
+    return parse_json_object(raw, parameter_name)
 
 
-def _parse_optional_json_list(raw: str | None, parameter_name: str) -> list[object] | None:
+def parse_optional_json_list(raw: str | None, parameter_name: str) -> list[object] | None:
     if raw is None:
         return None
-    parsed = _parse_json_body(raw)
+    parsed = parse_json_body(raw)
     if not isinstance(parsed, list):
         raise typer.BadParameter(f"{parameter_name} must be a JSON array")
     return parsed
@@ -97,7 +97,7 @@ def _get_settings(ctx: typer.Context) -> settings.Settings:
     return settings_obj
 
 
-def _run_client_call(
+def _client_call(
     ctx: typer.Context,
     call: Callable[[MetabaseClient], Awaitable[JSONValue | None]],
 ) -> Coroutine[object, object, JSONValue | None]:
@@ -106,6 +106,13 @@ def _run_client_call(
             return await call(client)
 
     return do_request()
+
+
+def run_client_command(
+    ctx: typer.Context,
+    call: Callable[[MetabaseClient], Awaitable[JSONValue | None]],
+) -> None:
+    _run_and_print(_client_call(ctx, call))
 
 
 @app.callback()

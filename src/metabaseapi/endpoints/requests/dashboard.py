@@ -6,15 +6,15 @@ from typing import ClassVar
 from pydantic import Field as PydanticField
 
 from metabaseapi.endpoints.entities import Dashboard
+from metabaseapi.endpoints.execution import EndpointRequest
 from metabaseapi.endpoints.execution import MetabaseRequestClient
-from metabaseapi.endpoints.execution import _BaseMetabaseRequest
-from metabaseapi.endpoints.responses import GenericOperationResponse
-from metabaseapi.endpoints.responses import ListDashboardsResponse
+from metabaseapi.endpoints.responses.common import GenericOperationResponse
+from metabaseapi.endpoints.responses.dashboard import ListDashboardsResponse
 from metabaseapi.wire import JSONValue
 from metabaseapi.wire import QueryParamValue
 
 
-class ListDashboardsRequest(_BaseMetabaseRequest[ListDashboardsResponse]):
+class ListDashboardsRequest(EndpointRequest[ListDashboardsResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/dashboard"
 
@@ -25,7 +25,7 @@ class ListDashboardsRequest(_BaseMetabaseRequest[ListDashboardsResponse]):
         return self.execute_sync(client, ListDashboardsResponse)
 
 
-class PostDashboardRequest(_BaseMetabaseRequest[Dashboard]):
+class PostDashboardRequest(EndpointRequest[Dashboard]):
     body: dict[str, Any] = PydanticField(default_factory=dict)
 
     endpoint_method: ClassVar[str] = "POST"
@@ -41,7 +41,7 @@ class PostDashboardRequest(_BaseMetabaseRequest[Dashboard]):
         return self.body
 
 
-class GetDashboardRequest(_BaseMetabaseRequest[Dashboard]):
+class GetDashboardRequest(EndpointRequest[Dashboard]):
     dashboard_id: int | str
 
     endpoint_method: ClassVar[str] = "GET"
@@ -57,7 +57,7 @@ class GetDashboardRequest(_BaseMetabaseRequest[Dashboard]):
         return f"/api/dashboard/{self.dashboard_id}"
 
 
-class GetDashboardEmbeddableRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class GetDashboardEmbeddableRequest(EndpointRequest[GenericOperationResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/dashboard/embeddable"
 
@@ -68,7 +68,7 @@ class GetDashboardEmbeddableRequest(_BaseMetabaseRequest[GenericOperationRespons
         return self.execute_sync(client, GenericOperationResponse)
 
 
-class GetDashboardPublicRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class GetDashboardPublicRequest(EndpointRequest[GenericOperationResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/dashboard/public"
 
@@ -79,7 +79,7 @@ class GetDashboardPublicRequest(_BaseMetabaseRequest[GenericOperationResponse]):
         return self.execute_sync(client, GenericOperationResponse)
 
 
-class PostDashboardPivotQueryRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class PostDashboardPivotQueryRequest(EndpointRequest[GenericOperationResponse]):
     dashboard_id: int | str
     dashcard_id: int | str
     card_id: int | str
@@ -101,7 +101,7 @@ class PostDashboardPivotQueryRequest(_BaseMetabaseRequest[GenericOperationRespon
         return self.body
 
 
-class SaveDashboardRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class SaveDashboardRequest(EndpointRequest[GenericOperationResponse]):
     body: dict[str, Any] = PydanticField(default_factory=dict)
 
     endpoint_method: ClassVar[str] = "POST"
@@ -117,7 +117,7 @@ class SaveDashboardRequest(_BaseMetabaseRequest[GenericOperationResponse]):
         return self.body
 
 
-class SaveDashboardToCollectionRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class SaveDashboardToCollectionRequest(EndpointRequest[GenericOperationResponse]):
     parent_collection_id: int | str
     body: dict[str, Any] = PydanticField(default_factory=dict)
 
@@ -137,7 +137,7 @@ class SaveDashboardToCollectionRequest(_BaseMetabaseRequest[GenericOperationResp
         return self.body
 
 
-class GetDashboardDashcardExecuteRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class GetDashboardDashcardExecuteRequest(EndpointRequest[GenericOperationResponse]):
     dashboard_id: int | str
     dashcard_id: int | str
     parameters: dict[str, QueryParamValue] = PydanticField(default_factory=dict)
@@ -158,7 +158,7 @@ class GetDashboardDashcardExecuteRequest(_BaseMetabaseRequest[GenericOperationRe
         return self.parameters
 
 
-class ExecuteDashboardDashcardRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class ExecuteDashboardDashcardRequest(EndpointRequest[GenericOperationResponse]):
     dashboard_id: int | str
     dashcard_id: int | str
     parameters: dict[str, Any] = PydanticField(default_factory=dict)
@@ -179,7 +179,7 @@ class ExecuteDashboardDashcardRequest(_BaseMetabaseRequest[GenericOperationRespo
         return {"parameters": self.parameters}
 
 
-class CreateDashboardPublicLinkRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class CreateDashboardPublicLinkRequest(EndpointRequest[GenericOperationResponse]):
     dashboard_id: int | str
 
     endpoint_method: ClassVar[str] = "POST"
@@ -195,7 +195,7 @@ class CreateDashboardPublicLinkRequest(_BaseMetabaseRequest[GenericOperationResp
         return f"/api/dashboard/{self.dashboard_id}/public_link"
 
 
-class DeleteDashboardPublicLinkRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class DeleteDashboardPublicLinkRequest(EndpointRequest[GenericOperationResponse]):
     dashboard_id: int | str
 
     endpoint_method: ClassVar[str] = "DELETE"
@@ -211,7 +211,7 @@ class DeleteDashboardPublicLinkRequest(_BaseMetabaseRequest[GenericOperationResp
         return f"/api/dashboard/{self.dashboard_id}/public_link"
 
 
-class CopyDashboardRequest(_BaseMetabaseRequest[Dashboard]):
+class CopyDashboardRequest(EndpointRequest[Dashboard]):
     from_dashboard_id: int | str
     body: dict[str, Any] | None = None
 
@@ -231,7 +231,7 @@ class CopyDashboardRequest(_BaseMetabaseRequest[Dashboard]):
         return self.body
 
 
-class DeleteDashboardRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class DeleteDashboardRequest(EndpointRequest[GenericOperationResponse]):
     dashboard_id: int | str
 
     endpoint_method: ClassVar[str] = "DELETE"
@@ -247,7 +247,7 @@ class DeleteDashboardRequest(_BaseMetabaseRequest[GenericOperationResponse]):
         return f"/api/dashboard/{self.dashboard_id}"
 
 
-class UpdateDashboardRequest(_BaseMetabaseRequest[Dashboard]):
+class UpdateDashboardRequest(EndpointRequest[Dashboard]):
     dashboard_id: int | str
     body: dict[str, Any]
 
@@ -267,7 +267,7 @@ class UpdateDashboardRequest(_BaseMetabaseRequest[Dashboard]):
         return self.body
 
 
-class UpdateDashboardCardsRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class UpdateDashboardCardsRequest(EndpointRequest[GenericOperationResponse]):
     dashboard_id: int | str
     body: dict[str, Any]
 
@@ -287,7 +287,7 @@ class UpdateDashboardCardsRequest(_BaseMetabaseRequest[GenericOperationResponse]
         return self.body
 
 
-class GetDashboardItemsRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class GetDashboardItemsRequest(EndpointRequest[GenericOperationResponse]):
     dashboard_id: int | str
 
     endpoint_method: ClassVar[str] = "GET"
@@ -303,7 +303,7 @@ class GetDashboardItemsRequest(_BaseMetabaseRequest[GenericOperationResponse]):
         return f"/api/dashboard/{self.dashboard_id}/items"
 
 
-class DashboardParamRemappingRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class DashboardParamRemappingRequest(EndpointRequest[GenericOperationResponse]):
     dashboard_id: int | str
     param_key: str
     parameters: dict[str, QueryParamValue] = PydanticField(default_factory=dict)
@@ -324,7 +324,7 @@ class DashboardParamRemappingRequest(_BaseMetabaseRequest[GenericOperationRespon
         return self.parameters
 
 
-class DashboardParamSearchRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class DashboardParamSearchRequest(EndpointRequest[GenericOperationResponse]):
     dashboard_id: int | str
     param_key: str
     query: str
@@ -346,7 +346,7 @@ class DashboardParamSearchRequest(_BaseMetabaseRequest[GenericOperationResponse]
         return self.parameters
 
 
-class DashboardParamValuesRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class DashboardParamValuesRequest(EndpointRequest[GenericOperationResponse]):
     dashboard_id: int | str
     param_key: str
     parameters: dict[str, QueryParamValue] = PydanticField(default_factory=dict)
@@ -367,7 +367,7 @@ class DashboardParamValuesRequest(_BaseMetabaseRequest[GenericOperationResponse]
         return self.parameters
 
 
-class GetDashboardQueryMetadataRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class GetDashboardQueryMetadataRequest(EndpointRequest[GenericOperationResponse]):
     dashboard_id: int | str
 
     endpoint_method: ClassVar[str] = "GET"
@@ -383,7 +383,7 @@ class GetDashboardQueryMetadataRequest(_BaseMetabaseRequest[GenericOperationResp
         return f"/api/dashboard/{self.dashboard_id}/query_metadata"
 
 
-class GetDashboardRelatedRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class GetDashboardRelatedRequest(EndpointRequest[GenericOperationResponse]):
     dashboard_id: int | str
 
     endpoint_method: ClassVar[str] = "GET"

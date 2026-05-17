@@ -6,13 +6,13 @@ from typing import ClassVar
 from pydantic import Field as PydanticField
 
 from metabaseapi.endpoints.entities import Database
+from metabaseapi.endpoints.execution import EndpointRequest
 from metabaseapi.endpoints.execution import MetabaseRequestClient
-from metabaseapi.endpoints.execution import _BaseMetabaseRequest
-from metabaseapi.endpoints.responses import ListDatabasesResponse
+from metabaseapi.endpoints.responses.database import ListDatabasesResponse
 from metabaseapi.wire import JSONValue
 
 
-class ListDatabasesRequest(_BaseMetabaseRequest[ListDatabasesResponse]):
+class ListDatabasesRequest(EndpointRequest[ListDatabasesResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/database"
 
@@ -23,7 +23,7 @@ class ListDatabasesRequest(_BaseMetabaseRequest[ListDatabasesResponse]):
         return self.execute_sync(client, ListDatabasesResponse)
 
 
-class CreateDatabaseRequest(_BaseMetabaseRequest[Database]):
+class CreateDatabaseRequest(EndpointRequest[Database]):
     name: str
     engine: str
     details: dict[str, Any] = PydanticField(default_factory=dict)
@@ -41,7 +41,7 @@ class CreateDatabaseRequest(_BaseMetabaseRequest[Database]):
         return self.model_dump(exclude_none=True)
 
 
-class GetDatabaseRequest(_BaseMetabaseRequest[Database]):
+class GetDatabaseRequest(EndpointRequest[Database]):
     database_id: int | str
 
     endpoint_method: ClassVar[str] = "GET"

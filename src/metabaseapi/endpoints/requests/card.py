@@ -6,16 +6,16 @@ from typing import ClassVar
 from pydantic import Field as PydanticField
 
 from metabaseapi.endpoints.entities import Card
+from metabaseapi.endpoints.execution import EndpointRequest
 from metabaseapi.endpoints.execution import MetabaseRequestClient
-from metabaseapi.endpoints.execution import _BaseMetabaseRequest
-from metabaseapi.endpoints.responses import CardsDashboardsResponse
-from metabaseapi.endpoints.responses import GenericOperationResponse
-from metabaseapi.endpoints.responses import ListCardsResponse
+from metabaseapi.endpoints.responses.card import CardsDashboardsResponse
+from metabaseapi.endpoints.responses.card import ListCardsResponse
+from metabaseapi.endpoints.responses.common import GenericOperationResponse
 from metabaseapi.wire import JSONValue
 from metabaseapi.wire import QueryParamValue
 
 
-class ListCardsRequest(_BaseMetabaseRequest[ListCardsResponse]):
+class ListCardsRequest(EndpointRequest[ListCardsResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/card"
 
@@ -26,7 +26,7 @@ class ListCardsRequest(_BaseMetabaseRequest[ListCardsResponse]):
         return self.execute_sync(client, ListCardsResponse)
 
 
-class CreateCardRequest(_BaseMetabaseRequest[Card]):
+class CreateCardRequest(EndpointRequest[Card]):
     name: str
     dataset_query: dict[str, Any]
     display: str
@@ -50,7 +50,7 @@ class CreateCardRequest(_BaseMetabaseRequest[Card]):
         return self.model_dump(exclude_none=True)
 
 
-class GetCardRequest(_BaseMetabaseRequest[Card]):
+class GetCardRequest(EndpointRequest[Card]):
     card_id: int | str
 
     endpoint_method: ClassVar[str] = "GET"
@@ -66,7 +66,7 @@ class GetCardRequest(_BaseMetabaseRequest[Card]):
         return f"/api/card/{self.card_id}"
 
 
-class GetCardCollectionsRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class GetCardCollectionsRequest(EndpointRequest[GenericOperationResponse]):
     card_ids: list[int | str] | None = None
     collection_id: int | str | None = None
 
@@ -88,7 +88,7 @@ class GetCardCollectionsRequest(_BaseMetabaseRequest[GenericOperationResponse]):
         return body or None
 
 
-class GetCardEmbeddableRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class GetCardEmbeddableRequest(EndpointRequest[GenericOperationResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/card/embeddable"
 
@@ -99,7 +99,7 @@ class GetCardEmbeddableRequest(_BaseMetabaseRequest[GenericOperationResponse]):
         return self.execute_sync(client, GenericOperationResponse)
 
 
-class PostCardPivotQueryRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class PostCardPivotQueryRequest(EndpointRequest[GenericOperationResponse]):
     card_id: int | str
     body: dict[str, Any] = PydanticField(default_factory=dict)
 
@@ -119,7 +119,7 @@ class PostCardPivotQueryRequest(_BaseMetabaseRequest[GenericOperationResponse]):
         return self.body or None
 
 
-class GetCardPublicRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class GetCardPublicRequest(EndpointRequest[GenericOperationResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/card/public"
 
@@ -130,7 +130,7 @@ class GetCardPublicRequest(_BaseMetabaseRequest[GenericOperationResponse]):
         return self.execute_sync(client, GenericOperationResponse)
 
 
-class CardParamsSearchRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class CardParamsSearchRequest(EndpointRequest[GenericOperationResponse]):
     card_id: int | str
     param_key: str
     query: str
@@ -148,7 +148,7 @@ class CardParamsSearchRequest(_BaseMetabaseRequest[GenericOperationResponse]):
         return f"/api/card/{self.card_id}/params/{self.param_key}/search/{self.query}"
 
 
-class CardParamsValuesRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class CardParamsValuesRequest(EndpointRequest[GenericOperationResponse]):
     card_id: int | str
     param_key: str
 
@@ -165,7 +165,7 @@ class CardParamsValuesRequest(_BaseMetabaseRequest[GenericOperationResponse]):
         return f"/api/card/{self.card_id}/params/{self.param_key}/values"
 
 
-class CreateCardPublicLinkRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class CreateCardPublicLinkRequest(EndpointRequest[GenericOperationResponse]):
     card_id: int | str
 
     endpoint_method: ClassVar[str] = "POST"
@@ -181,7 +181,7 @@ class CreateCardPublicLinkRequest(_BaseMetabaseRequest[GenericOperationResponse]
         return f"/api/card/{self.card_id}/public_link"
 
 
-class DeleteCardPublicLinkRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class DeleteCardPublicLinkRequest(EndpointRequest[GenericOperationResponse]):
     card_id: int | str
 
     endpoint_method: ClassVar[str] = "DELETE"
@@ -197,7 +197,7 @@ class DeleteCardPublicLinkRequest(_BaseMetabaseRequest[GenericOperationResponse]
         return f"/api/card/{self.card_id}/public_link"
 
 
-class CardQueryRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class CardQueryRequest(EndpointRequest[GenericOperationResponse]):
     card_id: int | str
     body: dict[str, Any] = PydanticField(default_factory=dict)
 
@@ -217,7 +217,7 @@ class CardQueryRequest(_BaseMetabaseRequest[GenericOperationResponse]):
         return self.body or None
 
 
-class CardQueryExportRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class CardQueryExportRequest(EndpointRequest[GenericOperationResponse]):
     card_id: int | str
     export_format: str
     body: dict[str, Any] = PydanticField(default_factory=dict)
@@ -248,7 +248,7 @@ class CardQueryExportRequest(_BaseMetabaseRequest[GenericOperationResponse]):
         return params
 
 
-class UpdateCardRequest(_BaseMetabaseRequest[Card]):
+class UpdateCardRequest(EndpointRequest[Card]):
     card_id: int | str
     body: dict[str, Any]
 
@@ -268,7 +268,7 @@ class UpdateCardRequest(_BaseMetabaseRequest[Card]):
         return self.body
 
 
-class DeleteCardRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class DeleteCardRequest(EndpointRequest[GenericOperationResponse]):
     card_id: int | str
 
     endpoint_method: ClassVar[str] = "DELETE"
@@ -284,7 +284,7 @@ class DeleteCardRequest(_BaseMetabaseRequest[GenericOperationResponse]):
         return f"/api/card/{self.card_id}"
 
 
-class CopyCardRequest(_BaseMetabaseRequest[Card]):
+class CopyCardRequest(EndpointRequest[Card]):
     card_id: int | str
     body: dict[str, Any] = PydanticField(default_factory=dict)
 
@@ -304,7 +304,7 @@ class CopyCardRequest(_BaseMetabaseRequest[Card]):
         return self.body or None
 
 
-class GetCardDashboardsRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class GetCardDashboardsRequest(EndpointRequest[GenericOperationResponse]):
     card_id: int | str
 
     endpoint_method: ClassVar[str] = "GET"
@@ -320,7 +320,7 @@ class GetCardDashboardsRequest(_BaseMetabaseRequest[GenericOperationResponse]):
         return f"/api/card/{self.card_id}/dashboards"
 
 
-class CardRemappingRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class CardRemappingRequest(EndpointRequest[GenericOperationResponse]):
     card_id: int | str
     param_key: str
 
@@ -337,7 +337,7 @@ class CardRemappingRequest(_BaseMetabaseRequest[GenericOperationResponse]):
         return f"/api/card/{self.card_id}/params/{self.param_key}/remapping"
 
 
-class GetCardQueryMetadataRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class GetCardQueryMetadataRequest(EndpointRequest[GenericOperationResponse]):
     card_id: int | str
 
     endpoint_method: ClassVar[str] = "GET"
@@ -353,7 +353,7 @@ class GetCardQueryMetadataRequest(_BaseMetabaseRequest[GenericOperationResponse]
         return f"/api/card/{self.card_id}/query_metadata"
 
 
-class GetCardSeriesRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class GetCardSeriesRequest(EndpointRequest[GenericOperationResponse]):
     card_id: int | str
 
     endpoint_method: ClassVar[str] = "GET"
@@ -369,7 +369,7 @@ class GetCardSeriesRequest(_BaseMetabaseRequest[GenericOperationResponse]):
         return f"/api/card/{self.card_id}/series"
 
 
-class CardsDashboardsRequest(_BaseMetabaseRequest[CardsDashboardsResponse]):
+class CardsDashboardsRequest(EndpointRequest[CardsDashboardsResponse]):
     card_ids: list[int | str]
 
     endpoint_method: ClassVar[str] = "POST"
@@ -385,7 +385,7 @@ class CardsDashboardsRequest(_BaseMetabaseRequest[CardsDashboardsResponse]):
         return {"card_ids": self.card_ids}
 
 
-class MoveCardsRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class MoveCardsRequest(EndpointRequest[GenericOperationResponse]):
     body: dict[str, object]
 
     endpoint_method: ClassVar[str] = "POST"

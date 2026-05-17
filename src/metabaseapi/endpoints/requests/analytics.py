@@ -3,13 +3,13 @@ from __future__ import annotations
 from typing import Any
 from typing import ClassVar
 
+from metabaseapi.endpoints.execution import EndpointRequest
 from metabaseapi.endpoints.execution import MetabaseRequestClient
-from metabaseapi.endpoints.execution import _BaseMetabaseRequest
-from metabaseapi.endpoints.responses import GenericOperationResponse
+from metabaseapi.endpoints.responses.common import GenericOperationResponse
 from metabaseapi.wire import JSONValue
 
 
-class GetAnonymousStatsRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class GetAnonymousStatsRequest(EndpointRequest[GenericOperationResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/analytics/anonymous-stats"
 
@@ -20,7 +20,7 @@ class GetAnonymousStatsRequest(_BaseMetabaseRequest[GenericOperationResponse]):
         return self.execute_sync(client, GenericOperationResponse)
 
 
-class CreateAnalyticsEventBatchRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class CreateAnalyticsEventBatchRequest(EndpointRequest[GenericOperationResponse]):
     body: dict[str, Any]
 
     endpoint_method: ClassVar[str] = "POST"

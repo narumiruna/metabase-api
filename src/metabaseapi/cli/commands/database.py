@@ -2,10 +2,9 @@ from __future__ import annotations
 
 import typer
 
-from metabaseapi.cli.runtime import _parse_json_body
-from metabaseapi.cli.runtime import _run_and_print
-from metabaseapi.cli.runtime import _run_client_call
 from metabaseapi.cli.runtime import app
+from metabaseapi.cli.runtime import parse_json_body
+from metabaseapi.cli.runtime import run_client_command
 from metabaseapi.client.raw import database as _raw_database
 
 
@@ -13,13 +12,11 @@ from metabaseapi.client.raw import database as _raw_database
 def list_databases(ctx: typer.Context) -> None:
     """List configured databases."""
 
-    _run_and_print(
-        _run_client_call(
-            ctx,
-            lambda client: _raw_database.list_databases(
-                client,
-            ),
-        )
+    run_client_command(
+        ctx,
+        lambda client: _raw_database.list_databases(
+            client,
+        ),
     )
 
 
@@ -27,7 +24,7 @@ def list_databases(ctx: typer.Context) -> None:
 def get_database(ctx: typer.Context, database_id: str = typer.Argument(...)) -> None:
     """Get a database by ID."""
 
-    _run_and_print(_run_client_call(ctx, lambda client: _raw_database.get_database(client, database_id)))
+    run_client_command(ctx, lambda client: _raw_database.get_database(client, database_id))
 
 
 @app.command("create-database")
@@ -43,14 +40,12 @@ def create_database(
     if details is None:
         details_payload = None
     else:
-        parsed = _parse_json_body(details)
+        parsed = parse_json_body(details)
         if parsed is not None and not isinstance(parsed, dict):
             raise typer.BadParameter("details must be a JSON object")
         details_payload = parsed
 
-    _run_and_print(
-        _run_client_call(
-            ctx,
-            lambda client: _raw_database.create_database(client, name=name, engine=engine, details=details_payload),
-        ),
+    run_client_command(
+        ctx,
+        lambda client: _raw_database.create_database(client, name=name, engine=engine, details=details_payload),
     )

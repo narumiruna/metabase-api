@@ -4,12 +4,12 @@ from typing import ClassVar
 
 from metabaseapi.endpoints.entities import MetabaseField
 from metabaseapi.endpoints.entities import Table
+from metabaseapi.endpoints.execution import EndpointRequest
 from metabaseapi.endpoints.execution import MetabaseRequestClient
-from metabaseapi.endpoints.execution import _BaseMetabaseRequest
-from metabaseapi.endpoints.responses import ListTablesResponse
+from metabaseapi.endpoints.responses.schema import ListTablesResponse
 
 
-class ListTablesRequest(_BaseMetabaseRequest[ListTablesResponse]):
+class ListTablesRequest(EndpointRequest[ListTablesResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/table"
 
@@ -20,7 +20,7 @@ class ListTablesRequest(_BaseMetabaseRequest[ListTablesResponse]):
         return self.execute_sync(client, ListTablesResponse)
 
 
-class GetTableRequest(_BaseMetabaseRequest[Table]):
+class GetTableRequest(EndpointRequest[Table]):
     table_id: int | str
 
     endpoint_method: ClassVar[str] = "GET"
@@ -36,7 +36,7 @@ class GetTableRequest(_BaseMetabaseRequest[Table]):
         return f"/api/table/{self.table_id}"
 
 
-class GetFieldRequest(_BaseMetabaseRequest[MetabaseField]):
+class GetFieldRequest(EndpointRequest[MetabaseField]):
     field_id: int | str
 
     endpoint_method: ClassVar[str] = "GET"

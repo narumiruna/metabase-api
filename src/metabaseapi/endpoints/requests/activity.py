@@ -4,15 +4,15 @@ from typing import Any
 from typing import ClassVar
 
 from metabaseapi.endpoints.entities import ActivityItem
+from metabaseapi.endpoints.execution import EndpointRequest
 from metabaseapi.endpoints.execution import MetabaseRequestClient
-from metabaseapi.endpoints.execution import _BaseMetabaseRequest
-from metabaseapi.endpoints.responses import ActivityMutationResponse
-from metabaseapi.endpoints.responses import ListActivityItemsResponse
+from metabaseapi.endpoints.responses.activity import ActivityMutationResponse
+from metabaseapi.endpoints.responses.activity import ListActivityItemsResponse
 from metabaseapi.wire import JSONValue
 from metabaseapi.wire import QueryParamValue
 
 
-class GetMostRecentlyViewedDashboardRequest(_BaseMetabaseRequest[ActivityItem]):
+class GetMostRecentlyViewedDashboardRequest(EndpointRequest[ActivityItem]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/activity/most_recently_viewed_dashboard"
 
@@ -23,7 +23,7 @@ class GetMostRecentlyViewedDashboardRequest(_BaseMetabaseRequest[ActivityItem]):
         return self.execute_sync(client, ActivityItem)
 
 
-class ListPopularItemsRequest(_BaseMetabaseRequest[ListActivityItemsResponse]):
+class ListPopularItemsRequest(EndpointRequest[ListActivityItemsResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/activity/popular_items"
 
@@ -34,7 +34,7 @@ class ListPopularItemsRequest(_BaseMetabaseRequest[ListActivityItemsResponse]):
         return self.execute_sync(client, ListActivityItemsResponse)
 
 
-class ListRecentViewsRequest(_BaseMetabaseRequest[ListActivityItemsResponse]):
+class ListRecentViewsRequest(EndpointRequest[ListActivityItemsResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/activity/recent_views"
 
@@ -45,7 +45,7 @@ class ListRecentViewsRequest(_BaseMetabaseRequest[ListActivityItemsResponse]):
         return self.execute_sync(client, ListActivityItemsResponse)
 
 
-class ListRecentsRequest(_BaseMetabaseRequest[ListActivityItemsResponse]):
+class ListRecentsRequest(EndpointRequest[ListActivityItemsResponse]):
     context: str | None = None
 
     endpoint_method: ClassVar[str] = "GET"
@@ -63,7 +63,7 @@ class ListRecentsRequest(_BaseMetabaseRequest[ListActivityItemsResponse]):
         return {"context": self.context}
 
 
-class CreateRecentRequest(_BaseMetabaseRequest[ActivityMutationResponse]):
+class CreateRecentRequest(EndpointRequest[ActivityMutationResponse]):
     body: dict[str, Any]
 
     endpoint_method: ClassVar[str] = "POST"

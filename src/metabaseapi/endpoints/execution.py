@@ -27,7 +27,7 @@ class MetabaseRequestClient(Protocol):
 ResponseT = TypeVar("ResponseT", bound=BaseModel)
 
 
-class _BaseMetabaseRequest[ResponseT](BaseModel):
+class EndpointRequest[ResponseT](BaseModel):
     model_config = ConfigDict(extra="allow")
 
     endpoint_method: ClassVar[str]
@@ -53,3 +53,6 @@ class _BaseMetabaseRequest[ResponseT](BaseModel):
 
     def execute_sync(self, client: MetabaseRequestClient, response_model: type[BaseModel]) -> ResponseT:
         return asyncio.run(self.execute(client, response_model))
+
+
+__all__ = ["EndpointRequest", "MetabaseRequestClient"]

@@ -2,12 +2,12 @@ from __future__ import annotations
 
 from typing import ClassVar
 
+from metabaseapi.endpoints.execution import EndpointRequest
 from metabaseapi.endpoints.execution import MetabaseRequestClient
-from metabaseapi.endpoints.execution import _BaseMetabaseRequest
-from metabaseapi.endpoints.responses import GenericOperationResponse
+from metabaseapi.endpoints.responses.common import GenericOperationResponse
 
 
-class AutomagicDashboardRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class AutomagicDashboardRequest(EndpointRequest[GenericOperationResponse]):
     path: str
 
     endpoint_method: ClassVar[str] = "GET"
@@ -23,7 +23,7 @@ class AutomagicDashboardRequest(_BaseMetabaseRequest[GenericOperationResponse]):
         return f"/api/automagic-dashboards/{self.path.lstrip('/')}"
 
 
-class AutomagicDatabaseCandidatesRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class AutomagicDatabaseCandidatesRequest(EndpointRequest[GenericOperationResponse]):
     database_id: int | str
 
     endpoint_method: ClassVar[str] = "GET"
@@ -39,7 +39,7 @@ class AutomagicDatabaseCandidatesRequest(_BaseMetabaseRequest[GenericOperationRe
         return f"/api/automagic-dashboards/database/{self.database_id}/candidates"
 
 
-class AutomagicModelIndexPrimaryKeyRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+class AutomagicModelIndexPrimaryKeyRequest(EndpointRequest[GenericOperationResponse]):
     model_index_id: int | str
     primary_key_id: int | str
 

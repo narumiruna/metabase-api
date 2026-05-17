@@ -3,13 +3,13 @@ from __future__ import annotations
 from typing import Any
 from typing import ClassVar
 
+from metabaseapi.endpoints.execution import EndpointRequest
 from metabaseapi.endpoints.execution import MetabaseRequestClient
-from metabaseapi.endpoints.execution import _BaseMetabaseRequest
-from metabaseapi.endpoints.responses import AgentResponse
+from metabaseapi.endpoints.responses.agent import AgentResponse
 from metabaseapi.wire import JSONValue
 
 
-class AgentExecuteRequest(_BaseMetabaseRequest[AgentResponse]):
+class AgentExecuteRequest(EndpointRequest[AgentResponse]):
     body: dict[str, Any]
 
     endpoint_method: ClassVar[str] = "POST"
@@ -25,7 +25,7 @@ class AgentExecuteRequest(_BaseMetabaseRequest[AgentResponse]):
         return self.body
 
 
-class GetAgentMetricRequest(_BaseMetabaseRequest[AgentResponse]):
+class GetAgentMetricRequest(EndpointRequest[AgentResponse]):
     metric_id: int | str
 
     endpoint_method: ClassVar[str] = "GET"
@@ -41,7 +41,7 @@ class GetAgentMetricRequest(_BaseMetabaseRequest[AgentResponse]):
         return f"/api/agent/v1/metric/{self.metric_id}"
 
 
-class GetAgentMetricFieldValuesRequest(_BaseMetabaseRequest[AgentResponse]):
+class GetAgentMetricFieldValuesRequest(EndpointRequest[AgentResponse]):
     metric_id: int | str
     field_id: int | str
 
@@ -58,7 +58,7 @@ class GetAgentMetricFieldValuesRequest(_BaseMetabaseRequest[AgentResponse]):
         return f"/api/agent/v1/metric/{self.metric_id}/field/{self.field_id}/values"
 
 
-class AgentPingRequest(_BaseMetabaseRequest[AgentResponse]):
+class AgentPingRequest(EndpointRequest[AgentResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/agent/v1/ping"
 
@@ -69,7 +69,7 @@ class AgentPingRequest(_BaseMetabaseRequest[AgentResponse]):
         return self.execute_sync(client, AgentResponse)
 
 
-class AgentSearchRequest(_BaseMetabaseRequest[AgentResponse]):
+class AgentSearchRequest(EndpointRequest[AgentResponse]):
     body: dict[str, Any]
 
     endpoint_method: ClassVar[str] = "POST"
@@ -85,7 +85,7 @@ class AgentSearchRequest(_BaseMetabaseRequest[AgentResponse]):
         return self.body
 
 
-class GetAgentTableRequest(_BaseMetabaseRequest[AgentResponse]):
+class GetAgentTableRequest(EndpointRequest[AgentResponse]):
     table_id: int | str
 
     endpoint_method: ClassVar[str] = "GET"
@@ -101,7 +101,7 @@ class GetAgentTableRequest(_BaseMetabaseRequest[AgentResponse]):
         return f"/api/agent/v1/table/{self.table_id}"
 
 
-class GetAgentTableFieldValuesRequest(_BaseMetabaseRequest[AgentResponse]):
+class GetAgentTableFieldValuesRequest(EndpointRequest[AgentResponse]):
     table_id: int | str
     field_id: int | str
 
@@ -118,7 +118,7 @@ class GetAgentTableFieldValuesRequest(_BaseMetabaseRequest[AgentResponse]):
         return f"/api/agent/v1/table/{self.table_id}/field/{self.field_id}/values"
 
 
-class AgentConstructQueryRequest(_BaseMetabaseRequest[AgentResponse]):
+class AgentConstructQueryRequest(EndpointRequest[AgentResponse]):
     body: dict[str, Any]
 
     endpoint_method: ClassVar[str] = "POST"
@@ -134,7 +134,7 @@ class AgentConstructQueryRequest(_BaseMetabaseRequest[AgentResponse]):
         return self.body
 
 
-class AgentQueryRequest(_BaseMetabaseRequest[AgentResponse]):
+class AgentQueryRequest(EndpointRequest[AgentResponse]):
     body: dict[str, Any]
 
     endpoint_method: ClassVar[str] = "POST"

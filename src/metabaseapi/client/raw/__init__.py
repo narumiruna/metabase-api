@@ -15,6 +15,7 @@ RAW_MODULES = (
     "bug_reporting",
     "cache",
     "card",
+    "card_query",
     "channel",
     "cloud_migration",
     "collection",

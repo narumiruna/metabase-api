@@ -20,6 +20,7 @@ from metabaseapi.client.raw import bookmark as raw_bookmark
 from metabaseapi.client.raw import bug_reporting as raw_bug_reporting
 from metabaseapi.client.raw import cache as raw_cache
 from metabaseapi.client.raw import card as raw_card
+from metabaseapi.client.raw import card_query as raw_card_query
 from metabaseapi.client.raw import channel as raw_channel
 from metabaseapi.client.raw import cloud_migration as raw_cloud_migration
 from metabaseapi.client.raw import collection as raw_collection
@@ -309,18 +310,18 @@ def test_raw_paths_cover_handwritten_endpoint_surface() -> None:
             ("POST", "/api/card/collections", {"card_ids": [1, 2], "collection_id": "root"}),
         ),
         (raw_card.list_embeddable_cards(client), ("GET", "/api/card/embeddable", None)),
-        (raw_card.pivot_query(client, 13, body={"x": 1}), ("POST", "/api/card/pivot/13/query", {"x": 1})),
+        (raw_card_query.pivot_query(client, 13, body={"x": 1}), ("POST", "/api/card/pivot/13/query", {"x": 1})),
         (raw_card.list_public_cards(client), ("GET", "/api/card/public", None)),
         (
-            raw_card.get_card_param_search_values(client, 13, "abc", "Orange"),
+            raw_card_query.get_card_param_search_values(client, 13, "abc", "Orange"),
             ("GET", "/api/card/13/params/abc/search/Orange", None),
         ),
-        (raw_card.get_card_param_values(client, 13, "abc"), ("GET", "/api/card/13/params/abc/values", None)),
+        (raw_card_query.get_card_param_values(client, 13, "abc"), ("GET", "/api/card/13/params/abc/values", None)),
         (raw_card.create_card_public_link(client, 13), ("POST", "/api/card/13/public_link", None)),
         (raw_card.delete_card_public_link(client, 13), ("DELETE", "/api/card/13/public_link", None)),
-        (raw_card.query_card(client, 13, body={"x": 1}), ("POST", "/api/card/13/query", {"x": 1})),
+        (raw_card_query.query_card(client, 13, body={"x": 1}), ("POST", "/api/card/13/query", {"x": 1})),
         (
-            raw_card.query_card_export(client, 13, "csv", body={"x": 1}, pivot_results=True, format_rows=False),
+            raw_card_query.query_card_export(client, 13, "csv", body={"x": 1}, pivot_results=True, format_rows=False),
             ("POST", "/api/card/13/query/csv", {"x": 1}),
         ),
         (
@@ -351,15 +352,18 @@ def test_raw_paths_cover_handwritten_endpoint_surface() -> None:
         (raw_card.update_card(client, 13, {"name": "Updated"}), ("PUT", "/api/card/13", {"name": "Updated"})),
         (raw_card.delete_card(client, 13), ("DELETE", "/api/card/13", None)),
         (raw_card.copy_card(client, 13), ("POST", "/api/card/13/copy", None)),
-        (raw_card.cards_dashboards(client, [1, 2]), ("POST", "/api/cards/dashboards", {"card_ids": [1, 2]})),
+        (raw_card_query.cards_dashboards(client, [1, 2]), ("POST", "/api/cards/dashboards", {"card_ids": [1, 2]})),
         (
             raw_card.move_cards(client, {"card_ids": [1], "collection_id": "root"}),
             ("POST", "/api/cards/move", {"card_ids": [1], "collection_id": "root"}),
         ),
-        (raw_card.get_card_dashboards(client, 13), ("GET", "/api/card/13/dashboards", None)),
-        (raw_card.get_card_param_remapping(client, 13, "abc"), ("GET", "/api/card/13/params/abc/remapping", None)),
-        (raw_card.get_card_query_metadata(client, 13), ("GET", "/api/card/13/query_metadata", None)),
-        (raw_card.get_card_series(client, 13), ("GET", "/api/card/13/series", None)),
+        (raw_card_query.get_card_dashboards(client, 13), ("GET", "/api/card/13/dashboards", None)),
+        (
+            raw_card_query.get_card_param_remapping(client, 13, "abc"),
+            ("GET", "/api/card/13/params/abc/remapping", None),
+        ),
+        (raw_card_query.get_card_query_metadata(client, 13), ("GET", "/api/card/13/query_metadata", None)),
+        (raw_card_query.get_card_series(client, 13), ("GET", "/api/card/13/series", None)),
         (raw_dashboard.list_dashboards(client), ("GET", "/api/dashboard", None)),
         (raw_dashboard.get_dashboard(client, 14), ("GET", "/api/dashboard/14", None)),
         (

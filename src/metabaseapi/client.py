@@ -87,6 +87,7 @@ from metabaseapi.metabase import GetChannelRequest
 from metabaseapi.metabase import GetCloudMigrationRequest
 from metabaseapi.metabase import GetCollectionDashboardQuestionCandidatesRequest
 from metabaseapi.metabase import GetCollectionGraphRequest
+from metabaseapi.metabase import GetCollectionItemsRequest
 from metabaseapi.metabase import GetCollectionRequest
 from metabaseapi.metabase import GetCollectionRootDashboardQuestionCandidatesRequest
 from metabaseapi.metabase import GetCollectionRootItemsRequest
@@ -818,6 +819,9 @@ class MetabaseClient:
     async def get_collection_dashboard_question_candidates(self, collection_id: int | str) -> JSONValue | None:
         return await self.get(f"/api/collection/{collection_id}/dashboard-question-candidates")
 
+    async def get_collection_items(self, collection_id: int | str) -> JSONValue | None:
+        return await self.get(f"/api/collection/{collection_id}/items")
+
     async def get_collection_graph(self) -> JSONValue | None:
         return await self.get("/api/collection/graph")
 
@@ -1282,7 +1286,11 @@ class MetabaseClient:
     ) -> GenericOperationResponse:
         return await self.run(GetCollectionDashboardQuestionCandidatesRequest(collection_id=collection_id))
 
+    async def get_collection_items_typed(self, collection_id: int | str) -> GenericOperationResponse:
+        return await self.run(GetCollectionItemsRequest(collection_id=collection_id))
+
     async def get_table_typed(self, table_id: int | str) -> Table:
+        return await self.run(GetTableRequest(table_id=table_id))
         return await self.run(GetTableRequest(table_id=table_id))
 
     async def get_field_typed(self, field_id: int | str) -> MetabaseField:

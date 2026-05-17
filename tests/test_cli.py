@@ -479,6 +479,9 @@ class _ConvenienceClient(_ClientWithRequestMethods):
     async def get_collection_dashboard_question_candidates(self, collection_id: str) -> dict[str, object]:
         return {"method": "GET", "path": f"/api/collection/{collection_id}/dashboard-question-candidates"}
 
+    async def get_collection_items(self, collection_id: str) -> dict[str, object]:
+        return {"method": "GET", "path": f"/api/collection/{collection_id}/items"}
+
     async def get_collection_root(self) -> dict[str, object]:
         return {"method": "GET", "path": "/api/collection/root"}
 
@@ -636,6 +639,7 @@ def test_help_lists_every_convenience_command() -> None:
         "list-collections",
         "get-collection",
         "get-collection-dashboard-question-candidates",
+        "get-collection-items",
         "list-tables",
         "get-table",
         "get-field",
@@ -760,6 +764,7 @@ def test_get_database_command_outputs_json(monkeypatch: pytest.MonkeyPatch) -> N
         (["get-user", "15"], "/api/user/15"),
         (["get-collection", "root"], "/api/collection/root"),
         (["get-collection-dashboard-question-candidates", "7"], "/api/collection/7/dashboard-question-candidates"),
+        (["get-collection-items", "7"], "/api/collection/7/items"),
         (["get-collection-root"], "/api/collection/root"),
         (["get-collection-root-dashboard-question-candidates"], "/api/collection/root/dashboard-question-candidates"),
         (["get-collection-root-items"], "/api/collection/root/items"),

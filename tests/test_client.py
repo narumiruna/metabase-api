@@ -205,6 +205,10 @@ def test_convenience_paths_cover_handwritten_endpoint_surface() -> None:
             client.get_collection_dashboard_question_candidates(7),
             ("GET", "/api/collection/7/dashboard-question-candidates", None),
         ),
+        (
+            client.get_collection_items(7),
+            ("GET", "/api/collection/7/items", None),
+        ),
         (client.get_collection_trash(), ("GET", "/api/collection/trash", None)),
         (client.get_collection_tree(), ("GET", "/api/collection/tree", None)),
         (

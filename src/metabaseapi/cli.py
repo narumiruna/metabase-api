@@ -1052,6 +1052,13 @@ def get_collection_dashboard_question_candidates(ctx: typer.Context, collection_
     )
 
 
+@app.command("get-collection-items")
+def get_collection_items(ctx: typer.Context, collection_id: str = typer.Argument(...)) -> None:
+    """Fetch a collection's items."""
+
+    _run_and_print(_run_client_call(ctx, lambda client: client.get_collection_items(collection_id)))
+
+
 @app.command("get-collection-root")
 def get_collection_root(ctx: typer.Context) -> None:
     """Get the root collection."""

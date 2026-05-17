@@ -75,6 +75,7 @@ from .requests import GetChannelRequest
 from .requests import GetCloudMigrationRequest
 from .requests import GetCollectionDashboardQuestionCandidatesRequest
 from .requests import GetCollectionGraphRequest
+from .requests import GetCollectionItemsRequest
 from .requests import GetCollectionRequest
 from .requests import GetCollectionRootDashboardQuestionCandidatesRequest
 from .requests import GetCollectionRootItemsRequest
@@ -212,6 +213,7 @@ __all__ = [
     "GetCloudMigrationRequest",
     "GetCollectionDashboardQuestionCandidatesRequest",
     "GetCollectionGraphRequest",
+    "GetCollectionItemsRequest",
     "GetCollectionRequest",
     "GetCollectionRootDashboardQuestionCandidatesRequest",
     "GetCollectionRootItemsRequest",

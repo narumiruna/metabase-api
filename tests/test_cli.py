@@ -81,6 +81,21 @@ class _ErrorClient(_ClientWithRequestMethods):
         raise MetabaseHTTPStatusError(401, {"message": "unauthorized"})
 
 
+class _RunSpyClient:
+    def __init__(self) -> None:
+        self.request_model: EndpointRequest[BaseModel] | None = None
+
+    async def __aenter__(self) -> _RunSpyClient:
+        return self
+
+    async def __aexit__(self, *_: object) -> None:
+        return None
+
+    async def run(self, request_model: EndpointRequest[BaseModel]) -> BaseModel:
+        self.request_model = request_model
+        return request_model.response_model.model_validate({})
+
+
 def test_help_omits_raw_request_commands() -> None:
     result = runner.invoke(cli.app, ["--help"])
 
@@ -556,6 +571,28 @@ def test_card_id_csv_commands_coerce_numeric_ids(
 
     assert result.exit_code == 0
     assert _LAST_CALL["body"] == expected_body
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        ["pivot-query", "13"],
+        ["query-card", "13"],
+        ["query-card-export", "13", "csv"],
+    ],
+)
+def test_card_query_commands_default_missing_body_to_empty_object(
+    monkeypatch: pytest.MonkeyPatch,
+    command: list[str],
+) -> None:
+    spy = _RunSpyClient()
+    monkeypatch.setattr(cli.runtime, "create_client", lambda _settings: spy)
+
+    result = runner.invoke(cli.app, ["--base-url", "http://localhost:3000", "--api-key", "abc", *command])
+
+    assert result.exit_code == 0
+    assert spy.request_model is not None
+    assert spy.request_model.model_dump()["body"] == {}
 
 
 def test_create_question_command_posts_card_json(monkeypatch: pytest.MonkeyPatch) -> None:

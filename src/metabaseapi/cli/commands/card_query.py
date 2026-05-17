@@ -4,7 +4,7 @@ import typer
 
 from metabaseapi.cli.runtime import app
 from metabaseapi.cli.runtime import parse_id_csv
-from metabaseapi.cli.runtime import parse_optional_json_object
+from metabaseapi.cli.runtime import parse_optional_json_object_or_empty
 from metabaseapi.cli.runtime import run_endpoint_command
 from metabaseapi.endpoints.requests.card_query import CardParamsSearchRequest
 from metabaseapi.endpoints.requests.card_query import CardParamsValuesRequest
@@ -24,8 +24,10 @@ def pivot_query(
     card_id: str = typer.Argument(...),
     body: str = typer.Argument(None, help="Optional query body JSON object"),
 ) -> None:
-    payload = parse_optional_json_object(body, "body") if body else None
-    run_endpoint_command(ctx, PostCardPivotQueryRequest(card_id=card_id, body=payload or {}))
+    run_endpoint_command(
+        ctx,
+        PostCardPivotQueryRequest(card_id=card_id, body=parse_optional_json_object_or_empty(body, "body")),
+    )
 
 
 @app.command("query-card")
@@ -34,8 +36,10 @@ def query_card(
     card_id: str = typer.Argument(...),
     body: str = typer.Argument(None, help="Optional query payload JSON object"),
 ) -> None:
-    payload = parse_optional_json_object(body, "body") if body else None
-    run_endpoint_command(ctx, CardQueryRequest(card_id=card_id, body=payload or {}))
+    run_endpoint_command(
+        ctx,
+        CardQueryRequest(card_id=card_id, body=parse_optional_json_object_or_empty(body, "body")),
+    )
 
 
 @app.command("query-card-export")
@@ -47,13 +51,12 @@ def query_card_export(
     pivot_results: bool | None = typer.Option(None, "--pivot-results"),
     format_rows: bool | None = typer.Option(None, "--format-rows"),
 ) -> None:
-    payload = parse_optional_json_object(body, "body") if body else None
     run_endpoint_command(
         ctx,
         CardQueryExportRequest(
             card_id=card_id,
             export_format=export_format,
-            body=payload or {},
+            body=parse_optional_json_object_or_empty(body, "body"),
             pivot_results=pivot_results,
             format_rows=format_rows,
         ),

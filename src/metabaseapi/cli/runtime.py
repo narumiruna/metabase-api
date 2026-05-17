@@ -69,6 +69,10 @@ def parse_optional_json_object(raw: str | None, parameter_name: str) -> dict[str
     return parse_json_object(raw, parameter_name)
 
 
+def parse_optional_json_object_or_empty(raw: str | None, parameter_name: str) -> dict[str, object]:
+    return parse_optional_json_object(raw, parameter_name) or {}
+
+
 def parse_optional_json_list(raw: str | None, parameter_name: str) -> list[object] | None:
     if raw is None:
         return None

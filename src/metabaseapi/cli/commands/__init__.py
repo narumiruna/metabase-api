@@ -136,12 +136,6 @@ def register_commands() -> None:
     command_module_objects()
 
 
-def __getattr__(name: str) -> object:
-    if name == "COMMAND_MODULES_OBJECTS":
-        return command_module_objects()
-    raise AttributeError(f"{__name__!r} has no attribute {name!r}")
-
-
 __all__ = [
     "ACTION_COMMAND_MODULE",
     "ACTIVITY_COMMAND_MODULE",
@@ -160,7 +154,6 @@ __all__ = [
     "COLLECTION_ROOT_COMMAND_MODULE",
     "COMMAND_MODULES",
     "COMMAND_MODULES_IMPORT_PATHS",
-    "COMMAND_MODULES_OBJECTS",
     "COMMAND_MODULE_GROUPS",
     "COMMAND_MODULE_GROUP_ORDER",
     "COMMAND_MODULE_GROUP_REGISTRY",

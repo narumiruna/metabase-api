@@ -719,7 +719,7 @@ def test_cli_command_modules_importable_in_multiple_orders() -> None:
             """
             from metabaseapi.cli.commands import *  # noqa: F401
             import metabaseapi.cli
-            print(len(COMMAND_MODULES), len(COMMAND_MODULES_OBJECTS), len(metabaseapi.cli.app.registered_commands))
+            print(len(COMMAND_MODULES), len(command_module_objects()), len(metabaseapi.cli.app.registered_commands))
             """
         ).strip(),
     ]

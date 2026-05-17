@@ -6,17 +6,13 @@ import logging
 from collections.abc import Awaitable
 from collections.abc import Callable
 from collections.abc import Coroutine
-from typing import Annotated
 
 import typer
-from pydantic import ValidationError
 
 from metabaseapi import settings
 from metabaseapi.client import MetabaseClient
 from metabaseapi.errors import MetabaseError
-from metabaseapi.models import APIRequestModel
 from metabaseapi.models import JSONValue
-from metabaseapi.models import QueryParamValue
 
 app = typer.Typer(help="Async Metabase API CLI")
 
@@ -49,24 +45,6 @@ def _build_client_settings(
 def _configure_logging(verbose: bool) -> None:
     if verbose:
         logging.basicConfig(level=logging.INFO)
-
-
-def _parse_key_value_pairs(values: list[str] | None) -> dict[str, QueryParamValue]:
-    pairs: dict[str, QueryParamValue] = {}
-    if values is None:
-        return pairs
-    for item in values:
-        if "=" not in item:
-            raise typer.BadParameter(f"Invalid parameter format: {item}, expected key=value")
-        key, value = item.split("=", 1)
-        existing = pairs.get(key)
-        if isinstance(existing, list):
-            existing.append(value)
-        elif key in pairs:
-            pairs[key] = [existing, value]
-        else:
-            pairs[key] = value
-    return pairs
 
 
 def _parse_json_body(raw: str | None) -> JSONValue | None:
@@ -124,33 +102,6 @@ def _get_settings(ctx: typer.Context) -> settings.Settings:
     return settings_obj
 
 
-def _run_raw_request(
-    client_settings: settings.Settings,
-    method: str,
-    path: str,
-    query: list[str] | None,
-    body: str | None,
-) -> Coroutine[object, object, JSONValue | None]:
-    params = _parse_key_value_pairs(query)
-    payload = _parse_json_body(body)
-
-    try:
-        api_request = APIRequestModel(method=method, path=path, params=params, body=payload)
-    except ValidationError as exc:
-        raise typer.BadParameter("method must be DELETE, GET, PATCH, POST, or PUT") from exc
-
-    async def do_request() -> JSONValue | None:
-        async with create_client(client_settings) as client:
-            return await client.request(
-                api_request.method,
-                api_request.path,
-                params=api_request.params,
-                json_data=api_request.body,
-            )
-
-    return do_request()
-
-
 def _run_client_call(
     ctx: typer.Context,
     call: Callable[[MetabaseClient], Awaitable[JSONValue | None]],
@@ -179,42 +130,6 @@ def configure(
         timeout_seconds=timeout_seconds,
         verify_ssl=verify_ssl,
     )
-
-
-@app.command()
-def request(
-    ctx: typer.Context,
-    method: str = typer.Argument(..., help="HTTP method (DELETE, GET, PATCH, POST, PUT)"),
-    path: str = typer.Argument(..., help="API path or absolute URL"),
-    query: Annotated[
-        list[str] | None, typer.Option("--query", "-q", help="Repeatable key=value query parameters")
-    ] = None,
-    body: Annotated[
-        str | None, typer.Option("--body", "-b", help="Raw JSON body for POST/PUT/PATCH/DELETE requests")
-    ] = None,
-) -> None:
-    """Send a raw Metabase HTTP request."""
-
-    client_settings = _get_settings(ctx)
-    _run_and_print(_run_raw_request(client_settings, method, path, query, body))
-
-
-@app.command("invoke")
-def invoke(
-    ctx: typer.Context,
-    method: str = typer.Argument(..., help="HTTP method (DELETE, GET, PATCH, POST, PUT)"),
-    path: str = typer.Argument(..., help="API path or absolute URL"),
-    query: Annotated[
-        list[str] | None, typer.Option("--query", "-q", help="Repeatable key=value query parameters")
-    ] = None,
-    body: Annotated[
-        str | None, typer.Option("--body", "-b", help="Raw JSON body for POST/PUT/PATCH/DELETE requests")
-    ] = None,
-) -> None:
-    """Generic API invoke command for structured endpoint calls."""
-
-    client_settings = _get_settings(ctx)
-    _run_and_print(_run_raw_request(client_settings, method, path, query, body))
 
 
 @app.command("current-user")

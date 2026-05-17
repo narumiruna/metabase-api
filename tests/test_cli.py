@@ -17,30 +17,6 @@ class _ClientWithRequestMethods:
         return None
 
 
-class _RequestClient(_ClientWithRequestMethods):
-    async def request(
-        self,
-        method: str,
-        path: str,
-        *,
-        params: dict[str, object] | None = None,
-        json_data: dict[str, object] | list[object] | str | int | float | bool | None = None,
-    ) -> dict[str, object]:
-        return {"method": method, "path": path, "params": params, "body": json_data}
-
-    async def get(self, path: str, *, params: dict[str, object] | None = None) -> dict[str, object]:
-        return {"method": "GET", "path": path, "params": params}
-
-    async def post(
-        self,
-        path: str,
-        *,
-        params: dict[str, object] | None = None,
-        body: dict[str, object] | list[object] | str | int | float | bool | None = None,
-    ) -> dict[str, object]:
-        return {"method": "POST", "path": path, "params": params, "body": body}
-
-
 class _ConvenienceClient(_ClientWithRequestMethods):
     async def current_user(self) -> dict[str, str]:
         return {"name": "Alice"}
@@ -160,55 +136,12 @@ class _ErrorClient(_ClientWithRequestMethods):
         raise MetabaseHTTPStatusError(401, {"message": "unauthorized"})
 
 
-def test_request_command_outputs_json(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(cli, "create_client", lambda _settings: _RequestClient())
-
-    result = runner.invoke(
-        cli.app,
-        [
-            "--base-url",
-            "http://localhost:3000",
-            "--api-key",
-            "abc",
-            "request",
-            "GET",
-            "/api/user/current",
-            "-q",
-            "a=1",
-            "-q",
-            "a=2",
-            "-q",
-            "b=2",
-        ],
-    )
+def test_help_omits_raw_request_commands() -> None:
+    result = runner.invoke(cli.app, ["--help"])
 
     assert result.exit_code == 0
-    assert '\n  "path": "/api/user/current"' in result.stdout
-    assert '\n  "method": "GET"' in result.stdout
-    assert '\n    "a": [' in result.stdout
-
-
-def test_invoke_command_behaves_like_request(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(cli, "create_client", lambda _settings: _RequestClient())
-
-    result = runner.invoke(
-        cli.app,
-        [
-            "--base-url",
-            "http://localhost:3000",
-            "--api-key",
-            "abc",
-            "invoke",
-            "POST",
-            "/api/database",
-            "--body",
-            '{"name": "analytics"}',
-        ],
-    )
-
-    assert result.exit_code == 0
-    assert '\n  "method": "POST"' in result.stdout
-    assert '\n  "path": "/api/database"' in result.stdout
+    assert "request" not in result.stdout
+    assert "invoke" not in result.stdout
 
 
 def test_help_lists_every_convenience_command() -> None:
@@ -385,7 +318,7 @@ def test_create_database_command_posts_json(monkeypatch: pytest.MonkeyPatch) -> 
 
 
 def test_create_database_command_invalid_details_fails(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(cli, "create_client", lambda _settings: _RequestClient())
+    monkeypatch.setattr(cli, "create_client", lambda _settings: _ConvenienceClient())
 
     result = runner.invoke(
         cli.app,
@@ -399,25 +332,6 @@ def test_create_database_command_invalid_details_fails(monkeypatch: pytest.Monke
             "postgres",
             "--details",
             "{bad-json}",
-        ],
-    )
-
-    assert result.exit_code != 0
-
-
-def test_invoke_rejects_unknown_method(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(cli, "create_client", lambda _settings: _RequestClient())
-
-    result = runner.invoke(
-        cli.app,
-        [
-            "--base-url",
-            "http://localhost:3000",
-            "--api-key",
-            "abc",
-            "invoke",
-            "OPTIONS",
-            "/api/user/current",
         ],
     )
 
@@ -453,9 +367,7 @@ def test_missing_api_key_fails_fast(monkeypatch: pytest.MonkeyPatch) -> None:
         [
             "--base-url",
             "http://localhost:3000",
-            "request",
-            "GET",
-            "/api/user/current",
+            "current-user",
         ],
     )
 

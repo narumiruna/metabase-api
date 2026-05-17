@@ -40,9 +40,6 @@ async def run_live_test() -> None:
     settings.requires_api_key()
 
     async with MetabaseClient.from_settings(settings) as client:
-        raw_current_user = await client.request("GET", "/api/user/current")
-        _print_payload_check("raw GET /api/user/current", raw_current_user)
-
         current_user = await client.current_user()
         _print_payload_check("convenience current-user", current_user)
 

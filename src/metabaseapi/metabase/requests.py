@@ -700,6 +700,22 @@ class DeleteAlertSubscriptionRequest(_BaseMetabaseRequest[GenericOperationRespon
         return f"/api/alert/{self.alert_id}/subscription"
 
 
+class DeleteCommentRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+    comment_id: int | str
+
+    endpoint_method: ClassVar[str] = "DELETE"
+    endpoint_path: ClassVar[str] = "/api/comment/{comment_id}"
+
+    async def do(self, client: MetabaseRequestClient) -> GenericOperationResponse:
+        return await self.execute(client, GenericOperationResponse)
+
+    def do_sync(self, client: MetabaseRequestClient) -> GenericOperationResponse:
+        return self.execute_sync(client, GenericOperationResponse)
+
+    def resolve_path(self) -> str:
+        return f"/api/comment/{self.comment_id}"
+
+
 class GetAnonymousStatsRequest(_BaseMetabaseRequest[GenericOperationResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/analytics/anonymous-stats"
@@ -1782,6 +1798,7 @@ __all__ = [
     "DeleteCardPublicLinkRequest",
     "DeleteCardRequest",
     "DeleteCollectionRequest",
+    "DeleteCommentRequest",
     "ExecuteActionRequest",
     "GetActionExecuteRequest",
     "GetActionRequest",

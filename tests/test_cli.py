@@ -482,6 +482,9 @@ class _ConvenienceClient(_ClientWithRequestMethods):
     async def delete_collection(self, collection_id: str) -> dict[str, object]:
         return {"method": "DELETE", "path": f"/api/collection/{collection_id}"}
 
+    async def delete_comment(self, comment_id: str) -> dict[str, object]:
+        return {"method": "DELETE", "path": f"/api/comment/{comment_id}"}
+
     async def get_collection_dashboard_question_candidates(self, collection_id: str) -> dict[str, object]:
         return {"method": "GET", "path": f"/api/collection/{collection_id}/dashboard-question-candidates"}
 
@@ -655,6 +658,7 @@ def test_help_lists_every_convenience_command() -> None:
         "get-collection",
         "update-collection",
         "delete-collection",
+        "delete-comment",
         "get-collection-dashboard-question-candidates",
         "get-collection-items",
         "list-tables",
@@ -835,6 +839,7 @@ def test_read_endpoint_commands_cover_handwritten_surface(
             "/api/collection/7/move-dashboard-question-candidates",
         ),
         (["update-collection", "7", '{"name":"New"}'], "PUT", "/api/collection/7"),
+        (["delete-comment", "7"], "DELETE", "/api/comment/7"),
         (["delete-collection", "7"], "DELETE", "/api/collection/7"),
         (["delete-action", "11"], "DELETE", "/api/action/11"),
         (["card-collections", "1,2", "--collection-id", "root"], "POST", "/api/card/collections"),

@@ -53,6 +53,7 @@ from .requests import DeleteCacheRequest
 from .requests import DeleteCardPublicLinkRequest
 from .requests import DeleteCardRequest
 from .requests import DeleteCollectionRequest
+from .requests import DeleteCommentRequest
 from .requests import ExecuteActionRequest
 from .requests import GetActionExecuteRequest
 from .requests import GetActionRequest
@@ -193,6 +194,7 @@ __all__ = [
     "DeleteCardPublicLinkRequest",
     "DeleteCardRequest",
     "DeleteCollectionRequest",
+    "DeleteCommentRequest",
     "ExecuteActionRequest",
     "GenericOperationResponse",
     "GetActionExecuteRequest",

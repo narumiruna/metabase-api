@@ -64,6 +64,7 @@ from metabaseapi.metabase import DeleteCacheRequest
 from metabaseapi.metabase import DeleteCardPublicLinkRequest
 from metabaseapi.metabase import DeleteCardRequest
 from metabaseapi.metabase import DeleteCollectionRequest
+from metabaseapi.metabase import DeleteCommentRequest
 from metabaseapi.metabase import ExecuteActionRequest
 from metabaseapi.metabase import GenericOperationResponse
 from metabaseapi.metabase import GetActionExecuteRequest
@@ -825,6 +826,9 @@ class MetabaseClient:
     async def delete_collection(self, collection_id: int | str) -> JSONValue | None:
         return await self.delete(f"/api/collection/{collection_id}")
 
+    async def delete_comment(self, comment_id: int | str) -> JSONValue | None:
+        return await self.delete(f"/api/comment/{comment_id}")
+
     async def get_collection_dashboard_question_candidates(self, collection_id: int | str) -> JSONValue | None:
         return await self.get(f"/api/collection/{collection_id}/dashboard-question-candidates")
 
@@ -1105,6 +1109,9 @@ class MetabaseClient:
 
     async def delete_collection_typed(self, collection_id: int | str) -> GenericOperationResponse:
         return await self.run(DeleteCollectionRequest(collection_id=collection_id))
+
+    async def delete_comment_typed(self, comment_id: int | str) -> GenericOperationResponse:
+        return await self.run(DeleteCommentRequest(comment_id=comment_id))
 
     async def get_collection_graph_typed(self) -> GenericOperationResponse:
         return await self.run(GetCollectionGraphRequest())

@@ -528,6 +528,13 @@ def delete_alert_subscription(ctx: typer.Context, alert_id: str = typer.Argument
     _run_and_print(_run_client_call(ctx, lambda client: client.delete_alert_subscription(alert_id)))
 
 
+@app.command("delete-comment")
+def delete_comment(ctx: typer.Context, comment_id: str = typer.Argument(...)) -> None:
+    """Delete a comment."""
+
+    _run_and_print(_run_client_call(ctx, lambda client: client.delete_comment(comment_id)))
+
+
 @app.command("anonymous-stats")
 def anonymous_stats(ctx: typer.Context) -> None:
     _run_and_print(_run_client_call(ctx, lambda client: client.anonymous_stats()))

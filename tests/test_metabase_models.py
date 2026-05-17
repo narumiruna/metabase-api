@@ -39,6 +39,7 @@ from metabaseapi.metabase import DeleteCacheRequest
 from metabaseapi.metabase import DeleteCardPublicLinkRequest
 from metabaseapi.metabase import DeleteCardRequest
 from metabaseapi.metabase import DeleteCollectionRequest
+from metabaseapi.metabase import DeleteCommentRequest
 from metabaseapi.metabase import ExecuteActionRequest
 from metabaseapi.metabase import GenericOperationResponse
 from metabaseapi.metabase import GetActionExecuteRequest
@@ -328,6 +329,11 @@ def test_action_requests_use_expected_paths_and_payloads() -> None:
             GenericOperationResponse,
             ("DELETE", "/api/collection/7", {}, None),
         ),
+        (
+            DeleteCommentRequest(comment_id="7"),
+            GenericOperationResponse,
+            ("DELETE", "/api/comment/7", {}, None),
+        ),
         (GetCollectionRootRequest(), Collection, ("GET", "/api/collection/root", {}, None)),
         (
             GetCollectionRootDashboardQuestionCandidatesRequest(),
@@ -543,6 +549,7 @@ def _build_mock_endpoint_responses() -> dict[tuple[str, str], dict[str, object]]
         ("POST", "/api/collection/7/move-dashboard-question-candidates"): {"updated": True},
         ("PUT", "/api/collection/7"): {"updated": True},
         ("DELETE", "/api/collection/7"): {"ok": True},
+        ("DELETE", "/api/comment/7"): {"ok": True},
         ("GET", "/api/table"): {"data": [{"id": 8, "name": "table", "schema": "public", "db_id": 1}]},
         ("GET", "/api/database/4"): {"id": 4, "name": "db4", "engine": "postgres"},
         ("GET", "/api/user/10"): {"id": 10, "email": "u10@example.com", "first_name": "Turing"},
@@ -601,6 +608,7 @@ def test_typed_methods_in_client_return_models() -> None:
     created_collection = _run(client.create_collection_typed({"name": "New"}))
     updated_collection = _run(client.update_collection_typed("7", {"name": "Updated"}))
     deleted_collection = _run(client.delete_collection_typed("7"))
+    deleted_comment = _run(client.delete_comment_typed("7"))
     collection_graph = _run(client.get_collection_graph_typed())
     collection_graph_update = _run(client.put_collection_graph_typed({"groups": ["admin"]}))
     collection_root = _run(client.get_collection_root_typed())
@@ -660,6 +668,7 @@ def test_typed_methods_in_client_return_models() -> None:
     assert created_collection.name == "New"
     assert isinstance(updated_collection, GenericOperationResponse)
     assert isinstance(deleted_collection, GenericOperationResponse)
+    assert isinstance(deleted_comment, GenericOperationResponse)
     assert isinstance(collection_graph, GenericOperationResponse)
     assert isinstance(collection_graph_update, GenericOperationResponse)
     assert isinstance(collection_root, Collection)

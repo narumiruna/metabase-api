@@ -399,6 +399,27 @@ def test_endpoints_public_exports_are_submodules_only() -> None:
     assert not hasattr(metabaseapi.endpoints, "ListCardsRequest")
 
 
+def test_endpoints_entities_public_exports_match_entity_models() -> None:
+    assert metabaseapi.endpoints.entities.__all__ == [
+        "Action",
+        "ActivityItem",
+        "AgentResource",
+        "Alert",
+        "ApiKey",
+        "Bookmark",
+        "Card",
+        "Collection",
+        "CurrentUserResponse",
+        "Dashboard",
+        "Database",
+        "MetabaseField",
+        "Table",
+        "User",
+    ]
+    assert "_MetabaseEntity" not in metabaseapi.endpoints.entities.__all__
+    assert "_MetabaseResponseBase" not in metabaseapi.endpoints.entities.__all__
+
+
 def test_endpoints_response_package_does_not_reexport_response_classes() -> None:
     assert metabaseapi.endpoints.responses.__all__ == [
         "RESPONSE_MODULES",

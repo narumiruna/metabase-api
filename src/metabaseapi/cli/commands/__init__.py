@@ -34,12 +34,12 @@ COMMAND_MODULES: Final[tuple[str, ...]] = (
     "cloud_migration",
 )
 
-COMMAND_MODULES_IMPORT_PATHS = tuple(f"metabaseapi.cli.commands.{module}" for module in COMMAND_MODULES)
+_COMMAND_MODULE_IMPORT_PATHS = tuple(f"metabaseapi.cli.commands.{module}" for module in COMMAND_MODULES)
 
 
 def command_module_objects() -> tuple[ModuleType, ...]:
     """Return imported CLI command modules in seam order."""
-    return tuple(import_module(module_path) for module_path in COMMAND_MODULES_IMPORT_PATHS)
+    return tuple(import_module(module_path) for module_path in _COMMAND_MODULE_IMPORT_PATHS)
 
 
 def command_module_names() -> tuple[str, ...]:
@@ -49,7 +49,7 @@ def command_module_names() -> tuple[str, ...]:
 
 def command_module_paths() -> tuple[str, ...]:
     """Return fully-qualified CLI command module import paths."""
-    return COMMAND_MODULES_IMPORT_PATHS
+    return _COMMAND_MODULE_IMPORT_PATHS
 
 
 def register_commands() -> None:
@@ -59,7 +59,6 @@ def register_commands() -> None:
 
 __all__ = [
     "COMMAND_MODULES",
-    "COMMAND_MODULES_IMPORT_PATHS",
     "command_module_names",
     "command_module_objects",
     "command_module_paths",

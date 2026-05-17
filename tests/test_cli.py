@@ -23,19 +23,19 @@ class _RequestClient(_ClientWithRequestMethods):
         method: str,
         path: str,
         *,
-        params: dict[str, str] | None = None,
+        params: dict[str, object] | None = None,
         json_data: dict[str, object] | list[object] | str | int | float | bool | None = None,
     ) -> dict[str, object]:
         return {"method": method, "path": path, "params": params, "body": json_data}
 
-    async def get(self, path: str, *, params: dict[str, str] | None = None) -> dict[str, object]:
+    async def get(self, path: str, *, params: dict[str, object] | None = None) -> dict[str, object]:
         return {"method": "GET", "path": path, "params": params}
 
     async def post(
         self,
         path: str,
         *,
-        params: dict[str, str] | None = None,
+        params: dict[str, object] | None = None,
         body: dict[str, object] | list[object] | str | int | float | bool | None = None,
     ) -> dict[str, object]:
         return {"method": "POST", "path": path, "params": params, "body": body}
@@ -65,6 +65,61 @@ class _ConvenienceClient(_ClientWithRequestMethods):
 
     async def list_cards(self) -> dict[str, object]:
         return {"method": "GET", "path": "/api/card"}
+
+    async def create_card(
+        self,
+        *,
+        name: str,
+        dataset_query: dict[str, object],
+        display: str,
+        visualization_settings: dict[str, object] | None = None,
+        card_type: str | None = "question",
+        collection_id: str | None = None,
+        description: str | None = None,
+        parameters: list[object] | None = None,
+        result_metadata: list[object] | None = None,
+    ) -> dict[str, object]:
+        body: dict[str, object] = {
+            "name": name,
+            "dataset_query": dataset_query,
+            "display": display,
+            "visualization_settings": visualization_settings or {},
+        }
+        if card_type is not None:
+            body["type"] = card_type
+        if collection_id is not None:
+            body["collection_id"] = collection_id
+        if description is not None:
+            body["description"] = description
+        if parameters is not None:
+            body["parameters"] = parameters
+        if result_metadata is not None:
+            body["result_metadata"] = result_metadata
+        return {"method": "POST", "path": "/api/card", "body": body}
+
+    async def create_question(
+        self,
+        *,
+        name: str,
+        dataset_query: dict[str, object],
+        display: str,
+        visualization_settings: dict[str, object] | None = None,
+        collection_id: str | None = None,
+        description: str | None = None,
+        parameters: list[object] | None = None,
+        result_metadata: list[object] | None = None,
+    ) -> dict[str, object]:
+        return await self.create_card(
+            name=name,
+            dataset_query=dataset_query,
+            display=display,
+            visualization_settings=visualization_settings,
+            card_type="question",
+            collection_id=collection_id,
+            description=description,
+            parameters=parameters,
+            result_metadata=result_metadata,
+        )
 
     async def get_card(self, card_id: str) -> dict[str, object]:
         return {"method": "GET", "path": f"/api/card/{card_id}"}
@@ -124,6 +179,8 @@ def test_request_command_outputs_json(monkeypatch: pytest.MonkeyPatch) -> None:
             "-q",
             "a=1",
             "-q",
+            "a=2",
+            "-q",
             "b=2",
         ],
     )
@@ -131,6 +188,7 @@ def test_request_command_outputs_json(monkeypatch: pytest.MonkeyPatch) -> None:
     assert result.exit_code == 0
     assert '\n  "path": "/api/user/current"' in result.stdout
     assert '\n  "method": "GET"' in result.stdout
+    assert '\n    "a": [' in result.stdout
 
 
 def test_invoke_command_behaves_like_request(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -166,6 +224,8 @@ def test_help_lists_every_convenience_command() -> None:
         "create-database",
         "get-database",
         "list-cards",
+        "create-card",
+        "create-question",
         "get-card",
         "list-dashboards",
         "get-dashboard",
@@ -253,6 +313,56 @@ def test_read_endpoint_commands_cover_handwritten_surface(
     assert result.exit_code == 0
     assert '\n  "method": "GET"' in result.stdout
     assert f'\n  "path": "{expected_path}"' in result.stdout
+
+
+def test_create_question_command_posts_card_json(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(cli, "create_client", lambda _settings: _ConvenienceClient())
+
+    result = runner.invoke(
+        cli.app,
+        [
+            "--base-url",
+            "http://localhost:3000",
+            "--api-key",
+            "abc",
+            "create-question",
+            "Orders",
+            '{"database": 1, "type": "query", "query": {"source-table": 2}}',
+            "--display",
+            "table",
+            "--visualization-settings",
+            '{"table.pivot": false}',
+            "--collection-id",
+            "root",
+            "--description",
+            "Orders question",
+        ],
+    )
+
+    assert result.exit_code == 0
+    assert '\n  "method": "POST"' in result.stdout
+    assert '\n  "path": "/api/card"' in result.stdout
+    assert '\n    "type": "question"' in result.stdout
+    assert '\n    "collection_id": "root"' in result.stdout
+
+
+def test_create_card_command_rejects_non_object_dataset_query(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(cli, "create_client", lambda _settings: _ConvenienceClient())
+
+    result = runner.invoke(
+        cli.app,
+        [
+            "--base-url",
+            "http://localhost:3000",
+            "--api-key",
+            "abc",
+            "create-card",
+            "Orders",
+            "[]",
+        ],
+    )
+
+    assert result.exit_code != 0
 
 
 def test_create_database_command_posts_json(monkeypatch: pytest.MonkeyPatch) -> None:

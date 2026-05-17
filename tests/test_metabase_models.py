@@ -10,6 +10,7 @@ import httpx
 from metabaseapi.client import MetabaseClient
 from metabaseapi.metabase import Card
 from metabaseapi.metabase import Collection
+from metabaseapi.metabase import CreateCardRequest
 from metabaseapi.metabase import CreateDatabaseRequest
 from metabaseapi.metabase import CurrentUserRequest
 from metabaseapi.metabase import CurrentUserResponse
@@ -38,19 +39,20 @@ from metabaseapi.metabase import ListUsersResponse
 from metabaseapi.metabase import MetabaseField
 from metabaseapi.metabase import Table
 from metabaseapi.metabase import User
+from metabaseapi.models import QueryParamValue
 
 
 class _StubClient:
     def __init__(self, response: object) -> None:
         self.response = response
-        self.calls: list[tuple[str, str, dict[str, str | int | bool | float | None], object | None]] = []
+        self.calls: list[tuple[str, str, dict[str, QueryParamValue], object | None]] = []
 
     async def request(
         self,
         method: str,
         path: str,
         *,
-        params: dict[str, str | int | bool | float | None] | None = None,
+        params: dict[str, QueryParamValue] | None = None,
         json_data: object | None = None,
     ) -> object:
         self.calls.append((method, path, params or {}, json_data))
@@ -122,6 +124,40 @@ def test_create_database_request_includes_body_for_post() -> None:
             "/api/database",
             {},
             {"name": "analytics", "engine": "postgres", "details": {"host": "db.local"}},
+        ),
+    ]
+
+
+def test_create_card_request_includes_question_body_for_post() -> None:
+    payload = {"id": 9, "name": "Orders", "display": "table", "type": "question"}
+    client = _StubClient(payload)
+
+    request = CreateCardRequest(
+        name="Orders",
+        dataset_query={"database": 1, "type": "query", "query": {"source-table": 2}},
+        display="table",
+        visualization_settings={"table.pivot": False},
+        collection_id="root",
+        description="Orders question",
+    )
+    response = request.do_sync(client)
+
+    assert isinstance(response, Card)
+    assert response.name == "Orders"
+    assert client.calls == [
+        (
+            "POST",
+            "/api/card",
+            {},
+            {
+                "name": "Orders",
+                "dataset_query": {"database": 1, "type": "query", "query": {"source-table": 2}},
+                "display": "table",
+                "visualization_settings": {"table.pivot": False},
+                "type": "question",
+                "collection_id": "root",
+                "description": "Orders question",
+            },
         ),
     ]
 
@@ -202,6 +238,7 @@ def _build_mock_endpoint_responses() -> dict[tuple[str, str], dict[str, object]]
         ("GET", "/api/card/11"): {"id": 11, "name": "card", "display": "bar"},
         ("GET", "/api/database"): {"data": [{"id": 2, "name": "main", "engine": "postgres"}]},
         ("POST", "/api/database"): {"id": 9, "name": "analytics", "engine": "postgres"},
+        ("POST", "/api/card"): {"id": 12, "name": "Orders", "display": "table", "type": "question"},
         ("GET", "/api/card"): {"data": [{"id": 5, "name": "card", "display": "line"}]},
         ("GET", "/api/dashboard"): {"data": [{"id": 6, "name": "dash", "collection_id": 1}]},
         ("GET", "/api/user"): {"data": [{"id": 4, "email": "user@example.com", "first_name": "Ada"}]},
@@ -236,6 +273,13 @@ def test_typed_methods_in_client_return_models() -> None:
     current_user = _run(client.current_user_typed())
     dashboard = _run(client.get_dashboard_typed(3))
     card = _run(client.get_card_typed(11))
+    created_card = _run(
+        client.create_question_typed(
+            name="Orders",
+            dataset_query={"database": 1, "type": "query", "query": {"source-table": 2}},
+            display="table",
+        ),
+    )
     databases = _run(client.list_databases_typed())
     cards = _run(client.list_cards_typed())
     dashboards = _run(client.list_dashboards_typed())
@@ -254,6 +298,8 @@ def test_typed_methods_in_client_return_models() -> None:
     assert isinstance(dashboard, Dashboard)
     assert dashboard.id == 3
     assert isinstance(card, Card)
+    assert isinstance(created_card, Card)
+    assert created_card.name == "Orders"
     assert isinstance(databases, ListDatabasesResponse)
     assert databases.databases[0].engine == "postgres"
     assert isinstance(cards, ListCardsResponse)

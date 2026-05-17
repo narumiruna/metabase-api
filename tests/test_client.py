@@ -49,6 +49,25 @@ def test_request_includes_api_key_and_query_parameters() -> None:
     assert result == {"ok": True}
 
 
+def test_repeated_query_parameters_are_preserved() -> None:
+    captured: list[tuple[str, str]] = []
+
+    async def handler(_request: httpx.Request) -> httpx.Response:
+        captured.extend(_request.url.params.multi_items())
+        return httpx.Response(200, json={"ok": True})
+
+    client = MetabaseClient(
+        base_url="http://localhost:3000",
+        api_key="abc",
+        client=httpx.AsyncClient(transport=httpx.MockTransport(handler)),
+    )
+
+    result = _run(client.get("/api/search", params={"models": ["card", "dashboard"]}))
+
+    assert result == {"ok": True}
+    assert captured == [("models", "card"), ("models", "dashboard")]
+
+
 def test_post_sends_json_body() -> None:
     async def handler(_request: httpx.Request) -> httpx.Response:
         assert _request.method == "POST"
@@ -97,6 +116,29 @@ def test_convenience_paths_cover_handwritten_endpoint_surface() -> None:
         ),
         (client.get_database(12), ("GET", "/api/database/12", None)),
         (client.list_cards(), ("GET", "/api/card", None)),
+        (
+            client.create_question(
+                name="Orders",
+                dataset_query={"database": 1, "type": "query", "query": {"source-table": 2}},
+                display="table",
+                visualization_settings={"table.pivot": False},
+                collection_id="root",
+                description="Orders question",
+            ),
+            (
+                "POST",
+                "/api/card",
+                {
+                    "name": "Orders",
+                    "dataset_query": {"database": 1, "type": "query", "query": {"source-table": 2}},
+                    "display": "table",
+                    "visualization_settings": {"table.pivot": False},
+                    "type": "question",
+                    "collection_id": "root",
+                    "description": "Orders question",
+                },
+            ),
+        ),
         (client.get_card(13), ("GET", "/api/card/13", None)),
         (client.list_dashboards(), ("GET", "/api/dashboard", None)),
         (client.get_dashboard(14), ("GET", "/api/dashboard/14", None)),

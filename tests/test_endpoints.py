@@ -30,6 +30,12 @@ def test_api_request_model_rejects_unknown_methods() -> None:
         APIRequestModel(method="OPTIONS", path="/api/card/1")
 
 
+def test_api_request_model_accepts_repeated_query_values() -> None:
+    request = APIRequestModel(method="GET", path="/api/search", params={"models": ["card", "dashboard"]})
+
+    assert request.params == {"models": ["card", "dashboard"]}
+
+
 def test_api_response_model_wraps_status_payload_and_content_type() -> None:
     response = APIResponseModel(status_code=200, payload={"ok": True}, content_type="application/json")
 
@@ -59,12 +65,14 @@ def test_client_request_dispatches_handwritten_http_methods() -> None:
     put_result = _run(client.put("/api/card/1", body={"name": "updated"}))
     patch_result = _run(client.patch("/api/card/1", body={"archived": True}))
     delete_result = _run(client.delete("/api/card/1"))
+    delete_body_result = _run(client.delete("/api/cache", body={"model": "question", "model_id": [1]}))
 
     assert get_result == {"method": "GET", "path": "/api/user/current"}
     assert post_result == {"method": "POST", "path": "/api/database"}
     assert put_result == {"method": "PUT", "path": "/api/card/1"}
     assert patch_result == {"method": "PATCH", "path": "/api/card/1"}
     assert delete_result == {"method": "DELETE", "path": "/api/card/1"}
+    assert delete_body_result == {"method": "DELETE", "path": "/api/cache"}
     assert captured[0] == ("GET", "/api/user/current", {"a": "1"}, None)
     assert captured[1][0:3] == ("POST", "/api/database", {})
     assert captured[1][3] == '{"name":"analytics"}'
@@ -73,3 +81,5 @@ def test_client_request_dispatches_handwritten_http_methods() -> None:
     assert captured[3][0:3] == ("PATCH", "/api/card/1", {})
     assert captured[3][3] == '{"archived":true}'
     assert captured[4] == ("DELETE", "/api/card/1", {}, None)
+    assert captured[5][0:3] == ("DELETE", "/api/cache", {})
+    assert captured[5][3] == '{"model":"question","model_id":[1]}'

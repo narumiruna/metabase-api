@@ -30,6 +30,7 @@ metabaseapi request GET /api/card/1 -q dashboard=1 -q archived=false
 metabaseapi request POST /api/dataset -b '{"query": {"database": 1, "type": "query", "query": {"source-table": 1}}}'
 metabaseapi request PUT /api/card/1 -b '{"name":"Updated card"}'
 metabaseapi request DELETE /api/card/1
+metabaseapi request DELETE /api/cache -b '{"model":"question","model_id":[1]}'
 metabaseapi invoke GET /api/user/current
 ```
 
@@ -41,6 +42,8 @@ metabaseapi list-databases
 metabaseapi create-database my_db postgres --details '{"host":"localhost","port":5432}'
 metabaseapi get-database 1
 metabaseapi list-cards
+metabaseapi create-question Orders '{"database":1,"type":"query","query":{"source-table":2}}'
+metabaseapi create-card Orders '{"database":1,"type":"query","query":{"source-table":2}}' --type question
 metabaseapi get-card 2
 metabaseapi list-dashboards
 metabaseapi get-dashboard 1
@@ -54,7 +57,7 @@ metabaseapi list-fields
 metabaseapi get-field 9
 ```
 
-所有輸出都會以可讀 JSON（縮排、排序）輸出，便於 AI / 腳本處理。未列為便利命令的 Metabase endpoint 可用 `request` 或 `invoke` 指定 HTTP method 與 path 呼叫。
+所有輸出都會以可讀 JSON（縮排、排序）輸出，便於 AI / 腳本處理。Metabase 文件中的所有 endpoints 都可用 `request` 或 `invoke` 指定 HTTP method、path、query 與 JSON body 呼叫；便利命令則維持手寫、逐步補齊高價值路徑。
 
 ## Live test
 

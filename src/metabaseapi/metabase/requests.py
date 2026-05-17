@@ -27,6 +27,7 @@ from metabaseapi.metabase.responses import ListFieldsResponse
 from metabaseapi.metabase.responses import ListTablesResponse
 from metabaseapi.metabase.responses import ListUsersResponse
 from metabaseapi.models import JSONValue
+from metabaseapi.models import QueryParamValue
 
 
 class MetabaseRequestClient(Protocol):
@@ -35,7 +36,7 @@ class MetabaseRequestClient(Protocol):
         method: str,
         path: str,
         *,
-        params: dict[str, str | int | bool | float | None] | None = ...,
+        params: dict[str, QueryParamValue] | None = ...,
         json_data: JSONValue | None = ...,
     ) -> object: ...
 
@@ -52,7 +53,7 @@ class _BaseMetabaseRequest[ResponseT](BaseModel):
     def resolve_path(self) -> str:
         return self.endpoint_path
 
-    def request_params(self) -> dict[str, str | int | bool | float | None]:
+    def request_params(self) -> dict[str, QueryParamValue]:
         return {}
 
     def request_body(self) -> JSONValue | None:
@@ -136,6 +137,30 @@ class ListCardsRequest(_BaseMetabaseRequest[ListCardsResponse]):
 
     def do_sync(self, client: MetabaseRequestClient) -> ListCardsResponse:
         return self.execute_sync(client, ListCardsResponse)
+
+
+class CreateCardRequest(_BaseMetabaseRequest[Card]):
+    name: str
+    dataset_query: dict[str, Any]
+    display: str
+    visualization_settings: dict[str, Any] = PydanticField(default_factory=dict)
+    type: str | None = "question"
+    collection_id: int | str | None = None
+    description: str | None = None
+    parameters: list[Any] | None = None
+    result_metadata: list[Any] | None = None
+
+    endpoint_method: ClassVar[str] = "POST"
+    endpoint_path: ClassVar[str] = "/api/card"
+
+    async def do(self, client: MetabaseRequestClient) -> Card:
+        return await self.execute(client, Card)
+
+    def do_sync(self, client: MetabaseRequestClient) -> Card:
+        return self.execute_sync(client, Card)
+
+    def request_body(self) -> JSONValue:
+        return self.model_dump(exclude_none=True)
 
 
 class GetCardRequest(_BaseMetabaseRequest[Card]):
@@ -290,6 +315,7 @@ class GetFieldRequest(_BaseMetabaseRequest[MetabaseField]):
 
 
 __all__ = [
+    "CreateCardRequest",
     "CreateDatabaseRequest",
     "CurrentUserRequest",
     "GetCardRequest",

@@ -8,6 +8,7 @@ from .entities import Database
 from .entities import MetabaseField
 from .entities import Table
 from .entities import User
+from .requests import CreateCardRequest
 from .requests import CreateDatabaseRequest
 from .requests import CurrentUserRequest
 from .requests import GetCardRequest
@@ -36,6 +37,7 @@ from .responses import ListUsersResponse
 __all__ = [
     "Card",
     "Collection",
+    "CreateCardRequest",
     "CreateDatabaseRequest",
     "CurrentUserRequest",
     "CurrentUserResponse",

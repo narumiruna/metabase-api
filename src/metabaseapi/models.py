@@ -5,13 +5,15 @@ from pydantic import Field
 from pydantic import field_validator
 
 JSONValue = str | int | float | bool | None | list[object] | dict[str, object]
+QueryParamPrimitive = str | int | float | bool | None
+QueryParamValue = QueryParamPrimitive | list[QueryParamPrimitive]
 SUPPORTED_HTTP_METHODS = frozenset({"DELETE", "GET", "PATCH", "POST", "PUT"})
 
 
 class APIRequestModel(BaseModel):
     method: str
     path: str
-    params: dict[str, str | int | bool | float | None] = Field(default_factory=dict)
+    params: dict[str, QueryParamValue] = Field(default_factory=dict)
     body: JSONValue | None = None
 
     @field_validator("method", mode="before")

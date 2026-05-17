@@ -16,6 +16,7 @@ from metabaseapi.client import MetabaseClient
 from metabaseapi.errors import MetabaseError
 from metabaseapi.models import APIRequestModel
 from metabaseapi.models import JSONValue
+from metabaseapi.models import QueryParamValue
 
 app = typer.Typer(help="Async Metabase API CLI")
 
@@ -50,15 +51,21 @@ def _configure_logging(verbose: bool) -> None:
         logging.basicConfig(level=logging.INFO)
 
 
-def _parse_key_value_pairs(values: list[str] | None) -> dict[str, str | int | bool | float | None]:
-    pairs: dict[str, str | int | bool | float | None] = {}
+def _parse_key_value_pairs(values: list[str] | None) -> dict[str, QueryParamValue]:
+    pairs: dict[str, QueryParamValue] = {}
     if values is None:
         return pairs
     for item in values:
         if "=" not in item:
             raise typer.BadParameter(f"Invalid parameter format: {item}, expected key=value")
         key, value = item.split("=", 1)
-        pairs[key] = value
+        existing = pairs.get(key)
+        if isinstance(existing, list):
+            existing.append(value)
+        elif key in pairs:
+            pairs[key] = [existing, value]
+        else:
+            pairs[key] = value
     return pairs
 
 
@@ -69,6 +76,28 @@ def _parse_json_body(raw: str | None) -> JSONValue | None:
         return json.loads(raw)
     except json.JSONDecodeError as exc:
         raise typer.BadParameter("Invalid JSON body") from exc
+
+
+def _parse_json_object(raw: str, parameter_name: str) -> dict[str, object]:
+    parsed = _parse_json_body(raw)
+    if not isinstance(parsed, dict):
+        raise typer.BadParameter(f"{parameter_name} must be a JSON object")
+    return parsed
+
+
+def _parse_optional_json_object(raw: str | None, parameter_name: str) -> dict[str, object] | None:
+    if raw is None:
+        return None
+    return _parse_json_object(raw, parameter_name)
+
+
+def _parse_optional_json_list(raw: str | None, parameter_name: str) -> list[object] | None:
+    if raw is None:
+        return None
+    parsed = _parse_json_body(raw)
+    if not isinstance(parsed, list):
+        raise typer.BadParameter(f"{parameter_name} must be a JSON array")
+    return parsed
 
 
 def _run_async(coro: Coroutine[object, object, JSONValue | None]) -> JSONValue | None:
@@ -160,7 +189,9 @@ def request(
     query: Annotated[
         list[str] | None, typer.Option("--query", "-q", help="Repeatable key=value query parameters")
     ] = None,
-    body: Annotated[str | None, typer.Option("--body", "-b", help="Raw JSON body for POST/PUT/PATCH requests")] = None,
+    body: Annotated[
+        str | None, typer.Option("--body", "-b", help="Raw JSON body for POST/PUT/PATCH/DELETE requests")
+    ] = None,
 ) -> None:
     """Send a raw Metabase HTTP request."""
 
@@ -176,7 +207,9 @@ def invoke(
     query: Annotated[
         list[str] | None, typer.Option("--query", "-q", help="Repeatable key=value query parameters")
     ] = None,
-    body: Annotated[str | None, typer.Option("--body", "-b", help="Raw JSON body for POST/PUT/PATCH requests")] = None,
+    body: Annotated[
+        str | None, typer.Option("--body", "-b", help="Raw JSON body for POST/PUT/PATCH/DELETE requests")
+    ] = None,
 ) -> None:
     """Generic API invoke command for structured endpoint calls."""
 
@@ -245,6 +278,94 @@ def get_database(ctx: typer.Context, database_id: str = typer.Argument(...)) -> 
     """Get a database by ID."""
 
     _run_and_print(_run_client_call(ctx, lambda client: client.get_database(database_id)))
+
+
+@app.command("create-card")
+def create_card(
+    ctx: typer.Context,
+    name: str = typer.Argument(..., help="Card name"),
+    dataset_query: str = typer.Argument(..., help="Dataset query JSON object"),
+    display: str = typer.Option("table", "--display", help="Visualization display type"),
+    visualization_settings: str | None = typer.Option(
+        None,
+        "--visualization-settings",
+        help="Visualization settings JSON object",
+    ),
+    card_type: str | None = typer.Option("question", "--type", help="Card type: question, metric, or model"),
+    collection_id: str | None = typer.Option(None, "--collection-id", help="Collection ID"),
+    description: str | None = typer.Option(None, "--description", help="Card description"),
+    parameters: str | None = typer.Option(None, "--parameters", help="Parameters JSON array"),
+    result_metadata: str | None = typer.Option(None, "--result-metadata", help="Result metadata JSON array"),
+) -> None:
+    """Create a card/question/model."""
+
+    dataset_query_payload = _parse_json_object(dataset_query, "dataset-query")
+    visualization_settings_payload = _parse_optional_json_object(
+        visualization_settings,
+        "visualization-settings",
+    )
+    parameters_payload = _parse_optional_json_list(parameters, "parameters")
+    result_metadata_payload = _parse_optional_json_list(result_metadata, "result-metadata")
+
+    _run_and_print(
+        _run_client_call(
+            ctx,
+            lambda client: client.create_card(
+                name=name,
+                dataset_query=dataset_query_payload,
+                display=display,
+                visualization_settings=visualization_settings_payload,
+                card_type=card_type,
+                collection_id=collection_id,
+                description=description,
+                parameters=parameters_payload,
+                result_metadata=result_metadata_payload,
+            ),
+        ),
+    )
+
+
+@app.command("create-question")
+def create_question(
+    ctx: typer.Context,
+    name: str = typer.Argument(..., help="Question name"),
+    dataset_query: str = typer.Argument(..., help="Dataset query JSON object"),
+    display: str = typer.Option("table", "--display", help="Visualization display type"),
+    visualization_settings: str | None = typer.Option(
+        None,
+        "--visualization-settings",
+        help="Visualization settings JSON object",
+    ),
+    collection_id: str | None = typer.Option(None, "--collection-id", help="Collection ID"),
+    description: str | None = typer.Option(None, "--description", help="Question description"),
+    parameters: str | None = typer.Option(None, "--parameters", help="Parameters JSON array"),
+    result_metadata: str | None = typer.Option(None, "--result-metadata", help="Result metadata JSON array"),
+) -> None:
+    """Create a question."""
+
+    dataset_query_payload = _parse_json_object(dataset_query, "dataset-query")
+    visualization_settings_payload = _parse_optional_json_object(
+        visualization_settings,
+        "visualization-settings",
+    )
+    parameters_payload = _parse_optional_json_list(parameters, "parameters")
+    result_metadata_payload = _parse_optional_json_list(result_metadata, "result-metadata")
+
+    _run_and_print(
+        _run_client_call(
+            ctx,
+            lambda client: client.create_question(
+                name=name,
+                dataset_query=dataset_query_payload,
+                display=display,
+                visualization_settings=visualization_settings_payload,
+                collection_id=collection_id,
+                description=description,
+                parameters=parameters_payload,
+                result_metadata=result_metadata_payload,
+            ),
+        ),
+    )
 
 
 @app.command("get-card")

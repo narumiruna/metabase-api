@@ -11,6 +11,7 @@ from metabaseapi.errors import MetabaseHTTPStatusError
 from metabaseapi.errors import MetabaseNetworkError
 from metabaseapi.metabase import Card
 from metabaseapi.metabase import Collection
+from metabaseapi.metabase import CreateCardRequest
 from metabaseapi.metabase import CreateDatabaseRequest
 from metabaseapi.metabase import CurrentUserRequest
 from metabaseapi.metabase import CurrentUserResponse
@@ -43,6 +44,7 @@ from metabaseapi.metabase import User
 from metabaseapi.models import APIRequestModel
 from metabaseapi.models import APIResponseModel
 from metabaseapi.models import JSONValue
+from metabaseapi.models import QueryParamValue
 from metabaseapi.settings import Settings
 
 
@@ -112,7 +114,7 @@ class MetabaseClient:
         method: str,
         path: str,
         *,
-        params: Mapping[str, str | int | bool | float | None] | None = None,
+        params: Mapping[str, QueryParamValue] | None = None,
         json_data: JSONValue | None = None,
     ) -> JSONValue | None:
         request_model = APIRequestModel(
@@ -150,7 +152,18 @@ class MetabaseClient:
                         headers=headers,
                     )
                 case "DELETE":
-                    response = await self._client.delete(url, params=request_model.params, headers=headers)
+                    if request_model.body is None:
+                        response = await self._client.delete(url, params=request_model.params, headers=headers)
+                    else:
+                        # httpx.AsyncClient.delete() has no JSON-body parameter, but Metabase documents
+                        # DELETE /api/cache with a JSON body.
+                        response = await self._client.request(
+                            "DELETE",
+                            url,
+                            params=request_model.params,
+                            json=request_model.body,
+                            headers=headers,
+                        )
                 case _:
                     raise AssertionError("unsupported HTTP method after request validation")
         except httpx.TimeoutException as exc:
@@ -191,7 +204,7 @@ class MetabaseClient:
         self,
         path: str,
         *,
-        params: Mapping[str, str | int | bool | float | None] | None = None,
+        params: Mapping[str, QueryParamValue] | None = None,
     ) -> JSONValue | None:
         return await self.request("GET", path, params=params)
 
@@ -199,7 +212,7 @@ class MetabaseClient:
         self,
         path: str,
         *,
-        params: Mapping[str, str | int | bool | float | None] | None = None,
+        params: Mapping[str, QueryParamValue] | None = None,
         body: JSONValue | None = None,
     ) -> JSONValue | None:
         return await self.request("POST", path, params=params, json_data=body)
@@ -208,7 +221,7 @@ class MetabaseClient:
         self,
         path: str,
         *,
-        params: Mapping[str, str | int | bool | float | None] | None = None,
+        params: Mapping[str, QueryParamValue] | None = None,
         body: JSONValue | None = None,
     ) -> JSONValue | None:
         return await self.request("PUT", path, params=params, json_data=body)
@@ -217,7 +230,7 @@ class MetabaseClient:
         self,
         path: str,
         *,
-        params: Mapping[str, str | int | bool | float | None] | None = None,
+        params: Mapping[str, QueryParamValue] | None = None,
         body: JSONValue | None = None,
     ) -> JSONValue | None:
         return await self.request("PATCH", path, params=params, json_data=body)
@@ -226,9 +239,10 @@ class MetabaseClient:
         self,
         path: str,
         *,
-        params: Mapping[str, str | int | bool | float | None] | None = None,
+        params: Mapping[str, QueryParamValue] | None = None,
+        body: JSONValue | None = None,
     ) -> JSONValue | None:
-        return await self.request("DELETE", path, params=params)
+        return await self.request("DELETE", path, params=params, json_data=body)
 
     async def current_user(self) -> JSONValue | None:
         return await self.get("/api/user/current")
@@ -253,6 +267,61 @@ class MetabaseClient:
 
     async def list_cards(self) -> JSONValue | None:
         return await self.get("/api/card")
+
+    async def create_card(
+        self,
+        *,
+        name: str,
+        dataset_query: Mapping[str, object],
+        display: str,
+        visualization_settings: Mapping[str, object] | None = None,
+        card_type: str | None = "question",
+        collection_id: int | str | None = None,
+        description: str | None = None,
+        parameters: list[object] | None = None,
+        result_metadata: list[object] | None = None,
+    ) -> JSONValue | None:
+        body: dict[str, object] = {
+            "name": name,
+            "dataset_query": dict(dataset_query),
+            "display": display,
+            "visualization_settings": dict(visualization_settings or {}),
+        }
+        if card_type is not None:
+            body["type"] = card_type
+        if collection_id is not None:
+            body["collection_id"] = collection_id
+        if description is not None:
+            body["description"] = description
+        if parameters is not None:
+            body["parameters"] = parameters
+        if result_metadata is not None:
+            body["result_metadata"] = result_metadata
+        return await self.post("/api/card", body=body)
+
+    async def create_question(
+        self,
+        *,
+        name: str,
+        dataset_query: Mapping[str, object],
+        display: str,
+        visualization_settings: Mapping[str, object] | None = None,
+        collection_id: int | str | None = None,
+        description: str | None = None,
+        parameters: list[object] | None = None,
+        result_metadata: list[object] | None = None,
+    ) -> JSONValue | None:
+        return await self.create_card(
+            name=name,
+            dataset_query=dataset_query,
+            display=display,
+            visualization_settings=visualization_settings,
+            card_type="question",
+            collection_id=collection_id,
+            description=description,
+            parameters=parameters,
+            result_metadata=result_metadata,
+        )
 
     async def get_card(self, card_id: int | str) -> JSONValue | None:
         return await self.get(f"/api/card/{card_id}")
@@ -323,6 +392,56 @@ class MetabaseClient:
     ) -> Database:
         request = CreateDatabaseRequest(name=name, engine=engine, details=details or {})
         return await self.run(request)
+
+    async def create_card_typed(
+        self,
+        *,
+        name: str,
+        dataset_query: dict[str, object],
+        display: str,
+        visualization_settings: dict[str, object] | None = None,
+        card_type: str | None = "question",
+        collection_id: int | str | None = None,
+        description: str | None = None,
+        parameters: list[object] | None = None,
+        result_metadata: list[object] | None = None,
+    ) -> Card:
+        request = CreateCardRequest(
+            name=name,
+            dataset_query=dataset_query,
+            display=display,
+            visualization_settings=visualization_settings or {},
+            type=card_type,
+            collection_id=collection_id,
+            description=description,
+            parameters=parameters,
+            result_metadata=result_metadata,
+        )
+        return await self.run(request)
+
+    async def create_question_typed(
+        self,
+        *,
+        name: str,
+        dataset_query: dict[str, object],
+        display: str,
+        visualization_settings: dict[str, object] | None = None,
+        collection_id: int | str | None = None,
+        description: str | None = None,
+        parameters: list[object] | None = None,
+        result_metadata: list[object] | None = None,
+    ) -> Card:
+        return await self.create_card_typed(
+            name=name,
+            dataset_query=dataset_query,
+            display=display,
+            visualization_settings=visualization_settings,
+            card_type="question",
+            collection_id=collection_id,
+            description=description,
+            parameters=parameters,
+            result_metadata=result_metadata,
+        )
 
     async def get_database_typed(self, database_id: int | str) -> Database:
         return await self.run(GetDatabaseRequest(database_id=database_id))

@@ -49,7 +49,18 @@ import metabaseapi.endpoints.requests.document
 import metabaseapi.endpoints.requests.email
 import metabaseapi.endpoints.requests.embed
 import metabaseapi.endpoints.requests.field
+import metabaseapi.endpoints.requests.geojson
+import metabaseapi.endpoints.requests.glossary
+import metabaseapi.endpoints.requests.logger
+import metabaseapi.endpoints.requests.login_history
+import metabaseapi.endpoints.requests.measure
+import metabaseapi.endpoints.requests.metric
+import metabaseapi.endpoints.requests.permissions
+import metabaseapi.endpoints.requests.preview_embed
 import metabaseapi.endpoints.requests.public
+import metabaseapi.endpoints.requests.segment
+import metabaseapi.endpoints.requests.session
+import metabaseapi.endpoints.requests.setting
 import metabaseapi.endpoints.requests.table
 import metabaseapi.endpoints.requests.user
 import metabaseapi.endpoints.requests.user_key_value
@@ -272,6 +283,72 @@ REQUEST_MODULE_CONTRACTS = {
         "GetEmbedTilesCardRequest",
         "GetEmbedTilesDashboardDashcardCardRequest",
     ),
+    "geojson": (
+        "GetGeojsonRequest",
+        "GetGeojsonByKeyRequest",
+    ),
+    "glossary": (
+        "GetGlossaryRequest",
+        "CreateGlossaryEntryRequest",
+        "UpdateGlossaryEntryRequest",
+        "DeleteGlossaryEntryRequest",
+    ),
+    "logger": (
+        "CreateLoggerAdjustmentRequest",
+        "DeleteLoggerAdjustmentRequest",
+        "GetLoggerLogsRequest",
+        "GetLoggerPresetsRequest",
+    ),
+    "login_history": ("GetCurrentLoginHistoryRequest",),
+    "measure": (
+        "CreateMeasureRequest",
+        "ListMeasuresRequest",
+        "GetMeasureRequest",
+        "UpdateMeasureRequest",
+        "GetMeasureDimensionRemappingRequest",
+        "SearchMeasureDimensionValuesRequest",
+        "GetMeasureDimensionValuesRequest",
+    ),
+    "metric": (
+        "ListMetricsRequest",
+        "MetricBreakoutValuesRequest",
+        "MetricDatasetRequest",
+        "GetMetricRequest",
+        "GetMetricDimensionRemappingRequest",
+        "SearchMetricDimensionValuesRequest",
+        "GetMetricDimensionValuesRequest",
+    ),
+    "permissions": (
+        "GetPermissionsGraphRequest",
+        "PutPermissionsGraphRequest",
+        "GetPermissionsGraphDbRequest",
+        "GetPermissionsGraphGroupRequest",
+        "ListPermissionsGroupsRequest",
+        "CreatePermissionsGroupRequest",
+        "UpdatePermissionsGroupRequest",
+        "DeletePermissionsGroupRequest",
+        "GetPermissionsGroupRequest",
+        "GetPermissionsMembershipRequest",
+        "CreatePermissionsMembershipRequest",
+        "ClearPermissionsMembershipRequest",
+        "UpdatePermissionsMembershipRequest",
+        "DeletePermissionsMembershipRequest",
+    ),
+    "preview_embed": (
+        "GetPreviewEmbedCardRequest",
+        "GetPreviewEmbedCardParamRemappingRequest",
+        "GetPreviewEmbedCardParamValuesRequest",
+        "GetPreviewEmbedCardQueryRequest",
+        "GetPreviewEmbedDashboardRequest",
+        "GetPreviewEmbedDashboardDashcardCardRequest",
+        "GetPreviewEmbedDashboardParamRemappingRequest",
+        "GetPreviewEmbedDashboardParamSearchRequest",
+        "GetPreviewEmbedDashboardParamValuesRequest",
+        "GetPreviewEmbedPivotCardQueryRequest",
+        "GetPreviewEmbedPivotDashboardDashcardCardRequest",
+        "GetPreviewEmbedTilesCardRequest",
+        "GetPreviewEmbedTilesDashboardDashcardCardRequest",
+    ),
     "data_studio": (
         "DataStudioTableDiscardValuesRequest",
         "DataStudioTableEditRequest",
@@ -304,6 +381,30 @@ REQUEST_MODULE_CONTRACTS = {
         "GetPublicPivotDashboardCardRequest",
         "GetPublicCardTileRequest",
         "GetPublicDashboardCardTileRequest",
+    ),
+    "segment": (
+        "CreateSegmentRequest",
+        "ListSegmentsRequest",
+        "GetSegmentRequest",
+        "UpdateSegmentRequest",
+        "DeleteSegmentRequest",
+        "GetSegmentRelatedRequest",
+    ),
+    "session": (
+        "CreateSessionRequest",
+        "DeleteSessionRequest",
+        "ForgotPasswordRequest",
+        "GoogleAuthRequest",
+        "PasswordCheckRequest",
+        "PasswordResetTokenValidRequest",
+        "GetSessionPropertiesRequest",
+        "ResetPasswordRequest",
+    ),
+    "setting": (
+        "ListSettingsRequest",
+        "UpdateSettingsRequest",
+        "GetSettingRequest",
+        "UpdateSettingRequest",
     ),
     "dashboard": (
         "ListDashboardsRequest",
@@ -530,6 +631,62 @@ RESPONSE_MODULE_CONTRACTS = {
         "GetEmbedTilesCardResponse",
         "GetEmbedTilesDashboardDashcardCardResponse",
     ),
+    "geojson": (
+        "GeojsonByKeyResponse",
+        "GeojsonResponse",
+    ),
+    "glossary": (
+        "CreateGlossaryEntryResponse",
+        "DeleteGlossaryEntryResponse",
+        "GlossaryEntriesResponse",
+        "UpdateGlossaryEntryResponse",
+    ),
+    "logger": (
+        "LoggerAdjustmentDeleteResponse",
+        "LoggerAdjustmentResponse",
+        "LoggerLogsResponse",
+        "LoggerPresetsResponse",
+    ),
+    "login_history": ("CurrentLoginHistoryResponse",),
+    "measure": (
+        "ListMeasuresResponse",
+        "MeasureDimensionRemappingResponse",
+        "MeasureDimensionSearchResponse",
+        "MeasureDimensionValuesResponse",
+    ),
+    "metric": (
+        "ListMetricsResponse",
+        "MetricBreakoutValuesResponse",
+        "MetricDatasetResponse",
+        "MetricDimensionRemappingResponse",
+        "MetricDimensionSearchResponse",
+        "MetricDimensionValuesResponse",
+    ),
+    "permissions": (
+        "DeletePermissionsGroupResponse",
+        "DeletePermissionsMembershipResponse",
+        "PermissionsGraphResponse",
+        "PermissionsGroupResponse",
+        "PermissionsGroupsResponse",
+        "PermissionsMembershipListResponse",
+        "PermissionsMembershipResponse",
+        "PermissionsMembershipsResponse",
+    ),
+    "preview_embed": (
+        "GetPreviewEmbedCardParamRemappingResponse",
+        "GetPreviewEmbedCardParamValuesResponse",
+        "GetPreviewEmbedCardQueryResponse",
+        "GetPreviewEmbedCardResponse",
+        "GetPreviewEmbedDashboardDashcardCardResponse",
+        "GetPreviewEmbedDashboardParamRemappingResponse",
+        "GetPreviewEmbedDashboardParamSearchResponse",
+        "GetPreviewEmbedDashboardParamValuesResponse",
+        "GetPreviewEmbedDashboardResponse",
+        "GetPreviewEmbedPivotCardQueryResponse",
+        "GetPreviewEmbedPivotDashboardDashcardCardResponse",
+        "GetPreviewEmbedTilesCardResponse",
+        "GetPreviewEmbedTilesDashboardDashcardCardResponse",
+    ),
     "field": (
         "DeleteFieldDimensionResponse",
         "FieldDimensionResponse",
@@ -556,6 +713,27 @@ RESPONSE_MODULE_CONTRACTS = {
         "PublicParameterValuesResponse",
         "PublicRemappingResponse",
         "PublicTileResponse",
+    ),
+    "segment": (
+        "DeleteSegmentResponse",
+        "ListSegmentsResponse",
+        "SegmentRelatedResponse",
+    ),
+    "session": (
+        "DeleteSessionResponse",
+        "ForgotPasswordResponse",
+        "GoogleAuthResponse",
+        "PasswordCheckResponse",
+        "PasswordResetTokenValidResponse",
+        "ResetPasswordResponse",
+        "SessionPropertiesResponse",
+        "SessionResponse",
+    ),
+    "setting": (
+        "SettingResponse",
+        "SettingsResponse",
+        "UpdateSettingResponse",
+        "UpdateSettingsResponse",
     ),
     "table": (
         "ListTablesResponse",

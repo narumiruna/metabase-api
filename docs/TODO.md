@@ -15,8 +15,8 @@ This file is a static implementation checklist derived from the latest Metabase 
 ## Coverage summary
 
 - Documented operations: 600
-- Complete hand-written endpoint implementations: 274
-- Remaining documented operations: 326
+- Complete hand-written endpoint implementations: 344
+- Remaining documented operations: 256
 - Raw `request` / `invoke`: disabled for CLI users and does not count toward TODO completion.
 
 ## Endpoint checklist
@@ -556,17 +556,17 @@ This file is a static implementation checklist derived from the latest Metabase 
 
 - [ ] `POST /api/frontend-errors` — `post-api-frontend-errors` — Endpoint for the frontend to report errors. Increments a Prometheus counter with the given `type` label.
 
-### /api/geojson (0/2 complete)
+### /api/geojson (2/2 complete)
 
-- [ ] `GET /api/geojson` — `get-api-geojson` — Load a custom GeoJSON file based on a URL or file path provided as a query parameter. This behaves similarly to /api/geojson/:key but doesn't require the cus...
-- [ ] `GET /api/geojson/{key}` — `get-api-geojson-key` — Fetch a custom GeoJSON file as defined in the [[metabase.geojson.settings/custom-geojson]] setting. (This just acts as a simple proxy for the file specified...
+- [x] `GET /api/geojson` — `get-api-geojson` — Load a custom GeoJSON file based on a URL or file path provided as a query parameter. This behaves similarly to /api/geojson/:key but doesn't require the cus...
+- [x] `GET /api/geojson/{key}` — `get-api-geojson-key` — Fetch a custom GeoJSON file as defined in the [[metabase.geojson.settings/custom-geojson]] setting. (This just acts as a simple proxy for the file specified...
 
-### /api/glossary (0/4 complete)
+### /api/glossary (4/4 complete)
 
-- [ ] `GET /api/glossary` — `get-api-glossary` — Fetch all glossary entries, optionally filtered by search term.
-- [ ] `POST /api/glossary` — `post-api-glossary` — Create a new glossary entry.
-- [ ] `PUT /api/glossary/{id}` — `put-api-glossary-id` — Update an existing glossary entry.
-- [ ] `DELETE /api/glossary/{id}` — `delete-api-glossary-id` — Delete a glossary entry.
+- [x] `GET /api/glossary` — `get-api-glossary` — Fetch all glossary entries, optionally filtered by search term.
+- [x] `POST /api/glossary` — `post-api-glossary` — Create a new glossary entry.
+- [x] `PUT /api/glossary/{id}` — `put-api-glossary-id` — Update an existing glossary entry.
+- [x] `DELETE /api/glossary/{id}` — `delete-api-glossary-id` — Delete a glossary entry.
 
 ### /api/google (0/1 complete)
 
@@ -582,26 +582,26 @@ This file is a static implementation checklist derived from the latest Metabase 
 - [ ] `POST /api/llm/generate-sql` — `post-api-llm-generate-sql` — Generate SQL from a natural language prompt. Requires: - LLM to be configured (Anthropic API key set in admin settings) - At least one table reference (expli...
 - [ ] `GET /api/llm/list-models` — `get-api-llm-list-models` — List available LLM models from the configured provider. Requires LLM to be configured for the selected provider in admin settings.
 
-### /api/logger (0/4 complete)
+### /api/logger (4/4 complete)
 
-- [ ] `POST /api/logger/adjustment` — `post-api-logger-adjustment` — Temporarily adjust the log levels.
-- [ ] `DELETE /api/logger/adjustment` — `delete-api-logger-adjustment` — Undo any log level adjustments.
-- [ ] `GET /api/logger/logs` — `get-api-logger-logs` — Logs.
-- [ ] `GET /api/logger/presets` — `get-api-logger-presets` — Get all known presets.
+- [x] `POST /api/logger/adjustment` — `post-api-logger-adjustment` — Temporarily adjust the log levels.
+- [x] `DELETE /api/logger/adjustment` — `delete-api-logger-adjustment` — Undo any log level adjustments.
+- [x] `GET /api/logger/logs` — `get-api-logger-logs` — Logs.
+- [x] `GET /api/logger/presets` — `get-api-logger-presets` — Get all known presets.
 
-### /api/login-history (0/1 complete)
+### /api/login-history (1/1 complete)
 
-- [ ] `GET /api/login-history/current` — `get-api-login-history-current` — Fetch recent logins for the current user.
+- [x] `GET /api/login-history/current` — `get-api-login-history-current` — Fetch recent logins for the current user.
 
-### /api/measure (0/7 complete)
+### /api/measure (7/7 complete)
 
-- [ ] `POST /api/measure` — `post-api-measure` — Create a new `Measure`.
-- [ ] `GET /api/measure` — `get-api-measure` — Fetch *all* `Measures`.
-- [ ] `GET /api/measure/{id}` — `get-api-measure-id` — Fetch `Measure` with ID.
-- [ ] `PUT /api/measure/{id}` — `put-api-measure-id` — Update a `Measure` with ID.
-- [ ] `GET /api/measure/{id}/dimension/{dimension-key}/remapping` — `get-api-measure-id-dimension-dimension-key-remapping` — Fetch remapped value for a specific dimension value. Returns a pair [value, display-name] if remapping exists, or [value] otherwise.
-- [ ] `GET /api/measure/{id}/dimension/{dimension-key}/search` — `get-api-measure-id-dimension-dimension-key-search` — Search for values of a dimension that contain the query string. Returns field values matching the search query in the same format as the field values API.
-- [ ] `GET /api/measure/{id}/dimension/{dimension-key}/values` — `get-api-measure-id-dimension-dimension-key-values` — Fetch values for a dimension of a measure. Returns field values in the same format as the field values API: - values: list of [value] or [value, display-name...
+- [x] `POST /api/measure` — `post-api-measure` — Create a new `Measure`.
+- [x] `GET /api/measure` — `get-api-measure` — Fetch *all* `Measures`.
+- [x] `GET /api/measure/{id}` — `get-api-measure-id` — Fetch `Measure` with ID.
+- [x] `PUT /api/measure/{id}` — `put-api-measure-id` — Update a `Measure` with ID.
+- [x] `GET /api/measure/{id}/dimension/{dimension-key}/remapping` — `get-api-measure-id-dimension-dimension-key-remapping` — Fetch remapped value for a specific dimension value. Returns a pair [value, display-name] if remapping exists, or [value] otherwise.
+- [x] `GET /api/measure/{id}/dimension/{dimension-key}/search` — `get-api-measure-id-dimension-dimension-key-search` — Search for values of a dimension that contain the query string. Returns field values matching the search query in the same format as the field values API.
+- [x] `GET /api/measure/{id}/dimension/{dimension-key}/values` — `get-api-measure-id-dimension-dimension-key-values` — Fetch values for a dimension of a measure. Returns field values in the same format as the field values API: - values: list of [value] or [value, display-name...
 
 ### /api/metabot (0/4 complete)
 
@@ -634,15 +634,15 @@ This file is a static implementation checklist derived from the latest Metabase 
 - [ ] `POST /api/metabot/slack/interactive` — `post-api-metabot-slack-interactive` — Handle interactive payloads from Slack (button clicks, modal submissions).
 - [ ] `PUT /api/metabot/slack/settings` — `put-api-metabot-slack-settings` — Update Metabot Slack settings atomically. All credential fields must be provided together. Setting values requires the metabot-v3 feature, but clearing value...
 
-### /api/metric (0/7 complete)
+### /api/metric (7/7 complete)
 
-- [ ] `GET /api/metric` — `get-api-metric` — Get a list of metrics. Returns metrics (Cards with type='metric') that the current user has read access to, filtered by collection visibility permissions.
-- [ ] `POST /api/metric/breakout-values` — `post-api-metric-breakout-values` — Fetch distinct breakout dimension values for a metric or measure definition. Accepts the same definition format as POST /dataset. Returns extracted values an...
-- [ ] `POST /api/metric/dataset` — `post-api-metric-dataset` — Execute a metric or measure-based query and stream the results. Request body requires a `definition` object containing: - expression: A metric math expressio...
-- [ ] `GET /api/metric/{id}` — `get-api-metric-id` — Fetch a `Metric` with ID. Returns the metric with hydrated dimensions and dimension mappings.
-- [ ] `GET /api/metric/{id}/dimension/{dimension-key}/remapping` — `get-api-metric-id-dimension-dimension-key-remapping` — Fetch remapped value for a specific dimension value. Returns a pair [value, display-name] if remapping exists, or [value] otherwise.
-- [ ] `GET /api/metric/{id}/dimension/{dimension-key}/search` — `get-api-metric-id-dimension-dimension-key-search` — Search for values of a dimension that contain the query string. Returns field values matching the search query in the same format as the field values API.
-- [ ] `GET /api/metric/{id}/dimension/{dimension-key}/values` — `get-api-metric-id-dimension-dimension-key-values` — Fetch values for a dimension of a metric. Returns field values in the same format as the field values API: - values: list of [value] or [value, display-name]...
+- [x] `GET /api/metric` — `get-api-metric` — Get a list of metrics. Returns metrics (Cards with type='metric') that the current user has read access to, filtered by collection visibility permissions.
+- [x] `POST /api/metric/breakout-values` — `post-api-metric-breakout-values` — Fetch distinct breakout dimension values for a metric or measure definition. Accepts the same definition format as POST /dataset. Returns extracted values an...
+- [x] `POST /api/metric/dataset` — `post-api-metric-dataset` — Execute a metric or measure-based query and stream the results. Request body requires a `definition` object containing: - expression: A metric math expressio...
+- [x] `GET /api/metric/{id}` — `get-api-metric-id` — Fetch a `Metric` with ID. Returns the metric with hydrated dimensions and dimension mappings.
+- [x] `GET /api/metric/{id}/dimension/{dimension-key}/remapping` — `get-api-metric-id-dimension-dimension-key-remapping` — Fetch remapped value for a specific dimension value. Returns a pair [value, display-name] if remapping exists, or [value] otherwise.
+- [x] `GET /api/metric/{id}/dimension/{dimension-key}/search` — `get-api-metric-id-dimension-dimension-key-search` — Search for values of a dimension that contain the query string. Returns field values matching the search query in the same format as the field values API.
+- [x] `GET /api/metric/{id}/dimension/{dimension-key}/values` — `get-api-metric-id-dimension-dimension-key-values` — Fetch values for a dimension of a metric. Returns field values in the same format as the field values API: - values: list of [value] or [value, display-name]...
 
 ### /api/model-index (0/4 complete)
 
@@ -697,22 +697,22 @@ This file is a static implementation checklist derived from the latest Metabase 
 - [ ] `POST /api/notify/db/{id}` — `post-api-notify-db-id` — Notification about a potential schema change to one of our `Databases`. Caller can optionally specify a `:table_id` or `:table_name` in the body to limit upd...
 - [ ] `POST /api/notify/db/{id}/new-table` — `post-api-notify-db-id-new-table` — Sync a new table without running a full database sync. Requires `schema_name` and `table_name`. Will throw an error if the table already exists in Metabase o...
 
-### /api/permissions (0/14 complete)
+### /api/permissions (14/14 complete)
 
-- [ ] `GET /api/permissions/graph` — `get-api-permissions-graph` — Fetch a graph of all Permissions.
-- [ ] `PUT /api/permissions/graph` — `put-api-permissions-graph` — Do a batch update of Permissions by passing in a modified graph. This should return the same graph, in the same format, that you got from `GET /api/permissio...
-- [ ] `GET /api/permissions/graph/db/{db-id}` — `get-api-permissions-graph-db-db-id` — Fetch a graph of all Permissions for db-id `db-id`.
-- [ ] `GET /api/permissions/graph/group/{group-id}` — `get-api-permissions-graph-group-group-id` — Fetch a graph of all Permissions for group-id `group-id`.
-- [ ] `GET /api/permissions/group` — `get-api-permissions-group` — Fetch all `PermissionsGroups`, including a count of the number of `:members` in that group. This API requires superuser or group manager of more than one gro...
-- [ ] `POST /api/permissions/group` — `post-api-permissions-group` — Create a new `PermissionsGroup`.
-- [ ] `PUT /api/permissions/group/{group-id}` — `put-api-permissions-group-group-id` — Update the name of a `PermissionsGroup`.
-- [ ] `DELETE /api/permissions/group/{group-id}` — `delete-api-permissions-group-group-id` — Delete a specific `PermissionsGroup`.
-- [ ] `GET /api/permissions/group/{id}` — `get-api-permissions-group-id` — Fetch the details for a certain permissions group.
-- [ ] `GET /api/permissions/membership` — `get-api-permissions-membership` — Fetch a map describing the group memberships of various users. This map's format is: {<user-id> [{:membership_id <id> :group_id <id> :is_group_manager boolea...
-- [ ] `POST /api/permissions/membership` — `post-api-permissions-membership` — Add a `User` to a `PermissionsGroup`. Returns updated list of members belonging to the group.
-- [ ] `PUT /api/permissions/membership/{group-id}/clear` — `put-api-permissions-membership-group-id-clear` — Remove all members from a `PermissionsGroup`. Returns a 400 (Bad Request) if the group ID is for the admin group.
-- [ ] `PUT /api/permissions/membership/{id}` — `put-api-permissions-membership-id` — Update a Permission Group membership. Returns the updated record.
-- [ ] `DELETE /api/permissions/membership/{id}` — `delete-api-permissions-membership-id` — Remove a User from a PermissionsGroup (delete their membership).
+- [x] `GET /api/permissions/graph` — `get-api-permissions-graph` — Fetch a graph of all Permissions.
+- [x] `PUT /api/permissions/graph` — `put-api-permissions-graph` — Do a batch update of Permissions by passing in a modified graph. This should return the same graph, in the same format, that you got from `GET /api/permissio...
+- [x] `GET /api/permissions/graph/db/{db-id}` — `get-api-permissions-graph-db-db-id` — Fetch a graph of all Permissions for db-id `db-id`.
+- [x] `GET /api/permissions/graph/group/{group-id}` — `get-api-permissions-graph-group-group-id` — Fetch a graph of all Permissions for group-id `group-id`.
+- [x] `GET /api/permissions/group` — `get-api-permissions-group` — Fetch all `PermissionsGroups`, including a count of the number of `:members` in that group. This API requires superuser or group manager of more than one gro...
+- [x] `POST /api/permissions/group` — `post-api-permissions-group` — Create a new `PermissionsGroup`.
+- [x] `PUT /api/permissions/group/{group-id}` — `put-api-permissions-group-group-id` — Update the name of a `PermissionsGroup`.
+- [x] `DELETE /api/permissions/group/{group-id}` — `delete-api-permissions-group-group-id` — Delete a specific `PermissionsGroup`.
+- [x] `GET /api/permissions/group/{id}` — `get-api-permissions-group-id` — Fetch the details for a certain permissions group.
+- [x] `GET /api/permissions/membership` — `get-api-permissions-membership` — Fetch a map describing the group memberships of various users. This map's format is: {<user-id> [{:membership_id <id> :group_id <id> :is_group_manager boolea...
+- [x] `POST /api/permissions/membership` — `post-api-permissions-membership` — Add a `User` to a `PermissionsGroup`. Returns updated list of members belonging to the group.
+- [x] `PUT /api/permissions/membership/{group-id}/clear` — `put-api-permissions-membership-group-id-clear` — Remove all members from a `PermissionsGroup`. Returns a 400 (Bad Request) if the group ID is for the admin group.
+- [x] `PUT /api/permissions/membership/{id}` — `put-api-permissions-membership-id` — Update a Permission Group membership. Returns the updated record.
+- [x] `DELETE /api/permissions/membership/{id}` — `delete-api-permissions-membership-id` — Remove a User from a PermissionsGroup (delete their membership).
 
 ### /api/persist (0/11 complete)
 
@@ -733,21 +733,21 @@ This file is a static implementation checklist derived from the latest Metabase 
 - [ ] `POST /api/premium-features/token/refresh` — `post-api-premium-features-token-refresh` — Clear all token caches and re-check the premium features token against the MetaStore. Returns the fresh token status. Useful for the frontend after a purchas...
 - [ ] `GET /api/premium-features/token/status` — `get-api-premium-features-token-status` — Fetch info about the current Premium-Features premium features token including whether it is `valid`, a `trial` token, its `features`, when it is `valid-thru...
 
-### /api/preview_embed (0/13 complete)
+### /api/preview_embed (13/13 complete)
 
-- [ ] `GET /api/preview_embed/card/{token}` — `get-api-preview_embed-card-token` — Fetch a Card you're considering embedding by passing a JWT `token`.
-- [ ] `GET /api/preview_embed/card/{token}/params/{param-key}/remapping` — `get-api-preview_embed-card-token-params-param-key-remapping` — Embedded version of api.card filter values endpoint.
-- [ ] `GET /api/preview_embed/card/{token}/params/{param-key}/values` — `get-api-preview_embed-card-token-params-param-key-values` — Embedded version of api.card filter values endpoint.
-- [ ] `GET /api/preview_embed/card/{token}/query` — `get-api-preview_embed-card-token-query` — Fetch the query results for a Card you're considering embedding by passing a JWT `token`.
-- [ ] `GET /api/preview_embed/dashboard/{token}` — `get-api-preview_embed-dashboard-token` — Fetch a Dashboard you're considering embedding by passing a JWT `token`.
-- [ ] `GET /api/preview_embed/dashboard/{token}/dashcard/{dashcard-id}/card/{card-id}` — `get-api-preview_embed-dashboard-token-dashcard-dashcard-id-card-card-id` — Fetch the results of running a Card belonging to a Dashboard you're considering embedding with JWT `token`.
-- [ ] `GET /api/preview_embed/dashboard/{token}/params/{param-key}/remapping` — `get-api-preview_embed-dashboard-token-params-param-key-remapping` — Embedded version of the remapped dashboard param value endpoint.
-- [ ] `GET /api/preview_embed/dashboard/{token}/params/{param-key}/search/{prefix}` — `get-api-preview_embed-dashboard-token-params-param-key-search-prefix` — Embedded version of chain filter search endpoint.
-- [ ] `GET /api/preview_embed/dashboard/{token}/params/{param-key}/values` — `get-api-preview_embed-dashboard-token-params-param-key-values` — Embedded version of chain filter values endpoint.
-- [ ] `GET /api/preview_embed/pivot/card/{token}/query` — `get-api-preview_embed-pivot-card-token-query` — Fetch the query results for a Card you're considering embedding by passing a JWT `token`.
-- [ ] `GET /api/preview_embed/pivot/dashboard/{token}/dashcard/{dashcard-id}/card/{card-id}` — `get-api-preview_embed-pivot-dashboard-token-dashcard-dashcard-id-card-card-id` — Fetch the results of running a Card belonging to a Dashboard you're considering embedding with JWT `token`.
-- [ ] `GET /api/preview_embed/tiles/card/{token}/{zoom}/{x}/{y}` — `get-api-preview_embed-tiles-card-token-zoom-x-y` — Generates a single tile image for an embedded Card using the map visualization.
-- [ ] `GET /api/preview_embed/tiles/dashboard/{token}/dashcard/{dashcard-id}/card/{card-id}/{zoom}/{x}/{y}` — `get-api-preview_embed-tiles-dashboard-token-dashcard-dashcard-id-card-card-id-zoom-x-y` — Generates a single tile image for a Card on an embedded Dashboard using the map visualization.
+- [x] `GET /api/preview_embed/card/{token}` — `get-api-preview_embed-card-token` — Fetch a Card you're considering embedding by passing a JWT `token`.
+- [x] `GET /api/preview_embed/card/{token}/params/{param-key}/remapping` — `get-api-preview_embed-card-token-params-param-key-remapping` — Embedded version of api.card filter values endpoint.
+- [x] `GET /api/preview_embed/card/{token}/params/{param-key}/values` — `get-api-preview_embed-card-token-params-param-key-values` — Embedded version of api.card filter values endpoint.
+- [x] `GET /api/preview_embed/card/{token}/query` — `get-api-preview_embed-card-token-query` — Fetch the query results for a Card you're considering embedding by passing a JWT `token`.
+- [x] `GET /api/preview_embed/dashboard/{token}` — `get-api-preview_embed-dashboard-token` — Fetch a Dashboard you're considering embedding by passing a JWT `token`.
+- [x] `GET /api/preview_embed/dashboard/{token}/dashcard/{dashcard-id}/card/{card-id}` — `get-api-preview_embed-dashboard-token-dashcard-dashcard-id-card-card-id` — Fetch the results of running a Card belonging to a Dashboard you're considering embedding with JWT `token`.
+- [x] `GET /api/preview_embed/dashboard/{token}/params/{param-key}/remapping` — `get-api-preview_embed-dashboard-token-params-param-key-remapping` — Embedded version of the remapped dashboard param value endpoint.
+- [x] `GET /api/preview_embed/dashboard/{token}/params/{param-key}/search/{prefix}` — `get-api-preview_embed-dashboard-token-params-param-key-search-prefix` — Embedded version of chain filter search endpoint.
+- [x] `GET /api/preview_embed/dashboard/{token}/params/{param-key}/values` — `get-api-preview_embed-dashboard-token-params-param-key-values` — Embedded version of chain filter values endpoint.
+- [x] `GET /api/preview_embed/pivot/card/{token}/query` — `get-api-preview_embed-pivot-card-token-query` — Fetch the query results for a Card you're considering embedding by passing a JWT `token`.
+- [x] `GET /api/preview_embed/pivot/dashboard/{token}/dashcard/{dashcard-id}/card/{card-id}` — `get-api-preview_embed-pivot-dashboard-token-dashcard-dashcard-id-card-card-id` — Fetch the results of running a Card belonging to a Dashboard you're considering embedding with JWT `token`.
+- [x] `GET /api/preview_embed/tiles/card/{token}/{zoom}/{x}/{y}` — `get-api-preview_embed-tiles-card-token-zoom-x-y` — Generates a single tile image for an embedded Card using the map visualization.
+- [x] `GET /api/preview_embed/tiles/dashboard/{token}/dashcard/{dashcard-id}/card/{card-id}/{zoom}/{x}/{y}` — `get-api-preview_embed-tiles-dashboard-token-dashcard-dashcard-id-card-card-id-zoom-x-y` — Generates a single tile image for a Card on an embedded Dashboard using the map visualization.
 
 ### /api/product-feedback (0/1 complete)
 
@@ -809,32 +809,32 @@ This file is a static implementation checklist derived from the latest Metabase 
 - [ ] `GET /api/search/weights` — `get-api-search-weights` — Return the current weights being used to rank the search results
 - [ ] `PUT /api/search/weights` — `put-api-search-weights` — Update the current weights being used to rank the search results
 
-### /api/segment (0/6 complete)
+### /api/segment (6/6 complete)
 
-- [ ] `POST /api/segment` — `post-api-segment` — Create a new `Segment`.
-- [ ] `GET /api/segment` — `get-api-segment` — Fetch *all* `Segments`.
-- [ ] `GET /api/segment/{id}` — `get-api-segment-id` — Fetch `Segment` with ID.
-- [ ] `PUT /api/segment/{id}` — `put-api-segment-id` — Update a `Segment` with ID.
-- [ ] `DELETE /api/segment/{id}` — `delete-api-segment-id` — Archive a Segment. (DEPRECATED -- Just pass updated value of `:archived` to the `PUT` endpoint instead.)
-- [ ] `GET /api/segment/{id}/related` — `get-api-segment-id-related` — Return related entities.
+- [x] `POST /api/segment` — `post-api-segment` — Create a new `Segment`.
+- [x] `GET /api/segment` — `get-api-segment` — Fetch *all* `Segments`.
+- [x] `GET /api/segment/{id}` — `get-api-segment-id` — Fetch `Segment` with ID.
+- [x] `PUT /api/segment/{id}` — `put-api-segment-id` — Update a `Segment` with ID.
+- [x] `DELETE /api/segment/{id}` — `delete-api-segment-id` — Archive a Segment. (DEPRECATED -- Just pass updated value of `:archived` to the `PUT` endpoint instead.)
+- [x] `GET /api/segment/{id}/related` — `get-api-segment-id-related` — Return related entities.
 
-### /api/session (0/8 complete)
+### /api/session (8/8 complete)
 
-- [ ] `POST /api/session` — `post-api-session` — Login.
-- [ ] `DELETE /api/session` — `delete-api-session` — Logout.
-- [ ] `POST /api/session/forgot_password` — `post-api-session-forgot_password` — Send a reset email when user has forgotten their password.
-- [ ] `POST /api/session/google_auth` — `post-api-session-google_auth` — Login with Google Auth.
-- [ ] `POST /api/session/password-check` — `post-api-session-password-check` — Endpoint that checks if the supplied password meets the currently configured password complexity rules.
-- [ ] `GET /api/session/password_reset_token_valid` — `get-api-session-password_reset_token_valid` — Check if a password reset token is valid and isn't expired.
-- [ ] `GET /api/session/properties` — `get-api-session-properties` — Get all properties and their values. These are the specific `Settings` that are readable by the current user, or are public if no user is logged in.
-- [ ] `POST /api/session/reset_password` — `post-api-session-reset_password` — Reset password with a reset token.
+- [x] `POST /api/session` — `post-api-session` — Login.
+- [x] `DELETE /api/session` — `delete-api-session` — Logout.
+- [x] `POST /api/session/forgot_password` — `post-api-session-forgot_password` — Send a reset email when user has forgotten their password.
+- [x] `POST /api/session/google_auth` — `post-api-session-google_auth` — Login with Google Auth.
+- [x] `POST /api/session/password-check` — `post-api-session-password-check` — Endpoint that checks if the supplied password meets the currently configured password complexity rules.
+- [x] `GET /api/session/password_reset_token_valid` — `get-api-session-password_reset_token_valid` — Check if a password reset token is valid and isn't expired.
+- [x] `GET /api/session/properties` — `get-api-session-properties` — Get all properties and their values. These are the specific `Settings` that are readable by the current user, or are public if no user is logged in.
+- [x] `POST /api/session/reset_password` — `post-api-session-reset_password` — Reset password with a reset token.
 
-### /api/setting (0/4 complete)
+### /api/setting (4/4 complete)
 
-- [ ] `GET /api/setting` — `get-api-setting` — Get all `Settings` and their values. You must be a superuser or have `setting` permission to do this. For non-superusers, a list of visible settings and valu...
-- [ ] `PUT /api/setting` — `put-api-setting` — Update multiple `Settings` values. If called by a non-superuser, only user-local settings can be updated.
-- [ ] `GET /api/setting/{key}` — `get-api-setting-key` — Fetch a single `Setting`.
-- [ ] `PUT /api/setting/{key}` — `put-api-setting-key` — Create/update a `Setting`. If called by a non-admin, only user-local settings can be updated. This endpoint can also be used to delete Settings by passing `n...
+- [x] `GET /api/setting` — `get-api-setting` — Get all `Settings` and their values. You must be a superuser or have `setting` permission to do this. For non-superusers, a list of visible settings and valu...
+- [x] `PUT /api/setting` — `put-api-setting` — Update multiple `Settings` values. If called by a non-superuser, only user-local settings can be updated.
+- [x] `GET /api/setting/{key}` — `get-api-setting-key` — Fetch a single `Setting`.
+- [x] `PUT /api/setting/{key}` — `put-api-setting-key` — Create/update a `Setting`. If called by a non-admin, only user-local settings can be updated. This endpoint can also be used to delete Settings by passing `n...
 
 ### /api/setup (0/1 complete)
 

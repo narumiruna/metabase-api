@@ -30,7 +30,18 @@ def _register_commands() -> None:
     from metabaseapi.cli.commands import email as email
     from metabaseapi.cli.commands import embed as embed
     from metabaseapi.cli.commands import field as field
+    from metabaseapi.cli.commands import geojson as geojson
+    from metabaseapi.cli.commands import glossary as glossary
+    from metabaseapi.cli.commands import logger as logger
+    from metabaseapi.cli.commands import login_history as login_history
+    from metabaseapi.cli.commands import measure as measure
+    from metabaseapi.cli.commands import metric as metric
+    from metabaseapi.cli.commands import permissions as permissions
+    from metabaseapi.cli.commands import preview_embed as preview_embed
     from metabaseapi.cli.commands import public as public
+    from metabaseapi.cli.commands import segment as segment
+    from metabaseapi.cli.commands import session as session
+    from metabaseapi.cli.commands import setting as setting
     from metabaseapi.cli.commands import table as table
     from metabaseapi.cli.commands import user as user
     from metabaseapi.cli.commands import user_key_value as user_key_value
@@ -64,7 +75,18 @@ def _register_commands() -> None:
         email,
         embed,
         field,
+        geojson,
+        glossary,
+        logger,
+        login_history,
+        measure,
+        metric,
+        permissions,
+        preview_embed,
         public,
+        segment,
+        session,
+        setting,
         table,
         user,
         user_key_value,

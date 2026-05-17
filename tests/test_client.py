@@ -37,7 +37,7 @@ def test_request_includes_api_key_and_query_parameters() -> None:
         client=httpx.AsyncClient(transport=transport, timeout=3.0, verify=False),
     )
 
-    result = _run(client.request("GET", "/api/user/current", params={"a": "1"}))
+    result = _run(client._request("GET", "/api/user/current", params={"a": "1"}))
 
     request_url = captured["url"]
     assert isinstance(request_url, str)
@@ -62,7 +62,7 @@ def test_repeated_query_parameters_are_preserved() -> None:
         client=httpx.AsyncClient(transport=httpx.MockTransport(handler)),
     )
 
-    result = _run(client.request("GET", "/api/search", params={"models": ["card", "dashboard"]}))
+    result = _run(client._request("GET", "/api/search", params={"models": ["card", "dashboard"]}))
 
     assert result == {"ok": True}
     assert captured == [("models", "card"), ("models", "dashboard")]
@@ -82,7 +82,7 @@ def test_post_sends_json_body() -> None:
         client=httpx.AsyncClient(transport=transport),
     )
 
-    result = _run(client.request("POST", "/api/session", json_data={"foo": "bar"}))
+    result = _run(client._request("POST", "/api/session", json_data={"foo": "bar"}))
     assert result == {"received": {"foo": "bar"}}
 
 
@@ -98,7 +98,7 @@ def test_http_error_is_mapped_to_client_error() -> None:
     )
 
     with pytest.raises(MetabaseHTTPStatusError) as exc:
-        _run(client.request("GET", "/api/card/1"))
+        _run(client._request("GET", "/api/card/1"))
 
     assert exc.value.status_code == 404
 
@@ -115,7 +115,7 @@ def test_decode_error_for_invalid_json() -> None:
     )
 
     with pytest.raises(MetabaseDecodeError):
-        _run(client.request("GET", "/api/card/1"))
+        _run(client._request("GET", "/api/card/1"))
 
 
 def test_non_json_payload_is_wrapped_as_json_text() -> None:
@@ -129,7 +129,7 @@ def test_non_json_payload_is_wrapped_as_json_text() -> None:
         client=httpx.AsyncClient(transport=transport),
     )
 
-    result = _run(client.request("GET", "/api/health"))
+    result = _run(client._request("GET", "/api/health"))
     assert result == {"content_type": "text/plain", "text": "ok"}
 
 
@@ -160,4 +160,4 @@ def test_network_error_is_mapped() -> None:
     )
 
     with pytest.raises(MetabaseNetworkError):
-        _run(client.request("GET", "/api/card/1"))
+        _run(client._request("GET", "/api/card/1"))

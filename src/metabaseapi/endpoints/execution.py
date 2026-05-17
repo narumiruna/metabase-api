@@ -12,8 +12,8 @@ from metabaseapi.wire import JSONValue
 from metabaseapi.wire import QueryParamValue
 
 
-class MetabaseRequestClient(Protocol):
-    async def request(
+class _MetabaseRequestClient(Protocol):
+    async def _request(
         self,
         method: str,
         path: str,
@@ -43,8 +43,8 @@ class EndpointRequest[ResponseT](BaseModel):
     def request_body(self) -> JSONValue | None:
         return None
 
-    async def do(self, client: MetabaseRequestClient) -> ResponseT:
-        payload = await client.request(
+    async def do(self, client: _MetabaseRequestClient) -> ResponseT:
+        payload = await client._request(
             self.endpoint_method,
             self.resolve_path(),
             params=self.request_params(),
@@ -53,4 +53,4 @@ class EndpointRequest[ResponseT](BaseModel):
         return cast(ResponseT, self.response_model.model_validate(payload or {}))
 
 
-__all__ = ["EndpointRequest", "MetabaseRequestClient", "ResponseModel"]
+__all__ = ["EndpointRequest", "ResponseModel"]

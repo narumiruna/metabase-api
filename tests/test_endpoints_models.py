@@ -142,7 +142,7 @@ class _StubClient:
         self.response = response
         self.calls: list[tuple[str, str, dict[str, QueryParamValue], object | None]] = []
 
-    async def request(
+    async def _request(
         self,
         method: str,
         path: str,

@@ -60,12 +60,12 @@ def test_client_request_dispatches_supported_methods() -> None:
         client=httpx.AsyncClient(transport=httpx.MockTransport(handler)),
     )
 
-    get_result = _run(client.request("GET", "/api/user/current", params={"a": "1"}))
-    post_result = _run(client.request("POST", "/api/database", json_data={"name": "analytics"}))
-    put_result = _run(client.request("PUT", "/api/card/1", json_data={"name": "updated"}))
-    patch_result = _run(client.request("PATCH", "/api/card/1", json_data={"archived": True}))
-    delete_result = _run(client.request("DELETE", "/api/card/1"))
-    delete_body_result = _run(client.request("DELETE", "/api/cache", json_data={"model": "question", "model_id": [1]}))
+    get_result = _run(client._request("GET", "/api/user/current", params={"a": "1"}))
+    post_result = _run(client._request("POST", "/api/database", json_data={"name": "analytics"}))
+    put_result = _run(client._request("PUT", "/api/card/1", json_data={"name": "updated"}))
+    patch_result = _run(client._request("PATCH", "/api/card/1", json_data={"archived": True}))
+    delete_result = _run(client._request("DELETE", "/api/card/1"))
+    delete_body_result = _run(client._request("DELETE", "/api/cache", json_data={"model": "question", "model_id": [1]}))
 
     assert get_result == {"method": "GET", "path": "/api/user/current"}
     assert post_result == {"method": "POST", "path": "/api/database"}

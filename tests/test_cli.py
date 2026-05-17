@@ -38,7 +38,7 @@ class _ClientWithRequestMethods:
     async def __aexit__(self, *_: object) -> None:
         return None
 
-    async def request(
+    async def _request(
         self,
         method: str,
         path: str,
@@ -55,7 +55,7 @@ class _ClientWithRequestMethods:
 
 
 class _ErrorClient(_ClientWithRequestMethods):
-    async def request(self, *_: object, **__: object) -> dict[str, object]:
+    async def _request(self, *_: object, **__: object) -> dict[str, object]:
         raise MetabaseHTTPStatusError(401, {"message": "unauthorized"})
 
 

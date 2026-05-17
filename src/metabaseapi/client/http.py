@@ -81,7 +81,7 @@ class MetabaseClient:
             return f"{self.base_url}{normalized}"
         return normalized
 
-    async def request(
+    async def _request(
         self,
         method: str,
         path: str,

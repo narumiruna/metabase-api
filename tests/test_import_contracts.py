@@ -333,6 +333,7 @@ def test_client_public_exports_use_http_implementation() -> None:
     assert not hasattr(metabaseapi.client.MetabaseClient, "put")
     assert not hasattr(metabaseapi.client.MetabaseClient, "patch")
     assert not hasattr(metabaseapi.client.MetabaseClient, "delete")
+    assert not hasattr(metabaseapi.client.MetabaseClient, "request")
     with pytest.raises(ModuleNotFoundError):
         importlib.import_module("metabaseapi.client.mixins")
 
@@ -378,7 +379,7 @@ def test_client_public_module_exports_concrete_http_implementation() -> None:
 
 
 def test_endpoints_execution_owns_request_interface() -> None:
-    assert metabaseapi.endpoints.execution.__all__ == ["EndpointRequest", "MetabaseRequestClient", "ResponseModel"]
+    assert metabaseapi.endpoints.execution.__all__ == ["EndpointRequest", "ResponseModel"]
     assert not hasattr(metabaseapi.endpoints.execution, "_BaseMetabaseRequest")
     assert not hasattr(metabaseapi.endpoints.execution.EndpointRequest, "do_sync")
     assert metabaseapi.endpoints.requests.card.ListCardsRequest.__mro__[1].__module__ == (

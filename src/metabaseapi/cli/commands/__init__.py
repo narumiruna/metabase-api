@@ -18,6 +18,7 @@ AGENT_COMMAND_MODULE = "agent"
 BOOKMARK_COMMAND_MODULE = "bookmark"
 COMMENT_COMMAND_MODULE = "comment"
 USER_COMMAND_MODULE = "user"
+USER_KEY_VALUE_COMMAND_MODULE = "user_key_value"
 COLLECTION_COMMAND_MODULE = "collection"
 CARD_COMMAND_MODULE = "card"
 CARD_QUERY_COMMAND_MODULE = "card_query"
@@ -57,6 +58,7 @@ COMMAND_MODULE_REGISTRY: Final[tuple[CommandModuleSpec, ...]] = (
     CommandModuleSpec(BOOKMARK_COMMAND_MODULE, "core_resource"),
     CommandModuleSpec(COMMENT_COMMAND_MODULE, "core_resource"),
     CommandModuleSpec(USER_COMMAND_MODULE, "asset_authoring"),
+    CommandModuleSpec(USER_KEY_VALUE_COMMAND_MODULE, "asset_authoring"),
     CommandModuleSpec(COLLECTION_COMMAND_MODULE, "asset_authoring"),
     CommandModuleSpec(DATABASE_COMMAND_MODULE, "asset_authoring"),
     CommandModuleSpec(CARD_COMMAND_MODULE, "asset_authoring"),
@@ -166,6 +168,7 @@ __all__ = [
     "QUERY_AND_EXECUTION_MODULES",
     "SCHEMA_COMMAND_MODULE",
     "USER_COMMAND_MODULE",
+    "USER_KEY_VALUE_COMMAND_MODULE",
     "CommandModuleSpec",
     "command_group_names",
     "command_module_names",

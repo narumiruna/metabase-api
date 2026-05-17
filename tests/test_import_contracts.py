@@ -284,6 +284,7 @@ def test_cli_command_modules_import_from_package() -> None:
     assert metabaseapi.cli.commands.DATABASE_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
     assert metabaseapi.cli.commands.DASHBOARD_QUERY_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
     assert metabaseapi.cli.commands.USER_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
+    assert metabaseapi.cli.commands.USER_KEY_VALUE_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
     assert metabaseapi.cli.commands.SCHEMA_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
     assert metabaseapi.cli.commands.PLATFORM_BUG_REPORTING_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
     assert metabaseapi.cli.commands.PLATFORM_CACHE_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
@@ -632,7 +633,20 @@ def test_resource_list_commands_live_with_resource_modules() -> None:
 def test_current_user_command_lives_with_user_commands() -> None:
     command_names = _command_names_by_module()
     assert "current-user" in command_names[metabaseapi.cli.commands.USER_COMMAND_MODULE]
+    assert "get-user-key-value-namespace" not in command_names[metabaseapi.cli.commands.USER_COMMAND_MODULE]
     assert "current-user" not in command_names[metabaseapi.cli.commands.ANALYTICS_COMMAND_MODULE]
+
+
+def test_user_key_value_commands_live_with_user_key_value_module() -> None:
+    command_names = _command_names_by_module()
+    for command_name in (
+        "get-user-key-value-namespace",
+        "put-user-key-value-namespace-key",
+        "get-user-key-value-namespace-key",
+        "delete-user-key-value-namespace-key",
+    ):
+        assert command_name in command_names[metabaseapi.cli.commands.USER_KEY_VALUE_COMMAND_MODULE]
+        assert command_name not in command_names[metabaseapi.cli.commands.USER_COMMAND_MODULE]
 
 
 def test_activity_commands_live_with_activity_module() -> None:

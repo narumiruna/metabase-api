@@ -117,6 +117,12 @@ def test_convenience_paths_cover_handwritten_endpoint_surface() -> None:
         ),
         (client.create_action_public_link(11), ("POST", "/api/action/11/public_link", None)),
         (client.delete_action_public_link(11), ("DELETE", "/api/action/11/public_link", None)),
+        (client.automagic_database_candidates(1), ("GET", "/api/automagic-dashboards/database/1/candidates", None)),
+        (
+            client.automagic_model_index_primary_key(2, 3),
+            ("GET", "/api/automagic-dashboards/model_index/2/primary_key/3", None),
+        ),
+        (client.automagic_entity("table", "4"), ("GET", "/api/automagic-dashboards/table/4", None)),
         (
             client.create_api_key({"name": "key", "group_id": 1}),
             ("POST", "/api/api-key", {"name": "key", "group_id": 1}),

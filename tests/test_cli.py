@@ -58,6 +58,85 @@ class _ConvenienceClient(_ClientWithRequestMethods):
     async def delete_action_public_link(self, action_id: str) -> dict[str, object]:
         return {"method": "DELETE", "path": f"/api/action/{action_id}/public_link"}
 
+    async def automagic_database_candidates(self, database_id: str) -> dict[str, object]:
+        return {"method": "GET", "path": f"/api/automagic-dashboards/database/{database_id}/candidates"}
+
+    async def automagic_model_index_primary_key(self, model_index_id: str, primary_key_id: str) -> dict[str, object]:
+        return {
+            "method": "GET",
+            "path": f"/api/automagic-dashboards/model_index/{model_index_id}/primary_key/{primary_key_id}",
+        }
+
+    async def automagic_dashboard_path(self, path: str) -> dict[str, object]:
+        return {"method": "GET", "path": f"/api/automagic-dashboards/{path}"}
+
+    async def automagic_entity(self, entity: str, entity_id_or_query: str) -> dict[str, object]:
+        return await self.automagic_dashboard_path(f"{entity}/{entity_id_or_query}")
+
+    async def automagic_entity_cell(self, entity: str, entity_id_or_query: str, cell_query: str) -> dict[str, object]:
+        return await self.automagic_dashboard_path(f"{entity}/{entity_id_or_query}/cell/{cell_query}")
+
+    async def automagic_entity_cell_compare(
+        self,
+        entity: str,
+        entity_id_or_query: str,
+        cell_query: str,
+        comparison_entity: str,
+        comparison_entity_id_or_query: str,
+    ) -> dict[str, object]:
+        return await self.automagic_dashboard_path(
+            f"{entity}/{entity_id_or_query}/cell/{cell_query}/compare/{comparison_entity}/{comparison_entity_id_or_query}"
+        )
+
+    async def automagic_entity_cell_rule(
+        self, entity: str, entity_id_or_query: str, cell_query: str, prefix: str, dashboard_template: str
+    ) -> dict[str, object]:
+        return await self.automagic_dashboard_path(
+            f"{entity}/{entity_id_or_query}/cell/{cell_query}/rule/{prefix}/{dashboard_template}"
+        )
+
+    async def automagic_entity_cell_rule_compare(
+        self,
+        entity: str,
+        entity_id_or_query: str,
+        cell_query: str,
+        prefix: str,
+        dashboard_template: str,
+        comparison_entity: str,
+        comparison_entity_id_or_query: str,
+    ) -> dict[str, object]:
+        return await self.automagic_dashboard_path(
+            f"{entity}/{entity_id_or_query}/cell/{cell_query}/rule/{prefix}/{dashboard_template}/compare/{comparison_entity}/{comparison_entity_id_or_query}"
+        )
+
+    async def automagic_entity_compare(
+        self, entity: str, entity_id_or_query: str, comparison_entity: str, comparison_entity_id_or_query: str
+    ) -> dict[str, object]:
+        return await self.automagic_dashboard_path(
+            f"{entity}/{entity_id_or_query}/compare/{comparison_entity}/{comparison_entity_id_or_query}"
+        )
+
+    async def automagic_entity_query_metadata(self, entity: str, entity_id_or_query: str) -> dict[str, object]:
+        return await self.automagic_dashboard_path(f"{entity}/{entity_id_or_query}/query_metadata")
+
+    async def automagic_entity_rule(
+        self, entity: str, entity_id_or_query: str, prefix: str, dashboard_template: str
+    ) -> dict[str, object]:
+        return await self.automagic_dashboard_path(f"{entity}/{entity_id_or_query}/rule/{prefix}/{dashboard_template}")
+
+    async def automagic_entity_rule_compare(
+        self,
+        entity: str,
+        entity_id_or_query: str,
+        prefix: str,
+        dashboard_template: str,
+        comparison_entity: str,
+        comparison_entity_id_or_query: str,
+    ) -> dict[str, object]:
+        return await self.automagic_dashboard_path(
+            f"{entity}/{entity_id_or_query}/rule/{prefix}/{dashboard_template}/compare/{comparison_entity}/{comparison_entity_id_or_query}"
+        )
+
     async def create_api_key(self, body: dict[str, object]) -> dict[str, object]:
         return {"method": "POST", "path": "/api/api-key", "body": body}
 
@@ -277,6 +356,17 @@ def test_help_lists_every_convenience_command() -> None:
         "execute-action",
         "create-action-public-link",
         "delete-action-public-link",
+        "automagic-database-candidates",
+        "automagic-model-index-primary-key",
+        "automagic-entity",
+        "automagic-entity-cell",
+        "automagic-entity-cell-compare",
+        "automagic-entity-cell-rule",
+        "automagic-entity-cell-rule-compare",
+        "automagic-entity-compare",
+        "automagic-entity-query-metadata",
+        "automagic-entity-rule",
+        "automagic-entity-rule-compare",
         "create-api-key",
         "list-api-keys",
         "count-api-keys",
@@ -369,6 +459,29 @@ def test_get_database_command_outputs_json(monkeypatch: pytest.MonkeyPatch) -> N
         (["list-public-actions"], "/api/action/public"),
         (["get-action", "11"], "/api/action/11"),
         (["get-action-execute", "11"], "/api/action/11/execute"),
+        (["automagic-database-candidates", "1"], "/api/automagic-dashboards/database/1/candidates"),
+        (["automagic-model-index-primary-key", "2", "3"], "/api/automagic-dashboards/model_index/2/primary_key/3"),
+        (["automagic-entity", "table", "4"], "/api/automagic-dashboards/table/4"),
+        (["automagic-entity-cell", "table", "4", "cell"], "/api/automagic-dashboards/table/4/cell/cell"),
+        (
+            ["automagic-entity-cell-compare", "table", "4", "cell", "table", "5"],
+            "/api/automagic-dashboards/table/4/cell/cell/compare/table/5",
+        ),
+        (
+            ["automagic-entity-cell-rule", "table", "4", "cell", "p", "t"],
+            "/api/automagic-dashboards/table/4/cell/cell/rule/p/t",
+        ),
+        (
+            ["automagic-entity-cell-rule-compare", "table", "4", "cell", "p", "t", "table", "5"],
+            "/api/automagic-dashboards/table/4/cell/cell/rule/p/t/compare/table/5",
+        ),
+        (["automagic-entity-compare", "table", "4", "table", "5"], "/api/automagic-dashboards/table/4/compare/table/5"),
+        (["automagic-entity-query-metadata", "table", "4"], "/api/automagic-dashboards/table/4/query_metadata"),
+        (["automagic-entity-rule", "table", "4", "p", "t"], "/api/automagic-dashboards/table/4/rule/p/t"),
+        (
+            ["automagic-entity-rule-compare", "table", "4", "p", "t", "table", "5"],
+            "/api/automagic-dashboards/table/4/rule/p/t/compare/table/5",
+        ),
         (["list-api-keys"], "/api/api-key"),
         (["count-api-keys"], "/api/api-key/count"),
         (["list-alerts"], "/api/alert"),

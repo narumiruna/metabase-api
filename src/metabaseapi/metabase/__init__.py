@@ -18,6 +18,9 @@ from .requests import AgentPingRequest
 from .requests import AgentQueryRequest
 from .requests import AgentSearchRequest
 from .requests import AnalyzeChartRequest
+from .requests import AutomagicDashboardRequest
+from .requests import AutomagicDatabaseCandidatesRequest
+from .requests import AutomagicModelIndexPrimaryKeyRequest
 from .requests import CountApiKeysRequest
 from .requests import CreateActionPublicLinkRequest
 from .requests import CreateActionRequest
@@ -94,6 +97,9 @@ __all__ = [
     "Alert",
     "AnalyzeChartRequest",
     "ApiKey",
+    "AutomagicDashboardRequest",
+    "AutomagicDatabaseCandidatesRequest",
+    "AutomagicModelIndexPrimaryKeyRequest",
     "Card",
     "Collection",
     "CountApiKeysRequest",

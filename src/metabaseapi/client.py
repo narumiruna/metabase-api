@@ -23,6 +23,9 @@ from metabaseapi.metabase import AgentSearchRequest
 from metabaseapi.metabase import Alert
 from metabaseapi.metabase import AnalyzeChartRequest
 from metabaseapi.metabase import ApiKey
+from metabaseapi.metabase import AutomagicDashboardRequest
+from metabaseapi.metabase import AutomagicDatabaseCandidatesRequest
+from metabaseapi.metabase import AutomagicModelIndexPrimaryKeyRequest
 from metabaseapi.metabase import Card
 from metabaseapi.metabase import Collection
 from metabaseapi.metabase import CountApiKeysRequest
@@ -333,6 +336,86 @@ class MetabaseClient:
     async def delete_action_public_link(self, action_id: int | str) -> JSONValue | None:
         return await self.delete(f"/api/action/{action_id}/public_link")
 
+    async def automagic_database_candidates(self, database_id: int | str) -> JSONValue | None:
+        return await self.get(f"/api/automagic-dashboards/database/{database_id}/candidates")
+
+    async def automagic_model_index_primary_key(
+        self,
+        model_index_id: int | str,
+        primary_key_id: int | str,
+    ) -> JSONValue | None:
+        return await self.get(f"/api/automagic-dashboards/model_index/{model_index_id}/primary_key/{primary_key_id}")
+
+    async def automagic_dashboard_path(self, path: str) -> JSONValue | None:
+        return await self.get(f"/api/automagic-dashboards/{path.lstrip('/')}")
+
+    async def automagic_entity(self, entity: str, entity_id_or_query: str) -> JSONValue | None:
+        return await self.automagic_dashboard_path(f"{entity}/{entity_id_or_query}")
+
+    async def automagic_entity_cell(self, entity: str, entity_id_or_query: str, cell_query: str) -> JSONValue | None:
+        return await self.automagic_dashboard_path(f"{entity}/{entity_id_or_query}/cell/{cell_query}")
+
+    async def automagic_entity_cell_compare(
+        self,
+        entity: str,
+        entity_id_or_query: str,
+        cell_query: str,
+        comparison_entity: str,
+        comparison_entity_id_or_query: str,
+    ) -> JSONValue | None:
+        return await self.automagic_dashboard_path(
+            f"{entity}/{entity_id_or_query}/cell/{cell_query}/compare/{comparison_entity}/{comparison_entity_id_or_query}"
+        )
+
+    async def automagic_entity_cell_rule(
+        self, entity: str, entity_id_or_query: str, cell_query: str, prefix: str, dashboard_template: str
+    ) -> JSONValue | None:
+        return await self.automagic_dashboard_path(
+            f"{entity}/{entity_id_or_query}/cell/{cell_query}/rule/{prefix}/{dashboard_template}"
+        )
+
+    async def automagic_entity_cell_rule_compare(
+        self,
+        entity: str,
+        entity_id_or_query: str,
+        cell_query: str,
+        prefix: str,
+        dashboard_template: str,
+        comparison_entity: str,
+        comparison_entity_id_or_query: str,
+    ) -> JSONValue | None:
+        return await self.automagic_dashboard_path(
+            f"{entity}/{entity_id_or_query}/cell/{cell_query}/rule/{prefix}/{dashboard_template}/compare/{comparison_entity}/{comparison_entity_id_or_query}"
+        )
+
+    async def automagic_entity_compare(
+        self, entity: str, entity_id_or_query: str, comparison_entity: str, comparison_entity_id_or_query: str
+    ) -> JSONValue | None:
+        return await self.automagic_dashboard_path(
+            f"{entity}/{entity_id_or_query}/compare/{comparison_entity}/{comparison_entity_id_or_query}"
+        )
+
+    async def automagic_entity_query_metadata(self, entity: str, entity_id_or_query: str) -> JSONValue | None:
+        return await self.automagic_dashboard_path(f"{entity}/{entity_id_or_query}/query_metadata")
+
+    async def automagic_entity_rule(
+        self, entity: str, entity_id_or_query: str, prefix: str, dashboard_template: str
+    ) -> JSONValue | None:
+        return await self.automagic_dashboard_path(f"{entity}/{entity_id_or_query}/rule/{prefix}/{dashboard_template}")
+
+    async def automagic_entity_rule_compare(
+        self,
+        entity: str,
+        entity_id_or_query: str,
+        prefix: str,
+        dashboard_template: str,
+        comparison_entity: str,
+        comparison_entity_id_or_query: str,
+    ) -> JSONValue | None:
+        return await self.automagic_dashboard_path(
+            f"{entity}/{entity_id_or_query}/rule/{prefix}/{dashboard_template}/compare/{comparison_entity}/{comparison_entity_id_or_query}"
+        )
+
     async def create_api_key(self, body: Mapping[str, object]) -> JSONValue | None:
         return await self.post("/api/api-key", body=dict(body))
 
@@ -564,6 +647,21 @@ class MetabaseClient:
 
     async def delete_action_public_link_typed(self, action_id: int | str) -> ActionExecutionResponse:
         return await self.run(DeleteActionPublicLinkRequest(action_id=action_id))
+
+    async def automagic_database_candidates_typed(self, database_id: int | str) -> GenericOperationResponse:
+        return await self.run(AutomagicDatabaseCandidatesRequest(database_id=database_id))
+
+    async def automagic_model_index_primary_key_typed(
+        self,
+        model_index_id: int | str,
+        primary_key_id: int | str,
+    ) -> GenericOperationResponse:
+        return await self.run(
+            AutomagicModelIndexPrimaryKeyRequest(model_index_id=model_index_id, primary_key_id=primary_key_id),
+        )
+
+    async def automagic_dashboard_path_typed(self, path: str) -> GenericOperationResponse:
+        return await self.run(AutomagicDashboardRequest(path=path))
 
     async def create_api_key_typed(self, body: dict[str, object]) -> ApiKey:
         return await self.run(CreateApiKeyRequest(body=body))

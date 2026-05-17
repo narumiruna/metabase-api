@@ -13,6 +13,7 @@ from metabaseapi.client.raw.api_key import _MetabaseClientRawMixin as _MetabaseC
 from metabaseapi.client.raw.channels import _MetabaseClientRawMixin as _MetabaseClientChannelsRawMixin
 from metabaseapi.client.raw.cloud import _MetabaseClientRawMixin as _MetabaseClientCloudRawMixin
 from metabaseapi.client.raw.collections import _MetabaseClientRawMixin as _MetabaseClientCollectionsRawMixin
+from metabaseapi.client.raw.comments import _MetabaseClientRawMixin as _MetabaseClientCommentsRawMixin
 from metabaseapi.client.raw.users import _MetabaseClientRawMixin as _MetabaseClientUsersRawMixin
 from metabaseapi.client.typed.alerts import _MetabaseClientTypedMixin as _MetabaseClientAlertsTypedMixin
 from metabaseapi.client.typed.analytics import _MetabaseClientTypedMixin as _MetabaseClientAnalyticsTypedMixin
@@ -20,6 +21,7 @@ from metabaseapi.client.typed.api_key import _MetabaseClientTypedMixin as _Metab
 from metabaseapi.client.typed.channels import _MetabaseClientTypedMixin as _MetabaseClientChannelsTypedMixin
 from metabaseapi.client.typed.cloud import _MetabaseClientTypedMixin as _MetabaseClientCloudTypedMixin
 from metabaseapi.client.typed.collections import _MetabaseClientTypedMixin as _MetabaseClientCollectionsTypedMixin
+from metabaseapi.client.typed.comments import _MetabaseClientTypedMixin as _MetabaseClientCommentsTypedMixin
 from metabaseapi.client.typed.users import _MetabaseClientTypedMixin as _MetabaseClientUsersTypedMixin
 from metabaseapi.errors import MetabaseDecodeError
 from metabaseapi.errors import MetabaseHTTPStatusError
@@ -72,7 +74,6 @@ from metabaseapi.metabase import DeleteBookmarkRequest
 from metabaseapi.metabase import DeleteCacheRequest
 from metabaseapi.metabase import DeleteCardPublicLinkRequest
 from metabaseapi.metabase import DeleteCardRequest
-from metabaseapi.metabase import DeleteCommentRequest
 from metabaseapi.metabase import DeleteDashboardPublicLinkRequest
 from metabaseapi.metabase import DeleteDashboardRequest
 from metabaseapi.metabase import ExecuteActionRequest
@@ -94,8 +95,6 @@ from metabaseapi.metabase import GetCardPublicRequest
 from metabaseapi.metabase import GetCardQueryMetadataRequest
 from metabaseapi.metabase import GetCardRequest
 from metabaseapi.metabase import GetCardSeriesRequest
-from metabaseapi.metabase import GetCommentMentionsRequest
-from metabaseapi.metabase import GetCommentRequest
 from metabaseapi.metabase import GetDashboardDashcardExecuteRequest
 from metabaseapi.metabase import GetDashboardEmbeddableRequest
 from metabaseapi.metabase import GetDashboardItemsRequest
@@ -128,8 +127,6 @@ from metabaseapi.metabase import ListTablesResponse
 from metabaseapi.metabase import MetabaseField
 from metabaseapi.metabase import MoveCardsRequest
 from metabaseapi.metabase import PostCardPivotQueryRequest
-from metabaseapi.metabase import PostCommentReactionRequest
-from metabaseapi.metabase import PostCommentRequest
 from metabaseapi.metabase import PostDashboardPivotQueryRequest
 from metabaseapi.metabase import PostDashboardRequest
 from metabaseapi.metabase import PutCacheRequest
@@ -139,7 +136,6 @@ from metabaseapi.metabase import Table
 from metabaseapi.metabase import UpdateActionRequest
 from metabaseapi.metabase import UpdateBookmarkOrderingRequest
 from metabaseapi.metabase import UpdateCardRequest
-from metabaseapi.metabase import UpdateCommentRequest
 from metabaseapi.metabase import UpdateDashboardCardsRequest
 from metabaseapi.metabase import UpdateDashboardRequest
 from metabaseapi.models import APIRequestModel
@@ -158,6 +154,7 @@ class _MetabaseClientRawMixin(
     _MetabaseClientCollectionsRawMixin,
     _MetabaseClientChannelsRawMixin,
     _MetabaseClientCloudRawMixin,
+    _MetabaseClientCommentsRawMixin,
 ):
     """Resource-scoped raw mixin."""
 
@@ -171,6 +168,7 @@ class _MetabaseClientTypedMixin(
     _MetabaseClientCollectionsTypedMixin,
     _MetabaseClientChannelsTypedMixin,
     _MetabaseClientCloudTypedMixin,
+    _MetabaseClientCommentsTypedMixin,
 ):
     """Resource-scoped typed mixin."""
 
@@ -955,34 +953,6 @@ class MetabaseClient(_MetabaseClientTypedMixin):
     async def data_studio_table_sync_schema(self, body: Mapping[str, object]) -> JSONValue | None:
         return await self.post("/api/data-studio/table/sync-schema", body=dict(body))
 
-    async def get_comment(
-        self,
-        *,
-        model: str | None = None,
-        model_id: int | str | None = None,
-    ) -> JSONValue | None:
-        params: dict[str, QueryParamValue] = {}
-        if model is not None:
-            params["model"] = model
-        if model_id is not None:
-            params["model-id"] = model_id
-        return await self.get("/api/comment", params=params or None)
-
-    async def get_comment_mentions(self) -> JSONValue | None:
-        return await self.get("/api/comment/mentions")
-
-    async def create_comment(self, body: Mapping[str, object]) -> JSONValue | None:
-        return await self.post("/api/comment", body=dict(body))
-
-    async def update_comment(self, comment_id: int | str, body: Mapping[str, object]) -> JSONValue | None:
-        return await self.put(f"/api/comment/{comment_id}", body=dict(body))
-
-    async def post_comment_reaction(self, comment_id: int | str, body: Mapping[str, object]) -> JSONValue | None:
-        return await self.post(f"/api/comment/{comment_id}/reaction", body=dict(body))
-
-    async def delete_comment(self, comment_id: int | str) -> JSONValue | None:
-        return await self.delete(f"/api/comment/{comment_id}")
-
     async def list_tables(self) -> JSONValue | None:
         return await self.get("/api/table")
 
@@ -1147,31 +1117,6 @@ class MetabaseClient(_MetabaseClientTypedMixin):
 
     async def create_dashboard_typed(self, body: dict[str, object]) -> Dashboard:
         return await self.run(PostDashboardRequest(body=dict(body)))
-
-    async def delete_comment_typed(self, comment_id: int | str) -> GenericOperationResponse:
-        return await self.run(DeleteCommentRequest(comment_id=comment_id))
-
-    async def get_comment_mentions_typed(self) -> GenericOperationResponse:
-        return await self.run(GetCommentMentionsRequest())
-
-    async def update_comment_typed(self, comment_id: int | str, body: dict[str, object]) -> GenericOperationResponse:
-        return await self.run(UpdateCommentRequest(comment_id=comment_id, body=dict(body)))
-
-    async def post_comment_reaction_typed(
-        self, comment_id: int | str, body: dict[str, object]
-    ) -> GenericOperationResponse:
-        return await self.run(PostCommentReactionRequest(comment_id=comment_id, body=dict(body)))
-
-    async def get_comment_typed(
-        self,
-        *,
-        model: str | None = None,
-        model_id: int | str | None = None,
-    ) -> GenericOperationResponse:
-        return await self.run(GetCommentRequest(model=model, model_id=model_id))
-
-    async def create_comment_typed(self, body: dict[str, object]) -> GenericOperationResponse:
-        return await self.run(PostCommentRequest(body=dict(body)))
 
     async def list_tables_typed(self) -> ListTablesResponse:
         return await self.run(ListTablesRequest())

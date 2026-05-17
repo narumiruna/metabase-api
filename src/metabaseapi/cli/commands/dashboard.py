@@ -93,7 +93,7 @@ def copy_dashboard(
     from_dashboard_id: str = typer.Argument(...),
     body: str | None = typer.Argument(None, help="Optional copy payload JSON object"),
 ) -> None:
-    payload = parse_optional_json_object(body, "body") if body else None
+    payload = parse_optional_json_object(body, "body")
     run_endpoint_command(ctx, CopyDashboardRequest(from_dashboard_id=from_dashboard_id, body=payload))
 
 

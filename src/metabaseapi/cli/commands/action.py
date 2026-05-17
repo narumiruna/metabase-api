@@ -3,7 +3,7 @@ from __future__ import annotations
 import typer
 
 from metabaseapi.cli.runtime import app
-from metabaseapi.cli.runtime import parse_optional_json_object
+from metabaseapi.cli.runtime import parse_optional_json_object_or_empty
 from metabaseapi.cli.runtime import run_endpoint_command
 from metabaseapi.cli.runtime import run_json_body_endpoint_command
 from metabaseapi.endpoints.requests.action import CreateActionPublicLinkRequest
@@ -61,8 +61,13 @@ def get_action_execute(
 ) -> None:
     """Fetch execution parameter values for an action."""
 
-    payload = parse_optional_json_object(parameters, "parameters")
-    run_endpoint_command(ctx, GetActionExecuteRequest(action_id=action_id, parameters=payload or {}))
+    run_endpoint_command(
+        ctx,
+        GetActionExecuteRequest(
+            action_id=action_id,
+            parameters=parse_optional_json_object_or_empty(parameters, "parameters"),
+        ),
+    )
 
 
 @app.command("update-action")
@@ -84,8 +89,13 @@ def execute_action(
 ) -> None:
     """Execute an action."""
 
-    payload = parse_optional_json_object(parameters, "parameters")
-    run_endpoint_command(ctx, ExecuteActionRequest(action_id=action_id, parameters=payload or {}))
+    run_endpoint_command(
+        ctx,
+        ExecuteActionRequest(
+            action_id=action_id,
+            parameters=parse_optional_json_object_or_empty(parameters, "parameters"),
+        ),
+    )
 
 
 @app.command("create-action-public-link")

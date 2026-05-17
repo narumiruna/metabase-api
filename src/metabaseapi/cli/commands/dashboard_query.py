@@ -6,6 +6,7 @@ import typer
 
 from metabaseapi.cli.runtime import app
 from metabaseapi.cli.runtime import parse_optional_json_object
+from metabaseapi.cli.runtime import parse_optional_json_object_or_empty
 from metabaseapi.cli.runtime import run_endpoint_command
 from metabaseapi.endpoints.requests.dashboard_query import DashboardCardQueryExportRequest
 from metabaseapi.endpoints.requests.dashboard_query import DashboardCardQueryRequest
@@ -27,6 +28,10 @@ _FILTERING_OPTION = typer.Option(None, "--filtering", help="Filtering field ID l
 def _parse_optional_query_params(raw: str | None) -> dict[str, QueryParamValue] | None:
     payload = parse_optional_json_object(raw, "params")
     return cast("dict[str, QueryParamValue] | None", payload)
+
+
+def _parse_optional_query_params_or_empty(raw: str | None) -> dict[str, QueryParamValue]:
+    return _parse_optional_query_params(raw) or {}
 
 
 @app.command("get-dashboard-params-valid-filter-fields")
@@ -121,13 +126,12 @@ def get_dashboard_dashcard_execute(
     dashcard_id: str = typer.Argument(...),
     params: str | None = typer.Option(None, "--params", help="Execution query parameters JSON object"),
 ) -> None:
-    payload = _parse_optional_query_params(params)
     run_endpoint_command(
         ctx,
         GetDashboardDashcardExecuteRequest(
             dashboard_id=dashboard_id,
             dashcard_id=dashcard_id,
-            parameters=payload or {},
+            parameters=_parse_optional_query_params_or_empty(params),
         ),
     )
 
@@ -139,13 +143,12 @@ def execute_dashboard_dashcard(
     dashcard_id: str = typer.Argument(...),
     parameters: str | None = typer.Option(None, "--parameters", help="Execution parameters JSON object"),
 ) -> None:
-    payload = parse_optional_json_object(parameters, "parameters")
     run_endpoint_command(
         ctx,
         ExecuteDashboardDashcardRequest(
             dashboard_id=dashboard_id,
             dashcard_id=dashcard_id,
-            parameters=payload or {},
+            parameters=parse_optional_json_object_or_empty(parameters, "parameters"),
         ),
     )
 
@@ -157,10 +160,13 @@ def get_dashboard_param_remapping(
     param_key: str = typer.Argument(...),
     params: str | None = typer.Option(None, "--params", help="Filter context JSON object"),
 ) -> None:
-    payload = _parse_optional_query_params(params)
     run_endpoint_command(
         ctx,
-        DashboardParamRemappingRequest(dashboard_id=dashboard_id, param_key=param_key, parameters=payload or {}),
+        DashboardParamRemappingRequest(
+            dashboard_id=dashboard_id,
+            param_key=param_key,
+            parameters=_parse_optional_query_params_or_empty(params),
+        ),
     )
 
 
@@ -172,14 +178,13 @@ def get_dashboard_param_search_values(
     query: str = typer.Argument(...),
     params: str | None = typer.Option(None, "--params", help="Filter context JSON object"),
 ) -> None:
-    payload = _parse_optional_query_params(params)
     run_endpoint_command(
         ctx,
         DashboardParamSearchRequest(
             dashboard_id=dashboard_id,
             param_key=param_key,
             query=query,
-            parameters=payload or {},
+            parameters=_parse_optional_query_params_or_empty(params),
         ),
     )
 
@@ -191,10 +196,13 @@ def get_dashboard_param_values(
     param_key: str = typer.Argument(...),
     params: str | None = typer.Option(None, "--params", help="Filter context JSON object"),
 ) -> None:
-    payload = _parse_optional_query_params(params)
     run_endpoint_command(
         ctx,
-        DashboardParamValuesRequest(dashboard_id=dashboard_id, param_key=param_key, parameters=payload or {}),
+        DashboardParamValuesRequest(
+            dashboard_id=dashboard_id,
+            param_key=param_key,
+            parameters=_parse_optional_query_params_or_empty(params),
+        ),
     )
 
 

@@ -266,7 +266,7 @@ RESPONSE_MODULE_CONTRACTS = {
     "alert": ("AlertSubscriptionDeleteResponse", "ListAlertsResponse"),
     "analytics": ("AnalyticsEventBatchResponse", "AnonymousStatsResponse"),
     "api_key": ("ApiKeyCountResponse", "DeleteApiKeyResponse", "ListApiKeysResponse"),
-    "bookmark": ("ListBookmarksResponse",),
+    "bookmark": ("BookmarkOrderingUpdateResponse", "DeleteBookmarkResponse", "ListBookmarksResponse"),
     "bug_reporting": ("BugReportingConnectionPoolDetailsResponse", "BugReportingDetailsResponse"),
     "card": ("CardsDashboardsResponse", "ListCardsResponse"),
     "channel": ("ListChannelsResponse",),

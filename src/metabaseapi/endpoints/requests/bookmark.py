@@ -5,8 +5,9 @@ from typing import ClassVar
 
 from metabaseapi.endpoints.entities import Bookmark
 from metabaseapi.endpoints.execution import EndpointRequest
+from metabaseapi.endpoints.responses.bookmark import BookmarkOrderingUpdateResponse
+from metabaseapi.endpoints.responses.bookmark import DeleteBookmarkResponse
 from metabaseapi.endpoints.responses.bookmark import ListBookmarksResponse
-from metabaseapi.endpoints.responses.common import GenericOperationResponse
 
 
 class ListBookmarksRequest(EndpointRequest[ListBookmarksResponse]):
@@ -15,12 +16,12 @@ class ListBookmarksRequest(EndpointRequest[ListBookmarksResponse]):
     response_model = ListBookmarksResponse
 
 
-class UpdateBookmarkOrderingRequest(EndpointRequest[GenericOperationResponse]):
+class UpdateBookmarkOrderingRequest(EndpointRequest[BookmarkOrderingUpdateResponse]):
     body: dict[str, Any]
 
     endpoint_method: ClassVar[str] = "PUT"
     endpoint_path: ClassVar[str] = "/api/bookmark/ordering"
-    response_model = GenericOperationResponse
+    response_model = BookmarkOrderingUpdateResponse
 
 
 class CreateBookmarkRequest(EndpointRequest[Bookmark]):
@@ -32,10 +33,10 @@ class CreateBookmarkRequest(EndpointRequest[Bookmark]):
     response_model = Bookmark
 
 
-class DeleteBookmarkRequest(EndpointRequest[GenericOperationResponse]):
+class DeleteBookmarkRequest(EndpointRequest[DeleteBookmarkResponse]):
     model: str
     item_id: int | str
 
     endpoint_method: ClassVar[str] = "DELETE"
     endpoint_path: ClassVar[str] = "/api/bookmark/{model}/{item_id}"
-    response_model = GenericOperationResponse
+    response_model = DeleteBookmarkResponse

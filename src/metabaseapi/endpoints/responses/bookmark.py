@@ -8,6 +8,7 @@ from pydantic import Field as PydanticField
 from pydantic import model_validator
 
 from metabaseapi.endpoints._response_payload import normalize_list_payload
+from metabaseapi.endpoints._response_payload import normalize_unstructured_payload
 from metabaseapi.endpoints.entities import Bookmark
 from metabaseapi.wire import JSONValue
 
@@ -22,3 +23,22 @@ class ListBookmarksResponse(BaseModel):
     def normalize_payload(cls, values: object) -> dict[str, Any]:
         return normalize_list_payload(values, "bookmarks")
 
+
+class BookmarkOrderingUpdateResponse(BaseModel):
+    raw: JSONValue | None = None
+    model_config = ConfigDict(extra="allow")
+
+    @model_validator(mode="before")
+    @classmethod
+    def normalize_payload(cls, values: object) -> dict[str, Any]:
+        return normalize_unstructured_payload(values)
+
+
+class DeleteBookmarkResponse(BaseModel):
+    raw: JSONValue | None = None
+    model_config = ConfigDict(extra="allow")
+
+    @model_validator(mode="before")
+    @classmethod
+    def normalize_payload(cls, values: object) -> dict[str, Any]:
+        return normalize_unstructured_payload(values)

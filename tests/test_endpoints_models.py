@@ -33,6 +33,8 @@ from metabaseapi.endpoints.requests.analytics import CreateAnalyticsEventBatchRe
 from metabaseapi.endpoints.requests.analytics import GetAnonymousStatsRequest
 from metabaseapi.endpoints.requests.api_key import CountApiKeysRequest
 from metabaseapi.endpoints.requests.api_key import DeleteApiKeyRequest
+from metabaseapi.endpoints.requests.bookmark import DeleteBookmarkRequest
+from metabaseapi.endpoints.requests.bookmark import UpdateBookmarkOrderingRequest
 from metabaseapi.endpoints.requests.bug_reporting import GetBugReportingConnectionPoolDetailsRequest
 from metabaseapi.endpoints.requests.bug_reporting import GetBugReportingDetailsRequest
 from metabaseapi.endpoints.requests.cache import DeleteCacheRequest
@@ -139,6 +141,8 @@ from metabaseapi.endpoints.responses.analytics import AnalyticsEventBatchRespons
 from metabaseapi.endpoints.responses.analytics import AnonymousStatsResponse
 from metabaseapi.endpoints.responses.api_key import ApiKeyCountResponse
 from metabaseapi.endpoints.responses.api_key import DeleteApiKeyResponse
+from metabaseapi.endpoints.responses.bookmark import BookmarkOrderingUpdateResponse
+from metabaseapi.endpoints.responses.bookmark import DeleteBookmarkResponse
 from metabaseapi.endpoints.responses.bug_reporting import BugReportingConnectionPoolDetailsResponse
 from metabaseapi.endpoints.responses.bug_reporting import BugReportingDetailsResponse
 from metabaseapi.endpoints.responses.card import CardsDashboardsResponse
@@ -346,6 +350,16 @@ def test_action_requests_use_expected_paths_and_payloads() -> None:
         ),
         (CountApiKeysRequest(), ApiKeyCountResponse, ("GET", "/api/api-key/count", {}, None)),
         (DeleteApiKeyRequest(api_key_id=7), DeleteApiKeyResponse, ("DELETE", "/api/api-key/7", {}, None)),
+        (
+            UpdateBookmarkOrderingRequest(body={"ids": [1]}),
+            BookmarkOrderingUpdateResponse,
+            ("PUT", "/api/bookmark/ordering", {}, {"ids": [1]}),
+        ),
+        (
+            DeleteBookmarkRequest(model="card", item_id=1),
+            DeleteBookmarkResponse,
+            ("DELETE", "/api/bookmark/card/1", {}, None),
+        ),
         (
             GetBugReportingConnectionPoolDetailsRequest(),
             BugReportingConnectionPoolDetailsResponse,

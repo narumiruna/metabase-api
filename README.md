@@ -1,4 +1,4 @@
-# metabaseapi: Async Python Client and CLI for the Metabase API
+# 🗃️ metabaseapi: Async Python Client and CLI for the Metabase API
 
 `metabaseapi` is a typed, async Python client and command-line interface for the
 [Metabase](https://www.metabase.com/) API. It wraps Metabase endpoints with
@@ -9,26 +9,26 @@ Use this project when you need a Python Metabase API client for dashboards,
 cards, databases, collections, users, settings, permissions, embedding, search,
 and other Metabase administration workflows.
 
-⚠️ This package is currently early-stage and versioned as `0.0.0`. Pin commits
-or tags when using it outside local development.
+> ⚠️ This package is currently early-stage and versioned as `0.0.0`. Pin commits
+> or tags when using it outside local development.
 
-## Features
+## ✨ Features
 
-- Async Metabase API client built on `httpx.AsyncClient`.
-- Typed endpoint request models with Pydantic validation.
-- JSON CLI output designed for scripts and agent workflows.
-- Environment-based configuration via `METABASE_URL` and `METABASE_API_KEY`.
-- Coverage for many core, admin, and enterprise Metabase endpoint families.
-- Local tests for CLI behavior, settings, client transport, endpoint models, and
+- ⚡ Async Metabase API client built on `httpx.AsyncClient`.
+- 🔒 Typed endpoint request models with Pydantic validation.
+- 🖥️ JSON CLI output designed for scripts and agent workflows.
+- ⚙️ Environment-based configuration via `METABASE_URL` and `METABASE_API_KEY`.
+- 📡 Coverage for many core, admin, and enterprise Metabase endpoint families.
+- ✅ Local tests for CLI behavior, settings, client transport, endpoint models, and
   optional live Metabase smoke checks.
 
-## Requirements
+## 📋 Requirements
 
-- Python 3.14 or newer.
-- `uv` for local development and dependency management.
-- A Metabase instance plus an API key for real API calls.
+- 🐍 Python 3.14 or newer.
+- 📦 `uv` for local development and dependency management.
+- 🌐 A Metabase instance plus an API key for real API calls.
 
-## Installation
+## 🚀 Installation
 
 Install directly from GitHub when consuming the project before a packaged
 release:
@@ -45,7 +45,7 @@ cd metabase-api
 uv sync
 ```
 
-## Quick Start
+## ⚡ Quick Start
 
 Configure the Metabase connection with environment variables:
 
@@ -67,7 +67,7 @@ metabaseapi list-dashboards
 All successful CLI responses are rendered as formatted JSON. API and validation
 errors are printed to stderr as JSON error payloads and return exit code `1`.
 
-## Python API Example
+## 🐍 Python API Example
 
 ```python
 import asyncio
@@ -91,7 +91,7 @@ Endpoint requests live under `metabaseapi.endpoints.requests.<domain>`, for
 example `user`, `database`, `card`, `dashboard`, `collection`, `table`, and
 `search`.
 
-## Configuration
+## ⚙️ Configuration
 
 `metabaseapi` reads `.env` and process environment values through Pydantic
 settings:
@@ -105,7 +105,7 @@ settings:
 
 Use `.env.sample` as the local template. Do not commit real API keys.
 
-## Development
+## 🛠️ Development
 
 Common repository commands:
 
@@ -123,7 +123,7 @@ just all         # run format, lint, type, and tests
 just live-test
 ```
 
-## Project Layout
+## 📁 Project Layout
 
 ```text
 src/metabaseapi/
@@ -134,6 +134,6 @@ src/metabaseapi/
 tests/                    unit, CLI, endpoint, and optional live tests
 ```
 
-## License
+## 📄 License
 
 This project is licensed under the terms in [LICENSE](LICENSE).

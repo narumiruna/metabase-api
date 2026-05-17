@@ -7,6 +7,7 @@ import subprocess
 import sys
 from pathlib import Path
 from textwrap import dedent
+from types import ModuleType
 
 import pytest
 
@@ -275,27 +276,17 @@ RESPONSE_MODULE_CONTRACTS = {
 }
 
 
-def test_cli_command_modules_import_from_package() -> None:
-    assert len(metabaseapi.cli.commands.command_module_names()) == len(metabaseapi.cli.commands.command_module_paths())
-    assert len(metabaseapi.cli.commands.command_module_objects()) == len(
-        metabaseapi.cli.commands.command_module_paths()
-    )
-    assert {module.__name__ for module in metabaseapi.cli.commands.command_module_objects()} == set(
-        metabaseapi.cli.commands.command_module_paths()
-    )
-    module_names = metabaseapi.cli.commands.command_module_names()
-    module_paths = metabaseapi.cli.commands.command_module_paths()
-    assert all(path.endswith(f".{module}") for module, path in zip(module_names, module_paths, strict=True))
-    for module_path in module_paths:
-        importlib.import_module(module_path)
+def test_cli_command_package_exposes_no_registry_api() -> None:
+    assert metabaseapi.cli.commands.__all__ == []
+    assert not hasattr(metabaseapi.cli.commands, "command_module_names")
+    assert not hasattr(metabaseapi.cli.commands, "command_module_paths")
+    assert not hasattr(metabaseapi.cli.commands, "command_module_objects")
+    assert not hasattr(metabaseapi.cli.commands, "register_commands")
 
 
 def test_cli_command_registry_matches_package_files() -> None:
-    command_package_path = Path(metabaseapi.cli.commands.__file__).parent
-    command_module_files = tuple(
-        sorted(path.stem for path in command_package_path.glob("*.py") if path.stem != "__init__")
-    )
-    assert command_module_files == tuple(sorted(metabaseapi.cli.commands.command_module_names()))
+    module_names = tuple(module.__name__.rsplit(".", maxsplit=1)[-1] for module in _command_modules())
+    assert module_names == _command_module_names()
 
 
 def test_cli_command_legacy_shims_are_not_importable() -> None:
@@ -478,9 +469,18 @@ def test_endpoint_requests_use_base_execution_methods() -> None:
             assert "do_sync" not in request_class.__dict__
 
 
+def _command_module_names() -> tuple[str, ...]:
+    command_package_path = Path(metabaseapi.cli.commands.__file__).parent
+    return tuple(sorted(path.stem for path in command_package_path.glob("*.py") if path.stem != "__init__"))
+
+
+def _command_modules() -> tuple[ModuleType, ...]:
+    return tuple(importlib.import_module(f"metabaseapi.cli.commands.{module}") for module in _command_module_names())
+
+
 def _command_names_from_sources() -> list[str]:
     command_names: list[str] = []
-    for module in metabaseapi.cli.commands.command_module_objects():
+    for module in _command_modules():
         source_path = Path(module.__file__) if module.__file__ else None
         if source_path is None:
             continue
@@ -491,7 +491,7 @@ def _command_names_from_sources() -> list[str]:
 
 def _command_names_by_module() -> dict[str, tuple[str, ...]]:
     command_names: dict[str, tuple[str, ...]] = {}
-    for module in metabaseapi.cli.commands.command_module_objects():
+    for module in _command_modules():
         source_path = Path(module.__file__) if module.__file__ else None
         if source_path is None:
             continue
@@ -622,18 +622,11 @@ def test_cli_app_registers_all_declared_commands() -> None:
 
 
 def test_cli_command_modules_are_compact() -> None:
-    for module in metabaseapi.cli.commands.command_module_objects():
+    for module in _command_modules():
         source_path = Path(module.__file__) if module.__file__ else None
         assert source_path is not None
         line_count = len(source_path.read_text(encoding="utf-8").splitlines())
         assert line_count < 1000, f"{module.__name__} has {line_count} lines"
-
-
-def test_cli_command_module_objects_preserve_order() -> None:
-    first = metabaseapi.cli.commands.command_module_objects()
-    second = metabaseapi.cli.commands.command_module_objects()
-    assert first == second
-    assert tuple(module.__name__ for module in first) == metabaseapi.cli.commands.command_module_paths()
 
 
 def test_cli_command_modules_importable_in_multiple_orders() -> None:
@@ -647,14 +640,14 @@ def test_cli_command_modules_importable_in_multiple_orders() -> None:
             """
             import metabaseapi.cli.commands
             import metabaseapi.cli
-            print(len(metabaseapi.cli.commands.command_module_objects()), len(metabaseapi.cli.app.registered_commands))
+            print(len(metabaseapi.cli.app.registered_commands))
             """
         ).strip(),
         dedent(
             """
             import metabaseapi.cli
             import metabaseapi.cli.commands
-            print(len(metabaseapi.cli.commands.command_module_objects()), len(metabaseapi.cli.app.registered_commands))
+            print(len(metabaseapi.cli.app.registered_commands))
             """
         ).strip(),
         dedent(
@@ -662,9 +655,9 @@ def test_cli_command_modules_importable_in_multiple_orders() -> None:
             from metabaseapi.cli.commands import *  # noqa: F401
             import metabaseapi.cli
             print(
-                len(command_module_names()),
-                len(command_module_objects()),
                 len(metabaseapi.cli.app.registered_commands),
+                "command_module_names" in globals(),
+                "command_module_objects" in globals(),
             )
             """
         ).strip(),
@@ -680,8 +673,7 @@ def test_cli_command_modules_importable_in_multiple_orders() -> None:
         )
         lines = result.stdout.strip().splitlines()
         assert len(lines) == 1
-        values = [int(item) for item in lines[0].split()]
-        assert len(values) in (2, 3)
-        assert all(value > 0 for value in values)
-        expected_modules = len(metabaseapi.cli.commands.command_module_objects())
-        assert values[0] == expected_modules
+        values = lines[0].split()
+        assert int(values[0]) > 0
+        if len(values) == 3:
+            assert values[1:] == ["False", "False"]

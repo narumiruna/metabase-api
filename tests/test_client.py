@@ -3,11 +3,14 @@ from __future__ import annotations
 import asyncio
 import json
 from collections.abc import Coroutine
+from typing import cast
 
 import httpx
 import pytest
 
 from metabaseapi.client import MetabaseClient
+from metabaseapi.endpoints.entities import CurrentUserResponse
+from metabaseapi.endpoints.requests.user import CurrentUserRequest
 from metabaseapi.errors import MetabaseDecodeError
 from metabaseapi.errors import MetabaseHTTPStatusError
 from metabaseapi.errors import MetabaseNetworkError
@@ -133,19 +136,19 @@ def test_non_json_payload_is_wrapped_as_json_text() -> None:
     assert result == {"content_type": "text/plain", "text": "ok"}
 
 
-class _RunRequest:
-    async def do(self, client: MetabaseClient) -> str:
-        _ = client
-        return "ok"
-
-
 def test_run_seam_executes_request_model() -> None:
-    client = MetabaseClient(base_url="http://localhost:3000", api_key="abc")
-    request = _RunRequest()
+    async def handler(_request: httpx.Request) -> httpx.Response:
+        return httpx.Response(200, json={"name": "Alice"})
 
-    result = _run(client.run(request))
+    client = MetabaseClient(
+        base_url="http://localhost:3000",
+        api_key="abc",
+        client=httpx.AsyncClient(transport=httpx.MockTransport(handler)),
+    )
 
-    assert result == "ok"
+    result = cast("CurrentUserResponse", _run(client.run(CurrentUserRequest())))
+
+    assert result.name == "Alice"
 
 
 def test_network_error_is_mapped() -> None:

@@ -1,19 +1,16 @@
 from __future__ import annotations
 
 import json
-from typing import Protocol
 
 import pytest
+from pydantic import BaseModel
 from typer.testing import CliRunner
 
 from metabaseapi import cli
+from metabaseapi.endpoints.execution import EndpointRequest
 from metabaseapi.errors import MetabaseHTTPStatusError
 
 runner = CliRunner()
-
-
-class _EndpointRequest(Protocol):
-    async def do(self, client: object) -> object: ...
 
 
 def _contains_mapping(payload: object, expected: dict[str, object]) -> bool:
@@ -50,7 +47,7 @@ class _ClientWithRequestMethods:
             return {"name": "Alice"}
         return {"method": method, "path": path, "params": params, "body": json_data}
 
-    async def run(self, request_model: _EndpointRequest) -> object:
+    async def run(self, request_model: EndpointRequest[BaseModel]) -> object:
         return await request_model.do(self)
 
 

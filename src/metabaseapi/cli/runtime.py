@@ -5,8 +5,6 @@ import json
 import logging
 from collections.abc import Callable
 from collections.abc import Coroutine
-from typing import Protocol
-from typing import TypeVar
 from typing import cast
 
 import typer
@@ -16,17 +14,11 @@ from metabaseapi import settings
 from metabaseapi.cli.error_adapter import error_payload
 from metabaseapi.cli.output import render_payload
 from metabaseapi.client import MetabaseClient
+from metabaseapi.endpoints.execution import EndpointRequest
 from metabaseapi.errors import MetabaseError
 from metabaseapi.wire import JSONValue
 
 app = typer.Typer(help="Async Metabase API CLI")
-
-ResponseT = TypeVar("ResponseT")
-
-
-class EndpointCommandRequest(Protocol[ResponseT]):
-    async def do(self, client: MetabaseClient) -> ResponseT: ...
-
 
 def create_client(
     client_settings: settings.Settings,
@@ -112,7 +104,7 @@ def _get_settings(ctx: typer.Context) -> settings.Settings:
     return settings_obj
 
 
-def run_endpoint_command(ctx: typer.Context, request: EndpointCommandRequest[object]) -> None:
+def run_endpoint_command[ResponseT: BaseModel](ctx: typer.Context, request: EndpointRequest[ResponseT]) -> None:
     async def do_request() -> object:
         async with create_client(_get_settings(ctx)) as client:
             return await client.run(request)
@@ -120,10 +112,10 @@ def run_endpoint_command(ctx: typer.Context, request: EndpointCommandRequest[obj
     _run_and_print(do_request())
 
 
-def run_json_body_endpoint_command(
+def run_json_body_endpoint_command[ResponseT: BaseModel](
     ctx: typer.Context,
     raw_body: str,
-    build_request: Callable[[dict[str, object]], EndpointCommandRequest[object]],
+    build_request: Callable[[dict[str, object]], EndpointRequest[ResponseT]],
 ) -> None:
     run_endpoint_command(ctx, build_request(parse_json_object(raw_body, "body")))
 

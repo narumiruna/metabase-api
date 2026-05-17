@@ -1,11 +1,11 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
-from typing import Protocol
-from typing import TypeVar
 
 import httpx
+from pydantic import BaseModel
 
+from metabaseapi.endpoints.execution import EndpointRequest
 from metabaseapi.errors import MetabaseDecodeError
 from metabaseapi.errors import MetabaseHTTPStatusError
 from metabaseapi.errors import MetabaseNetworkError
@@ -18,13 +18,6 @@ from metabaseapi.wire import QueryParamValue
 __all__ = [
     "MetabaseClient",
 ]
-
-
-class _ExecutableRequest[ResponseT](Protocol):
-    async def do(self, client: MetabaseClient) -> ResponseT: ...
-
-
-ResponseT = TypeVar("ResponseT")
 
 
 class MetabaseClient:
@@ -172,5 +165,5 @@ class MetabaseClient:
             "text": response.text,
         }
 
-    async def run[ResponseT](self, request_model: _ExecutableRequest[ResponseT]) -> ResponseT:
+    async def run[ResponseT: BaseModel](self, request_model: EndpointRequest[ResponseT]) -> ResponseT:
         return await request_model.do(self)

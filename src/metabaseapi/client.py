@@ -139,6 +139,7 @@ from metabaseapi.metabase import PostCollectionMoveDashboardQuestionCandidatesRe
 from metabaseapi.metabase import PostCollectionRootMoveDashboardQuestionCandidatesRequest
 from metabaseapi.metabase import PostCommentReactionRequest
 from metabaseapi.metabase import PostCommentRequest
+from metabaseapi.metabase import PostDashboardRequest
 from metabaseapi.metabase import PutCacheRequest
 from metabaseapi.metabase import PutCollectionGraphRequest
 from metabaseapi.metabase import PutCollectionRequest
@@ -804,6 +805,9 @@ class MetabaseClient:
     async def get_card(self, card_id: int | str) -> JSONValue | None:
         return await self.get(f"/api/card/{card_id}")
 
+    async def create_dashboard(self, body: Mapping[str, object]) -> JSONValue | None:
+        return await self.post("/api/dashboard", body=dict(body))
+
     async def list_dashboards(self) -> JSONValue | None:
         return await self.get("/api/dashboard")
 
@@ -1120,6 +1124,9 @@ class MetabaseClient:
 
     async def list_dashboards_typed(self) -> ListDashboardsResponse:
         return await self.run(ListDashboardsRequest())
+
+    async def create_dashboard_typed(self, body: dict[str, object]) -> Dashboard:
+        return await self.run(PostDashboardRequest(body=dict(body)))
 
     async def list_users_typed(self) -> ListUsersResponse:
         return await self.run(ListUsersRequest())

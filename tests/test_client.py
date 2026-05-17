@@ -192,6 +192,7 @@ def test_convenience_paths_cover_handwritten_endpoint_surface() -> None:
         (client.get_cloud_migration(), ("GET", "/api/cloud-migration", None)),
         (client.cancel_cloud_migration(), ("PUT", "/api/cloud-migration/cancel", None)),
         (client.create_collection({"name": "New"}), ("POST", "/api/collection", {"name": "New"})),
+        (client.create_dashboard({"name": "Sales"}), ("POST", "/api/dashboard", {"name": "Sales"})),
         (client.get_collection("7"), ("GET", "/api/collection/7", None)),
         (client.update_collection("7", {"name": "Updated"}), ("PUT", "/api/collection/7", {"name": "Updated"})),
         (client.delete_collection("7"), ("DELETE", "/api/collection/7", None)),

@@ -115,6 +115,7 @@ from .requests import PostCollectionMoveDashboardQuestionCandidatesRequest
 from .requests import PostCollectionRootMoveDashboardQuestionCandidatesRequest
 from .requests import PostCommentReactionRequest
 from .requests import PostCommentRequest
+from .requests import PostDashboardRequest
 from .requests import PutCacheRequest
 from .requests import PutCollectionGraphRequest
 from .requests import PutCollectionRequest
@@ -275,6 +276,7 @@ __all__ = [
     "PostCollectionRootMoveDashboardQuestionCandidatesRequest",
     "PostCommentReactionRequest",
     "PostCommentRequest",
+    "PostDashboardRequest",
     "PutCacheRequest",
     "PutCollectionGraphRequest",
     "PutCollectionRequest",

@@ -1061,6 +1061,12 @@ def get_dashboard(ctx: typer.Context, dashboard_id: str = typer.Argument(...)) -
     _run_and_print(_run_client_call(ctx, lambda client: client.get_dashboard(dashboard_id)))
 
 
+@app.command("create-dashboard")
+def create_dashboard(ctx: typer.Context, body: str = typer.Argument(..., help="Dashboard body JSON object")) -> None:
+    payload = _parse_json_object(body, "body")
+    _run_and_print(_run_client_call(ctx, lambda client: client.create_dashboard(payload)))
+
+
 @app.command("get-user")
 def get_user(ctx: typer.Context, user_id: str = typer.Argument(...)) -> None:
     """Get a user by ID."""

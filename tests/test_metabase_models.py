@@ -94,6 +94,7 @@ from metabaseapi.metabase import PostCollectionMoveDashboardQuestionCandidatesRe
 from metabaseapi.metabase import PostCollectionRootMoveDashboardQuestionCandidatesRequest
 from metabaseapi.metabase import PostCommentReactionRequest
 from metabaseapi.metabase import PostCommentRequest
+from metabaseapi.metabase import PostDashboardRequest
 from metabaseapi.metabase import PutCacheRequest
 from metabaseapi.metabase import PutCollectionGraphRequest
 from metabaseapi.metabase import PutCollectionRequest
@@ -359,6 +360,13 @@ def test_action_requests_use_expected_paths_and_payloads() -> None:
             GenericOperationResponse,
             ("POST", "/api/comment", {}, {"text": "Hi"}),
         ),
+        (GetDashboardRequest(dashboard_id=9), Dashboard, ("GET", "/api/dashboard/9", {}, None)),
+        (PostDashboardRequest(body={"name": "Sales"}), Dashboard, ("POST", "/api/dashboard", {}, {"name": "Sales"})),
+        (
+            DeleteCommentRequest(comment_id="7"),
+            GenericOperationResponse,
+            ("DELETE", "/api/comment/7", {}, None),
+        ),
         (
             DeleteCommentRequest(comment_id="7"),
             GenericOperationResponse,
@@ -563,6 +571,7 @@ def _build_mock_endpoint_responses() -> dict[tuple[str, str], dict[str, object]]
         ("POST", "/api/card"): {"id": 12, "name": "Orders", "display": "table", "type": "question"},
         ("GET", "/api/card"): {"data": [{"id": 5, "name": "card", "display": "line"}]},
         ("GET", "/api/dashboard"): {"data": [{"id": 6, "name": "dash", "collection_id": 1}]},
+        ("POST", "/api/dashboard"): {"id": 7, "name": "Sales", "collection_id": 1},
         ("GET", "/api/user"): {"data": [{"id": 4, "email": "user@example.com", "first_name": "Ada"}]},
         ("GET", "/api/collection"): {"data": [{"id": 7, "name": "collection"}]},
         ("POST", "/api/collection"): {"id": 15, "name": "New"},
@@ -641,6 +650,7 @@ def test_typed_methods_in_client_return_models() -> None:
     latest_cloud_migration = _run(client.get_cloud_migration_typed())
     canceled_cloud_migration = _run(client.cancel_cloud_migration_typed())
     created_collection = _run(client.create_collection_typed({"name": "New"}))
+    created_dashboard = _run(client.create_dashboard_typed({"name": "Sales"}))
     updated_collection = _run(client.update_collection_typed("7", {"name": "Updated"}))
     deleted_collection = _run(client.delete_collection_typed("7"))
     comments = _run(client.get_comment_typed(model="card", model_id=13))
@@ -706,6 +716,8 @@ def test_typed_methods_in_client_return_models() -> None:
     assert isinstance(canceled_cloud_migration, GenericOperationResponse)
     assert isinstance(created_collection, Collection)
     assert created_collection.name == "New"
+    assert isinstance(created_dashboard, Dashboard)
+    assert created_dashboard.name == "Sales"
     assert isinstance(updated_collection, GenericOperationResponse)
     assert isinstance(deleted_collection, GenericOperationResponse)
     assert isinstance(comments, GenericOperationResponse)

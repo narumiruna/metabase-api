@@ -473,6 +473,9 @@ class _ConvenienceClient(_ClientWithRequestMethods):
     async def create_collection(self, body: dict[str, object]) -> dict[str, object]:
         return {"method": "POST", "path": "/api/collection", "body": body}
 
+    async def create_dashboard(self, body: dict[str, object]) -> dict[str, object]:
+        return {"method": "POST", "path": "/api/dashboard", "body": body}
+
     async def get_collection(self, collection_id: str) -> dict[str, object]:
         return {"method": "GET", "path": f"/api/collection/{collection_id}"}
 
@@ -668,6 +671,7 @@ def test_help_lists_every_convenience_command() -> None:
         "get-card-series",
         "list-dashboards",
         "get-dashboard",
+        "create-dashboard",
         "list-users",
         "get-user",
         "list-collections",
@@ -852,6 +856,7 @@ def test_read_endpoint_commands_cover_handwritten_surface(
         (["create-cloud-migration", '{"environment":"prod"}'], "POST", "/api/cloud-migration"),
         (["cancel-cloud-migration"], "PUT", "/api/cloud-migration/cancel"),
         (["create-collection", '{"name":"New"}'], "POST", "/api/collection"),
+        (["create-dashboard", '{"name":"Sales"}'], "POST", "/api/dashboard"),
         (["get-collection-graph"], "GET", "/api/collection/graph"),
         (["put-collection-graph", '{"groups":["admin"]}'], "PUT", "/api/collection/graph"),
         (

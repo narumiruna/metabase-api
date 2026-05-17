@@ -1511,6 +1511,22 @@ class ListDashboardsRequest(_BaseMetabaseRequest[ListDashboardsResponse]):
         return self.execute_sync(client, ListDashboardsResponse)
 
 
+class PostDashboardRequest(_BaseMetabaseRequest[Dashboard]):
+    body: dict[str, Any] = PydanticField(default_factory=dict)
+
+    endpoint_method: ClassVar[str] = "POST"
+    endpoint_path: ClassVar[str] = "/api/dashboard"
+
+    async def do(self, client: MetabaseRequestClient) -> Dashboard:
+        return await self.execute(client, Dashboard)
+
+    def do_sync(self, client: MetabaseRequestClient) -> Dashboard:
+        return self.execute_sync(client, Dashboard)
+
+    def request_body(self) -> JSONValue:
+        return self.body
+
+
 class GetDashboardRequest(_BaseMetabaseRequest[Dashboard]):
     dashboard_id: int | str
 
@@ -1949,6 +1965,7 @@ __all__ = [
     "PostCollectionRootMoveDashboardQuestionCandidatesRequest",
     "PostCommentReactionRequest",
     "PostCommentRequest",
+    "PostDashboardRequest",
     "PutCacheRequest",
     "PutCollectionGraphRequest",
     "PutCollectionRequest",

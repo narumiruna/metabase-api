@@ -434,6 +434,9 @@ def test_cli_command_modules_depend_on_runtime_not_cli_facade() -> None:
 
 def test_cli_entrypoint_importable() -> None:
     assert hasattr(metabaseapi.cli, "app")
+    assert metabaseapi.cli.__all__ == ["app"]
+    assert not hasattr(metabaseapi.cli, "configure")
+    assert not hasattr(metabaseapi.cli, "create_client")
 
 
 def test_client_public_module_exports_concrete_http_implementation() -> None:

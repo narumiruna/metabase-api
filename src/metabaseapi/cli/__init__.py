@@ -1,10 +1,8 @@
 from __future__ import annotations
 
 from metabaseapi.cli.runtime import app
-from metabaseapi.cli.runtime import configure
-from metabaseapi.cli.runtime import create_client
 
-__all__ = ["app", "configure", "create_client"]
+__all__ = ["app"]
 
 
 def _register_commands() -> None:

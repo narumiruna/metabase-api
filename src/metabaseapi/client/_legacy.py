@@ -17,6 +17,7 @@ from metabaseapi.client.raw.channels import _MetabaseClientRawMixin as _Metabase
 from metabaseapi.client.raw.cloud import _MetabaseClientRawMixin as _MetabaseClientCloudRawMixin
 from metabaseapi.client.raw.collections import _MetabaseClientRawMixin as _MetabaseClientCollectionsRawMixin
 from metabaseapi.client.raw.comments import _MetabaseClientRawMixin as _MetabaseClientCommentsRawMixin
+from metabaseapi.client.raw.tables import _MetabaseClientRawMixin as _MetabaseClientTablesRawMixin
 from metabaseapi.client.raw.users import _MetabaseClientRawMixin as _MetabaseClientUsersRawMixin
 from metabaseapi.client.typed.alerts import _MetabaseClientTypedMixin as _MetabaseClientAlertsTypedMixin
 from metabaseapi.client.typed.analytics import _MetabaseClientTypedMixin as _MetabaseClientAnalyticsTypedMixin
@@ -28,6 +29,7 @@ from metabaseapi.client.typed.channels import _MetabaseClientTypedMixin as _Meta
 from metabaseapi.client.typed.cloud import _MetabaseClientTypedMixin as _MetabaseClientCloudTypedMixin
 from metabaseapi.client.typed.collections import _MetabaseClientTypedMixin as _MetabaseClientCollectionsTypedMixin
 from metabaseapi.client.typed.comments import _MetabaseClientTypedMixin as _MetabaseClientCommentsTypedMixin
+from metabaseapi.client.typed.tables import _MetabaseClientTypedMixin as _MetabaseClientTablesTypedMixin
 from metabaseapi.client.typed.users import _MetabaseClientTypedMixin as _MetabaseClientUsersTypedMixin
 from metabaseapi.errors import MetabaseDecodeError
 from metabaseapi.errors import MetabaseHTTPStatusError
@@ -102,9 +104,7 @@ from metabaseapi.metabase import GetDashboardQueryMetadataRequest
 from metabaseapi.metabase import GetDashboardRelatedRequest
 from metabaseapi.metabase import GetDashboardRequest
 from metabaseapi.metabase import GetDatabaseRequest
-from metabaseapi.metabase import GetFieldRequest
 from metabaseapi.metabase import GetMostRecentlyViewedDashboardRequest
-from metabaseapi.metabase import GetTableRequest
 from metabaseapi.metabase import ListActionsRequest
 from metabaseapi.metabase import ListActionsResponse
 from metabaseapi.metabase import ListActivityItemsResponse
@@ -118,16 +118,12 @@ from metabaseapi.metabase import ListPopularItemsRequest
 from metabaseapi.metabase import ListPublicActionsRequest
 from metabaseapi.metabase import ListRecentsRequest
 from metabaseapi.metabase import ListRecentViewsRequest
-from metabaseapi.metabase import ListTablesRequest
-from metabaseapi.metabase import ListTablesResponse
-from metabaseapi.metabase import MetabaseField
 from metabaseapi.metabase import MoveCardsRequest
 from metabaseapi.metabase import PostCardPivotQueryRequest
 from metabaseapi.metabase import PostDashboardPivotQueryRequest
 from metabaseapi.metabase import PostDashboardRequest
 from metabaseapi.metabase import SaveDashboardRequest
 from metabaseapi.metabase import SaveDashboardToCollectionRequest
-from metabaseapi.metabase import Table
 from metabaseapi.metabase import UpdateActionRequest
 from metabaseapi.metabase import UpdateCardRequest
 from metabaseapi.metabase import UpdateDashboardCardsRequest
@@ -152,6 +148,7 @@ class _MetabaseClientRawMixin(
     _MetabaseClientCloudRawMixin,
     _MetabaseClientCommentsRawMixin,
     _MetabaseClientBugReportingRawMixin,
+    _MetabaseClientTablesRawMixin,
 ):
     """Resource-scoped raw mixin."""
 
@@ -169,6 +166,7 @@ class _MetabaseClientTypedMixin(
     _MetabaseClientCloudTypedMixin,
     _MetabaseClientCommentsTypedMixin,
     _MetabaseClientBugReportingTypedMixin,
+    _MetabaseClientTablesTypedMixin,
 ):
     """Resource-scoped typed mixin."""
 
@@ -907,15 +905,6 @@ class MetabaseClient(_MetabaseClientTypedMixin):
     async def data_studio_table_sync_schema(self, body: Mapping[str, object]) -> JSONValue | None:
         return await self.post("/api/data-studio/table/sync-schema", body=dict(body))
 
-    async def list_tables(self) -> JSONValue | None:
-        return await self.get("/api/table")
-
-    async def get_table(self, table_id: int | str) -> JSONValue | None:
-        return await self.get(f"/api/table/{table_id}")
-
-    async def get_field(self, field_id: int | str) -> JSONValue | None:
-        return await self.get(f"/api/field/{field_id}")
-
     async def run[ResponseT](self, request_model: _ExecutableRequest[ResponseT]) -> ResponseT:
         return await request_model.do(self)
 
@@ -1027,9 +1016,6 @@ class MetabaseClient(_MetabaseClientTypedMixin):
 
     async def create_dashboard_typed(self, body: dict[str, object]) -> Dashboard:
         return await self.run(PostDashboardRequest(body=dict(body)))
-
-    async def list_tables_typed(self) -> ListTablesResponse:
-        return await self.run(ListTablesRequest())
 
     async def create_database_typed(
         self,
@@ -1352,10 +1338,3 @@ class MetabaseClient(_MetabaseClientTypedMixin):
 
     async def data_studio_table_sync_schema_typed(self, body: dict[str, object]) -> GenericOperationResponse:
         return await self.run(DataStudioTableSyncSchemaRequest(body=body))
-
-    async def get_table_typed(self, table_id: int | str) -> Table:
-        return await self.run(GetTableRequest(table_id=table_id))
-        return await self.run(GetTableRequest(table_id=table_id))
-
-    async def get_field_typed(self, field_id: int | str) -> MetabaseField:
-        return await self.run(GetFieldRequest(field_id=field_id))

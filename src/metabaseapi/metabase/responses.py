@@ -8,15 +8,14 @@ from pydantic import ConfigDict
 from pydantic import Field as PydanticField
 from pydantic import model_validator
 
+from metabaseapi.metabase.entities import Card
+from metabaseapi.metabase.entities import Collection
+from metabaseapi.metabase.entities import Dashboard
+from metabaseapi.metabase.entities import Database
+from metabaseapi.metabase.entities import MetabaseField
+from metabaseapi.metabase.entities import Table
+from metabaseapi.metabase.entities import User
 from metabaseapi.models import JSONValue
-
-from .entities import Card
-from .entities import Collection
-from .entities import Dashboard
-from .entities import Database
-from .entities import MetabaseField
-from .entities import Table
-from .entities import User
 
 
 class ListDatabasesResponse(BaseModel):

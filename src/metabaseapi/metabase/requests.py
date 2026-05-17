@@ -11,23 +11,22 @@ from pydantic import BaseModel
 from pydantic import ConfigDict
 from pydantic import Field as PydanticField
 
+from metabaseapi.metabase.entities import Card
+from metabaseapi.metabase.entities import Collection
+from metabaseapi.metabase.entities import CurrentUserResponse
+from metabaseapi.metabase.entities import Dashboard
+from metabaseapi.metabase.entities import Database
+from metabaseapi.metabase.entities import MetabaseField
+from metabaseapi.metabase.entities import Table
+from metabaseapi.metabase.entities import User
+from metabaseapi.metabase.responses import ListCardsResponse
+from metabaseapi.metabase.responses import ListCollectionsResponse
+from metabaseapi.metabase.responses import ListDashboardsResponse
+from metabaseapi.metabase.responses import ListDatabasesResponse
+from metabaseapi.metabase.responses import ListFieldsResponse
+from metabaseapi.metabase.responses import ListTablesResponse
+from metabaseapi.metabase.responses import ListUsersResponse
 from metabaseapi.models import JSONValue
-
-from .entities import Card
-from .entities import Collection
-from .entities import CurrentUserResponse
-from .entities import Dashboard
-from .entities import Database
-from .entities import MetabaseField
-from .entities import Table
-from .entities import User
-from .responses import ListCardsResponse
-from .responses import ListCollectionsResponse
-from .responses import ListDashboardsResponse
-from .responses import ListDatabasesResponse
-from .responses import ListFieldsResponse
-from .responses import ListTablesResponse
-from .responses import ListUsersResponse
 
 
 class MetabaseRequestClient(Protocol):

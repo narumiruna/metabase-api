@@ -9,11 +9,11 @@ from typing import Annotated
 import typer
 from pydantic import ValidationError
 
-from . import settings
-from .client import MetabaseClient
-from .errors import MetabaseError
-from .models import APIRequestModel
-from .models import JSONValue
+from metabaseapi import settings
+from metabaseapi.client import MetabaseClient
+from metabaseapi.errors import MetabaseError
+from metabaseapi.models import APIRequestModel
+from metabaseapi.models import JSONValue
 
 app = typer.Typer(help="Async Metabase API CLI")
 

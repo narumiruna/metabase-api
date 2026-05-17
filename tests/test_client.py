@@ -117,6 +117,12 @@ def test_convenience_paths_cover_handwritten_endpoint_surface() -> None:
         ),
         (client.create_action_public_link(11), ("POST", "/api/action/11/public_link", None)),
         (client.delete_action_public_link(11), ("DELETE", "/api/action/11/public_link", None)),
+        (client.list_bookmarks(), ("GET", "/api/bookmark", None)),
+        (client.update_bookmark_ordering({"ids": [1]}), ("PUT", "/api/bookmark/ordering", {"ids": [1]})),
+        (client.create_bookmark("card", 1), ("POST", "/api/bookmark/card/1", None)),
+        (client.delete_bookmark("card", 1), ("DELETE", "/api/bookmark/card/1", None)),
+        (client.bug_reporting_connection_pool_details(), ("GET", "/api/bug-reporting/connection-pool-details", None)),
+        (client.bug_reporting_details(), ("GET", "/api/bug-reporting/details", None)),
         (client.automagic_database_candidates(1), ("GET", "/api/automagic-dashboards/database/1/candidates", None)),
         (
             client.automagic_model_index_primary_key(2, 3),

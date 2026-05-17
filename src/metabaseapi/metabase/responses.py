@@ -12,6 +12,7 @@ from metabaseapi.metabase.entities import Action
 from metabaseapi.metabase.entities import ActivityItem
 from metabaseapi.metabase.entities import Alert
 from metabaseapi.metabase.entities import ApiKey
+from metabaseapi.metabase.entities import Bookmark
 from metabaseapi.metabase.entities import Card
 from metabaseapi.metabase.entities import Collection
 from metabaseapi.metabase.entities import Dashboard
@@ -76,6 +77,17 @@ class ListAlertsResponse(BaseModel):
     @classmethod
     def normalize_payload(cls, values: object) -> dict[str, Any]:
         return _normalize_list_payload(values, "alerts")
+
+
+class ListBookmarksResponse(BaseModel):
+    bookmarks: list[Bookmark] = PydanticField(default_factory=list)
+    raw: JSONValue | None = None
+    model_config = ConfigDict(extra="allow")
+
+    @model_validator(mode="before")
+    @classmethod
+    def normalize_payload(cls, values: object) -> dict[str, Any]:
+        return _normalize_list_payload(values, "bookmarks")
 
 
 class ListApiKeysResponse(BaseModel):
@@ -212,6 +224,7 @@ __all__ = [
     "ListActivityItemsResponse",
     "ListAlertsResponse",
     "ListApiKeysResponse",
+    "ListBookmarksResponse",
     "ListCardsResponse",
     "ListCollectionsResponse",
     "ListDashboardsResponse",

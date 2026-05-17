@@ -4,6 +4,7 @@ from .entities import Action
 from .entities import ActivityItem
 from .entities import Alert
 from .entities import ApiKey
+from .entities import Bookmark
 from .entities import Card
 from .entities import Collection
 from .entities import CurrentUserResponse
@@ -26,6 +27,7 @@ from .requests import CreateActionPublicLinkRequest
 from .requests import CreateActionRequest
 from .requests import CreateAnalyticsEventBatchRequest
 from .requests import CreateApiKeyRequest
+from .requests import CreateBookmarkRequest
 from .requests import CreateCardRequest
 from .requests import CreateDatabaseRequest
 from .requests import CreateRecentRequest
@@ -34,6 +36,7 @@ from .requests import DeleteActionPublicLinkRequest
 from .requests import DeleteActionRequest
 from .requests import DeleteAlertSubscriptionRequest
 from .requests import DeleteApiKeyRequest
+from .requests import DeleteBookmarkRequest
 from .requests import ExecuteActionRequest
 from .requests import GetActionExecuteRequest
 from .requests import GetActionRequest
@@ -43,6 +46,8 @@ from .requests import GetAgentTableFieldValuesRequest
 from .requests import GetAgentTableRequest
 from .requests import GetAlertRequest
 from .requests import GetAnonymousStatsRequest
+from .requests import GetBugReportingConnectionPoolDetailsRequest
+from .requests import GetBugReportingDetailsRequest
 from .requests import GetCardRequest
 from .requests import GetCollectionRequest
 from .requests import GetDashboardRequest
@@ -54,6 +59,7 @@ from .requests import GetUserRequest
 from .requests import ListActionsRequest
 from .requests import ListAlertsRequest
 from .requests import ListApiKeysRequest
+from .requests import ListBookmarksRequest
 from .requests import ListCardsRequest
 from .requests import ListCollectionsRequest
 from .requests import ListDashboardsRequest
@@ -68,6 +74,7 @@ from .requests import MetabaseRequestClient
 from .requests import RegenerateApiKeyRequest
 from .requests import UpdateActionRequest
 from .requests import UpdateApiKeyRequest
+from .requests import UpdateBookmarkOrderingRequest
 from .responses import ActionExecutionResponse
 from .responses import ActivityMutationResponse
 from .responses import AgentResponse
@@ -76,6 +83,7 @@ from .responses import ListActionsResponse
 from .responses import ListActivityItemsResponse
 from .responses import ListAlertsResponse
 from .responses import ListApiKeysResponse
+from .responses import ListBookmarksResponse
 from .responses import ListCardsResponse
 from .responses import ListCollectionsResponse
 from .responses import ListDashboardsResponse
@@ -100,6 +108,7 @@ __all__ = [
     "AutomagicDashboardRequest",
     "AutomagicDatabaseCandidatesRequest",
     "AutomagicModelIndexPrimaryKeyRequest",
+    "Bookmark",
     "Card",
     "Collection",
     "CountApiKeysRequest",
@@ -107,6 +116,7 @@ __all__ = [
     "CreateActionRequest",
     "CreateAnalyticsEventBatchRequest",
     "CreateApiKeyRequest",
+    "CreateBookmarkRequest",
     "CreateCardRequest",
     "CreateDatabaseRequest",
     "CreateRecentRequest",
@@ -118,6 +128,7 @@ __all__ = [
     "DeleteActionRequest",
     "DeleteAlertSubscriptionRequest",
     "DeleteApiKeyRequest",
+    "DeleteBookmarkRequest",
     "ExecuteActionRequest",
     "GenericOperationResponse",
     "GetActionExecuteRequest",
@@ -128,6 +139,8 @@ __all__ = [
     "GetAgentTableRequest",
     "GetAlertRequest",
     "GetAnonymousStatsRequest",
+    "GetBugReportingConnectionPoolDetailsRequest",
+    "GetBugReportingDetailsRequest",
     "GetCardRequest",
     "GetCollectionRequest",
     "GetDashboardRequest",
@@ -143,6 +156,8 @@ __all__ = [
     "ListAlertsResponse",
     "ListApiKeysRequest",
     "ListApiKeysResponse",
+    "ListBookmarksRequest",
+    "ListBookmarksResponse",
     "ListCardsRequest",
     "ListCardsResponse",
     "ListCollectionsRequest",
@@ -165,5 +180,6 @@ __all__ = [
     "Table",
     "UpdateActionRequest",
     "UpdateApiKeyRequest",
+    "UpdateBookmarkOrderingRequest",
     "User",
 ]

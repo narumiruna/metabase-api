@@ -15,8 +15,8 @@ This file is a static implementation checklist derived from the latest Metabase 
 ## Coverage summary
 
 - Documented operations: 600
-- Complete hand-written endpoint implementations: 63
-- Remaining documented operations: 537
+- Complete hand-written endpoint implementations: 69
+- Remaining documented operations: 531
 - Raw `request` / `invoke`: disabled for CLI users and does not count toward TODO completion.
 
 ## Endpoint checklist
@@ -92,17 +92,17 @@ This file is a static implementation checklist derived from the latest Metabase 
 - [x] `GET /api/automagic-dashboards/{entity}/{entity-id-or-query}/rule/{prefix}/{dashboard-template}` — `get-api-automagic-dashboards-entity-entity-id-or-query-rule-prefix-dashboard-template` — Return an automagic dashboard for entity `entity` with id `id` using dashboard-template `dashboard-template`.
 - [x] `GET /api/automagic-dashboards/{entity}/{entity-id-or-query}/rule/{prefix}/{dashboard-template}/compare/{comparison-entity}/{comparison-entity-id-or-query}` — `get-api-automagic-dashboards-entity-entity-id-or-query-rule-prefix-dashboard-template-compare-comparison-entity-comparison-entity-id-or-query` — Return an automagic comparison dashboard for entity `entity` with id `id` using dashboard-template `dashboard-template`; compared with entity `comparison-ent...
 
-### /api/bookmark (0/4 complete)
+### /api/bookmark (4/4 complete)
 
-- [ ] `GET /api/bookmark` — `get-api-bookmark` — Fetch all bookmarks for the user
-- [ ] `PUT /api/bookmark/ordering` — `put-api-bookmark-ordering` — Sets the order of bookmarks for user.
-- [ ] `POST /api/bookmark/{model}/{id}` — `post-api-bookmark-model-id` — Create a new bookmark for user.
-- [ ] `DELETE /api/bookmark/{model}/{id}` — `delete-api-bookmark-model-id` — Delete a bookmark. Will delete a bookmark assigned to the user making the request by model and id.
+- [x] `GET /api/bookmark` — `get-api-bookmark` — Fetch all bookmarks for the user
+- [x] `PUT /api/bookmark/ordering` — `put-api-bookmark-ordering` — Sets the order of bookmarks for user.
+- [x] `POST /api/bookmark/{model}/{id}` — `post-api-bookmark-model-id` — Create a new bookmark for user.
+- [x] `DELETE /api/bookmark/{model}/{id}` — `delete-api-bookmark-model-id` — Delete a bookmark. Will delete a bookmark assigned to the user making the request by model and id.
 
-### /api/bug-reporting (0/2 complete)
+### /api/bug-reporting (2/2 complete)
 
-- [ ] `GET /api/bug-reporting/connection-pool-details` — `get-api-bug-reporting-connection-pool-details` — Returns database connection pool info for the current Metabase instance.
-- [ ] `GET /api/bug-reporting/details` — `get-api-bug-reporting-details` — Returns version and system information relevant to filing a bug report against Metabase.
+- [x] `GET /api/bug-reporting/connection-pool-details` — `get-api-bug-reporting-connection-pool-details` — Returns database connection pool info for the current Metabase instance.
+- [x] `GET /api/bug-reporting/details` — `get-api-bug-reporting-details` — Returns version and system information relevant to filing a bug report against Metabase.
 
 ### /api/cache (0/4 complete)
 

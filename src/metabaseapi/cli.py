@@ -218,6 +218,39 @@ def delete_action_public_link(ctx: typer.Context, action_id: str = typer.Argumen
     _run_and_print(_run_client_call(ctx, lambda client: client.delete_action_public_link(action_id)))
 
 
+@app.command("list-bookmarks")
+def list_bookmarks(ctx: typer.Context) -> None:
+    _run_and_print(_run_client_call(ctx, lambda client: client.list_bookmarks()))
+
+
+@app.command("update-bookmark-ordering")
+def update_bookmark_ordering(
+    ctx: typer.Context, body: str = typer.Argument(..., help="Bookmark ordering JSON object")
+) -> None:
+    payload = _parse_json_object(body, "body")
+    _run_and_print(_run_client_call(ctx, lambda client: client.update_bookmark_ordering(payload)))
+
+
+@app.command("create-bookmark")
+def create_bookmark(ctx: typer.Context, model: str = typer.Argument(...), item_id: str = typer.Argument(...)) -> None:
+    _run_and_print(_run_client_call(ctx, lambda client: client.create_bookmark(model, item_id)))
+
+
+@app.command("delete-bookmark")
+def delete_bookmark(ctx: typer.Context, model: str = typer.Argument(...), item_id: str = typer.Argument(...)) -> None:
+    _run_and_print(_run_client_call(ctx, lambda client: client.delete_bookmark(model, item_id)))
+
+
+@app.command("bug-reporting-connection-pool-details")
+def bug_reporting_connection_pool_details(ctx: typer.Context) -> None:
+    _run_and_print(_run_client_call(ctx, lambda client: client.bug_reporting_connection_pool_details()))
+
+
+@app.command("bug-reporting-details")
+def bug_reporting_details(ctx: typer.Context) -> None:
+    _run_and_print(_run_client_call(ctx, lambda client: client.bug_reporting_details()))
+
+
 @app.command("automagic-database-candidates")
 def automagic_database_candidates(ctx: typer.Context, database_id: str = typer.Argument(...)) -> None:
     _run_and_print(_run_client_call(ctx, lambda client: client.automagic_database_candidates(database_id)))

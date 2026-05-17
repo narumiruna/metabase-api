@@ -85,6 +85,11 @@ class ApiKey(_MetabaseEntity):
     group_id: int | str | None = None
 
 
+class Bookmark(_MetabaseEntity):
+    model: str | None = None
+    item_id: int | str | None = None
+
+
 class Card(_MetabaseEntity):
     display: str | None = None
     description: str | None = None
@@ -123,6 +128,7 @@ __all__ = [
     "AgentResource",
     "Alert",
     "ApiKey",
+    "Bookmark",
     "Card",
     "Collection",
     "CurrentUserResponse",

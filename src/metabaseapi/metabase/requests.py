@@ -15,6 +15,7 @@ from metabaseapi.metabase.entities import Action
 from metabaseapi.metabase.entities import ActivityItem
 from metabaseapi.metabase.entities import Alert
 from metabaseapi.metabase.entities import ApiKey
+from metabaseapi.metabase.entities import Bookmark
 from metabaseapi.metabase.entities import Card
 from metabaseapi.metabase.entities import Collection
 from metabaseapi.metabase.entities import CurrentUserResponse
@@ -31,6 +32,7 @@ from metabaseapi.metabase.responses import ListActionsResponse
 from metabaseapi.metabase.responses import ListActivityItemsResponse
 from metabaseapi.metabase.responses import ListAlertsResponse
 from metabaseapi.metabase.responses import ListApiKeysResponse
+from metabaseapi.metabase.responses import ListBookmarksResponse
 from metabaseapi.metabase.responses import ListCardsResponse
 from metabaseapi.metabase.responses import ListCollectionsResponse
 from metabaseapi.metabase.responses import ListDashboardsResponse
@@ -250,6 +252,89 @@ class DeleteActionPublicLinkRequest(_BaseMetabaseRequest[ActionExecutionResponse
 
     def resolve_path(self) -> str:
         return f"/api/action/{self.action_id}/public_link"
+
+
+class ListBookmarksRequest(_BaseMetabaseRequest[ListBookmarksResponse]):
+    endpoint_method: ClassVar[str] = "GET"
+    endpoint_path: ClassVar[str] = "/api/bookmark"
+
+    async def do(self, client: MetabaseRequestClient) -> ListBookmarksResponse:
+        return await self.execute(client, ListBookmarksResponse)
+
+    def do_sync(self, client: MetabaseRequestClient) -> ListBookmarksResponse:
+        return self.execute_sync(client, ListBookmarksResponse)
+
+
+class UpdateBookmarkOrderingRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+    body: dict[str, Any]
+
+    endpoint_method: ClassVar[str] = "PUT"
+    endpoint_path: ClassVar[str] = "/api/bookmark/ordering"
+
+    async def do(self, client: MetabaseRequestClient) -> GenericOperationResponse:
+        return await self.execute(client, GenericOperationResponse)
+
+    def do_sync(self, client: MetabaseRequestClient) -> GenericOperationResponse:
+        return self.execute_sync(client, GenericOperationResponse)
+
+    def request_body(self) -> JSONValue:
+        return self.body
+
+
+class CreateBookmarkRequest(_BaseMetabaseRequest[Bookmark]):
+    model: str
+    item_id: int | str
+
+    endpoint_method: ClassVar[str] = "POST"
+    endpoint_path: ClassVar[str] = "/api/bookmark/{model}/{id}"
+
+    async def do(self, client: MetabaseRequestClient) -> Bookmark:
+        return await self.execute(client, Bookmark)
+
+    def do_sync(self, client: MetabaseRequestClient) -> Bookmark:
+        return self.execute_sync(client, Bookmark)
+
+    def resolve_path(self) -> str:
+        return f"/api/bookmark/{self.model}/{self.item_id}"
+
+
+class DeleteBookmarkRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+    model: str
+    item_id: int | str
+
+    endpoint_method: ClassVar[str] = "DELETE"
+    endpoint_path: ClassVar[str] = "/api/bookmark/{model}/{id}"
+
+    async def do(self, client: MetabaseRequestClient) -> GenericOperationResponse:
+        return await self.execute(client, GenericOperationResponse)
+
+    def do_sync(self, client: MetabaseRequestClient) -> GenericOperationResponse:
+        return self.execute_sync(client, GenericOperationResponse)
+
+    def resolve_path(self) -> str:
+        return f"/api/bookmark/{self.model}/{self.item_id}"
+
+
+class GetBugReportingConnectionPoolDetailsRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+    endpoint_method: ClassVar[str] = "GET"
+    endpoint_path: ClassVar[str] = "/api/bug-reporting/connection-pool-details"
+
+    async def do(self, client: MetabaseRequestClient) -> GenericOperationResponse:
+        return await self.execute(client, GenericOperationResponse)
+
+    def do_sync(self, client: MetabaseRequestClient) -> GenericOperationResponse:
+        return self.execute_sync(client, GenericOperationResponse)
+
+
+class GetBugReportingDetailsRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+    endpoint_method: ClassVar[str] = "GET"
+    endpoint_path: ClassVar[str] = "/api/bug-reporting/details"
+
+    async def do(self, client: MetabaseRequestClient) -> GenericOperationResponse:
+        return await self.execute(client, GenericOperationResponse)
+
+    def do_sync(self, client: MetabaseRequestClient) -> GenericOperationResponse:
+        return self.execute_sync(client, GenericOperationResponse)
 
 
 class AutomagicDashboardRequest(_BaseMetabaseRequest[GenericOperationResponse]):
@@ -938,6 +1023,7 @@ __all__ = [
     "CreateActionRequest",
     "CreateAnalyticsEventBatchRequest",
     "CreateApiKeyRequest",
+    "CreateBookmarkRequest",
     "CreateCardRequest",
     "CreateDatabaseRequest",
     "CreateRecentRequest",
@@ -946,6 +1032,7 @@ __all__ = [
     "DeleteActionRequest",
     "DeleteAlertSubscriptionRequest",
     "DeleteApiKeyRequest",
+    "DeleteBookmarkRequest",
     "ExecuteActionRequest",
     "GetActionExecuteRequest",
     "GetActionRequest",
@@ -955,6 +1042,8 @@ __all__ = [
     "GetAgentTableRequest",
     "GetAlertRequest",
     "GetAnonymousStatsRequest",
+    "GetBugReportingConnectionPoolDetailsRequest",
+    "GetBugReportingDetailsRequest",
     "GetCardRequest",
     "GetCollectionRequest",
     "GetDashboardRequest",
@@ -966,6 +1055,7 @@ __all__ = [
     "ListActionsRequest",
     "ListAlertsRequest",
     "ListApiKeysRequest",
+    "ListBookmarksRequest",
     "ListCardsRequest",
     "ListCollectionsRequest",
     "ListDashboardsRequest",
@@ -980,4 +1070,5 @@ __all__ = [
     "RegenerateApiKeyRequest",
     "UpdateActionRequest",
     "UpdateApiKeyRequest",
+    "UpdateBookmarkOrderingRequest",
 ]

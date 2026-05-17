@@ -58,6 +58,24 @@ class _ConvenienceClient(_ClientWithRequestMethods):
     async def delete_action_public_link(self, action_id: str) -> dict[str, object]:
         return {"method": "DELETE", "path": f"/api/action/{action_id}/public_link"}
 
+    async def list_bookmarks(self) -> dict[str, object]:
+        return {"method": "GET", "path": "/api/bookmark"}
+
+    async def update_bookmark_ordering(self, body: dict[str, object]) -> dict[str, object]:
+        return {"method": "PUT", "path": "/api/bookmark/ordering", "body": body}
+
+    async def create_bookmark(self, model: str, item_id: str) -> dict[str, object]:
+        return {"method": "POST", "path": f"/api/bookmark/{model}/{item_id}"}
+
+    async def delete_bookmark(self, model: str, item_id: str) -> dict[str, object]:
+        return {"method": "DELETE", "path": f"/api/bookmark/{model}/{item_id}"}
+
+    async def bug_reporting_connection_pool_details(self) -> dict[str, object]:
+        return {"method": "GET", "path": "/api/bug-reporting/connection-pool-details"}
+
+    async def bug_reporting_details(self) -> dict[str, object]:
+        return {"method": "GET", "path": "/api/bug-reporting/details"}
+
     async def automagic_database_candidates(self, database_id: str) -> dict[str, object]:
         return {"method": "GET", "path": f"/api/automagic-dashboards/database/{database_id}/candidates"}
 
@@ -356,6 +374,12 @@ def test_help_lists_every_convenience_command() -> None:
         "execute-action",
         "create-action-public-link",
         "delete-action-public-link",
+        "list-bookmarks",
+        "update-bookmark-ordering",
+        "create-bookmark",
+        "delete-bookmark",
+        "bug-reporting-connection-pool-details",
+        "bug-reporting-details",
         "automagic-database-candidates",
         "automagic-model-index-primary-key",
         "automagic-entity",
@@ -459,6 +483,9 @@ def test_get_database_command_outputs_json(monkeypatch: pytest.MonkeyPatch) -> N
         (["list-public-actions"], "/api/action/public"),
         (["get-action", "11"], "/api/action/11"),
         (["get-action-execute", "11"], "/api/action/11/execute"),
+        (["list-bookmarks"], "/api/bookmark"),
+        (["bug-reporting-connection-pool-details"], "/api/bug-reporting/connection-pool-details"),
+        (["bug-reporting-details"], "/api/bug-reporting/details"),
         (["automagic-database-candidates", "1"], "/api/automagic-dashboards/database/1/candidates"),
         (["automagic-model-index-primary-key", "2", "3"], "/api/automagic-dashboards/model_index/2/primary_key/3"),
         (["automagic-entity", "table", "4"], "/api/automagic-dashboards/table/4"),
@@ -537,6 +564,9 @@ def test_read_endpoint_commands_cover_handwritten_surface(
         (["execute-action", "11", "--parameters", '{"id":1}'], "POST", "/api/action/11/execute"),
         (["create-action-public-link", "11"], "POST", "/api/action/11/public_link"),
         (["delete-action-public-link", "11"], "DELETE", "/api/action/11/public_link"),
+        (["update-bookmark-ordering", '{"ids":[1]}'], "PUT", "/api/bookmark/ordering"),
+        (["create-bookmark", "card", "1"], "POST", "/api/bookmark/card/1"),
+        (["delete-bookmark", "card", "1"], "DELETE", "/api/bookmark/card/1"),
         (["create-api-key", '{"name":"key","group_id":1}'], "POST", "/api/api-key"),
         (["update-api-key", "7", '{"name":"key"}'], "PUT", "/api/api-key/7"),
         (["delete-api-key", "7"], "DELETE", "/api/api-key/7"),

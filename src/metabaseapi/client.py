@@ -26,6 +26,7 @@ from metabaseapi.metabase import ApiKey
 from metabaseapi.metabase import AutomagicDashboardRequest
 from metabaseapi.metabase import AutomagicDatabaseCandidatesRequest
 from metabaseapi.metabase import AutomagicModelIndexPrimaryKeyRequest
+from metabaseapi.metabase import Bookmark
 from metabaseapi.metabase import Card
 from metabaseapi.metabase import Collection
 from metabaseapi.metabase import CountApiKeysRequest
@@ -33,6 +34,7 @@ from metabaseapi.metabase import CreateActionPublicLinkRequest
 from metabaseapi.metabase import CreateActionRequest
 from metabaseapi.metabase import CreateAnalyticsEventBatchRequest
 from metabaseapi.metabase import CreateApiKeyRequest
+from metabaseapi.metabase import CreateBookmarkRequest
 from metabaseapi.metabase import CreateCardRequest
 from metabaseapi.metabase import CreateDatabaseRequest
 from metabaseapi.metabase import CreateRecentRequest
@@ -44,6 +46,7 @@ from metabaseapi.metabase import DeleteActionPublicLinkRequest
 from metabaseapi.metabase import DeleteActionRequest
 from metabaseapi.metabase import DeleteAlertSubscriptionRequest
 from metabaseapi.metabase import DeleteApiKeyRequest
+from metabaseapi.metabase import DeleteBookmarkRequest
 from metabaseapi.metabase import ExecuteActionRequest
 from metabaseapi.metabase import GenericOperationResponse
 from metabaseapi.metabase import GetActionExecuteRequest
@@ -54,6 +57,8 @@ from metabaseapi.metabase import GetAgentTableFieldValuesRequest
 from metabaseapi.metabase import GetAgentTableRequest
 from metabaseapi.metabase import GetAlertRequest
 from metabaseapi.metabase import GetAnonymousStatsRequest
+from metabaseapi.metabase import GetBugReportingConnectionPoolDetailsRequest
+from metabaseapi.metabase import GetBugReportingDetailsRequest
 from metabaseapi.metabase import GetCardRequest
 from metabaseapi.metabase import GetCollectionRequest
 from metabaseapi.metabase import GetDashboardRequest
@@ -69,6 +74,8 @@ from metabaseapi.metabase import ListAlertsRequest
 from metabaseapi.metabase import ListAlertsResponse
 from metabaseapi.metabase import ListApiKeysRequest
 from metabaseapi.metabase import ListApiKeysResponse
+from metabaseapi.metabase import ListBookmarksRequest
+from metabaseapi.metabase import ListBookmarksResponse
 from metabaseapi.metabase import ListCardsRequest
 from metabaseapi.metabase import ListCardsResponse
 from metabaseapi.metabase import ListCollectionsRequest
@@ -90,6 +97,7 @@ from metabaseapi.metabase import RegenerateApiKeyRequest
 from metabaseapi.metabase import Table
 from metabaseapi.metabase import UpdateActionRequest
 from metabaseapi.metabase import UpdateApiKeyRequest
+from metabaseapi.metabase import UpdateBookmarkOrderingRequest
 from metabaseapi.metabase import User
 from metabaseapi.models import APIRequestModel
 from metabaseapi.models import APIResponseModel
@@ -335,6 +343,24 @@ class MetabaseClient:
 
     async def delete_action_public_link(self, action_id: int | str) -> JSONValue | None:
         return await self.delete(f"/api/action/{action_id}/public_link")
+
+    async def list_bookmarks(self) -> JSONValue | None:
+        return await self.get("/api/bookmark")
+
+    async def update_bookmark_ordering(self, body: Mapping[str, object]) -> JSONValue | None:
+        return await self.put("/api/bookmark/ordering", body=dict(body))
+
+    async def create_bookmark(self, model: str, item_id: int | str) -> JSONValue | None:
+        return await self.post(f"/api/bookmark/{model}/{item_id}")
+
+    async def delete_bookmark(self, model: str, item_id: int | str) -> JSONValue | None:
+        return await self.delete(f"/api/bookmark/{model}/{item_id}")
+
+    async def bug_reporting_connection_pool_details(self) -> JSONValue | None:
+        return await self.get("/api/bug-reporting/connection-pool-details")
+
+    async def bug_reporting_details(self) -> JSONValue | None:
+        return await self.get("/api/bug-reporting/details")
 
     async def automagic_database_candidates(self, database_id: int | str) -> JSONValue | None:
         return await self.get(f"/api/automagic-dashboards/database/{database_id}/candidates")
@@ -647,6 +673,24 @@ class MetabaseClient:
 
     async def delete_action_public_link_typed(self, action_id: int | str) -> ActionExecutionResponse:
         return await self.run(DeleteActionPublicLinkRequest(action_id=action_id))
+
+    async def list_bookmarks_typed(self) -> ListBookmarksResponse:
+        return await self.run(ListBookmarksRequest())
+
+    async def update_bookmark_ordering_typed(self, body: dict[str, object]) -> GenericOperationResponse:
+        return await self.run(UpdateBookmarkOrderingRequest(body=body))
+
+    async def create_bookmark_typed(self, model: str, item_id: int | str) -> Bookmark:
+        return await self.run(CreateBookmarkRequest(model=model, item_id=item_id))
+
+    async def delete_bookmark_typed(self, model: str, item_id: int | str) -> GenericOperationResponse:
+        return await self.run(DeleteBookmarkRequest(model=model, item_id=item_id))
+
+    async def bug_reporting_connection_pool_details_typed(self) -> GenericOperationResponse:
+        return await self.run(GetBugReportingConnectionPoolDetailsRequest())
+
+    async def bug_reporting_details_typed(self) -> GenericOperationResponse:
+        return await self.run(GetBugReportingDetailsRequest())
 
     async def automagic_database_candidates_typed(self, database_id: int | str) -> GenericOperationResponse:
         return await self.run(AutomagicDatabaseCandidatesRequest(database_id=database_id))

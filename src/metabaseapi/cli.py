@@ -528,6 +528,15 @@ def delete_alert_subscription(ctx: typer.Context, alert_id: str = typer.Argument
     _run_and_print(_run_client_call(ctx, lambda client: client.delete_alert_subscription(alert_id)))
 
 
+@app.command("get-comment")
+def get_comment(
+    ctx: typer.Context,
+    model: str | None = typer.Option(None, "--model"),
+    model_id: str | None = typer.Option(None, "--model-id"),
+) -> None:
+    _run_and_print(_run_client_call(ctx, lambda client: client.get_comment(model=model, model_id=model_id)))
+
+
 @app.command("delete-comment")
 def delete_comment(ctx: typer.Context, comment_id: str = typer.Argument(...)) -> None:
     """Delete a comment."""

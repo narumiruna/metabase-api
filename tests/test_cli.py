@@ -482,6 +482,10 @@ class _ConvenienceClient(_ClientWithRequestMethods):
     async def delete_collection(self, collection_id: str) -> dict[str, object]:
         return {"method": "DELETE", "path": f"/api/collection/{collection_id}"}
 
+    async def get_comment(self, model: str | None = None, model_id: str | None = None) -> dict[str, object]:
+        del model, model_id
+        return {"method": "GET", "path": "/api/comment"}
+
     async def delete_comment(self, comment_id: str) -> dict[str, object]:
         return {"method": "DELETE", "path": f"/api/comment/{comment_id}"}
 
@@ -659,6 +663,7 @@ def test_help_lists_every_convenience_command() -> None:
         "update-collection",
         "delete-collection",
         "delete-comment",
+        "get-comment",
         "get-collection-dashboard-question-candidates",
         "get-collection-items",
         "list-tables",
@@ -767,6 +772,7 @@ def test_get_database_command_outputs_json(monkeypatch: pytest.MonkeyPatch) -> N
         (["get-cloud-migration"], "/api/cloud-migration"),
         (["list-databases"], "/api/database"),
         (["list-channels"], "/api/channel"),
+        (["get-comment"], "/api/comment"),
         (["list-cards"], "/api/card"),
         (["list-dashboards"], "/api/dashboard"),
         (["list-users"], "/api/user"),
@@ -839,6 +845,7 @@ def test_read_endpoint_commands_cover_handwritten_surface(
             "/api/collection/7/move-dashboard-question-candidates",
         ),
         (["update-collection", "7", '{"name":"New"}'], "PUT", "/api/collection/7"),
+        (["get-comment"], "GET", "/api/comment"),
         (["delete-comment", "7"], "DELETE", "/api/comment/7"),
         (["delete-collection", "7"], "DELETE", "/api/collection/7"),
         (["delete-action", "11"], "DELETE", "/api/action/11"),

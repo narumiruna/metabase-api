@@ -96,6 +96,7 @@ from metabaseapi.metabase import GetCollectionRootItemsRequest
 from metabaseapi.metabase import GetCollectionRootRequest
 from metabaseapi.metabase import GetCollectionTrashRequest
 from metabaseapi.metabase import GetCollectionTreeRequest
+from metabaseapi.metabase import GetCommentRequest
 from metabaseapi.metabase import GetDashboardRequest
 from metabaseapi.metabase import GetDatabaseRequest
 from metabaseapi.metabase import GetFieldRequest
@@ -826,6 +827,19 @@ class MetabaseClient:
     async def delete_collection(self, collection_id: int | str) -> JSONValue | None:
         return await self.delete(f"/api/collection/{collection_id}")
 
+    async def get_comment(
+        self,
+        *,
+        model: str | None = None,
+        model_id: int | str | None = None,
+    ) -> JSONValue | None:
+        params: dict[str, QueryParamValue] = {}
+        if model is not None:
+            params["model"] = model
+        if model_id is not None:
+            params["model-id"] = model_id
+        return await self.get("/api/comment", params=params or None)
+
     async def delete_comment(self, comment_id: int | str) -> JSONValue | None:
         return await self.delete(f"/api/comment/{comment_id}")
 
@@ -1112,6 +1126,14 @@ class MetabaseClient:
 
     async def delete_comment_typed(self, comment_id: int | str) -> GenericOperationResponse:
         return await self.run(DeleteCommentRequest(comment_id=comment_id))
+
+    async def get_comment_typed(
+        self,
+        *,
+        model: str | None = None,
+        model_id: int | str | None = None,
+    ) -> GenericOperationResponse:
+        return await self.run(GetCommentRequest(model=model, model_id=model_id))
 
     async def get_collection_graph_typed(self) -> GenericOperationResponse:
         return await self.run(GetCollectionGraphRequest())

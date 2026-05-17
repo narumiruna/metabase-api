@@ -367,6 +367,28 @@ class GetCacheRequest(_BaseMetabaseRequest[GenericOperationResponse]):
         return params
 
 
+class GetCommentRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+    model: str | None = None
+    model_id: int | str | None = None
+
+    endpoint_method: ClassVar[str] = "GET"
+    endpoint_path: ClassVar[str] = "/api/comment"
+
+    async def do(self, client: MetabaseRequestClient) -> GenericOperationResponse:
+        return await self.execute(client, GenericOperationResponse)
+
+    def do_sync(self, client: MetabaseRequestClient) -> GenericOperationResponse:
+        return self.execute_sync(client, GenericOperationResponse)
+
+    def request_params(self) -> dict[str, QueryParamValue]:
+        params: dict[str, QueryParamValue] = {}
+        if self.model is not None:
+            params["model"] = self.model
+        if self.model_id is not None:
+            params["model-id"] = self.model_id
+        return params
+
+
 class ListChannelsRequest(_BaseMetabaseRequest[ListChannelsResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/channel"
@@ -1829,6 +1851,7 @@ __all__ = [
     "GetCollectionRootRequest",
     "GetCollectionTrashRequest",
     "GetCollectionTreeRequest",
+    "GetCommentRequest",
     "GetDashboardRequest",
     "GetDatabaseRequest",
     "GetFieldRequest",

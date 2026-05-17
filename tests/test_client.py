@@ -25,6 +25,7 @@ from metabaseapi.client.raw import channel as raw_channel
 from metabaseapi.client.raw import cloud_migration as raw_cloud_migration
 from metabaseapi.client.raw import collection as raw_collection
 from metabaseapi.client.raw import collection_graph as raw_collection_graph
+from metabaseapi.client.raw import collection_root as raw_collection_root
 from metabaseapi.client.raw import comment as raw_comment
 from metabaseapi.client.raw import dashboard as raw_dashboard
 from metabaseapi.client.raw import dashboard_query as raw_dashboard_query
@@ -271,17 +272,17 @@ def test_raw_paths_cover_handwritten_endpoint_surface() -> None:
             raw_collection_graph.put_collection_graph(client, {"groups": ["admin"]}),
             ("PUT", "/api/collection/graph", {"groups": ["admin"]}),
         ),
-        (raw_collection.get_collection_root(client), ("GET", "/api/collection/root", None)),
+        (raw_collection_root.get_collection_root(client), ("GET", "/api/collection/root", None)),
         (
-            raw_collection.get_collection_root_dashboard_question_candidates(client),
+            raw_collection_root.get_collection_root_dashboard_question_candidates(client),
             ("GET", "/api/collection/root/dashboard-question-candidates", None),
         ),
         (
-            raw_collection.get_collection_root_items(client),
+            raw_collection_root.get_collection_root_items(client),
             ("GET", "/api/collection/root/items", None),
         ),
         (
-            raw_collection.post_collection_root_move_dashboard_question_candidates(client, {"card_ids": [1]}),
+            raw_collection_root.post_collection_root_move_dashboard_question_candidates(client, {"card_ids": [1]}),
             ("POST", "/api/collection/root/move-dashboard-question-candidates", {"card_ids": [1]}),
         ),
         (

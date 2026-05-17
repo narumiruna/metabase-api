@@ -21,6 +21,7 @@ REQUEST_MODULES = (
     "cloud_migration",
     "collection",
     "collection_graph",
+    "collection_root",
     "database",
     "data_studio",
     "dashboard",

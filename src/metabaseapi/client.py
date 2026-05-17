@@ -12,12 +12,15 @@ from metabaseapi.errors import MetabaseHTTPStatusError
 from metabaseapi.errors import MetabaseNetworkError
 from metabaseapi.metabase import Action
 from metabaseapi.metabase import ActionExecutionResponse
+from metabaseapi.metabase import ActivityItem
+from metabaseapi.metabase import ActivityMutationResponse
 from metabaseapi.metabase import Card
 from metabaseapi.metabase import Collection
 from metabaseapi.metabase import CreateActionPublicLinkRequest
 from metabaseapi.metabase import CreateActionRequest
 from metabaseapi.metabase import CreateCardRequest
 from metabaseapi.metabase import CreateDatabaseRequest
+from metabaseapi.metabase import CreateRecentRequest
 from metabaseapi.metabase import CurrentUserRequest
 from metabaseapi.metabase import CurrentUserResponse
 from metabaseapi.metabase import Dashboard
@@ -32,10 +35,12 @@ from metabaseapi.metabase import GetCollectionRequest
 from metabaseapi.metabase import GetDashboardRequest
 from metabaseapi.metabase import GetDatabaseRequest
 from metabaseapi.metabase import GetFieldRequest
+from metabaseapi.metabase import GetMostRecentlyViewedDashboardRequest
 from metabaseapi.metabase import GetTableRequest
 from metabaseapi.metabase import GetUserRequest
 from metabaseapi.metabase import ListActionsRequest
 from metabaseapi.metabase import ListActionsResponse
+from metabaseapi.metabase import ListActivityItemsResponse
 from metabaseapi.metabase import ListCardsRequest
 from metabaseapi.metabase import ListCardsResponse
 from metabaseapi.metabase import ListCollectionsRequest
@@ -44,7 +49,10 @@ from metabaseapi.metabase import ListDashboardsRequest
 from metabaseapi.metabase import ListDashboardsResponse
 from metabaseapi.metabase import ListDatabasesRequest
 from metabaseapi.metabase import ListDatabasesResponse
+from metabaseapi.metabase import ListPopularItemsRequest
 from metabaseapi.metabase import ListPublicActionsRequest
+from metabaseapi.metabase import ListRecentsRequest
+from metabaseapi.metabase import ListRecentViewsRequest
 from metabaseapi.metabase import ListTablesRequest
 from metabaseapi.metabase import ListTablesResponse
 from metabaseapi.metabase import ListUsersRequest
@@ -298,6 +306,22 @@ class MetabaseClient:
     async def delete_action_public_link(self, action_id: int | str) -> JSONValue | None:
         return await self.delete(f"/api/action/{action_id}/public_link")
 
+    async def most_recently_viewed_dashboard(self) -> JSONValue | None:
+        return await self.get("/api/activity/most_recently_viewed_dashboard")
+
+    async def list_popular_items(self) -> JSONValue | None:
+        return await self.get("/api/activity/popular_items")
+
+    async def list_recent_views(self) -> JSONValue | None:
+        return await self.get("/api/activity/recent_views")
+
+    async def list_recents(self, *, context: str | None = None) -> JSONValue | None:
+        params = {"context": context} if context is not None else None
+        return await self.get("/api/activity/recents", params=params)
+
+    async def create_recent(self, body: Mapping[str, object]) -> JSONValue | None:
+        return await self.post("/api/activity/recents", body=dict(body))
+
     async def current_user(self) -> JSONValue | None:
         return await self.get("/api/user/current")
 
@@ -449,6 +473,21 @@ class MetabaseClient:
 
     async def delete_action_public_link_typed(self, action_id: int | str) -> ActionExecutionResponse:
         return await self.run(DeleteActionPublicLinkRequest(action_id=action_id))
+
+    async def most_recently_viewed_dashboard_typed(self) -> ActivityItem:
+        return await self.run(GetMostRecentlyViewedDashboardRequest())
+
+    async def list_popular_items_typed(self) -> ListActivityItemsResponse:
+        return await self.run(ListPopularItemsRequest())
+
+    async def list_recent_views_typed(self) -> ListActivityItemsResponse:
+        return await self.run(ListRecentViewsRequest())
+
+    async def list_recents_typed(self, *, context: str | None = None) -> ListActivityItemsResponse:
+        return await self.run(ListRecentsRequest(context=context))
+
+    async def create_recent_typed(self, body: dict[str, object]) -> ActivityMutationResponse:
+        return await self.run(CreateRecentRequest(body=body))
 
     async def current_user_typed(self) -> CurrentUserResponse:
         return await self.run(CurrentUserRequest())

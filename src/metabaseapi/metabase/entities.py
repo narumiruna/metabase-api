@@ -62,6 +62,12 @@ class Action(_MetabaseEntity):
     description: str | None = None
 
 
+class ActivityItem(_MetabaseEntity):
+    model: str | None = None
+    model_id: int | str | None = None
+    timestamp: datetime | None = None
+
+
 class Card(_MetabaseEntity):
     display: str | None = None
     description: str | None = None
@@ -96,6 +102,7 @@ class MetabaseField(_MetabaseEntity):
 
 __all__ = [
     "Action",
+    "ActivityItem",
     "Card",
     "Collection",
     "CurrentUserResponse",

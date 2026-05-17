@@ -117,6 +117,14 @@ def test_convenience_paths_cover_handwritten_endpoint_surface() -> None:
         ),
         (client.create_action_public_link(11), ("POST", "/api/action/11/public_link", None)),
         (client.delete_action_public_link(11), ("DELETE", "/api/action/11/public_link", None)),
+        (client.most_recently_viewed_dashboard(), ("GET", "/api/activity/most_recently_viewed_dashboard", None)),
+        (client.list_popular_items(), ("GET", "/api/activity/popular_items", None)),
+        (client.list_recent_views(), ("GET", "/api/activity/recent_views", None)),
+        (client.list_recents(), ("GET", "/api/activity/recents", None)),
+        (
+            client.create_recent({"model": "card", "model_id": 1}),
+            ("POST", "/api/activity/recents", {"model": "card", "model_id": 1}),
+        ),
         (client.current_user(), ("GET", "/api/user/current", None)),
         (client.list_databases(), ("GET", "/api/database", None)),
         (

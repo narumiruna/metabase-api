@@ -15,8 +15,8 @@ This file is a static implementation checklist derived from the latest Metabase 
 ## Coverage summary
 
 - Documented operations: 600
-- Complete hand-written endpoint implementations: 26
-- Remaining documented operations: 574
+- Complete hand-written endpoint implementations: 31
+- Remaining documented operations: 569
 - Raw `request` / `invoke`: disabled for CLI users and does not count toward TODO completion.
 
 ## Endpoint checklist
@@ -34,13 +34,13 @@ This file is a static implementation checklist derived from the latest Metabase 
 - [x] `POST /api/action/{id}/public_link` — `post-api-action-id-public_link` — Generate publicly-accessible links for this Action. Returns UUID to be used in public links. (If this Action has already been shared, it will return the exis...
 - [x] `DELETE /api/action/{id}/public_link` — `delete-api-action-id-public_link` — Delete the publicly-accessible link to this Dashboard.
 
-### /api/activity (0/5 complete)
+### /api/activity (5/5 complete)
 
-- [ ] `GET /api/activity/most_recently_viewed_dashboard` — `get-api-activity-most_recently_viewed_dashboard` — Get the most recently viewed dashboard for the current user. Returns a 204 if the user has not viewed any dashboards in the last 24 hours.
-- [ ] `GET /api/activity/popular_items` — `get-api-activity-popular_items` — Get the list of 5 popular things on the instance. Query takes 8 and limits to 5 so that if it finds anything archived, deleted, etc it can usually still get 5.
-- [ ] `GET /api/activity/recent_views` — `get-api-activity-recent_views` — Get a list of 100 models (cards, models, tables, dashboards, and collections) that the current user has been viewing most recently. Return a maximum of 20 mo...
-- [ ] `GET /api/activity/recents` — `get-api-activity-recents` — Get a list of recent items the current user has been viewing most recently under the `:recents` key. Allows for filtering by context: views or selections
-- [ ] `POST /api/activity/recents` — `post-api-activity-recents` — Adds a model to the list of recently selected items.
+- [x] `GET /api/activity/most_recently_viewed_dashboard` — `get-api-activity-most_recently_viewed_dashboard` — Get the most recently viewed dashboard for the current user. Returns a 204 if the user has not viewed any dashboards in the last 24 hours.
+- [x] `GET /api/activity/popular_items` — `get-api-activity-popular_items` — Get the list of 5 popular things on the instance. Query takes 8 and limits to 5 so that if it finds anything archived, deleted, etc it can usually still get 5.
+- [x] `GET /api/activity/recent_views` — `get-api-activity-recent_views` — Get a list of 100 models (cards, models, tables, dashboards, and collections) that the current user has been viewing most recently. Return a maximum of 20 mo...
+- [x] `GET /api/activity/recents` — `get-api-activity-recents` — Get a list of recent items the current user has been viewing most recently under the `:recents` key. Allows for filtering by context: views or selections
+- [x] `POST /api/activity/recents` — `post-api-activity-recents` — Adds a model to the list of recently selected items.
 
 ### /api/agent (0/9 complete)
 

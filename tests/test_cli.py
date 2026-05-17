@@ -58,6 +58,21 @@ class _ConvenienceClient(_ClientWithRequestMethods):
     async def delete_action_public_link(self, action_id: str) -> dict[str, object]:
         return {"method": "DELETE", "path": f"/api/action/{action_id}/public_link"}
 
+    async def most_recently_viewed_dashboard(self) -> dict[str, object]:
+        return {"method": "GET", "path": "/api/activity/most_recently_viewed_dashboard"}
+
+    async def list_popular_items(self) -> dict[str, object]:
+        return {"method": "GET", "path": "/api/activity/popular_items"}
+
+    async def list_recent_views(self) -> dict[str, object]:
+        return {"method": "GET", "path": "/api/activity/recent_views"}
+
+    async def list_recents(self, *, context: str | None = None) -> dict[str, object]:
+        return {"method": "GET", "path": "/api/activity/recents", "params": {"context": context} if context else None}
+
+    async def create_recent(self, body: dict[str, object]) -> dict[str, object]:
+        return {"method": "POST", "path": "/api/activity/recents", "body": body}
+
     async def current_user(self) -> dict[str, str]:
         return {"name": "Alice"}
 
@@ -199,6 +214,11 @@ def test_help_lists_every_convenience_command() -> None:
         "execute-action",
         "create-action-public-link",
         "delete-action-public-link",
+        "most-recently-viewed-dashboard",
+        "list-popular-items",
+        "list-recent-views",
+        "list-recents",
+        "create-recent",
         "current-user",
         "list-databases",
         "create-database",
@@ -265,6 +285,10 @@ def test_get_database_command_outputs_json(monkeypatch: pytest.MonkeyPatch) -> N
         (["list-public-actions"], "/api/action/public"),
         (["get-action", "11"], "/api/action/11"),
         (["get-action-execute", "11"], "/api/action/11/execute"),
+        (["most-recently-viewed-dashboard"], "/api/activity/most_recently_viewed_dashboard"),
+        (["list-popular-items"], "/api/activity/popular_items"),
+        (["list-recent-views"], "/api/activity/recent_views"),
+        (["list-recents"], "/api/activity/recents"),
         (["list-databases"], "/api/database"),
         (["list-cards"], "/api/card"),
         (["list-dashboards"], "/api/dashboard"),
@@ -306,6 +330,7 @@ def test_read_endpoint_commands_cover_handwritten_surface(
         (["execute-action", "11", "--parameters", '{"id":1}'], "POST", "/api/action/11/execute"),
         (["create-action-public-link", "11"], "POST", "/api/action/11/public_link"),
         (["delete-action-public-link", "11"], "DELETE", "/api/action/11/public_link"),
+        (["create-recent", '{"model":"card","model_id":1}'], "POST", "/api/activity/recents"),
     ],
 )
 def test_action_mutation_commands_cover_handwritten_surface(

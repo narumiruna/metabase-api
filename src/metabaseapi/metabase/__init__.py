@@ -1,6 +1,7 @@
 """Metabase typed endpoint models and request helpers."""
 
 from .entities import Action
+from .entities import ActivityItem
 from .entities import Card
 from .entities import Collection
 from .entities import CurrentUserResponse
@@ -13,6 +14,7 @@ from .requests import CreateActionPublicLinkRequest
 from .requests import CreateActionRequest
 from .requests import CreateCardRequest
 from .requests import CreateDatabaseRequest
+from .requests import CreateRecentRequest
 from .requests import CurrentUserRequest
 from .requests import DeleteActionPublicLinkRequest
 from .requests import DeleteActionRequest
@@ -24,6 +26,7 @@ from .requests import GetCollectionRequest
 from .requests import GetDashboardRequest
 from .requests import GetDatabaseRequest
 from .requests import GetFieldRequest
+from .requests import GetMostRecentlyViewedDashboardRequest
 from .requests import GetTableRequest
 from .requests import GetUserRequest
 from .requests import ListActionsRequest
@@ -31,13 +34,18 @@ from .requests import ListCardsRequest
 from .requests import ListCollectionsRequest
 from .requests import ListDashboardsRequest
 from .requests import ListDatabasesRequest
+from .requests import ListPopularItemsRequest
 from .requests import ListPublicActionsRequest
+from .requests import ListRecentsRequest
+from .requests import ListRecentViewsRequest
 from .requests import ListTablesRequest
 from .requests import ListUsersRequest
 from .requests import MetabaseRequestClient
 from .requests import UpdateActionRequest
 from .responses import ActionExecutionResponse
+from .responses import ActivityMutationResponse
 from .responses import ListActionsResponse
+from .responses import ListActivityItemsResponse
 from .responses import ListCardsResponse
 from .responses import ListCollectionsResponse
 from .responses import ListDashboardsResponse
@@ -48,12 +56,15 @@ from .responses import ListUsersResponse
 __all__ = [
     "Action",
     "ActionExecutionResponse",
+    "ActivityItem",
+    "ActivityMutationResponse",
     "Card",
     "Collection",
     "CreateActionPublicLinkRequest",
     "CreateActionRequest",
     "CreateCardRequest",
     "CreateDatabaseRequest",
+    "CreateRecentRequest",
     "CurrentUserRequest",
     "CurrentUserResponse",
     "Dashboard",
@@ -68,10 +79,12 @@ __all__ = [
     "GetDashboardRequest",
     "GetDatabaseRequest",
     "GetFieldRequest",
+    "GetMostRecentlyViewedDashboardRequest",
     "GetTableRequest",
     "GetUserRequest",
     "ListActionsRequest",
     "ListActionsResponse",
+    "ListActivityItemsResponse",
     "ListCardsRequest",
     "ListCardsResponse",
     "ListCollectionsRequest",
@@ -80,7 +93,10 @@ __all__ = [
     "ListDashboardsResponse",
     "ListDatabasesRequest",
     "ListDatabasesResponse",
+    "ListPopularItemsRequest",
     "ListPublicActionsRequest",
+    "ListRecentViewsRequest",
+    "ListRecentsRequest",
     "ListTablesRequest",
     "ListTablesResponse",
     "ListUsersRequest",

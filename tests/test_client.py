@@ -20,12 +20,12 @@ def _run(coro: Coroutine[object, object, object]) -> object:
 def test_request_includes_api_key_and_query_parameters() -> None:
     captured: dict[str, str | dict[str, str] | None] = {}
 
-    async def handler(request: httpx.Request) -> httpx.Response:
-        captured["url"] = str(request.url)
-        captured["method"] = request.method
-        captured["params"] = dict(request.url.params)
-        captured["x-api-key"] = request.headers.get("X-API-Key")
-        captured["accept"] = request.headers.get("Accept")
+    async def handler(_request: httpx.Request) -> httpx.Response:
+        captured["url"] = str(_request.url)
+        captured["method"] = _request.method
+        captured["params"] = dict(_request.url.params)
+        captured["x-api-key"] = _request.headers.get("X-API-Key")
+        captured["accept"] = _request.headers.get("Accept")
         return httpx.Response(200, json={"ok": True})
 
     transport = httpx.MockTransport(handler)
@@ -50,9 +50,9 @@ def test_request_includes_api_key_and_query_parameters() -> None:
 
 
 def test_post_sends_json_body() -> None:
-    async def handler(request: httpx.Request) -> httpx.Response:
-        assert request.method == "POST"
-        payload = json.loads(request.content.decode())
+    async def handler(_request: httpx.Request) -> httpx.Response:
+        assert _request.method == "POST"
+        payload = json.loads(_request.content.decode())
         assert payload == {"foo": "bar"}
         return httpx.Response(200, json={"received": payload})
 
@@ -70,9 +70,9 @@ def test_post_sends_json_body() -> None:
 def test_convenience_paths() -> None:
     captured: list[str] = []
 
-    async def handler(request: httpx.Request) -> httpx.Response:
-        captured.append(request.url.path)
-        return httpx.Response(200, json={"path": request.url.path})
+    async def handler(_request: httpx.Request) -> httpx.Response:
+        captured.append(_request.url.path)
+        return httpx.Response(200, json={"path": _request.url.path})
 
     transport = httpx.MockTransport(handler)
     client = MetabaseClient(
@@ -90,7 +90,7 @@ def test_convenience_paths() -> None:
 
 
 def test_http_error_is_mapped_to_client_error() -> None:
-    async def handler(request: httpx.Request) -> httpx.Response:
+    async def handler(_request: httpx.Request) -> httpx.Response:
         return httpx.Response(404, json={"message": "not found"})
 
     transport = httpx.MockTransport(handler)
@@ -107,7 +107,7 @@ def test_http_error_is_mapped_to_client_error() -> None:
 
 
 def test_decode_error_for_invalid_json() -> None:
-    async def handler(request: httpx.Request) -> httpx.Response:
+    async def handler(_request: httpx.Request) -> httpx.Response:
         return httpx.Response(200, content=b"not-json", headers={"content-type": "application/json"})
 
     transport = httpx.MockTransport(handler)
@@ -122,7 +122,7 @@ def test_decode_error_for_invalid_json() -> None:
 
 
 def test_non_json_payload_is_wrapped_as_json_text() -> None:
-    async def handler(request: httpx.Request) -> httpx.Response:
+    async def handler(_request: httpx.Request) -> httpx.Response:
         return httpx.Response(200, content=b"ok", headers={"content-type": "text/plain"})
 
     transport = httpx.MockTransport(handler)
@@ -136,8 +136,23 @@ def test_non_json_payload_is_wrapped_as_json_text() -> None:
     assert result == {"content_type": "text/plain", "text": "ok"}
 
 
+class _RunRequest:
+    async def do(self, client: MetabaseClient) -> str:
+        _ = client
+        return "ok"
+
+
+def test_run_seam_executes_request_model() -> None:
+    client = MetabaseClient(base_url="http://localhost:3000", api_key="abc")
+    request = _RunRequest()
+
+    result = _run(client.run(request))
+
+    assert result == "ok"
+
+
 def test_network_error_is_mapped() -> None:
-    async def handler(request: httpx.Request) -> httpx.Response:
+    async def handler(_request: httpx.Request) -> httpx.Response:
         raise httpx.TimeoutException("timeout")
 
     transport = httpx.MockTransport(handler)

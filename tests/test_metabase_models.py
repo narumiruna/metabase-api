@@ -9,15 +9,35 @@ import httpx
 
 from metabaseapi.client import MetabaseClient
 from metabaseapi.metabase.models import Card
+from metabaseapi.metabase.models import Collection
 from metabaseapi.metabase.models import CreateDatabaseRequest
 from metabaseapi.metabase.models import CurrentUserRequest
 from metabaseapi.metabase.models import CurrentUserResponse
 from metabaseapi.metabase.models import Dashboard
 from metabaseapi.metabase.models import Database
 from metabaseapi.metabase.models import GetCardRequest
+from metabaseapi.metabase.models import GetCollectionRequest
 from metabaseapi.metabase.models import GetDashboardRequest
+from metabaseapi.metabase.models import GetDatabaseRequest
+from metabaseapi.metabase.models import GetFieldRequest
+from metabaseapi.metabase.models import GetTableRequest
+from metabaseapi.metabase.models import GetUserRequest
+from metabaseapi.metabase.models import ListCardsRequest
+from metabaseapi.metabase.models import ListCardsResponse
+from metabaseapi.metabase.models import ListCollectionsRequest
+from metabaseapi.metabase.models import ListCollectionsResponse
+from metabaseapi.metabase.models import ListDashboardsResponse
 from metabaseapi.metabase.models import ListDatabasesRequest
 from metabaseapi.metabase.models import ListDatabasesResponse
+from metabaseapi.metabase.models import ListFieldsRequest
+from metabaseapi.metabase.models import ListFieldsResponse
+from metabaseapi.metabase.models import ListTablesRequest
+from metabaseapi.metabase.models import ListTablesResponse
+from metabaseapi.metabase.models import ListUsersRequest
+from metabaseapi.metabase.models import ListUsersResponse
+from metabaseapi.metabase.models import MetabaseField
+from metabaseapi.metabase.models import Table
+from metabaseapi.metabase.models import User
 
 
 class _StubClient:
@@ -106,6 +126,58 @@ def test_create_database_request_includes_body_for_post() -> None:
     ]
 
 
+def test_list_response_models_handle_wrapped_and_unwrapped_payloads() -> None:
+    list_payload = {
+        "data": [
+            {"id": 1, "name": "card", "collection_id": 2},
+        ]
+    }
+    wrapped = ListCardsResponse.model_validate(list_payload)
+    unwrapped = ListCardsResponse.model_validate(
+        [
+            {"id": 2, "name": "card2", "collection_id": 3},
+        ]
+    )
+
+    assert len(wrapped.cards) == 1
+    assert wrapped.cards[0].name == "card"
+    assert len(unwrapped.cards) == 1
+    assert unwrapped.cards[0].id == 2
+
+
+def test_list_requests_use_expected_paths() -> None:
+    for request_model, response_type, expected_path in [
+        (ListCardsRequest(), ListCardsResponse, "/api/card"),
+        (ListUsersRequest(), ListUsersResponse, "/api/user"),
+        (ListCollectionsRequest(), ListCollectionsResponse, "/api/collection"),
+        (ListTablesRequest(), ListTablesResponse, "/api/table"),
+        (ListFieldsRequest(), ListFieldsResponse, "/api/field"),
+    ]:
+        stub = _StubClient({"data": []})
+        response = request_model.do_sync(stub)
+
+        assert isinstance(response, response_type)
+        assert stub.calls == [("GET", expected_path, {}, None)]
+
+
+def test_get_path_based_requests_use_expected_paths() -> None:
+    expectations = [
+        (GetDatabaseRequest(database_id=4), "/api/database/4", Database),
+        (GetCardRequest(card_id=8), "/api/card/8", Card),
+        (GetDashboardRequest(dashboard_id=9), "/api/dashboard/9", Dashboard),
+        (GetUserRequest(user_id=10), "/api/user/10", User),
+        (GetCollectionRequest(collection_id="c1"), "/api/collection/c1", Collection),
+        (GetTableRequest(table_id=11), "/api/table/11", Table),
+        (GetFieldRequest(field_id=12), "/api/field/12", MetabaseField),
+    ]
+    for request, path, model_type in expectations:
+        stub = _StubClient({"id": 1, "name": "x"})
+        response = request.do_sync(stub)
+        assert isinstance(response, model_type)
+        assert stub.calls[0][0] == "GET"
+        assert stub.calls[0][1] == path
+
+
 def test_get_card_and_dashboard_requests_use_path_parameters() -> None:
     card_client = _StubClient({"id": 7, "name": "card", "display": "table"})
     dashboard_client = _StubClient({"id": 8, "name": "dashboard", "collection_id": 3})
@@ -124,17 +196,35 @@ def _run[T](coro: Coroutine[object, object, T]) -> T:
     return asyncio.run(coro)
 
 
+def _build_mock_endpoint_responses() -> dict[tuple[str, str], dict[str, object]]:
+    return {
+        ("GET", "/api/user/current"): {"id": 9, "email": "client@example.com"},
+        ("GET", "/api/card/11"): {"id": 11, "name": "card", "display": "bar"},
+        ("GET", "/api/database"): {"data": [{"id": 2, "name": "main", "engine": "postgres"}]},
+        ("POST", "/api/database"): {"id": 9, "name": "analytics", "engine": "postgres"},
+        ("GET", "/api/card"): {"data": [{"id": 5, "name": "card", "display": "line"}]},
+        ("GET", "/api/dashboard"): {"data": [{"id": 6, "name": "dash", "collection_id": 1}]},
+        ("GET", "/api/user"): {"data": [{"id": 4, "email": "user@example.com", "first_name": "Ada"}]},
+        ("GET", "/api/collection"): {"data": [{"id": 7, "name": "collection"}]},
+        ("GET", "/api/table"): {"data": [{"id": 8, "name": "table", "schema": "public", "db_id": 1}]},
+        ("GET", "/api/field"): {"data": [{"id": 9, "name": "field", "table_id": 8}]},
+        ("GET", "/api/database/4"): {"id": 4, "name": "db4", "engine": "postgres"},
+        ("GET", "/api/user/10"): {"id": 10, "email": "u10@example.com", "first_name": "Turing"},
+        ("GET", "/api/collection/c1"): {"id": "c1", "name": "col"},
+        ("GET", "/api/table/11"): {"id": 11, "name": "table11", "schema": "public", "db_id": 4},
+        ("GET", "/api/field/12"): {"id": 12, "name": "field12", "table_id": 11},
+        ("GET", "/api/dashboard/3"): {"id": 3, "name": "dash"},
+    }
+
+
 def test_typed_methods_in_client_return_models() -> None:
+    mock_responses = _build_mock_endpoint_responses()
+
     async def handler(request: httpx.Request) -> httpx.Response:
         assert request.headers.get("X-API-Key") == "abc"
-        if request.url.path == "/api/user/current":
-            return httpx.Response(200, json={"id": 9, "email": "client@example.com"})
-        if request.url.path == "/api/card/11":
-            return httpx.Response(200, json={"id": 11, "name": "card", "display": "bar"})
-        if request.url.path == "/api/database" and request.method == "GET":
-            return httpx.Response(200, json={"data": [{"id": 2, "name": "main", "engine": "postgres"}]})
-        if request.url.path == "/api/database" and request.method == "POST":
-            return httpx.Response(200, json={"id": 9, "name": "analytics", "engine": "postgres"})
+        payload = mock_responses.get((request.method, request.url.path))
+        if payload is not None:
+            return httpx.Response(200, json=payload)
         return httpx.Response(200, json={"id": 3, "name": "dash"})
 
     client = MetabaseClient(
@@ -147,7 +237,17 @@ def test_typed_methods_in_client_return_models() -> None:
     dashboard = _run(client.get_dashboard_typed(3))
     card = _run(client.get_card_typed(11))
     databases = _run(client.list_databases_typed())
-    db = _run(client.create_database_typed(name="analytics", engine="postgres", details={"host": "localhost"}))
+    cards = _run(client.list_cards_typed())
+    dashboards = _run(client.list_dashboards_typed())
+    users = _run(client.list_users_typed())
+    collections = _run(client.list_collections_typed())
+    tables = _run(client.list_tables_typed())
+    fields = _run(client.list_fields_typed())
+    db = _run(client.get_database_typed(4))
+    user = _run(client.get_user_typed(10))
+    collection = _run(client.get_collection_typed("c1"))
+    table = _run(client.get_table_typed(11))
+    field = _run(client.get_field_typed(12))
 
     assert isinstance(current_user, CurrentUserResponse)
     assert current_user.email == "client@example.com"
@@ -156,4 +256,15 @@ def test_typed_methods_in_client_return_models() -> None:
     assert isinstance(card, Card)
     assert isinstance(databases, ListDatabasesResponse)
     assert databases.databases[0].engine == "postgres"
-    assert db.name == "analytics"
+    assert isinstance(cards, ListCardsResponse)
+    assert isinstance(dashboards, ListDashboardsResponse)
+    assert isinstance(users, ListUsersResponse)
+    assert isinstance(collections, ListCollectionsResponse)
+    assert isinstance(tables, ListTablesResponse)
+    assert isinstance(fields, ListFieldsResponse)
+    assert db.name == "db4"
+    assert isinstance(user, User)
+    assert user.id == 10
+    assert isinstance(collection, Collection)
+    assert isinstance(table, Table)
+    assert isinstance(field, MetabaseField)

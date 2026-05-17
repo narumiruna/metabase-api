@@ -18,6 +18,16 @@ class _ClientWithRequestMethods:
 
 
 class _RequestClient(_ClientWithRequestMethods):
+    async def request(
+        self,
+        method: str,
+        path: str,
+        *,
+        params: dict[str, str] | None = None,
+        json_data: dict[str, object] | list[object] | str | int | float | bool | None = None,
+    ) -> dict[str, object]:
+        return {"method": method, "path": path, "params": params, "body": json_data}
+
     async def get(self, path: str, *, params: dict[str, str] | None = None) -> dict[str, object]:
         return {"method": "GET", "path": path, "params": params}
 
@@ -70,6 +80,29 @@ def test_request_command_outputs_json(monkeypatch: pytest.MonkeyPatch) -> None:
     assert result.exit_code == 0
     assert '\n  "path": "/api/user/current"' in result.stdout
     assert '\n  "method": "GET"' in result.stdout
+
+
+def test_invoke_command_behaves_like_request(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(cli, "create_client", lambda _settings: _RequestClient())
+
+    result = runner.invoke(
+        cli.app,
+        [
+            "--base-url",
+            "http://localhost:3000",
+            "--api-key",
+            "abc",
+            "invoke",
+            "POST",
+            "/api/database",
+            "--body",
+            '{"name": "analytics"}',
+        ],
+    )
+
+    assert result.exit_code == 0
+    assert '\n  "method": "POST"' in result.stdout
+    assert '\n  "path": "/api/database"' in result.stdout
 
 
 def test_current_user_command_outputs_json(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -149,6 +182,25 @@ def test_create_database_command_invalid_details_fails(monkeypatch: pytest.Monke
             "postgres",
             "--details",
             "{bad-json}",
+        ],
+    )
+
+    assert result.exit_code != 0
+
+
+def test_invoke_rejects_unknown_method(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(cli, "create_client", lambda _settings: _RequestClient())
+
+    result = runner.invoke(
+        cli.app,
+        [
+            "--base-url",
+            "http://localhost:3000",
+            "--api-key",
+            "abc",
+            "invoke",
+            "OPTIONS",
+            "/api/user/current",
         ],
     )
 

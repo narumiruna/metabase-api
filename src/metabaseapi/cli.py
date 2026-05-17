@@ -92,6 +92,33 @@ def _get_settings(ctx: typer.Context) -> settings.Settings:
     return settings_obj
 
 
+def _run_raw_request(
+    client_settings: settings.Settings,
+    method: str,
+    path: str,
+    query: list[str] | None,
+    body: str | None,
+) -> Coroutine[object, object, JSONValue | None]:
+    params = _parse_key_value_pairs(query)
+    payload = _parse_json_body(body)
+
+    request_model = get_request_model(method, path)
+    api_request = request_model(method=method, path=path, params=params, body=payload)
+    if api_request.method not in {"GET", "POST", "PUT", "PATCH", "DELETE"}:
+        raise typer.BadParameter("method must be GET, POST, PUT, PATCH, or DELETE")
+
+    async def do_request() -> JSONValue | None:
+        async with create_client(client_settings) as client:
+            return await client.request(
+                api_request.method,
+                api_request.path,
+                params=api_request.params,
+                json_data=api_request.body,
+            )
+
+    return do_request()
+
+
 @app.callback()
 def configure(
     ctx: typer.Context,
@@ -124,27 +151,23 @@ def request(
     """Send a raw Metabase HTTP request."""
 
     client_settings = _get_settings(ctx)
-    params = _parse_key_value_pairs(query)
-    payload = _parse_json_body(body)
+    _run_and_print(_run_raw_request(client_settings, method, path, query, body))
 
-    request_model = get_request_model(method, path)
-    api_request = request_model(method=method, path=path, params=params, body=payload)
-    if api_request.method not in {"GET", "POST", "PUT", "PATCH", "DELETE"}:
-        raise typer.BadParameter("method must be GET, POST, PUT, PATCH, or DELETE")
 
-    async def do_request() -> JSONValue | None:
-        async with create_client(client_settings) as client:
-            if api_request.method == "GET":
-                return await client.get(api_request.path, params=api_request.params)
-            if api_request.method == "POST":
-                return await client.post(api_request.path, params=api_request.params, body=api_request.body)
-            if api_request.method == "PUT":
-                return await client.put(api_request.path, params=api_request.params, body=api_request.body)
-            if api_request.method == "PATCH":
-                return await client.patch(api_request.path, params=api_request.params, body=api_request.body)
-            return await client.delete(api_request.path, params=api_request.params)
+@app.command("invoke")
+def invoke(
+    ctx: typer.Context,
+    method: str = typer.Argument(..., help="HTTP method (GET, POST, PUT, PATCH, DELETE)"),
+    path: str = typer.Argument(..., help="API path or absolute URL"),
+    query: Annotated[
+        list[str] | None, typer.Option("--query", "-q", help="Repeatable key=value query parameters")
+    ] = None,
+    body: Annotated[str | None, typer.Option("--body", "-b", help="Raw JSON body for POST/PUT requests")] = None,
+) -> None:
+    """Generic API invoke command for structured endpoint calls."""
 
-    _run_and_print(do_request())
+    client_settings = _get_settings(ctx)
+    _run_and_print(_run_raw_request(client_settings, method, path, query, body))
 
 
 @app.command("current-user")
@@ -162,11 +185,28 @@ def get_current_user(ctx: typer.Context) -> None:
 def list_databases(ctx: typer.Context) -> None:
     """List configured databases."""
 
-    async def do_request() -> JSONValue:
-        async with create_client(_get_settings(ctx)) as client:
-            return await client.list_databases()
+    _run_and_print(_run_raw_request(_get_settings(ctx), "GET", "/api/database", None, None))
 
-    _run_and_print(do_request())
+
+@app.command("list-cards")
+def list_cards(ctx: typer.Context) -> None:
+    """List cards."""
+
+    _run_and_print(_run_raw_request(_get_settings(ctx), "GET", "/api/card", None, None))
+
+
+@app.command("list-users")
+def list_users(ctx: typer.Context) -> None:
+    """List users."""
+
+    _run_and_print(_run_raw_request(_get_settings(ctx), "GET", "/api/user", None, None))
+
+
+@app.command("list-collections")
+def list_collections(ctx: typer.Context) -> None:
+    """List collections."""
+
+    _run_and_print(_run_raw_request(_get_settings(ctx), "GET", "/api/collection", None, None))
 
 
 @app.command("get-dashboard")
@@ -189,6 +229,20 @@ def get_card(ctx: typer.Context, card_id: int = typer.Argument(...)) -> None:
             return await client.get_card(card_id)
 
     _run_and_print(do_request())
+
+
+@app.command("get-user")
+def get_user(ctx: typer.Context, user_id: int = typer.Argument(...)) -> None:
+    """Get a user by ID."""
+
+    _run_and_print(_run_raw_request(_get_settings(ctx), "GET", f"/api/user/{user_id}", None, None))
+
+
+@app.command("get-table")
+def get_table(ctx: typer.Context, table_id: int = typer.Argument(...)) -> None:
+    """Get a table by ID."""
+
+    _run_and_print(_run_raw_request(_get_settings(ctx), "GET", f"/api/table/{table_id}", None, None))
 
 
 @app.command("get-database")

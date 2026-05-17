@@ -28,6 +28,7 @@ export METABASE_API_KEY=your-api-key
 metabaseapi request GET /api/user/current
 metabaseapi request GET /api/card/1 -q dashboard=1 -q archived=false
 metabaseapi request POST /api/dataset -b '{"query": {"database": 1, "type": "query", "query": {"source-table": 1}}'
+metabaseapi invoke GET /api/user/current
 ```
 
 ### 便利命令
@@ -37,7 +38,13 @@ metabaseapi current-user
 metabaseapi list-databases
 metabaseapi get-dashboard 1
 metabaseapi get-card 2
+metabaseapi get-user 4
+metabaseapi get-table 8
 metabaseapi get-database 1
+metabaseapi list-databases
+metabaseapi list-cards
+metabaseapi list-users
+metabaseapi list-collections
 metabaseapi create-database my_db postgres --details '{"host":"localhost","port":5432}'
 ```
 

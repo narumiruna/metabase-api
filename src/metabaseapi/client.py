@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
+from typing import Protocol
+from typing import TypeVar
 
 import httpx
 
@@ -8,19 +10,47 @@ from .errors import MetabaseDecodeError
 from .errors import MetabaseHTTPStatusError
 from .errors import MetabaseNetworkError
 from .metabase.models import Card
+from .metabase.models import Collection
 from .metabase.models import CreateDatabaseRequest
 from .metabase.models import CurrentUserRequest
 from .metabase.models import CurrentUserResponse
 from .metabase.models import Dashboard
 from .metabase.models import Database
 from .metabase.models import GetCardRequest
+from .metabase.models import GetCollectionRequest
 from .metabase.models import GetDashboardRequest
+from .metabase.models import GetDatabaseRequest
+from .metabase.models import GetFieldRequest
+from .metabase.models import GetTableRequest
+from .metabase.models import GetUserRequest
+from .metabase.models import ListCardsRequest
+from .metabase.models import ListCardsResponse
+from .metabase.models import ListCollectionsRequest
+from .metabase.models import ListCollectionsResponse
+from .metabase.models import ListDashboardsRequest
+from .metabase.models import ListDashboardsResponse
 from .metabase.models import ListDatabasesRequest
 from .metabase.models import ListDatabasesResponse
+from .metabase.models import ListFieldsRequest
+from .metabase.models import ListFieldsResponse
+from .metabase.models import ListTablesRequest
+from .metabase.models import ListTablesResponse
+from .metabase.models import ListUsersRequest
+from .metabase.models import ListUsersResponse
+from .metabase.models import MetabaseField
+from .metabase.models import Table
+from .metabase.models import User
 from .models import JSONValue
 from .models import get_request_model
 from .models import get_response_model
 from .settings import Settings
+
+
+class _ExecutableRequest[ResponseT](Protocol):
+    async def do(self, client: MetabaseClient) -> ResponseT: ...
+
+
+ResponseT = TypeVar("ResponseT")
 
 
 class MetabaseClient:
@@ -193,11 +223,32 @@ class MetabaseClient:
     async def get_card(self, card_id: int | str) -> JSONValue | None:
         return await self.get(f"/api/card/{card_id}")
 
+    async def run[ResponseT](self, request_model: _ExecutableRequest[ResponseT]) -> ResponseT:
+        return await request_model.do(self)
+
     async def current_user_typed(self) -> CurrentUserResponse:
-        return await CurrentUserRequest().do(self)
+        return await self.run(CurrentUserRequest())
 
     async def list_databases_typed(self) -> ListDatabasesResponse:
-        return await ListDatabasesRequest().do(self)
+        return await self.run(ListDatabasesRequest())
+
+    async def list_cards_typed(self) -> ListCardsResponse:
+        return await self.run(ListCardsRequest())
+
+    async def list_dashboards_typed(self) -> ListDashboardsResponse:
+        return await self.run(ListDashboardsRequest())
+
+    async def list_users_typed(self) -> ListUsersResponse:
+        return await self.run(ListUsersRequest())
+
+    async def list_collections_typed(self) -> ListCollectionsResponse:
+        return await self.run(ListCollectionsRequest())
+
+    async def list_tables_typed(self) -> ListTablesResponse:
+        return await self.run(ListTablesRequest())
+
+    async def list_fields_typed(self) -> ListFieldsResponse:
+        return await self.run(ListFieldsRequest())
 
     async def create_database_typed(
         self,
@@ -207,10 +258,25 @@ class MetabaseClient:
         details: dict[str, object] | None = None,
     ) -> Database:
         request = CreateDatabaseRequest(name=name, engine=engine, details=details or {})
-        return await request.do(self)
+        return await self.run(request)
+
+    async def get_database_typed(self, database_id: int | str) -> Database:
+        return await self.run(GetDatabaseRequest(database_id=database_id))
 
     async def get_card_typed(self, card_id: int | str) -> Card:
-        return await GetCardRequest(card_id=card_id).do(self)
+        return await self.run(GetCardRequest(card_id=card_id))
 
     async def get_dashboard_typed(self, dashboard_id: int | str) -> Dashboard:
-        return await GetDashboardRequest(dashboard_id=dashboard_id).do(self)
+        return await self.run(GetDashboardRequest(dashboard_id=dashboard_id))
+
+    async def get_user_typed(self, user_id: int | str) -> User:
+        return await self.run(GetUserRequest(user_id=user_id))
+
+    async def get_collection_typed(self, collection_id: int | str) -> Collection:
+        return await self.run(GetCollectionRequest(collection_id=collection_id))
+
+    async def get_table_typed(self, table_id: int | str) -> Table:
+        return await self.run(GetTableRequest(table_id=table_id))
+
+    async def get_field_typed(self, field_id: int | str) -> MetabaseField:
+        return await self.run(GetFieldRequest(field_id=field_id))

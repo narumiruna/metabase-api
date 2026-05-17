@@ -9,9 +9,17 @@ import httpx
 
 from metabaseapi.client.raw.alerts import _MetabaseClientRawMixin as _MetabaseClientAlertsRawMixin
 from metabaseapi.client.raw.analytics import _MetabaseClientRawMixin as _MetabaseClientAnalyticsRawMixin
+from metabaseapi.client.raw.api_key import _MetabaseClientRawMixin as _MetabaseClientApiKeyRawMixin
+from metabaseapi.client.raw.channels import _MetabaseClientRawMixin as _MetabaseClientChannelsRawMixin
+from metabaseapi.client.raw.cloud import _MetabaseClientRawMixin as _MetabaseClientCloudRawMixin
+from metabaseapi.client.raw.collections import _MetabaseClientRawMixin as _MetabaseClientCollectionsRawMixin
 from metabaseapi.client.raw.users import _MetabaseClientRawMixin as _MetabaseClientUsersRawMixin
 from metabaseapi.client.typed.alerts import _MetabaseClientTypedMixin as _MetabaseClientAlertsTypedMixin
 from metabaseapi.client.typed.analytics import _MetabaseClientTypedMixin as _MetabaseClientAnalyticsTypedMixin
+from metabaseapi.client.typed.api_key import _MetabaseClientTypedMixin as _MetabaseClientApiKeyTypedMixin
+from metabaseapi.client.typed.channels import _MetabaseClientTypedMixin as _MetabaseClientChannelsTypedMixin
+from metabaseapi.client.typed.cloud import _MetabaseClientTypedMixin as _MetabaseClientCloudTypedMixin
+from metabaseapi.client.typed.collections import _MetabaseClientTypedMixin as _MetabaseClientCollectionsTypedMixin
 from metabaseapi.client.typed.users import _MetabaseClientTypedMixin as _MetabaseClientUsersTypedMixin
 from metabaseapi.errors import MetabaseDecodeError
 from metabaseapi.errors import MetabaseHTTPStatusError
@@ -26,12 +34,10 @@ from metabaseapi.metabase import AgentPingRequest
 from metabaseapi.metabase import AgentQueryRequest
 from metabaseapi.metabase import AgentResponse
 from metabaseapi.metabase import AgentSearchRequest
-from metabaseapi.metabase import ApiKey
 from metabaseapi.metabase import AutomagicDashboardRequest
 from metabaseapi.metabase import AutomagicDatabaseCandidatesRequest
 from metabaseapi.metabase import AutomagicModelIndexPrimaryKeyRequest
 from metabaseapi.metabase import Bookmark
-from metabaseapi.metabase import CancelCloudMigrationRequest
 from metabaseapi.metabase import Card
 from metabaseapi.metabase import CardParamsSearchRequest
 from metabaseapi.metabase import CardParamsValuesRequest
@@ -40,19 +46,13 @@ from metabaseapi.metabase import CardQueryRequest
 from metabaseapi.metabase import CardRemappingRequest
 from metabaseapi.metabase import CardsDashboardsRequest
 from metabaseapi.metabase import CardsDashboardsResponse
-from metabaseapi.metabase import Collection
 from metabaseapi.metabase import CopyCardRequest
 from metabaseapi.metabase import CopyDashboardRequest
-from metabaseapi.metabase import CountApiKeysRequest
 from metabaseapi.metabase import CreateActionPublicLinkRequest
 from metabaseapi.metabase import CreateActionRequest
-from metabaseapi.metabase import CreateApiKeyRequest
 from metabaseapi.metabase import CreateBookmarkRequest
 from metabaseapi.metabase import CreateCardPublicLinkRequest
 from metabaseapi.metabase import CreateCardRequest
-from metabaseapi.metabase import CreateChannelRequest
-from metabaseapi.metabase import CreateCloudMigrationRequest
-from metabaseapi.metabase import CreateCollectionRequest
 from metabaseapi.metabase import CreateDashboardPublicLinkRequest
 from metabaseapi.metabase import CreateDatabaseRequest
 from metabaseapi.metabase import CreateRecentRequest
@@ -68,12 +68,10 @@ from metabaseapi.metabase import DataStudioTableSelectionRequest
 from metabaseapi.metabase import DataStudioTableSyncSchemaRequest
 from metabaseapi.metabase import DeleteActionPublicLinkRequest
 from metabaseapi.metabase import DeleteActionRequest
-from metabaseapi.metabase import DeleteApiKeyRequest
 from metabaseapi.metabase import DeleteBookmarkRequest
 from metabaseapi.metabase import DeleteCacheRequest
 from metabaseapi.metabase import DeleteCardPublicLinkRequest
 from metabaseapi.metabase import DeleteCardRequest
-from metabaseapi.metabase import DeleteCollectionRequest
 from metabaseapi.metabase import DeleteCommentRequest
 from metabaseapi.metabase import DeleteDashboardPublicLinkRequest
 from metabaseapi.metabase import DeleteDashboardRequest
@@ -96,17 +94,6 @@ from metabaseapi.metabase import GetCardPublicRequest
 from metabaseapi.metabase import GetCardQueryMetadataRequest
 from metabaseapi.metabase import GetCardRequest
 from metabaseapi.metabase import GetCardSeriesRequest
-from metabaseapi.metabase import GetChannelRequest
-from metabaseapi.metabase import GetCloudMigrationRequest
-from metabaseapi.metabase import GetCollectionDashboardQuestionCandidatesRequest
-from metabaseapi.metabase import GetCollectionGraphRequest
-from metabaseapi.metabase import GetCollectionItemsRequest
-from metabaseapi.metabase import GetCollectionRequest
-from metabaseapi.metabase import GetCollectionRootDashboardQuestionCandidatesRequest
-from metabaseapi.metabase import GetCollectionRootItemsRequest
-from metabaseapi.metabase import GetCollectionRootRequest
-from metabaseapi.metabase import GetCollectionTrashRequest
-from metabaseapi.metabase import GetCollectionTreeRequest
 from metabaseapi.metabase import GetCommentMentionsRequest
 from metabaseapi.metabase import GetCommentRequest
 from metabaseapi.metabase import GetDashboardDashcardExecuteRequest
@@ -124,16 +111,10 @@ from metabaseapi.metabase import InvalidateCacheRequest
 from metabaseapi.metabase import ListActionsRequest
 from metabaseapi.metabase import ListActionsResponse
 from metabaseapi.metabase import ListActivityItemsResponse
-from metabaseapi.metabase import ListApiKeysRequest
-from metabaseapi.metabase import ListApiKeysResponse
 from metabaseapi.metabase import ListBookmarksRequest
 from metabaseapi.metabase import ListBookmarksResponse
 from metabaseapi.metabase import ListCardsRequest
 from metabaseapi.metabase import ListCardsResponse
-from metabaseapi.metabase import ListChannelsRequest
-from metabaseapi.metabase import ListChannelsResponse
-from metabaseapi.metabase import ListCollectionsRequest
-from metabaseapi.metabase import ListCollectionsResponse
 from metabaseapi.metabase import ListDashboardsRequest
 from metabaseapi.metabase import ListDashboardsResponse
 from metabaseapi.metabase import ListDatabasesRequest
@@ -147,25 +128,17 @@ from metabaseapi.metabase import ListTablesResponse
 from metabaseapi.metabase import MetabaseField
 from metabaseapi.metabase import MoveCardsRequest
 from metabaseapi.metabase import PostCardPivotQueryRequest
-from metabaseapi.metabase import PostCollectionMoveDashboardQuestionCandidatesRequest
-from metabaseapi.metabase import PostCollectionRootMoveDashboardQuestionCandidatesRequest
 from metabaseapi.metabase import PostCommentReactionRequest
 from metabaseapi.metabase import PostCommentRequest
 from metabaseapi.metabase import PostDashboardPivotQueryRequest
 from metabaseapi.metabase import PostDashboardRequest
 from metabaseapi.metabase import PutCacheRequest
-from metabaseapi.metabase import PutCollectionGraphRequest
-from metabaseapi.metabase import PutCollectionRequest
-from metabaseapi.metabase import RegenerateApiKeyRequest
 from metabaseapi.metabase import SaveDashboardRequest
 from metabaseapi.metabase import SaveDashboardToCollectionRequest
 from metabaseapi.metabase import Table
-from metabaseapi.metabase import TestChannelRequest
 from metabaseapi.metabase import UpdateActionRequest
-from metabaseapi.metabase import UpdateApiKeyRequest
 from metabaseapi.metabase import UpdateBookmarkOrderingRequest
 from metabaseapi.metabase import UpdateCardRequest
-from metabaseapi.metabase import UpdateChannelRequest
 from metabaseapi.metabase import UpdateCommentRequest
 from metabaseapi.metabase import UpdateDashboardCardsRequest
 from metabaseapi.metabase import UpdateDashboardRequest
@@ -178,7 +151,13 @@ from metabaseapi.settings import Settings
 
 
 class _MetabaseClientRawMixin(
-    _MetabaseClientUsersRawMixin, _MetabaseClientAnalyticsRawMixin, _MetabaseClientAlertsRawMixin
+    _MetabaseClientUsersRawMixin,
+    _MetabaseClientAnalyticsRawMixin,
+    _MetabaseClientAlertsRawMixin,
+    _MetabaseClientApiKeyRawMixin,
+    _MetabaseClientCollectionsRawMixin,
+    _MetabaseClientChannelsRawMixin,
+    _MetabaseClientCloudRawMixin,
 ):
     """Resource-scoped raw mixin."""
 
@@ -188,6 +167,10 @@ class _MetabaseClientTypedMixin(
     _MetabaseClientUsersTypedMixin,
     _MetabaseClientAnalyticsTypedMixin,
     _MetabaseClientAlertsTypedMixin,
+    _MetabaseClientApiKeyTypedMixin,
+    _MetabaseClientCollectionsTypedMixin,
+    _MetabaseClientChannelsTypedMixin,
+    _MetabaseClientCloudTypedMixin,
 ):
     """Resource-scoped typed mixin."""
 
@@ -556,24 +539,6 @@ class MetabaseClient(_MetabaseClientTypedMixin):
             f"{entity}/{entity_id_or_query}/rule/{prefix}/{dashboard_template}/compare/{comparison_entity}/{comparison_entity_id_or_query}"
         )
 
-    async def create_api_key(self, body: Mapping[str, object]) -> JSONValue | None:
-        return await self.post("/api/api-key", body=dict(body))
-
-    async def list_api_keys(self) -> JSONValue | None:
-        return await self.get("/api/api-key")
-
-    async def count_api_keys(self) -> JSONValue | None:
-        return await self.get("/api/api-key/count")
-
-    async def update_api_key(self, api_key_id: int | str, body: Mapping[str, object]) -> JSONValue | None:
-        return await self.put(f"/api/api-key/{api_key_id}", body=dict(body))
-
-    async def delete_api_key(self, api_key_id: int | str) -> JSONValue | None:
-        return await self.delete(f"/api/api-key/{api_key_id}")
-
-    async def regenerate_api_key(self, api_key_id: int | str) -> JSONValue | None:
-        return await self.put(f"/api/api-key/{api_key_id}/regenerate")
-
     async def agent_execute(self, body: Mapping[str, object]) -> JSONValue | None:
         return await self.post("/api/agent/v1/execute", body=dict(body))
 
@@ -619,30 +584,6 @@ class MetabaseClient(_MetabaseClientTypedMixin):
 
     async def list_databases(self) -> JSONValue | None:
         return await self.get("/api/database")
-
-    async def list_channels(self) -> JSONValue | None:
-        return await self.get("/api/channel")
-
-    async def create_channel(self, body: Mapping[str, object]) -> JSONValue | None:
-        return await self.post("/api/channel", body=dict(body))
-
-    async def test_channel(self, body: Mapping[str, object]) -> JSONValue | None:
-        return await self.post("/api/channel/test", body=dict(body))
-
-    async def get_channel(self, channel_id: int | str) -> JSONValue | None:
-        return await self.get(f"/api/channel/{channel_id}")
-
-    async def update_channel(self, channel_id: int | str, body: Mapping[str, object]) -> JSONValue | None:
-        return await self.put(f"/api/channel/{channel_id}", body=dict(body))
-
-    async def create_cloud_migration(self, body: Mapping[str, object]) -> JSONValue | None:
-        return await self.post("/api/cloud-migration", body=dict(body))
-
-    async def get_cloud_migration(self) -> JSONValue | None:
-        return await self.get("/api/cloud-migration")
-
-    async def cancel_cloud_migration(self) -> JSONValue | None:
-        return await self.put("/api/cloud-migration/cancel")
 
     async def create_database(
         self,
@@ -1014,21 +955,6 @@ class MetabaseClient(_MetabaseClientTypedMixin):
     async def data_studio_table_sync_schema(self, body: Mapping[str, object]) -> JSONValue | None:
         return await self.post("/api/data-studio/table/sync-schema", body=dict(body))
 
-    async def list_collections(self) -> JSONValue | None:
-        return await self.get("/api/collection")
-
-    async def create_collection(self, body: Mapping[str, object]) -> JSONValue | None:
-        return await self.post("/api/collection", body=dict(body))
-
-    async def get_collection(self, collection_id: int | str) -> JSONValue | None:
-        return await self.get(f"/api/collection/{collection_id}")
-
-    async def update_collection(self, collection_id: int | str, body: Mapping[str, object]) -> JSONValue | None:
-        return await self.put(f"/api/collection/{collection_id}", body=dict(body))
-
-    async def delete_collection(self, collection_id: int | str) -> JSONValue | None:
-        return await self.delete(f"/api/collection/{collection_id}")
-
     async def get_comment(
         self,
         *,
@@ -1056,43 +982,6 @@ class MetabaseClient(_MetabaseClientTypedMixin):
 
     async def delete_comment(self, comment_id: int | str) -> JSONValue | None:
         return await self.delete(f"/api/comment/{comment_id}")
-
-    async def get_collection_dashboard_question_candidates(self, collection_id: int | str) -> JSONValue | None:
-        return await self.get(f"/api/collection/{collection_id}/dashboard-question-candidates")
-
-    async def get_collection_items(self, collection_id: int | str) -> JSONValue | None:
-        return await self.get(f"/api/collection/{collection_id}/items")
-
-    async def post_collection_move_dashboard_question_candidates(
-        self, collection_id: int | str, body: Mapping[str, object]
-    ) -> JSONValue | None:
-        return await self.post(f"/api/collection/{collection_id}/move-dashboard-question-candidates", body=dict(body))
-
-    async def get_collection_graph(self) -> JSONValue | None:
-        return await self.get("/api/collection/graph")
-
-    async def put_collection_graph(self, body: Mapping[str, object]) -> JSONValue | None:
-        return await self.put("/api/collection/graph", body=dict(body))
-
-    async def get_collection_root(self) -> JSONValue | None:
-        return await self.get("/api/collection/root")
-
-    async def get_collection_root_dashboard_question_candidates(self) -> JSONValue | None:
-        return await self.get("/api/collection/root/dashboard-question-candidates")
-
-    async def get_collection_root_items(self) -> JSONValue | None:
-        return await self.get("/api/collection/root/items")
-
-    async def post_collection_root_move_dashboard_question_candidates(
-        self, body: Mapping[str, object]
-    ) -> JSONValue | None:
-        return await self.post("/api/collection/root/move-dashboard-question-candidates", body=dict(body))
-
-    async def get_collection_trash(self) -> JSONValue | None:
-        return await self.get("/api/collection/trash")
-
-    async def get_collection_tree(self) -> JSONValue | None:
-        return await self.get("/api/collection/tree")
 
     async def list_tables(self) -> JSONValue | None:
         return await self.get("/api/table")
@@ -1205,24 +1094,6 @@ class MetabaseClient(_MetabaseClientTypedMixin):
     async def automagic_dashboard_path_typed(self, path: str) -> GenericOperationResponse:
         return await self.run(AutomagicDashboardRequest(path=path))
 
-    async def create_api_key_typed(self, body: dict[str, object]) -> ApiKey:
-        return await self.run(CreateApiKeyRequest(body=body))
-
-    async def list_api_keys_typed(self) -> ListApiKeysResponse:
-        return await self.run(ListApiKeysRequest())
-
-    async def count_api_keys_typed(self) -> GenericOperationResponse:
-        return await self.run(CountApiKeysRequest())
-
-    async def update_api_key_typed(self, api_key_id: int | str, body: dict[str, object]) -> ApiKey:
-        return await self.run(UpdateApiKeyRequest(api_key_id=api_key_id, body=body))
-
-    async def delete_api_key_typed(self, api_key_id: int | str) -> GenericOperationResponse:
-        return await self.run(DeleteApiKeyRequest(api_key_id=api_key_id))
-
-    async def regenerate_api_key_typed(self, api_key_id: int | str) -> ApiKey:
-        return await self.run(RegenerateApiKeyRequest(api_key_id=api_key_id))
-
     async def agent_execute_typed(self, body: dict[str, object]) -> AgentResponse:
         return await self.run(AgentExecuteRequest(body=body))
 
@@ -1268,30 +1139,6 @@ class MetabaseClient(_MetabaseClientTypedMixin):
     async def list_databases_typed(self) -> ListDatabasesResponse:
         return await self.run(ListDatabasesRequest())
 
-    async def list_channels_typed(self) -> ListChannelsResponse:
-        return await self.run(ListChannelsRequest())
-
-    async def create_channel_typed(self, body: dict[str, object]) -> GenericOperationResponse:
-        return await self.run(CreateChannelRequest(body=body))
-
-    async def test_channel_typed(self, body: dict[str, object]) -> GenericOperationResponse:
-        return await self.run(TestChannelRequest(body=body))
-
-    async def get_channel_typed(self, channel_id: int | str) -> GenericOperationResponse:
-        return await self.run(GetChannelRequest(channel_id=channel_id))
-
-    async def update_channel_typed(self, channel_id: int | str, body: dict[str, object]) -> GenericOperationResponse:
-        return await self.run(UpdateChannelRequest(channel_id=channel_id, body=body))
-
-    async def create_cloud_migration_typed(self, body: dict[str, object]) -> GenericOperationResponse:
-        return await self.run(CreateCloudMigrationRequest(body=body))
-
-    async def get_cloud_migration_typed(self) -> GenericOperationResponse:
-        return await self.run(GetCloudMigrationRequest())
-
-    async def cancel_cloud_migration_typed(self) -> GenericOperationResponse:
-        return await self.run(CancelCloudMigrationRequest())
-
     async def list_cards_typed(self) -> ListCardsResponse:
         return await self.run(ListCardsRequest())
 
@@ -1300,22 +1147,6 @@ class MetabaseClient(_MetabaseClientTypedMixin):
 
     async def create_dashboard_typed(self, body: dict[str, object]) -> Dashboard:
         return await self.run(PostDashboardRequest(body=dict(body)))
-
-    async def list_collections_typed(self) -> ListCollectionsResponse:
-        return await self.run(ListCollectionsRequest())
-
-    async def create_collection_typed(self, body: dict[str, object]) -> Collection:
-        return await self.run(CreateCollectionRequest(body=body))
-
-    async def update_collection_typed(
-        self,
-        collection_id: int | str,
-        body: dict[str, object],
-    ) -> GenericOperationResponse:
-        return await self.run(PutCollectionRequest(collection_id=collection_id, body=body))
-
-    async def delete_collection_typed(self, collection_id: int | str) -> GenericOperationResponse:
-        return await self.run(DeleteCollectionRequest(collection_id=collection_id))
 
     async def delete_comment_typed(self, comment_id: int | str) -> GenericOperationResponse:
         return await self.run(DeleteCommentRequest(comment_id=comment_id))
@@ -1341,42 +1172,6 @@ class MetabaseClient(_MetabaseClientTypedMixin):
 
     async def create_comment_typed(self, body: dict[str, object]) -> GenericOperationResponse:
         return await self.run(PostCommentRequest(body=dict(body)))
-
-    async def get_collection_graph_typed(self) -> GenericOperationResponse:
-        return await self.run(GetCollectionGraphRequest())
-
-    async def put_collection_graph_typed(self, body: dict[str, object]) -> GenericOperationResponse:
-        return await self.run(PutCollectionGraphRequest(body=body))
-
-    async def get_collection_root_typed(self) -> Collection:
-        return await self.run(GetCollectionRootRequest())
-
-    async def get_collection_root_dashboard_question_candidates_typed(self) -> GenericOperationResponse:
-        return await self.run(GetCollectionRootDashboardQuestionCandidatesRequest())
-
-    async def get_collection_root_items_typed(self) -> GenericOperationResponse:
-        return await self.run(GetCollectionRootItemsRequest())
-
-    async def post_collection_root_move_dashboard_question_candidates_typed(
-        self,
-        body: dict[str, object],
-    ) -> GenericOperationResponse:
-        return await self.run(PostCollectionRootMoveDashboardQuestionCandidatesRequest(body=body))
-
-    async def post_collection_move_dashboard_question_candidates_typed(
-        self,
-        collection_id: int | str,
-        body: dict[str, object],
-    ) -> GenericOperationResponse:
-        return await self.run(
-            PostCollectionMoveDashboardQuestionCandidatesRequest(collection_id=collection_id, body=body)
-        )
-
-    async def get_collection_trash_typed(self) -> Collection:
-        return await self.run(GetCollectionTrashRequest())
-
-    async def get_collection_tree_typed(self) -> GenericOperationResponse:
-        return await self.run(GetCollectionTreeRequest())
 
     async def list_tables_typed(self) -> ListTablesResponse:
         return await self.run(ListTablesRequest())
@@ -1702,17 +1497,6 @@ class MetabaseClient(_MetabaseClientTypedMixin):
 
     async def data_studio_table_sync_schema_typed(self, body: dict[str, object]) -> GenericOperationResponse:
         return await self.run(DataStudioTableSyncSchemaRequest(body=body))
-
-    async def get_collection_typed(self, collection_id: int | str) -> Collection:
-        return await self.run(GetCollectionRequest(collection_id=collection_id))
-
-    async def get_collection_dashboard_question_candidates_typed(
-        self, collection_id: int | str
-    ) -> GenericOperationResponse:
-        return await self.run(GetCollectionDashboardQuestionCandidatesRequest(collection_id=collection_id))
-
-    async def get_collection_items_typed(self, collection_id: int | str) -> GenericOperationResponse:
-        return await self.run(GetCollectionItemsRequest(collection_id=collection_id))
 
     async def get_table_typed(self, table_id: int | str) -> Table:
         return await self.run(GetTableRequest(table_id=table_id))

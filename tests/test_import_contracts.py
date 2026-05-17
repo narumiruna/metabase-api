@@ -49,6 +49,34 @@ import metabaseapi.endpoints.requests.document
 import metabaseapi.endpoints.requests.ee_action_v2
 import metabaseapi.endpoints.requests.ee_advanced_permissions
 import metabaseapi.endpoints.requests.ee_ai_controls
+import metabaseapi.endpoints.requests.ee_audit_app
+import metabaseapi.endpoints.requests.ee_billing
+import metabaseapi.endpoints.requests.ee_cloud
+import metabaseapi.endpoints.requests.ee_content_translation
+import metabaseapi.endpoints.requests.ee_data_complexity_score
+import metabaseapi.endpoints.requests.ee_data_studio
+import metabaseapi.endpoints.requests.ee_database_replication
+import metabaseapi.endpoints.requests.ee_database_routing
+import metabaseapi.endpoints.requests.ee_dependencies
+import metabaseapi.endpoints.requests.ee_email
+import metabaseapi.endpoints.requests.ee_embedding_hub
+import metabaseapi.endpoints.requests.ee_gsheets
+import metabaseapi.endpoints.requests.ee_library
+import metabaseapi.endpoints.requests.ee_logs
+import metabaseapi.endpoints.requests.ee_metabot
+import metabaseapi.endpoints.requests.ee_permission_debug
+import metabaseapi.endpoints.requests.ee_remote_sync
+import metabaseapi.endpoints.requests.ee_replacement
+import metabaseapi.endpoints.requests.ee_scim
+import metabaseapi.endpoints.requests.ee_security_center
+import metabaseapi.endpoints.requests.ee_semantic_search
+import metabaseapi.endpoints.requests.ee_serialization
+import metabaseapi.endpoints.requests.ee_stale
+import metabaseapi.endpoints.requests.ee_support_access_grant
+import metabaseapi.endpoints.requests.ee_tenant
+import metabaseapi.endpoints.requests.ee_transforms
+import metabaseapi.endpoints.requests.ee_transforms_python
+import metabaseapi.endpoints.requests.ee_upload_management
 import metabaseapi.endpoints.requests.eid_translation
 import metabaseapi.endpoints.requests.email
 import metabaseapi.endpoints.requests.embed
@@ -67,6 +95,8 @@ import metabaseapi.endpoints.requests.metabot
 import metabaseapi.endpoints.requests.metric
 import metabaseapi.endpoints.requests.model_index
 import metabaseapi.endpoints.requests.moderation_review
+import metabaseapi.endpoints.requests.mt_gtap
+import metabaseapi.endpoints.requests.mt_user
 import metabaseapi.endpoints.requests.native_query_snippet
 import metabaseapi.endpoints.requests.notification
 import metabaseapi.endpoints.requests.notify
@@ -317,6 +347,144 @@ REQUEST_MODULE_CONTRACTS = {
         "GetEeAiControlsUsageGroupIdRequest",
         "PutEeAiControlsUsageGroupIdRequest",
     ),
+    "ee_audit_app": (
+        "PostEeAuditAppAnalyticsDevExportRequest",
+        "GetEeAuditAppUserAuditInfoRequest",
+        "DeleteEeAuditAppUserSubscriptionsRequest",
+    ),
+    "ee_billing": ("GetEeBillingRequest",),
+    "ee_cloud": (
+        "GetEeCloudAddOnsAddonsRequest",
+        "GetEeCloudAddOnsPlansRequest",
+        "PostEeCloudAddOnsProductTypeRequest",
+        "DeleteEeCloudAddOnsProductTypeRequest",
+        "PostEeCloudProxyOperationIdRequest",
+    ),
+    "ee_content_translation": (
+        "GetEeContentTranslationCsvRequest",
+        "GetEeContentTranslationDictionaryRequest",
+        "GetEeContentTranslationDictionaryTokenRequest",
+        "PostEeContentTranslationUploadDictionaryRequest",
+    ),
+    "ee_data_complexity_score": ("GetEeDataComplexityScoreComplexityRequest",),
+    "ee_data_studio": (
+        "PostEeDataStudioTablePublishTablesRequest",
+        "PostEeDataStudioTableUnpublishTablesRequest",
+    ),
+    "ee_database_replication": (
+        "PostEeDatabaseReplicationConnectionDatabaseIdRequest",
+        "DeleteEeDatabaseReplicationConnectionDatabaseIdRequest",
+        "PostEeDatabaseReplicationConnectionDatabaseIdPreviewRequest",
+    ),
+    "ee_database_routing": (
+        "PostEeDatabaseRoutingDestinationDatabaseRequest",
+        "PutEeDatabaseRoutingRouterDatabaseIdRequest",
+    ),
+    "ee_dependencies": (
+        "GetEeDependenciesBackfillStatusRequest",
+        "CheckEeDependenciesCardRequest",
+        "CheckEeDependenciesSnippetRequest",
+        "CheckEeDependenciesTransformRequest",
+        "GetEeDependenciesGraphRequest",
+        "GetEeDependenciesGraphBreakingRequest",
+        "GetEeDependenciesGraphBrokenRequest",
+        "GetEeDependenciesGraphDependentsRequest",
+        "GetEeDependenciesGraphUnreferencedRequest",
+    ),
+    "ee_email": (
+        "PutEeEmailOverrideRequest",
+        "DeleteEeEmailOverrideRequest",
+    ),
+    "ee_embedding_hub": ("GetEeEmbeddingHubChecklistRequest",),
+    "ee_gsheets": (
+        "CreateEeGsheetsConnectionRequest",
+        "GetEeGsheetsConnectionRequest",
+        "DeleteEeGsheetsConnectionRequest",
+        "SyncEeGsheetsConnectionRequest",
+        "GetEeGsheetsServiceAccountRequest",
+    ),
+    "ee_library": (
+        "CreateEeLibraryRequest",
+        "GetEeLibraryRequest",
+        "GetEeLibraryTreeRequest",
+    ),
+    "ee_logs": ("GetEeLogsQueryExecutionRequest",),
+    "ee_metabot": ("GetEeMetabotUsageRequest",),
+    "ee_permission_debug": ("GetEePermissionDebugRequest",),
+    "ee_remote_sync": (
+        "GetEeRemoteSyncBranchesRequest",
+        "PostEeRemoteSyncCreateBranchRequest",
+        "GetEeRemoteSyncCurrentTaskRequest",
+        "PostEeRemoteSyncCurrentTaskCancelRequest",
+        "GetEeRemoteSyncDirtyRequest",
+        "PostEeRemoteSyncExportRequest",
+        "GetEeRemoteSyncHasRemoteChangesRequest",
+        "PostEeRemoteSyncImportRequest",
+        "GetEeRemoteSyncIsDirtyRequest",
+        "PutEeRemoteSyncSettingsRequest",
+        "PostEeRemoteSyncStashRequest",
+    ),
+    "ee_replacement": (
+        "PostEeReplacementCheckReplaceSourceRequest",
+        "PostEeReplacementReplaceModelWithTransformRequest",
+        "PostEeReplacementReplaceSourceRequest",
+        "GetEeReplacementRunsRequest",
+        "GetEeReplacementRunsIdRequest",
+        "PostEeReplacementRunsIdCancelRequest",
+    ),
+    "ee_scim": (
+        "GetEeScimApiKeyRequest",
+        "CreateEeScimApiKeyRequest",
+        "ListEeScimV2GroupsRequest",
+        "CreateEeScimV2GroupRequest",
+        "GetEeScimV2GroupRequest",
+        "UpdateEeScimV2GroupRequest",
+        "DeleteEeScimV2GroupRequest",
+        "ListEeScimV2UsersRequest",
+        "CreateEeScimV2UserRequest",
+        "GetEeScimV2UserRequest",
+        "UpdateEeScimV2UserRequest",
+        "PatchEeScimV2UserRequest",
+    ),
+    "ee_security_center": (
+        "GetEeSecurityCenterRequest",
+        "AcknowledgeEeSecurityCenterAdvisoriesRequest",
+        "SyncEeSecurityCenterRequest",
+        "TestEeSecurityCenterNotificationRequest",
+        "AcknowledgeEeSecurityCenterAdvisoryRequest",
+    ),
+    "ee_semantic_search": ("GetEeSemanticSearchStatusRequest",),
+    "ee_serialization": (
+        "PostEeSerializationExportRequest",
+        "PostEeSerializationImportRequest",
+    ),
+    "ee_stale": ("GetEeStaleIdRequest",),
+    "ee_support_access_grant": (
+        "PostEeSupportAccessGrantRequest",
+        "GetEeSupportAccessGrantRequest",
+        "GetEeSupportAccessGrantCurrentRequest",
+        "PutEeSupportAccessGrantIdRevokeRequest",
+    ),
+    "ee_tenant": (
+        "PostEeTenantRequest",
+        "GetEeTenantRequest",
+        "PutEeTenantIdRequest",
+        "GetEeTenantIdRequest",
+    ),
+    "ee_transforms": (
+        "GetEeTransformsIdInspectRequest",
+        "GetEeTransformsIdInspectLensIdRequest",
+        "PostEeTransformsIdInspectLensIdQueryRequest",
+    ),
+    "ee_transforms_python": (
+        "GetEeTransformsPythonLibraryPathRequest",
+        "PutEeTransformsPythonLibraryPathRequest",
+        "PostEeTransformsPythonTestRunRequest",
+    ),
+    "ee_upload_management": (
+        "GetEeUploadManagementTablesRequest",
+        "DeleteEeUploadManagementTablesIdRequest",
+    ),
     "eid_translation": ("TranslateEntityIdsRequest",),
     "email": (
         "UpdateEmailSettingsRequest",
@@ -418,6 +586,18 @@ REQUEST_MODULE_CONTRACTS = {
         "DeleteModelIndexRequest",
     ),
     "moderation_review": ("CreateModerationReviewRequest",),
+    "mt_gtap": (
+        "GetMtGtapRequest",
+        "PostMtGtapRequest",
+        "PostMtGtapValidateRequest",
+        "GetMtGtapIdRequest",
+        "PutMtGtapIdRequest",
+        "DeleteMtGtapIdRequest",
+    ),
+    "mt_user": (
+        "GetMtUserAttributesRequest",
+        "PutMtUserIdAttributesRequest",
+    ),
     "native_query_snippet": (
         "ListNativeQuerySnippetsRequest",
         "CreateNativeQuerySnippetRequest",
@@ -853,6 +1033,101 @@ RESPONSE_MODULE_CONTRACTS = {
         "EeAiControlsTenantUsageLimitsResponse",
         "EeAiControlsUsageLimitResponse",
     ),
+    "ee_audit_app": (
+        "EeAuditAppExportResponse",
+        "EeAuditAppUserAuditInfoResponse",
+        "EeAuditAppUserSubscriptionsDeleteResponse",
+    ),
+    "ee_billing": ("EeBillingResponse",),
+    "ee_cloud": (
+        "EeCloudAddOnOperationResponse",
+        "EeCloudAddOnsResponse",
+        "EeCloudPlansResponse",
+        "EeCloudProxyResponse",
+    ),
+    "ee_content_translation": (
+        "EeContentTranslationCsvResponse",
+        "EeContentTranslationDictionaryResponse",
+        "EeContentTranslationUploadResponse",
+    ),
+    "ee_data_complexity_score": ("EeDataComplexityScoreResponse",),
+    "ee_data_studio": ("EeDataStudioTablePublishResponse",),
+    "ee_database_replication": ("EeDatabaseReplicationConnectionResponse",),
+    "ee_database_routing": ("EeDatabaseRoutingDatabaseResponse",),
+    "ee_dependencies": (
+        "EeDependencyBackfillStatusResponse",
+        "EeDependencyCheckResponse",
+        "EeDependencyEntitiesResponse",
+        "EeDependencyGraphResponse",
+    ),
+    "ee_email": (
+        "DeleteEeEmailOverrideResponse",
+        "EeEmailOverrideResponse",
+    ),
+    "ee_embedding_hub": ("EeEmbeddingHubChecklistResponse",),
+    "ee_gsheets": (
+        "EeGsheetsConnectionResponse",
+        "EeGsheetsDeleteConnectionResponse",
+        "EeGsheetsServiceAccountResponse",
+    ),
+    "ee_library": (
+        "EeLibraryResponse",
+        "EeLibraryTreeResponse",
+    ),
+    "ee_logs": ("EeQueryExecutionLogsResponse",),
+    "ee_metabot": ("EeMetabotUsageResponse",),
+    "ee_permission_debug": ("EePermissionDebugResponse",),
+    "ee_remote_sync": (
+        "EeRemoteSyncBranchesResponse",
+        "EeRemoteSyncDirtyResponse",
+        "EeRemoteSyncHasRemoteChangesResponse",
+        "EeRemoteSyncIsDirtyResponse",
+        "EeRemoteSyncOperationResponse",
+        "EeRemoteSyncSettingsResponse",
+        "EeRemoteSyncTaskResponse",
+    ),
+    "ee_replacement": (
+        "EeReplacementCheckReplaceSourceResponse",
+        "EeReplacementOperationResponse",
+        "EeReplacementRunResponse",
+        "EeReplacementRunsResponse",
+    ),
+    "ee_scim": (
+        "EeScimApiKeyResponse",
+        "EeScimDeleteResponse",
+        "EeScimGroupsResponse",
+        "EeScimUsersResponse",
+    ),
+    "ee_security_center": (
+        "EeSecurityCenterAdvisoriesResponse",
+        "EeSecurityCenterOperationResponse",
+    ),
+    "ee_semantic_search": ("EeSemanticSearchStatusResponse",),
+    "ee_serialization": (
+        "EeSerializationExportResponse",
+        "EeSerializationImportResponse",
+    ),
+    "ee_stale": ("EeStaleResponse",),
+    "ee_support_access_grant": (
+        "EeSupportAccessGrantResponse",
+        "EeSupportAccessGrantsResponse",
+    ),
+    "ee_tenant": (
+        "EeTenantResponse",
+        "EeTenantsResponse",
+    ),
+    "ee_transforms": (
+        "EeTransformInspectQueryResponse",
+        "EeTransformInspectResponse",
+    ),
+    "ee_transforms_python": (
+        "EeTransformsPythonLibraryResponse",
+        "EeTransformsPythonTestRunResponse",
+    ),
+    "ee_upload_management": (
+        "EeUploadManagementDeleteTableResponse",
+        "EeUploadManagementTablesResponse",
+    ),
     "eid_translation": ("EidTranslationResponse",),
     "email": (
         "DeleteEmailSettingsResponse",
@@ -943,6 +1218,16 @@ RESPONSE_MODULE_CONTRACTS = {
         "ListModelIndexesResponse",
     ),
     "moderation_review": ("ModerationReviewResponse",),
+    "mt_gtap": (
+        "MtGtapDeleteResponse",
+        "MtGtapResponse",
+        "MtGtapsResponse",
+        "MtGtapValidationResponse",
+    ),
+    "mt_user": (
+        "MtUserAttributesResponse",
+        "MtUserUpdateAttributesResponse",
+    ),
     "native_query_snippet": ("ListNativeQuerySnippetsResponse",),
     "notification": (
         "ListNotificationsResponse",

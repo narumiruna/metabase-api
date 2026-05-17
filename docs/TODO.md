@@ -15,8 +15,8 @@ This file is a static implementation checklist derived from the latest Metabase 
 ## Coverage summary
 
 - Documented operations: 600
-- Complete hand-written endpoint implementations: 492
-- Remaining documented operations: 108
+- Complete hand-written endpoint implementations: 600
+- Remaining documented operations: 0
 - Raw `request` / `invoke`: disabled for CLI users and does not count toward TODO completion.
 
 ## Endpoint checklist
@@ -307,196 +307,196 @@ This file is a static implementation checklist derived from the latest Metabase 
 - [x] `GET /api/ee/ai-controls/usage/tenant/{tenant-id}` — `get-api-ee-ai-controls-usage-tenant-tenant-id` — Get the metabot usage limit for a specific tenant. Returns `max_usage: null` if no limit is set.
 - [x] `PUT /api/ee/ai-controls/usage/tenant/{tenant-id}` — `put-api-ee-ai-controls-usage-tenant-tenant-id` — Set or update the metabot usage limit for a specific tenant. Pass `max_usage: null` to remove the limit.
 
-### /api/ee/audit-app/analytics-dev (0/1 complete)
+### /api/ee/audit-app/analytics-dev (1/1 complete)
 
-- [ ] `POST /api/ee/audit-app/analytics-dev/export` — `post-api-ee-audit-app-analytics-dev-export` — Export analytics content as a .tar.gz file for local development. Only available when MB_ANALYTICS_DEV_MODE=true. Returns a tarball containing the analytics...
+- [x] `POST /api/ee/audit-app/analytics-dev/export` — `post-api-ee-audit-app-analytics-dev-export` — Export analytics content as a .tar.gz file for local development. Only available when MB_ANALYTICS_DEV_MODE=true. Returns a tarball containing the analytics...
 
-### /api/ee/audit-app/user (0/2 complete)
+### /api/ee/audit-app/user (2/2 complete)
 
-- [ ] `GET /api/ee/audit-app/user/audit-info` — `get-api-ee-audit-app-user-audit-info` — Gets audit info for the current user if he has permissions to access the audit collection. Otherwise return an empty map.
-- [ ] `DELETE /api/ee/audit-app/user/{id}/subscriptions` — `delete-api-ee-audit-app-user-id-subscriptions` — Delete all Alert and DashboardSubscription subscriptions for a User (i.e., so they will no longer receive them). Archive all Alerts and DashboardSubscription...
+- [x] `GET /api/ee/audit-app/user/audit-info` — `get-api-ee-audit-app-user-audit-info` — Gets audit info for the current user if he has permissions to access the audit collection. Otherwise return an empty map.
+- [x] `DELETE /api/ee/audit-app/user/{id}/subscriptions` — `delete-api-ee-audit-app-user-id-subscriptions` — Delete all Alert and DashboardSubscription subscriptions for a User (i.e., so they will no longer receive them). Archive all Alerts and DashboardSubscription...
 
-### /api/ee/billing (0/1 complete)
+### /api/ee/billing (1/1 complete)
 
-- [ ] `GET /api/ee/billing` — `get-api-ee-billing` — Get billing information. This acts as a proxy between `metabase-billing-info-url` and the client, using the embedding token and signed in user's email to fet...
+- [x] `GET /api/ee/billing` — `get-api-ee-billing` — Get billing information. This acts as a proxy between `metabase-billing-info-url` and the client, using the embedding token and signed in user's email to fet...
 
-### /api/ee/cloud-add-ons (0/4 complete)
+### /api/ee/cloud-add-ons (4/4 complete)
 
-- [ ] `GET /api/ee/cloud-add-ons/addons` — `get-api-ee-cloud-add-ons-addons` — Get addons information from the Metabase Store API.
-- [ ] `GET /api/ee/cloud-add-ons/plans` — `get-api-ee-cloud-add-ons-plans` — Get plans information from the Metabase Store API.
-- [ ] `POST /api/ee/cloud-add-ons/{product-type}` — `post-api-ee-cloud-add-ons-product-type` — Purchase an add-on.
-- [ ] `DELETE /api/ee/cloud-add-ons/{product-type}` — `delete-api-ee-cloud-add-ons-product-type` — Remove an add-on.
+- [x] `GET /api/ee/cloud-add-ons/addons` — `get-api-ee-cloud-add-ons-addons` — Get addons information from the Metabase Store API.
+- [x] `GET /api/ee/cloud-add-ons/plans` — `get-api-ee-cloud-add-ons-plans` — Get plans information from the Metabase Store API.
+- [x] `POST /api/ee/cloud-add-ons/{product-type}` — `post-api-ee-cloud-add-ons-product-type` — Purchase an add-on.
+- [x] `DELETE /api/ee/cloud-add-ons/{product-type}` — `delete-api-ee-cloud-add-ons-product-type` — Remove an add-on.
 
-### /api/ee/cloud-proxy (0/1 complete)
+### /api/ee/cloud-proxy (1/1 complete)
 
-- [ ] `POST /api/ee/cloud-proxy/{operation-id}` — `post-api-ee-cloud-proxy-operation-id` — Proxy a call to the Metabase Store API via harbormaster client. This endpoint is used only for hosted instances, and calls Harbormaster Store using a OpenAPI...
+- [x] `POST /api/ee/cloud-proxy/{operation-id}` — `post-api-ee-cloud-proxy-operation-id` — Proxy a call to the Metabase Store API via harbormaster client. This endpoint is used only for hosted instances, and calls Harbormaster Store using a OpenAPI...
 
-### /api/ee/content-translation (0/4 complete)
+### /api/ee/content-translation (4/4 complete)
 
-- [ ] `GET /api/ee/content-translation/csv` — `get-api-ee-content-translation-csv` — Provides content translation dictionary in CSV
-- [ ] `GET /api/ee/content-translation/dictionary` — `get-api-ee-content-translation-dictionary` — Fetch the content translation dictionary for authenticated users (auth-based embedding flows).
-- [ ] `GET /api/ee/content-translation/dictionary/{token}` — `get-api-ee-content-translation-dictionary-token` — Fetch the content translation dictionary via a JSON Web Token signed with the `embedding-secret-key`.
-- [ ] `POST /api/ee/content-translation/upload-dictionary` — `post-api-ee-content-translation-upload-dictionary` — Upload a CSV of content translations
+- [x] `GET /api/ee/content-translation/csv` — `get-api-ee-content-translation-csv` — Provides content translation dictionary in CSV
+- [x] `GET /api/ee/content-translation/dictionary` — `get-api-ee-content-translation-dictionary` — Fetch the content translation dictionary for authenticated users (auth-based embedding flows).
+- [x] `GET /api/ee/content-translation/dictionary/{token}` — `get-api-ee-content-translation-dictionary-token` — Fetch the content translation dictionary via a JSON Web Token signed with the `embedding-secret-key`.
+- [x] `POST /api/ee/content-translation/upload-dictionary` — `post-api-ee-content-translation-upload-dictionary` — Upload a CSV of content translations
 
-### /api/ee/data-complexity-score (0/1 complete)
+### /api/ee/data-complexity-score (1/1 complete)
 
-- [ ] `GET /api/ee/data-complexity-score/complexity` — `get-api-ee-data-complexity-score-complexity` — Return the current Data Complexity Score for this instance. Superuser-only, expensive, and emits Snowplow events for benchmark consumers. Concurrent requests...
+- [x] `GET /api/ee/data-complexity-score/complexity` — `get-api-ee-data-complexity-score-complexity` — Return the current Data Complexity Score for this instance. Superuser-only, expensive, and emits Snowplow events for benchmark consumers. Concurrent requests...
 
-### /api/ee/data-studio/table (0/2 complete)
+### /api/ee/data-studio/table (2/2 complete)
 
-- [ ] `POST /api/ee/data-studio/table/publish-tables` — `post-api-ee-data-studio-table-publish-tables` — Set collection for each of selected tables and all upstream dependencies recursively.
-- [ ] `POST /api/ee/data-studio/table/unpublish-tables` — `post-api-ee-data-studio-table-unpublish-tables` — Unset collection for each of selected tables and all downstream dependents recursively.
+- [x] `POST /api/ee/data-studio/table/publish-tables` — `post-api-ee-data-studio-table-publish-tables` — Set collection for each of selected tables and all upstream dependencies recursively.
+- [x] `POST /api/ee/data-studio/table/unpublish-tables` — `post-api-ee-data-studio-table-unpublish-tables` — Unset collection for each of selected tables and all downstream dependents recursively.
 
-### /api/ee/database-replication (0/3 complete)
+### /api/ee/database-replication (3/3 complete)
 
-- [ ] `POST /api/ee/database-replication/connection/{database-id}` — `post-api-ee-database-replication-connection-database-id` — Create a new PG replication connection for the specified database.
-- [ ] `DELETE /api/ee/database-replication/connection/{database-id}` — `delete-api-ee-database-replication-connection-database-id` — Delete PG replication connection for the specified database.
-- [ ] `POST /api/ee/database-replication/connection/{database-id}/preview` — `post-api-ee-database-replication-connection-database-id-preview` — Return info about pg-replication connection that is about to be created.
+- [x] `POST /api/ee/database-replication/connection/{database-id}` — `post-api-ee-database-replication-connection-database-id` — Create a new PG replication connection for the specified database.
+- [x] `DELETE /api/ee/database-replication/connection/{database-id}` — `delete-api-ee-database-replication-connection-database-id` — Delete PG replication connection for the specified database.
+- [x] `POST /api/ee/database-replication/connection/{database-id}/preview` — `post-api-ee-database-replication-connection-database-id-preview` — Return info about pg-replication connection that is about to be created.
 
-### /api/ee/database-routing (0/2 complete)
+### /api/ee/database-routing (2/2 complete)
 
-- [ ] `POST /api/ee/database-routing/destination-database` — `post-api-ee-database-routing-destination-database` — Create new Destination Databases. Note that unlike the normal `POST /api/database` endpoint, does NOT check the details before adding the Database. This is O...
-- [ ] `PUT /api/ee/database-routing/router-database/{id}` — `put-api-ee-database-routing-router-database-id` — Updates an existing Database with the `user_attribute` to route on. Will either: - turn an existing Database into a Router database - change the `user_attrib...
+- [x] `POST /api/ee/database-routing/destination-database` — `post-api-ee-database-routing-destination-database` — Create new Destination Databases. Note that unlike the normal `POST /api/database` endpoint, does NOT check the details before adding the Database. This is O...
+- [x] `PUT /api/ee/database-routing/router-database/{id}` — `put-api-ee-database-routing-router-database-id` — Updates an existing Database with the `user_attribute` to route on. Will either: - turn an existing Database into a Router database - change the `user_attrib...
 
-### /api/ee/dependencies (0/9 complete)
+### /api/ee/dependencies (9/9 complete)
 
-- [ ] `GET /api/ee/dependencies/backfill-status` — `get-api-ee-dependencies-backfill-status` — Returns whether the dependency backfill has pending work. `complete` is true when there are no stale or outdated entities awaiting processing.
-- [ ] `POST /api/ee/dependencies/check-card` — `post-api-ee-dependencies-check-card` — Check a proposed edit to a card, and return the card IDs for those cards this edit will break.
-- [ ] `POST /api/ee/dependencies/check-snippet` — `post-api-ee-dependencies-check-snippet` — Check a proposed edit to a native snippet, and return the cards, etc. which will be broken.
-- [ ] `POST /api/ee/dependencies/check-transform` — `post-api-ee-dependencies-check-transform` — Check a proposed edit to a transform, and return the card, transform, etc. IDs for things that will break.
-- [ ] `GET /api/ee/dependencies/graph` — `get-api-ee-dependencies-graph` — This endpoint takes an :id and a supported entity :type, and returns a graph of all its upstream dependencies. The graph is represented by a list of :nodes a...
-- [ ] `GET /api/ee/dependencies/graph/breaking` — `get-api-ee-dependencies-graph-breaking` — Returns a list of entities that are breaking other entities (sources of errors). These are tables or cards that other entities depend on, where those depende...
-- [ ] `GET /api/ee/dependencies/graph/broken` — `get-api-ee-dependencies-graph-broken` — Returns the broken dependents for a specific source entity. These are entities that have validation errors traced back to the specified source. Required para...
-- [ ] `GET /api/ee/dependencies/graph/dependents` — `get-api-ee-dependencies-graph-dependents` — Returns a list of dependents for the specified entity. Required parameters: - `id`: The ID of the entity - `type`: The type of the entity (card, table, dashb...
-- [ ] `GET /api/ee/dependencies/graph/unreferenced` — `get-api-ee-dependencies-graph-unreferenced` — Returns a list of all unreferenced items in the instance. An unreferenced item is one that is not a dependency of any other item. Accepts optional parameters...
+- [x] `GET /api/ee/dependencies/backfill-status` — `get-api-ee-dependencies-backfill-status` — Returns whether the dependency backfill has pending work. `complete` is true when there are no stale or outdated entities awaiting processing.
+- [x] `POST /api/ee/dependencies/check-card` — `post-api-ee-dependencies-check-card` — Check a proposed edit to a card, and return the card IDs for those cards this edit will break.
+- [x] `POST /api/ee/dependencies/check-snippet` — `post-api-ee-dependencies-check-snippet` — Check a proposed edit to a native snippet, and return the cards, etc. which will be broken.
+- [x] `POST /api/ee/dependencies/check-transform` — `post-api-ee-dependencies-check-transform` — Check a proposed edit to a transform, and return the card, transform, etc. IDs for things that will break.
+- [x] `GET /api/ee/dependencies/graph` — `get-api-ee-dependencies-graph` — This endpoint takes an :id and a supported entity :type, and returns a graph of all its upstream dependencies. The graph is represented by a list of :nodes a...
+- [x] `GET /api/ee/dependencies/graph/breaking` — `get-api-ee-dependencies-graph-breaking` — Returns a list of entities that are breaking other entities (sources of errors). These are tables or cards that other entities depend on, where those depende...
+- [x] `GET /api/ee/dependencies/graph/broken` — `get-api-ee-dependencies-graph-broken` — Returns the broken dependents for a specific source entity. These are entities that have validation errors traced back to the specified source. Required para...
+- [x] `GET /api/ee/dependencies/graph/dependents` — `get-api-ee-dependencies-graph-dependents` — Returns a list of dependents for the specified entity. Required parameters: - `id`: The ID of the entity - `type`: The type of the entity (card, table, dashb...
+- [x] `GET /api/ee/dependencies/graph/unreferenced` — `get-api-ee-dependencies-graph-unreferenced` — Returns a list of all unreferenced items in the instance. An unreferenced item is one that is not a dependency of any other item. Accepts optional parameters...
 
-### /api/ee/email (0/2 complete)
+### /api/ee/email (2/2 complete)
 
-- [ ] `PUT /api/ee/email/override` — `put-api-ee-email-override` — Update multiple cloud email Settings. You must be a superuser or have `setting` permission to do this. Calling this automatically sets `cloud-smtp-enabled` t...
-- [ ] `DELETE /api/ee/email/override` — `delete-api-ee-email-override` — Clear all cloud email related settings. You must be a superuser or have `setting` permission to do this.
+- [x] `PUT /api/ee/email/override` — `put-api-ee-email-override` — Update multiple cloud email Settings. You must be a superuser or have `setting` permission to do this. Calling this automatically sets `cloud-smtp-enabled` t...
+- [x] `DELETE /api/ee/email/override` — `delete-api-ee-email-override` — Clear all cloud email related settings. You must be a superuser or have `setting` permission to do this.
 
-### /api/ee/embedding-hub (0/1 complete)
+### /api/ee/embedding-hub (1/1 complete)
 
-- [ ] `GET /api/ee/embedding-hub/checklist` — `get-api-ee-embedding-hub-checklist` — Get the embedding hub checklist status, indicating which setup steps have been completed.
+- [x] `GET /api/ee/embedding-hub/checklist` — `get-api-ee-embedding-hub-checklist` — Get the embedding hub checklist status, indicating which setup steps have been completed.
 
-### /api/ee/gsheets (0/5 complete)
+### /api/ee/gsheets (5/5 complete)
 
-- [ ] `POST /api/ee/gsheets/connection` — `post-api-ee-gsheets-connection` — Hook up a new google drive folder or sheet that will be watched and have its content ETL'd into Metabase.
-- [ ] `GET /api/ee/gsheets/connection` — `get-api-ee-gsheets-connection` — Check the status of a connection. This endpoint gets polled by FE to determine when to stop showing the setup widget. Returns the gsheets shape, with the att...
-- [ ] `DELETE /api/ee/gsheets/connection` — `delete-api-ee-gsheets-connection` — Disconnect the google service account. There is only one (or zero) at the time of writing.
-- [ ] `POST /api/ee/gsheets/connection/sync` — `post-api-ee-gsheets-connection-sync` — Force a sync of the connection now. Returns the gsheets shape, with the attached datawarehouse db id at `:db_id`.
-- [ ] `GET /api/ee/gsheets/service-account` — `get-api-ee-gsheets-service-account` — Checks to see if service-account is setup or not, delegates to HM only if we haven't set it from a metabase cluster before.
+- [x] `POST /api/ee/gsheets/connection` — `post-api-ee-gsheets-connection` — Hook up a new google drive folder or sheet that will be watched and have its content ETL'd into Metabase.
+- [x] `GET /api/ee/gsheets/connection` — `get-api-ee-gsheets-connection` — Check the status of a connection. This endpoint gets polled by FE to determine when to stop showing the setup widget. Returns the gsheets shape, with the att...
+- [x] `DELETE /api/ee/gsheets/connection` — `delete-api-ee-gsheets-connection` — Disconnect the google service account. There is only one (or zero) at the time of writing.
+- [x] `POST /api/ee/gsheets/connection/sync` — `post-api-ee-gsheets-connection-sync` — Force a sync of the connection now. Returns the gsheets shape, with the attached datawarehouse db id at `:db_id`.
+- [x] `GET /api/ee/gsheets/service-account` — `get-api-ee-gsheets-service-account` — Checks to see if service-account is setup or not, delegates to HM only if we haven't set it from a metabase cluster before.
 
-### /api/ee/library (0/3 complete)
+### /api/ee/library (3/3 complete)
 
-- [ ] `POST /api/ee/library` — `post-api-ee-library` — Creates the Library if it doesn't exist. Returns the created collection. Requires data analyst or superuser permissions.
-- [ ] `GET /api/ee/library` — `get-api-ee-library` — Get the Library. If no library exists, it doesn't fail but returns an empty response
-- [ ] `GET /api/ee/library/tree` — `get-api-ee-library-tree` — This matches /api/collection/tree but only returns the library collection.
+- [x] `POST /api/ee/library` — `post-api-ee-library` — Creates the Library if it doesn't exist. Returns the created collection. Requires data analyst or superuser permissions.
+- [x] `GET /api/ee/library` — `get-api-ee-library` — Get the Library. If no library exists, it doesn't fail but returns an empty response
+- [x] `GET /api/ee/library/tree` — `get-api-ee-library-tree` — This matches /api/collection/tree but only returns the library collection.
 
-### /api/ee/logs (0/1 complete)
+### /api/ee/logs (1/1 complete)
 
-- [ ] `GET /api/ee/logs/query_execution/{yyyy-mm}` — `get-api-ee-logs-query_execution-yyyy-mm` — Fetch rows for the month specified by `:yyyy-mm` from the query_execution logs table. Must be a superuser.
+- [x] `GET /api/ee/logs/query_execution/{yyyy-mm}` — `get-api-ee-logs-query_execution-yyyy-mm` — Fetch rows for the month specified by `:yyyy-mm` from the query_execution logs table. Must be a superuser.
 
-### /api/ee/metabot (0/1 complete)
+### /api/ee/metabot (1/1 complete)
 
-- [ ] `GET /api/ee/metabot/usage` — `get-api-ee-metabot-usage` — Fetch current Metabot token usage for the current billing period.
+- [x] `GET /api/ee/metabot/usage` — `get-api-ee-metabot-usage` — Fetch current Metabot token usage for the current billing period.
 
-### /api/ee/permission_debug (0/1 complete)
+### /api/ee/permission_debug (1/1 complete)
 
-- [ ] `GET /api/ee/permission_debug` — `get-api-ee-permission_debug` — This endpoint expects a `user_id`, a `model_id` to debug permissions against, and `action_type`. The type of model we are debugging against is inferred by th...
+- [x] `GET /api/ee/permission_debug` — `get-api-ee-permission_debug` — This endpoint expects a `user_id`, a `model_id` to debug permissions against, and `action_type`. The type of model we are debugging against is inferred by th...
 
-### /api/ee/remote-sync (0/11 complete)
+### /api/ee/remote-sync (11/11 complete)
 
-- [ ] `GET /api/ee/remote-sync/branches` — `get-api-ee-remote-sync-branches` — Get list of branches from the configured source. Returns a JSON object with branch names under the :items key. Requires superuser permissions.
-- [ ] `POST /api/ee/remote-sync/create-branch` — `post-api-ee-remote-sync-create-branch` — Create a new branch from the current remote-sync branch and switches the current remote-sync branch to it. Requires superuser permissions.
-- [ ] `GET /api/ee/remote-sync/current-task` — `get-api-ee-remote-sync-current-task` — Get the current sync task
-- [ ] `POST /api/ee/remote-sync/current-task/cancel` — `post-api-ee-remote-sync-current-task-cancel` — Cancels the current task if one is running
-- [ ] `GET /api/ee/remote-sync/dirty` — `get-api-ee-remote-sync-dirty` — Return all models with changes that have not been pushed to the remote sync source in any remote-synced collection.
-- [ ] `POST /api/ee/remote-sync/export` — `post-api-ee-remote-sync-export` — Export the current state of the Remote Sync collection to a Source. This endpoint will: - Fetch the latest changes from the source - Create a branch or subdi...
-- [ ] `GET /api/ee/remote-sync/has-remote-changes` — `get-api-ee-remote-sync-has-remote-changes` — Check if there are new changes on the remote branch that can be pulled. Uses in-memory caching (configurable TTL via remote-sync-check-changes-cache-ttl-seco...
-- [ ] `POST /api/ee/remote-sync/import` — `post-api-ee-remote-sync-import` — Import Metabase content from configured Remote Sync source. This endpoint will: - Fetch the latest changes from the configured source - Load the updated cont...
-- [ ] `GET /api/ee/remote-sync/is-dirty` — `get-api-ee-remote-sync-is-dirty` — Check if any remote-synced collection or collection item has local changes that have not been pushed to the remote sync source.
-- [ ] `PUT /api/ee/remote-sync/settings` — `put-api-ee-remote-sync-settings` — Update Remote Sync related settings. You must be a superuser to do this.
-- [ ] `POST /api/ee/remote-sync/stash` — `post-api-ee-remote-sync-stash` — Stashes changes to a new branch, and changes the current branch to it. Requires superuser permissions.
+- [x] `GET /api/ee/remote-sync/branches` — `get-api-ee-remote-sync-branches` — Get list of branches from the configured source. Returns a JSON object with branch names under the :items key. Requires superuser permissions.
+- [x] `POST /api/ee/remote-sync/create-branch` — `post-api-ee-remote-sync-create-branch` — Create a new branch from the current remote-sync branch and switches the current remote-sync branch to it. Requires superuser permissions.
+- [x] `GET /api/ee/remote-sync/current-task` — `get-api-ee-remote-sync-current-task` — Get the current sync task
+- [x] `POST /api/ee/remote-sync/current-task/cancel` — `post-api-ee-remote-sync-current-task-cancel` — Cancels the current task if one is running
+- [x] `GET /api/ee/remote-sync/dirty` — `get-api-ee-remote-sync-dirty` — Return all models with changes that have not been pushed to the remote sync source in any remote-synced collection.
+- [x] `POST /api/ee/remote-sync/export` — `post-api-ee-remote-sync-export` — Export the current state of the Remote Sync collection to a Source. This endpoint will: - Fetch the latest changes from the source - Create a branch or subdi...
+- [x] `GET /api/ee/remote-sync/has-remote-changes` — `get-api-ee-remote-sync-has-remote-changes` — Check if there are new changes on the remote branch that can be pulled. Uses in-memory caching (configurable TTL via remote-sync-check-changes-cache-ttl-seco...
+- [x] `POST /api/ee/remote-sync/import` — `post-api-ee-remote-sync-import` — Import Metabase content from configured Remote Sync source. This endpoint will: - Fetch the latest changes from the configured source - Load the updated cont...
+- [x] `GET /api/ee/remote-sync/is-dirty` — `get-api-ee-remote-sync-is-dirty` — Check if any remote-synced collection or collection item has local changes that have not been pushed to the remote sync source.
+- [x] `PUT /api/ee/remote-sync/settings` — `put-api-ee-remote-sync-settings` — Update Remote Sync related settings. You must be a superuser to do this.
+- [x] `POST /api/ee/remote-sync/stash` — `post-api-ee-remote-sync-stash` — Stashes changes to a new branch, and changes the current branch to it. Requires superuser permissions.
 
-### /api/ee/replacement (0/6 complete)
+### /api/ee/replacement (6/6 complete)
 
-- [ ] `POST /api/ee/replacement/check-replace-source` — `post-api-ee-replacement-check-replace-source` — Check whether a source entity can be replaced by a target entity. Returns compatibility errors describing column mismatches, type mismatches, primary key mis...
-- [ ] `POST /api/ee/replacement/replace-model-with-transform` — `post-api-ee-replacement-replace-model-with-transform` — Create a transform from a model, execute it, and replace all usages of the model with the output table. Un-persists the model and converts it to a saved ques...
-- [ ] `POST /api/ee/replacement/replace-source` — `post-api-ee-replacement-replace-source` — Replace all usages of a source entity with a target entity asynchronously. Returns 202 with a run_id for polling. Returns 409 if a replacement is already run...
-- [ ] `GET /api/ee/replacement/runs` — `get-api-ee-replacement-runs` — List replacement runs, optionally filtered by is-active.
-- [ ] `GET /api/ee/replacement/runs/{id}` — `get-api-ee-replacement-runs-id` — Get the status of a source replacement run.
-- [ ] `POST /api/ee/replacement/runs/{id}/cancel` — `post-api-ee-replacement-runs-id-cancel` — Cancel a running source replacement.
+- [x] `POST /api/ee/replacement/check-replace-source` — `post-api-ee-replacement-check-replace-source` — Check whether a source entity can be replaced by a target entity. Returns compatibility errors describing column mismatches, type mismatches, primary key mis...
+- [x] `POST /api/ee/replacement/replace-model-with-transform` — `post-api-ee-replacement-replace-model-with-transform` — Create a transform from a model, execute it, and replace all usages of the model with the output table. Un-persists the model and converts it to a saved ques...
+- [x] `POST /api/ee/replacement/replace-source` — `post-api-ee-replacement-replace-source` — Replace all usages of a source entity with a target entity asynchronously. Returns 202 with a run_id for polling. Returns 409 if a replacement is already run...
+- [x] `GET /api/ee/replacement/runs` — `get-api-ee-replacement-runs` — List replacement runs, optionally filtered by is-active.
+- [x] `GET /api/ee/replacement/runs/{id}` — `get-api-ee-replacement-runs-id` — Get the status of a source replacement run.
+- [x] `POST /api/ee/replacement/runs/{id}/cancel` — `post-api-ee-replacement-runs-id-cancel` — Cancel a running source replacement.
 
-### /api/ee/scim (0/2 complete)
+### /api/ee/scim (2/2 complete)
 
-- [ ] `GET /api/ee/scim/api_key` — `get-api-ee-scim-api_key` — Fetch the SCIM API key if one exists. Does *not* return an unmasked key, since we don't have access to that after it is created.
-- [ ] `POST /api/ee/scim/api_key` — `post-api-ee-scim-api_key` — Create a new SCIM API key, or refresh one that already exists. When called for the first time, this is equivalent to enabling SCIM.
+- [x] `GET /api/ee/scim/api_key` — `get-api-ee-scim-api_key` — Fetch the SCIM API key if one exists. Does *not* return an unmasked key, since we don't have access to that after it is created.
+- [x] `POST /api/ee/scim/api_key` — `post-api-ee-scim-api_key` — Create a new SCIM API key, or refresh one that already exists. When called for the first time, this is equivalent to enabling SCIM.
 
-### /api/ee/scim/v2 (0/10 complete)
+### /api/ee/scim/v2 (10/10 complete)
 
-- [ ] `GET /api/ee/scim/v2/Groups` — `get-api-ee-scim-v2-Groups` — Fetch a list of groups.
-- [ ] `POST /api/ee/scim/v2/Groups` — `post-api-ee-scim-v2-Groups` — Create a single group, and populates it if necessary.
-- [ ] `GET /api/ee/scim/v2/Groups/{id}` — `get-api-ee-scim-v2-Groups-id` — Fetch a single group.
-- [ ] `PUT /api/ee/scim/v2/Groups/{id}` — `put-api-ee-scim-v2-Groups-id` — Update a group.
-- [ ] `DELETE /api/ee/scim/v2/Groups/{id}` — `delete-api-ee-scim-v2-Groups-id` — Delete a group.
-- [ ] `GET /api/ee/scim/v2/Users` — `get-api-ee-scim-v2-Users` — Fetch a list of users.
-- [ ] `POST /api/ee/scim/v2/Users` — `post-api-ee-scim-v2-Users` — Create a single user.
-- [ ] `GET /api/ee/scim/v2/Users/{id}` — `get-api-ee-scim-v2-Users-id` — Fetch a single user.
-- [ ] `PUT /api/ee/scim/v2/Users/{id}` — `put-api-ee-scim-v2-Users-id` — Update a user.
-- [ ] `PATCH /api/ee/scim/v2/Users/{id}` — `patch-api-ee-scim-v2-Users-id` — Activate or deactivate a user. Supports specific replace operations, but not arbitrary patches.
+- [x] `GET /api/ee/scim/v2/Groups` — `get-api-ee-scim-v2-Groups` — Fetch a list of groups.
+- [x] `POST /api/ee/scim/v2/Groups` — `post-api-ee-scim-v2-Groups` — Create a single group, and populates it if necessary.
+- [x] `GET /api/ee/scim/v2/Groups/{id}` — `get-api-ee-scim-v2-Groups-id` — Fetch a single group.
+- [x] `PUT /api/ee/scim/v2/Groups/{id}` — `put-api-ee-scim-v2-Groups-id` — Update a group.
+- [x] `DELETE /api/ee/scim/v2/Groups/{id}` — `delete-api-ee-scim-v2-Groups-id` — Delete a group.
+- [x] `GET /api/ee/scim/v2/Users` — `get-api-ee-scim-v2-Users` — Fetch a list of users.
+- [x] `POST /api/ee/scim/v2/Users` — `post-api-ee-scim-v2-Users` — Create a single user.
+- [x] `GET /api/ee/scim/v2/Users/{id}` — `get-api-ee-scim-v2-Users-id` — Fetch a single user.
+- [x] `PUT /api/ee/scim/v2/Users/{id}` — `put-api-ee-scim-v2-Users-id` — Update a user.
+- [x] `PATCH /api/ee/scim/v2/Users/{id}` — `patch-api-ee-scim-v2-Users-id` — Activate or deactivate a user. Supports specific replace operations, but not arbitrary patches.
 
-### /api/ee/security-center (0/5 complete)
+### /api/ee/security-center (5/5 complete)
 
-- [ ] `GET /api/ee/security-center` — `get-api-ee-security-center` — List all security advisories with match status.
-- [ ] `POST /api/ee/security-center/acknowledge` — `post-api-ee-security-center-acknowledge` — Acknowledge multiple security advisories. Skips already-acknowledged advisories.
-- [ ] `POST /api/ee/security-center/sync` — `post-api-ee-security-center-sync` — Trigger an async advisory sync + re-evaluation. Returns immediately. If a sync is already running, the request is a no-op.
-- [ ] `POST /api/ee/security-center/test-notification` — `post-api-ee-security-center-test-notification` — Send a test notification through the configured Security Center channels.
-- [ ] `POST /api/ee/security-center/{advisory-id}/acknowledge` — `post-api-ee-security-center-advisory-id-acknowledge` — Acknowledge a security advisory. Stops repeat notifications.
+- [x] `GET /api/ee/security-center` — `get-api-ee-security-center` — List all security advisories with match status.
+- [x] `POST /api/ee/security-center/acknowledge` — `post-api-ee-security-center-acknowledge` — Acknowledge multiple security advisories. Skips already-acknowledged advisories.
+- [x] `POST /api/ee/security-center/sync` — `post-api-ee-security-center-sync` — Trigger an async advisory sync + re-evaluation. Returns immediately. If a sync is already running, the request is a no-op.
+- [x] `POST /api/ee/security-center/test-notification` — `post-api-ee-security-center-test-notification` — Send a test notification through the configured Security Center channels.
+- [x] `POST /api/ee/security-center/{advisory-id}/acknowledge` — `post-api-ee-security-center-advisory-id-acknowledge` — Acknowledge a security advisory. Stops repeat notifications.
 
-### /api/ee/semantic-search (0/1 complete)
+### /api/ee/semantic-search (1/1 complete)
 
-- [ ] `GET /api/ee/semantic-search/status` — `get-api-ee-semantic-search-status` — Fetch the indexing status of the currently active semantic search index table. Returns a map with keys: :indexed_count <number of indexed items> :total_est <...
+- [x] `GET /api/ee/semantic-search/status` — `get-api-ee-semantic-search-status` — Fetch the indexing status of the currently active semantic search index table. Returns a map with keys: :indexed_count <number of indexed items> :total_est <...
 
-### /api/ee/serialization (0/2 complete)
+### /api/ee/serialization (2/2 complete)
 
-- [ ] `POST /api/ee/serialization/export` — `post-api-ee-serialization-export` — Serialize and retrieve Metabase instance. Outputs `.tar.gz` file with serialization results and an `export.log` file. On error outputs serialization logs dir...
-- [ ] `POST /api/ee/serialization/import` — `post-api-ee-serialization-import` — Deserialize Metabase instance from an archive generated by /export. Parameters: - `file`: archive encoded as `multipart/form-data` (required). Returns logs o...
+- [x] `POST /api/ee/serialization/export` — `post-api-ee-serialization-export` — Serialize and retrieve Metabase instance. Outputs `.tar.gz` file with serialization results and an `export.log` file. On error outputs serialization logs dir...
+- [x] `POST /api/ee/serialization/import` — `post-api-ee-serialization-import` — Deserialize Metabase instance from an archive generated by /export. Parameters: - `file`: archive encoded as `multipart/form-data` (required). Returns logs o...
 
-### /api/ee/stale (0/1 complete)
+### /api/ee/stale (1/1 complete)
 
-- [ ] `GET /api/ee/stale/{id}` — `get-api-ee-stale-id` — A flexible endpoint that returns stale entities, in the same shape as collections/items, with the following options: - `before_date` - only return entities t...
+- [x] `GET /api/ee/stale/{id}` — `get-api-ee-stale-id` — A flexible endpoint that returns stale entities, in the same shape as collections/items, with the following options: - `before_date` - only return entities t...
 
-### /api/ee/support-access-grant (0/4 complete)
+### /api/ee/support-access-grant (4/4 complete)
 
-- [ ] `POST /api/ee/support-access-grant` — `post-api-ee-support-access-grant` — Create a new support access grant. Requires superuser permissions. Only one active grant can exist at a time.
-- [ ] `GET /api/ee/support-access-grant` — `get-api-ee-support-access-grant` — List support access grants with optional filtering and pagination. Requires superuser permissions. Query parameters: - ticket-number: Filter by ticket number...
-- [ ] `GET /api/ee/support-access-grant/current` — `get-api-ee-support-access-grant-current` — Get the currently active support access grant, if one exists. Requires superuser permissions.
-- [ ] `PUT /api/ee/support-access-grant/{id}/revoke` — `put-api-ee-support-access-grant-id-revoke` — Revoke an existing support access grant. Requires superuser permissions. Any admin can revoke any grant.
+- [x] `POST /api/ee/support-access-grant` — `post-api-ee-support-access-grant` — Create a new support access grant. Requires superuser permissions. Only one active grant can exist at a time.
+- [x] `GET /api/ee/support-access-grant` — `get-api-ee-support-access-grant` — List support access grants with optional filtering and pagination. Requires superuser permissions. Query parameters: - ticket-number: Filter by ticket number...
+- [x] `GET /api/ee/support-access-grant/current` — `get-api-ee-support-access-grant-current` — Get the currently active support access grant, if one exists. Requires superuser permissions.
+- [x] `PUT /api/ee/support-access-grant/{id}/revoke` — `put-api-ee-support-access-grant-id-revoke` — Revoke an existing support access grant. Requires superuser permissions. Any admin can revoke any grant.
 
-### /api/ee/tenant (0/4 complete)
+### /api/ee/tenant (4/4 complete)
 
-- [ ] `POST /api/ee/tenant` — `post-api-ee-tenant` — Create a new Tenant
-- [ ] `GET /api/ee/tenant` — `get-api-ee-tenant` — Get all tenants
-- [ ] `PUT /api/ee/tenant/{id}` — `put-api-ee-tenant-id` — Update a tenant, can set name, attributes, or whether this tenant is active.
-- [ ] `GET /api/ee/tenant/{id}` — `get-api-ee-tenant-id` — Get info about a tenant
+- [x] `POST /api/ee/tenant` — `post-api-ee-tenant` — Create a new Tenant
+- [x] `GET /api/ee/tenant` — `get-api-ee-tenant` — Get all tenants
+- [x] `PUT /api/ee/tenant/{id}` — `put-api-ee-tenant-id` — Update a tenant, can set name, attributes, or whether this tenant is active.
+- [x] `GET /api/ee/tenant/{id}` — `get-api-ee-tenant-id` — Get info about a tenant
 
-### /api/ee/transforms (0/3 complete)
+### /api/ee/transforms (3/3 complete)
 
-- [ ] `GET /api/ee/transforms/{id}/inspect` — `get-api-ee-transforms-id-inspect` — Phase 1: Discover available lenses for a transform. Returns structural metadata and available lens types.
-- [ ] `GET /api/ee/transforms/{id}/inspect/{lens-id}` — `get-api-ee-transforms-id-inspect-lens-id` — Phase 2: Get full lens contents for a transform. Returns sections, cards with dataset_query, and trigger definitions. Accepts optional params for drill lense...
-- [ ] `POST /api/ee/transforms/{id}/inspect/{lens-id}/query` — `post-api-ee-transforms-id-inspect-lens-id-query` — Execute a query in the context of a transform inspector lens.
+- [x] `GET /api/ee/transforms/{id}/inspect` — `get-api-ee-transforms-id-inspect` — Phase 1: Discover available lenses for a transform. Returns structural metadata and available lens types.
+- [x] `GET /api/ee/transforms/{id}/inspect/{lens-id}` — `get-api-ee-transforms-id-inspect-lens-id` — Phase 2: Get full lens contents for a transform. Returns sections, cards with dataset_query, and trigger definitions. Accepts optional params for drill lense...
+- [x] `POST /api/ee/transforms/{id}/inspect/{lens-id}/query` — `post-api-ee-transforms-id-inspect-lens-id-query` — Execute a query in the context of a transform inspector lens.
 
-### /api/ee/transforms-python (0/3 complete)
+### /api/ee/transforms-python (3/3 complete)
 
-- [ ] `GET /api/ee/transforms-python/library/{path}` — `get-api-ee-transforms-python-library-path` — Get the Python library for user modules.
-- [ ] `PUT /api/ee/transforms-python/library/{path}` — `put-api-ee-transforms-python-library-path` — Update the Python library source code for user modules.
-- [ ] `POST /api/ee/transforms-python/test-run` — `post-api-ee-transforms-python-test-run` — Evaluate an ad-hoc python transform on a sample of input data. Intended for short runs for early feedback. Input/output/timeout limits apply.
+- [x] `GET /api/ee/transforms-python/library/{path}` — `get-api-ee-transforms-python-library-path` — Get the Python library for user modules.
+- [x] `PUT /api/ee/transforms-python/library/{path}` — `put-api-ee-transforms-python-library-path` — Update the Python library source code for user modules.
+- [x] `POST /api/ee/transforms-python/test-run` — `post-api-ee-transforms-python-test-run` — Evaluate an ad-hoc python transform on a sample of input data. Intended for short runs for early feedback. Input/output/timeout limits apply.
 
-### /api/ee/upload-management (0/2 complete)
+### /api/ee/upload-management (2/2 complete)
 
-- [ ] `GET /api/ee/upload-management/tables` — `get-api-ee-upload-management-tables` — Get all `Tables` visible to the current user which were created by uploading a file.
-- [ ] `DELETE /api/ee/upload-management/tables/{id}` — `delete-api-ee-upload-management-tables-id` — Delete the uploaded table from the database, optionally archiving cards for which it is the primary source.
+- [x] `GET /api/ee/upload-management/tables` — `get-api-ee-upload-management-tables` — Get all `Tables` visible to the current user which were created by uploading a file.
+- [x] `DELETE /api/ee/upload-management/tables/{id}` — `delete-api-ee-upload-management-tables-id` — Delete the uploaded table from the database, optionally archiving cards for which it is the primary source.
 
 ### /api/eid-translation (1/1 complete)
 
@@ -655,19 +655,19 @@ This file is a static implementation checklist derived from the latest Metabase 
 
 - [x] `POST /api/moderation-review` — `post-api-moderation-review` — Create a new `ModerationReview`.
 
-### /api/mt/gtap (0/6 complete)
+### /api/mt/gtap (6/6 complete)
 
-- [ ] `GET /api/mt/gtap` — `get-api-mt-gtap` — Fetch a list of all GTAPs currently in use, or a single GTAP if both `group_id` and `table_id` are provided.
-- [ ] `POST /api/mt/gtap` — `post-api-mt-gtap` — Create a new GTAP.
-- [ ] `POST /api/mt/gtap/validate` — `post-api-mt-gtap-validate` — Validate a sandbox which may not have yet been saved. This runs the same validation that is performed when the sandbox is saved, but doesn't actually save th...
-- [ ] `GET /api/mt/gtap/{id}` — `get-api-mt-gtap-id` — Fetch GTAP by `id`
-- [ ] `PUT /api/mt/gtap/{id}` — `put-api-mt-gtap-id` — Update a GTAP entry. The only things you're allowed to update for a GTAP are the Card being used (`card_id`) or the parameter mappings; changing `table_id` o...
-- [ ] `DELETE /api/mt/gtap/{id}` — `delete-api-mt-gtap-id` — Delete a GTAP entry.
+- [x] `GET /api/mt/gtap` — `get-api-mt-gtap` — Fetch a list of all GTAPs currently in use, or a single GTAP if both `group_id` and `table_id` are provided.
+- [x] `POST /api/mt/gtap` — `post-api-mt-gtap` — Create a new GTAP.
+- [x] `POST /api/mt/gtap/validate` — `post-api-mt-gtap-validate` — Validate a sandbox which may not have yet been saved. This runs the same validation that is performed when the sandbox is saved, but doesn't actually save th...
+- [x] `GET /api/mt/gtap/{id}` — `get-api-mt-gtap-id` — Fetch GTAP by `id`
+- [x] `PUT /api/mt/gtap/{id}` — `put-api-mt-gtap-id` — Update a GTAP entry. The only things you're allowed to update for a GTAP are the Card being used (`card_id`) or the parameter mappings; changing `table_id` o...
+- [x] `DELETE /api/mt/gtap/{id}` — `delete-api-mt-gtap-id` — Delete a GTAP entry.
 
-### /api/mt/user (0/2 complete)
+### /api/mt/user (2/2 complete)
 
-- [ ] `GET /api/mt/user/attributes` — `get-api-mt-user-attributes` — Fetch a list of possible keys for User `login_attributes`. This includes keys from tenant model attributes and keys that have already been set for existing U...
-- [ ] `PUT /api/mt/user/{id}/attributes` — `put-api-mt-user-id-attributes` — Update the `login_attributes` for a User.
+- [x] `GET /api/mt/user/attributes` — `get-api-mt-user-attributes` — Fetch a list of possible keys for User `login_attributes`. This includes keys from tenant model attributes and keys that have already been set for existing U...
+- [x] `PUT /api/mt/user/{id}/attributes` — `put-api-mt-user-id-attributes` — Update the `login_attributes` for a User.
 
 ### /api/native-query-snippet (4/4 complete)
 

@@ -30,6 +30,34 @@ def _register_commands() -> None:
     from metabaseapi.cli.commands import ee_action_v2 as ee_action_v2
     from metabaseapi.cli.commands import ee_advanced_permissions as ee_advanced_permissions
     from metabaseapi.cli.commands import ee_ai_controls as ee_ai_controls
+    from metabaseapi.cli.commands import ee_audit_app as ee_audit_app
+    from metabaseapi.cli.commands import ee_billing as ee_billing
+    from metabaseapi.cli.commands import ee_cloud as ee_cloud
+    from metabaseapi.cli.commands import ee_content_translation as ee_content_translation
+    from metabaseapi.cli.commands import ee_data_complexity_score as ee_data_complexity_score
+    from metabaseapi.cli.commands import ee_data_studio as ee_data_studio
+    from metabaseapi.cli.commands import ee_database_replication as ee_database_replication
+    from metabaseapi.cli.commands import ee_database_routing as ee_database_routing
+    from metabaseapi.cli.commands import ee_dependencies as ee_dependencies
+    from metabaseapi.cli.commands import ee_email as ee_email
+    from metabaseapi.cli.commands import ee_embedding_hub as ee_embedding_hub
+    from metabaseapi.cli.commands import ee_gsheets as ee_gsheets
+    from metabaseapi.cli.commands import ee_library as ee_library
+    from metabaseapi.cli.commands import ee_logs as ee_logs
+    from metabaseapi.cli.commands import ee_metabot as ee_metabot
+    from metabaseapi.cli.commands import ee_permission_debug as ee_permission_debug
+    from metabaseapi.cli.commands import ee_remote_sync as ee_remote_sync
+    from metabaseapi.cli.commands import ee_replacement as ee_replacement
+    from metabaseapi.cli.commands import ee_scim as ee_scim
+    from metabaseapi.cli.commands import ee_security_center as ee_security_center
+    from metabaseapi.cli.commands import ee_semantic_search as ee_semantic_search
+    from metabaseapi.cli.commands import ee_serialization as ee_serialization
+    from metabaseapi.cli.commands import ee_stale as ee_stale
+    from metabaseapi.cli.commands import ee_support_access_grant as ee_support_access_grant
+    from metabaseapi.cli.commands import ee_tenant as ee_tenant
+    from metabaseapi.cli.commands import ee_transforms as ee_transforms
+    from metabaseapi.cli.commands import ee_transforms_python as ee_transforms_python
+    from metabaseapi.cli.commands import ee_upload_management as ee_upload_management
     from metabaseapi.cli.commands import eid_translation as eid_translation
     from metabaseapi.cli.commands import email as email
     from metabaseapi.cli.commands import embed as embed
@@ -48,6 +76,8 @@ def _register_commands() -> None:
     from metabaseapi.cli.commands import metric as metric
     from metabaseapi.cli.commands import model_index as model_index
     from metabaseapi.cli.commands import moderation_review as moderation_review
+    from metabaseapi.cli.commands import mt_gtap as mt_gtap
+    from metabaseapi.cli.commands import mt_user as mt_user
     from metabaseapi.cli.commands import native_query_snippet as native_query_snippet
     from metabaseapi.cli.commands import notification as notification
     from metabaseapi.cli.commands import notify as notify
@@ -107,6 +137,34 @@ def _register_commands() -> None:
         ee_action_v2,
         ee_advanced_permissions,
         ee_ai_controls,
+        ee_audit_app,
+        ee_billing,
+        ee_cloud,
+        ee_content_translation,
+        ee_data_complexity_score,
+        ee_data_studio,
+        ee_database_replication,
+        ee_database_routing,
+        ee_dependencies,
+        ee_email,
+        ee_embedding_hub,
+        ee_gsheets,
+        ee_library,
+        ee_logs,
+        ee_metabot,
+        ee_permission_debug,
+        ee_remote_sync,
+        ee_replacement,
+        ee_scim,
+        ee_security_center,
+        ee_semantic_search,
+        ee_serialization,
+        ee_stale,
+        ee_support_access_grant,
+        ee_tenant,
+        ee_transforms,
+        ee_transforms_python,
+        ee_upload_management,
         eid_translation,
         email,
         embed,
@@ -123,6 +181,8 @@ def _register_commands() -> None:
         measure,
         metabot,
         metric,
+        mt_gtap,
+        mt_user,
         model_index,
         moderation_review,
         native_query_snippet,

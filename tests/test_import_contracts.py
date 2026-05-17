@@ -46,18 +46,35 @@ import metabaseapi.endpoints.requests.data_studio
 import metabaseapi.endpoints.requests.database
 import metabaseapi.endpoints.requests.dataset
 import metabaseapi.endpoints.requests.document
+import metabaseapi.endpoints.requests.ee_action_v2
+import metabaseapi.endpoints.requests.ee_advanced_permissions
+import metabaseapi.endpoints.requests.ee_ai_controls
+import metabaseapi.endpoints.requests.eid_translation
 import metabaseapi.endpoints.requests.email
 import metabaseapi.endpoints.requests.embed
 import metabaseapi.endpoints.requests.embed_theme
 import metabaseapi.endpoints.requests.field
+import metabaseapi.endpoints.requests.frontend_errors
 import metabaseapi.endpoints.requests.geojson
 import metabaseapi.endpoints.requests.glossary
+import metabaseapi.endpoints.requests.google
+import metabaseapi.endpoints.requests.ldap
+import metabaseapi.endpoints.requests.llm
 import metabaseapi.endpoints.requests.logger
 import metabaseapi.endpoints.requests.login_history
 import metabaseapi.endpoints.requests.measure
+import metabaseapi.endpoints.requests.metabot
 import metabaseapi.endpoints.requests.metric
+import metabaseapi.endpoints.requests.model_index
+import metabaseapi.endpoints.requests.moderation_review
+import metabaseapi.endpoints.requests.native_query_snippet
+import metabaseapi.endpoints.requests.notification
+import metabaseapi.endpoints.requests.notify
 import metabaseapi.endpoints.requests.permissions
+import metabaseapi.endpoints.requests.persist
+import metabaseapi.endpoints.requests.premium_features
 import metabaseapi.endpoints.requests.preview_embed
+import metabaseapi.endpoints.requests.product_feedback
 import metabaseapi.endpoints.requests.public
 import metabaseapi.endpoints.requests.pulse
 import metabaseapi.endpoints.requests.revision
@@ -65,11 +82,17 @@ import metabaseapi.endpoints.requests.search
 import metabaseapi.endpoints.requests.segment
 import metabaseapi.endpoints.requests.session
 import metabaseapi.endpoints.requests.setting
+import metabaseapi.endpoints.requests.setup
+import metabaseapi.endpoints.requests.slack
 import metabaseapi.endpoints.requests.table
 import metabaseapi.endpoints.requests.task
 import metabaseapi.endpoints.requests.tiles
 import metabaseapi.endpoints.requests.timeline
 import metabaseapi.endpoints.requests.timeline_event
+import metabaseapi.endpoints.requests.transform
+import metabaseapi.endpoints.requests.transform_job
+import metabaseapi.endpoints.requests.transform_tag
+import metabaseapi.endpoints.requests.upload
 import metabaseapi.endpoints.requests.user
 import metabaseapi.endpoints.requests.user_key_value
 import metabaseapi.endpoints.requests.util
@@ -269,6 +292,32 @@ REQUEST_MODULE_CONTRACTS = {
         "DeleteDocumentPublicLinkRequest",
         "CopyDocumentRequest",
     ),
+    "ee_action_v2": (
+        "EeActionV2ExecuteRequest",
+        "EeActionV2ExecuteBulkRequest",
+        "EeActionV2ExecuteFormRequest",
+    ),
+    "ee_advanced_permissions": (
+        "GetEeApplicationPermissionsGraphRequest",
+        "PutEeApplicationPermissionsGraphRequest",
+        "GetEeImpersonationRequest",
+        "DeleteEeImpersonationRequest",
+    ),
+    "ee_ai_controls": (
+        "GetEeAiControlsPermissionsRequest",
+        "PutEeAiControlsPermissionsRequest",
+        "EnableEeAiControlsAdvancedPermissionsRequest",
+        "DisableEeAiControlsAdvancedPermissionsRequest",
+        "GetEeAiControlsUsageInstanceRequest",
+        "PutEeAiControlsUsageInstanceRequest",
+        "GetEeAiControlsUsageTenantRequest",
+        "GetEeAiControlsUsageTenantIdRequest",
+        "PutEeAiControlsUsageTenantIdRequest",
+        "GetEeAiControlsUsageGroupRequest",
+        "GetEeAiControlsUsageGroupIdRequest",
+        "PutEeAiControlsUsageGroupIdRequest",
+    ),
+    "eid_translation": ("TranslateEntityIdsRequest",),
     "email": (
         "UpdateEmailSettingsRequest",
         "DeleteEmailSettingsRequest",
@@ -301,6 +350,7 @@ REQUEST_MODULE_CONTRACTS = {
         "DeleteEmbedThemeRequest",
         "CopyEmbedThemeRequest",
     ),
+    "frontend_errors": ("ReportFrontendErrorRequest",),
     "geojson": (
         "GetGeojsonRequest",
         "GetGeojsonByKeyRequest",
@@ -310,6 +360,13 @@ REQUEST_MODULE_CONTRACTS = {
         "CreateGlossaryEntryRequest",
         "UpdateGlossaryEntryRequest",
         "DeleteGlossaryEntryRequest",
+    ),
+    "google": ("UpdateGoogleSettingsRequest",),
+    "ldap": ("UpdateLdapSettingsRequest",),
+    "llm": (
+        "ExtractLlmTablesRequest",
+        "GenerateLlmSqlRequest",
+        "ListLlmModelsRequest",
     ),
     "logger": (
         "CreateLoggerAdjustmentRequest",
@@ -327,6 +384,24 @@ REQUEST_MODULE_CONTRACTS = {
         "SearchMeasureDimensionValuesRequest",
         "GetMeasureDimensionValuesRequest",
     ),
+    "metabot": (
+        "MetabotAgentStreamingRequest",
+        "MetabotFeedbackRequest",
+        "GetMetabotSettingsRequest",
+        "UpdateMetabotSettingsRequest",
+        "GenerateMetabotDocumentContentRequest",
+        "ListMetabotsRequest",
+        "GetMetabotRequest",
+        "UpdateMetabotRequest",
+        "GetMetabotPromptSuggestionsRequest",
+        "DeleteMetabotPromptSuggestionsRequest",
+        "RegenerateMetabotPromptSuggestionsRequest",
+        "DeleteMetabotPromptSuggestionRequest",
+        "GetMetabotUserPermissionsRequest",
+        "MetabotSlackEventsRequest",
+        "MetabotSlackInteractiveRequest",
+        "UpdateMetabotSlackSettingsRequest",
+    ),
     "metric": (
         "ListMetricsRequest",
         "MetricBreakoutValuesRequest",
@@ -335,6 +410,35 @@ REQUEST_MODULE_CONTRACTS = {
         "GetMetricDimensionRemappingRequest",
         "SearchMetricDimensionValuesRequest",
         "GetMetricDimensionValuesRequest",
+    ),
+    "model_index": (
+        "CreateModelIndexRequest",
+        "ListModelIndexesRequest",
+        "GetModelIndexRequest",
+        "DeleteModelIndexRequest",
+    ),
+    "moderation_review": ("CreateModerationReviewRequest",),
+    "native_query_snippet": (
+        "ListNativeQuerySnippetsRequest",
+        "CreateNativeQuerySnippetRequest",
+        "GetNativeQuerySnippetRequest",
+        "UpdateNativeQuerySnippetRequest",
+    ),
+    "notification": (
+        "ListNotificationsRequest",
+        "CreateNotificationRequest",
+        "SendUnsavedNotificationRequest",
+        "GetNotificationRequest",
+        "UpdateNotificationRequest",
+        "SendNotificationRequest",
+        "UnsubscribeNotificationRequest",
+        "UnsubscribeNotificationByHashRequest",
+        "UndoNotificationUnsubscribeRequest",
+    ),
+    "notify": (
+        "NotifyAttachedDatawarehouseRequest",
+        "NotifyDatabaseRequest",
+        "NotifyDatabaseNewTableRequest",
     ),
     "permissions": (
         "GetPermissionsGraphRequest",
@@ -352,6 +456,23 @@ REQUEST_MODULE_CONTRACTS = {
         "UpdatePermissionsMembershipRequest",
         "DeletePermissionsMembershipRequest",
     ),
+    "persist": (
+        "ListPersistedInfoRequest",
+        "GetPersistedInfoByCardRequest",
+        "PersistCardRequest",
+        "RefreshPersistedCardRequest",
+        "UnpersistCardRequest",
+        "EnableDatabasePersistenceRequest",
+        "DisableDatabasePersistenceRequest",
+        "DisablePersistenceRequest",
+        "EnablePersistenceRequest",
+        "SetPersistenceRefreshScheduleRequest",
+        "GetPersistedInfoRequest",
+    ),
+    "premium_features": (
+        "RefreshPremiumFeaturesTokenRequest",
+        "GetPremiumFeaturesTokenStatusRequest",
+    ),
     "preview_embed": (
         "GetPreviewEmbedCardRequest",
         "GetPreviewEmbedCardParamRemappingRequest",
@@ -367,6 +488,7 @@ REQUEST_MODULE_CONTRACTS = {
         "GetPreviewEmbedTilesCardRequest",
         "GetPreviewEmbedTilesDashboardDashcardCardRequest",
     ),
+    "product_feedback": ("CreateProductFeedbackRequest",),
     "data_studio": (
         "DataStudioTableDiscardValuesRequest",
         "DataStudioTableEditRequest",
@@ -447,6 +569,13 @@ REQUEST_MODULE_CONTRACTS = {
         "GetSettingRequest",
         "UpdateSettingRequest",
     ),
+    "setup": ("SetupRequest",),
+    "slack": (
+        "GetSlackAppInfoRequest",
+        "CreateSlackBugReportRequest",
+        "GetSlackManifestRequest",
+        "UpdateSlackSettingsRequest",
+    ),
     "task": (
         "ListTasksRequest",
         "GetTaskInfoRequest",
@@ -476,6 +605,36 @@ REQUEST_MODULE_CONTRACTS = {
         "UpdateTimelineEventRequest",
         "DeleteTimelineEventRequest",
     ),
+    "transform": (
+        "ListTransformsRequest",
+        "CreateTransformRequest",
+        "ListTransformRunsRequest",
+        "GetTransformRunRequest",
+        "GetTransformRequest",
+        "UpdateTransformRequest",
+        "DeleteTransformRequest",
+        "CancelTransformRequest",
+        "GetTransformDependenciesRequest",
+        "ResetTransformCheckpointRequest",
+        "RunTransformRequest",
+        "DeleteTransformTableRequest",
+    ),
+    "transform_job": (
+        "CreateTransformJobRequest",
+        "ListTransformJobsRequest",
+        "UpdateTransformJobRequest",
+        "DeleteTransformJobRequest",
+        "GetTransformJobRequest",
+        "RunTransformJobRequest",
+        "GetTransformJobTransformsRequest",
+    ),
+    "transform_tag": (
+        "CreateTransformTagRequest",
+        "ListTransformTagsRequest",
+        "UpdateTransformTagRequest",
+        "DeleteTransformTagRequest",
+    ),
+    "upload": ("UploadCsvRequest",),
     "util": ("GetRandomTokenRequest",),
     "dashboard": (
         "ListDashboardsRequest",
@@ -679,6 +838,22 @@ RESPONSE_MODULE_CONTRACTS = {
         "ListDocumentsResponse",
         "ListPublicDocumentsResponse",
     ),
+    "ee_action_v2": (
+        "EeActionV2ExecuteFormResponse",
+        "EeActionV2ExecuteResponse",
+    ),
+    "ee_advanced_permissions": (
+        "DeleteEeImpersonationResponse",
+        "EeApplicationPermissionsGraphResponse",
+        "EeImpersonationResponse",
+    ),
+    "ee_ai_controls": (
+        "EeAiControlsGroupUsageLimitsResponse",
+        "EeAiControlsPermissionsResponse",
+        "EeAiControlsTenantUsageLimitsResponse",
+        "EeAiControlsUsageLimitResponse",
+    ),
+    "eid_translation": ("EidTranslationResponse",),
     "email": (
         "DeleteEmailSettingsResponse",
         "EmailSettingsResponse",
@@ -707,6 +882,7 @@ RESPONSE_MODULE_CONTRACTS = {
         "ListEmbedThemesResponse",
         "SeedDefaultEmbedThemesResponse",
     ),
+    "frontend_errors": ("FrontendErrorReportResponse",),
     "geojson": (
         "GeojsonByKeyResponse",
         "GeojsonResponse",
@@ -716,6 +892,13 @@ RESPONSE_MODULE_CONTRACTS = {
         "DeleteGlossaryEntryResponse",
         "GlossaryEntriesResponse",
         "UpdateGlossaryEntryResponse",
+    ),
+    "google": ("GoogleSettingsResponse",),
+    "ldap": ("LdapSettingsResponse",),
+    "llm": (
+        "ExtractLlmTablesResponse",
+        "GenerateLlmSqlResponse",
+        "ListLlmModelsResponse",
     ),
     "logger": (
         "LoggerAdjustmentDeleteResponse",
@@ -730,6 +913,23 @@ RESPONSE_MODULE_CONTRACTS = {
         "MeasureDimensionSearchResponse",
         "MeasureDimensionValuesResponse",
     ),
+    "metabot": (
+        "DeleteMetabotPromptSuggestionResponse",
+        "DeleteMetabotPromptSuggestionsResponse",
+        "ListMetabotsResponse",
+        "MetabotAgentStreamingResponse",
+        "MetabotFeedbackResponse",
+        "MetabotGenerateContentResponse",
+        "MetabotGenericResponse",
+        "MetabotPermissionsResponse",
+        "MetabotPromptSuggestionsResponse",
+        "MetabotResponse",
+        "MetabotSettingsResponse",
+        "MetabotSlackEventsResponse",
+        "MetabotSlackInteractiveResponse",
+        "MetabotSlackSettingsResponse",
+        "RegenerateMetabotPromptSuggestionsResponse",
+    ),
     "metric": (
         "ListMetricsResponse",
         "MetricBreakoutValuesResponse",
@@ -737,6 +937,24 @@ RESPONSE_MODULE_CONTRACTS = {
         "MetricDimensionRemappingResponse",
         "MetricDimensionSearchResponse",
         "MetricDimensionValuesResponse",
+    ),
+    "model_index": (
+        "DeleteModelIndexResponse",
+        "ListModelIndexesResponse",
+    ),
+    "moderation_review": ("ModerationReviewResponse",),
+    "native_query_snippet": ("ListNativeQuerySnippetsResponse",),
+    "notification": (
+        "ListNotificationsResponse",
+        "NotificationResponse",
+        "NotificationSendResponse",
+        "NotificationUnsubscribeResponse",
+        "NotificationUnsubscribeUndoResponse",
+    ),
+    "notify": (
+        "NotifyAttachedDatawarehouseResponse",
+        "NotifyDatabaseNewTableResponse",
+        "NotifyDatabaseResponse",
     ),
     "permissions": (
         "DeletePermissionsGroupResponse",
@@ -747,6 +965,16 @@ RESPONSE_MODULE_CONTRACTS = {
         "PermissionsMembershipListResponse",
         "PermissionsMembershipResponse",
         "PermissionsMembershipsResponse",
+    ),
+    "persist": (
+        "ListPersistedInfoResponse",
+        "PersistOperationResponse",
+        "PersistRefreshScheduleResponse",
+    ),
+    "premium_features": (
+        "PremiumFeaturesTokenResponse",
+        "PremiumFeaturesTokenStatusResponse",
+        "RefreshPremiumFeaturesTokenResponse",
     ),
     "preview_embed": (
         "GetPreviewEmbedCardParamRemappingResponse",
@@ -763,6 +991,7 @@ RESPONSE_MODULE_CONTRACTS = {
         "GetPreviewEmbedTilesCardResponse",
         "GetPreviewEmbedTilesDashboardDashcardCardResponse",
     ),
+    "product_feedback": ("ProductFeedbackResponse",),
     "field": (
         "DeleteFieldDimensionResponse",
         "FieldDimensionResponse",
@@ -830,6 +1059,13 @@ RESPONSE_MODULE_CONTRACTS = {
         "UpdateSettingResponse",
         "UpdateSettingsResponse",
     ),
+    "setup": ("SetupResponse",),
+    "slack": (
+        "SlackAppInfoResponse",
+        "SlackBugReportResponse",
+        "SlackManifestResponse",
+        "SlackSettingsResponse",
+    ),
     "task": (
         "GetTaskResponse",
         "ListTaskRunsResponse",
@@ -857,6 +1093,28 @@ RESPONSE_MODULE_CONTRACTS = {
         "DeleteTimelineEventResponse",
         "TimelineEventResponse",
     ),
+    "transform": (
+        "DeleteTransformResponse",
+        "ListTransformRunsResponse",
+        "ListTransformsResponse",
+        "TransformDependenciesResponse",
+        "TransformOperationResponse",
+        "TransformResponse",
+        "TransformRunResponse",
+    ),
+    "transform_job": (
+        "DeleteTransformJobResponse",
+        "ListTransformJobsResponse",
+        "TransformJobOperationResponse",
+        "TransformJobResponse",
+        "TransformJobTransformsResponse",
+    ),
+    "transform_tag": (
+        "DeleteTransformTagResponse",
+        "ListTransformTagsResponse",
+        "TransformTagResponse",
+    ),
+    "upload": ("UploadCsvResponse",),
     "util": ("RandomTokenResponse",),
     "table": (
         "ListTablesResponse",

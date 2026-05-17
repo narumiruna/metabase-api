@@ -15,8 +15,8 @@ This file is a static implementation checklist derived from the latest Metabase 
 ## Coverage summary
 
 - Documented operations: 600
-- Complete hand-written endpoint implementations: 390
-- Remaining documented operations: 210
+- Complete hand-written endpoint implementations: 492
+- Remaining documented operations: 108
 - Raw `request` / `invoke`: disabled for CLI users and does not count toward TODO completion.
 
 ## Endpoint checklist
@@ -275,37 +275,37 @@ This file is a static implementation checklist derived from the latest Metabase 
 - [x] `DELETE /api/document/{document-id}/public-link` — `delete-api-document-document-id-public-link` — Remove the public link for a Document. Deletes the public UUID from the Document, making it no longer accessible via the public sharing endpoint. This revoke...
 - [x] `POST /api/document/{from-document-id}/copy` — `post-api-document-from-document-id-copy` — Copy a Document.
 
-### /api/ee/action-v2 (0/3 complete)
+### /api/ee/action-v2 (3/3 complete)
 
-- [ ] `POST /api/ee/action-v2/execute` — `post-api-ee-action-v2-execute` — Execute an action with a single input. Takes: - `action` - an identifier or an expression for what we want to execute. - `scope` - where the action is being...
-- [ ] `POST /api/ee/action-v2/execute-bulk` — `post-api-ee-action-v2-execute-bulk` — Execute an action with multiple inputs. This is typically more efficient than calling execute with each input individually, for example by performing batch S...
-- [ ] `POST /api/ee/action-v2/execute-form` — `post-api-ee-action-v2-execute-form` — Temporary endpoint for describing an actions parameters such that they can be presented correctly in a modal ahead of execution.
+- [x] `POST /api/ee/action-v2/execute` — `post-api-ee-action-v2-execute` — Execute an action with a single input. Takes: - `action` - an identifier or an expression for what we want to execute. - `scope` - where the action is being...
+- [x] `POST /api/ee/action-v2/execute-bulk` — `post-api-ee-action-v2-execute-bulk` — Execute an action with multiple inputs. This is typically more efficient than calling execute with each input individually, for example by performing batch S...
+- [x] `POST /api/ee/action-v2/execute-form` — `post-api-ee-action-v2-execute-form` — Temporary endpoint for describing an actions parameters such that they can be presented correctly in a modal ahead of execution.
 
-### /api/ee/advanced-permissions/application (0/2 complete)
+### /api/ee/advanced-permissions/application (2/2 complete)
 
-- [ ] `GET /api/ee/advanced-permissions/application/graph` — `get-api-ee-advanced-permissions-application-graph` — Fetch a graph of Application Permissions.
-- [ ] `PUT /api/ee/advanced-permissions/application/graph` — `put-api-ee-advanced-permissions-application-graph` — Do a batch update of Application Permissions by passing a modified graph.
+- [x] `GET /api/ee/advanced-permissions/application/graph` — `get-api-ee-advanced-permissions-application-graph` — Fetch a graph of Application Permissions.
+- [x] `PUT /api/ee/advanced-permissions/application/graph` — `put-api-ee-advanced-permissions-application-graph` — Do a batch update of Application Permissions by passing a modified graph.
 
-### /api/ee/advanced-permissions/impersonation (0/2 complete)
+### /api/ee/advanced-permissions/impersonation (2/2 complete)
 
-- [ ] `GET /api/ee/advanced-permissions/impersonation` — `get-api-ee-advanced-permissions-impersonation` — Fetch a list of all Impersonation policies currently in effect, or a single policy if both `group_id` and `db_id` are provided.
-- [ ] `DELETE /api/ee/advanced-permissions/impersonation/{id}` — `delete-api-ee-advanced-permissions-impersonation-id` — Delete a Connection Impersonation entry.
+- [x] `GET /api/ee/advanced-permissions/impersonation` — `get-api-ee-advanced-permissions-impersonation` — Fetch a list of all Impersonation policies currently in effect, or a single policy if both `group_id` and `db_id` are provided.
+- [x] `DELETE /api/ee/advanced-permissions/impersonation/{id}` — `delete-api-ee-advanced-permissions-impersonation-id` — Delete a Connection Impersonation entry.
 
-### /api/ee/ai-controls/permissions (0/2 complete)
+### /api/ee/ai-controls/permissions (2/2 complete)
 
-- [ ] `GET /api/ee/ai-controls/permissions` — `get-api-ee-ai-controls-permissions` — List all metabot permissions for all groups, filling in defaults for missing entries.
-- [ ] `PUT /api/ee/ai-controls/permissions` — `put-api-ee-ai-controls-permissions` — Update metabot permissions for all groups. Upserts each permission entry and returns the full permissions list with defaults filled in.
+- [x] `GET /api/ee/ai-controls/permissions` — `get-api-ee-ai-controls-permissions` — List all metabot permissions for all groups, filling in defaults for missing entries.
+- [x] `PUT /api/ee/ai-controls/permissions` — `put-api-ee-ai-controls-permissions` — Update metabot permissions for all groups. Upserts each permission entry and returns the full permissions list with defaults filled in.
 
-### /api/ee/ai-controls/usage (0/8 complete)
+### /api/ee/ai-controls/usage (8/8 complete)
 
-- [ ] `GET /api/ee/ai-controls/usage/group` — `get-api-ee-ai-controls-usage-group` — Get all group-level metabot usage limits.
-- [ ] `GET /api/ee/ai-controls/usage/group/{group-id}` — `get-api-ee-ai-controls-usage-group-group-id` — Get the metabot usage limit for a specific group. Returns `max_usage: null` if no limit is set.
-- [ ] `PUT /api/ee/ai-controls/usage/group/{group-id}` — `put-api-ee-ai-controls-usage-group-group-id` — Set or update the metabot usage limit for a specific group. Pass `max_usage: null` to remove the limit.
-- [ ] `GET /api/ee/ai-controls/usage/instance` — `get-api-ee-ai-controls-usage-instance` — Get the instance-wide metabot usage limit. Returns `max_usage: null` if no limit is set (unlimited).
-- [ ] `PUT /api/ee/ai-controls/usage/instance` — `put-api-ee-ai-controls-usage-instance` — Set or update the instance-wide metabot usage limit. Pass `max_usage: null` to remove the limit (unlimited).
-- [ ] `GET /api/ee/ai-controls/usage/tenant` — `get-api-ee-ai-controls-usage-tenant` — Get all tenant-level metabot usage limits.
-- [ ] `GET /api/ee/ai-controls/usage/tenant/{tenant-id}` — `get-api-ee-ai-controls-usage-tenant-tenant-id` — Get the metabot usage limit for a specific tenant. Returns `max_usage: null` if no limit is set.
-- [ ] `PUT /api/ee/ai-controls/usage/tenant/{tenant-id}` — `put-api-ee-ai-controls-usage-tenant-tenant-id` — Set or update the metabot usage limit for a specific tenant. Pass `max_usage: null` to remove the limit.
+- [x] `GET /api/ee/ai-controls/usage/group` — `get-api-ee-ai-controls-usage-group` — Get all group-level metabot usage limits.
+- [x] `GET /api/ee/ai-controls/usage/group/{group-id}` — `get-api-ee-ai-controls-usage-group-group-id` — Get the metabot usage limit for a specific group. Returns `max_usage: null` if no limit is set.
+- [x] `PUT /api/ee/ai-controls/usage/group/{group-id}` — `put-api-ee-ai-controls-usage-group-group-id` — Set or update the metabot usage limit for a specific group. Pass `max_usage: null` to remove the limit.
+- [x] `GET /api/ee/ai-controls/usage/instance` — `get-api-ee-ai-controls-usage-instance` — Get the instance-wide metabot usage limit. Returns `max_usage: null` if no limit is set (unlimited).
+- [x] `PUT /api/ee/ai-controls/usage/instance` — `put-api-ee-ai-controls-usage-instance` — Set or update the instance-wide metabot usage limit. Pass `max_usage: null` to remove the limit (unlimited).
+- [x] `GET /api/ee/ai-controls/usage/tenant` — `get-api-ee-ai-controls-usage-tenant` — Get all tenant-level metabot usage limits.
+- [x] `GET /api/ee/ai-controls/usage/tenant/{tenant-id}` — `get-api-ee-ai-controls-usage-tenant-tenant-id` — Get the metabot usage limit for a specific tenant. Returns `max_usage: null` if no limit is set.
+- [x] `PUT /api/ee/ai-controls/usage/tenant/{tenant-id}` — `put-api-ee-ai-controls-usage-tenant-tenant-id` — Set or update the metabot usage limit for a specific tenant. Pass `max_usage: null` to remove the limit.
 
 ### /api/ee/audit-app/analytics-dev (0/1 complete)
 
@@ -498,9 +498,9 @@ This file is a static implementation checklist derived from the latest Metabase 
 - [ ] `GET /api/ee/upload-management/tables` — `get-api-ee-upload-management-tables` — Get all `Tables` visible to the current user which were created by uploading a file.
 - [ ] `DELETE /api/ee/upload-management/tables/{id}` — `delete-api-ee-upload-management-tables-id` — Delete the uploaded table from the database, optionally archiving cards for which it is the primary source.
 
-### /api/eid-translation (0/1 complete)
+### /api/eid-translation (1/1 complete)
 
-- [ ] `POST /api/eid-translation/translate` — `post-api-eid-translation-translate` — Translate entity IDs to model IDs.
+- [x] `POST /api/eid-translation/translate` — `post-api-eid-translation-translate` — Translate entity IDs to model IDs.
 
 ### /api/email (3/3 complete)
 
@@ -552,9 +552,9 @@ This file is a static implementation checklist derived from the latest Metabase 
 - [x] `GET /api/field/{id}/values` — `get-api-field-id-values` — If a Field's value of `has_field_values` is `:list`, return a list of all the distinct values of the Field (or remapped Field), and (if defined by a User) a...
 - [x] `POST /api/field/{id}/values` — `post-api-field-id-values` — Update the fields values and human-readable values for a `Field` whose semantic type is `category`/`city`/`state`/`country` or whose base type is `type/Boole...
 
-### /api/frontend-errors (0/1 complete)
+### /api/frontend-errors (1/1 complete)
 
-- [ ] `POST /api/frontend-errors` — `post-api-frontend-errors` — Endpoint for the frontend to report errors. Increments a Prometheus counter with the given `type` label.
+- [x] `POST /api/frontend-errors` — `post-api-frontend-errors` — Endpoint for the frontend to report errors. Increments a Prometheus counter with the given `type` label.
 
 ### /api/geojson (2/2 complete)
 
@@ -568,19 +568,19 @@ This file is a static implementation checklist derived from the latest Metabase 
 - [x] `PUT /api/glossary/{id}` — `put-api-glossary-id` — Update an existing glossary entry.
 - [x] `DELETE /api/glossary/{id}` — `delete-api-glossary-id` — Delete a glossary entry.
 
-### /api/google (0/1 complete)
+### /api/google (1/1 complete)
 
-- [ ] `PUT /api/google/settings` — `put-api-google-settings` — Update Google Sign-In related settings. You must be a superuser to do this.
+- [x] `PUT /api/google/settings` — `put-api-google-settings` — Update Google Sign-In related settings. You must be a superuser to do this.
 
-### /api/ldap (0/1 complete)
+### /api/ldap (1/1 complete)
 
-- [ ] `PUT /api/ldap/settings` — `put-api-ldap-settings` — Update LDAP related settings. You must be a superuser to do this.
+- [x] `PUT /api/ldap/settings` — `put-api-ldap-settings` — Update LDAP related settings. You must be a superuser to do this.
 
-### /api/llm (0/3 complete)
+### /api/llm (3/3 complete)
 
-- [ ] `POST /api/llm/extract-tables` — `post-api-llm-extract-tables` — Parse SQL and return referenced tables with their columns. Uses Macaw to parse the SQL, resolves table names to IDs, and returns permission-filtered tables w...
-- [ ] `POST /api/llm/generate-sql` — `post-api-llm-generate-sql` — Generate SQL from a natural language prompt. Requires: - LLM to be configured (Anthropic API key set in admin settings) - At least one table reference (expli...
-- [ ] `GET /api/llm/list-models` — `get-api-llm-list-models` — List available LLM models from the configured provider. Requires LLM to be configured for the selected provider in admin settings.
+- [x] `POST /api/llm/extract-tables` — `post-api-llm-extract-tables` — Parse SQL and return referenced tables with their columns. Uses Macaw to parse the SQL, resolves table names to IDs, and returns permission-filtered tables w...
+- [x] `POST /api/llm/generate-sql` — `post-api-llm-generate-sql` — Generate SQL from a natural language prompt. Requires: - LLM to be configured (Anthropic API key set in admin settings) - At least one table reference (expli...
+- [x] `GET /api/llm/list-models` — `get-api-llm-list-models` — List available LLM models from the configured provider. Requires LLM to be configured for the selected provider in admin settings.
 
 ### /api/logger (4/4 complete)
 
@@ -603,36 +603,36 @@ This file is a static implementation checklist derived from the latest Metabase 
 - [x] `GET /api/measure/{id}/dimension/{dimension-key}/search` — `get-api-measure-id-dimension-dimension-key-search` — Search for values of a dimension that contain the query string. Returns field values matching the search query in the same format as the field values API.
 - [x] `GET /api/measure/{id}/dimension/{dimension-key}/values` — `get-api-measure-id-dimension-dimension-key-values` — Fetch values for a dimension of a measure. Returns field values in the same format as the field values API: - values: list of [value] or [value, display-name...
 
-### /api/metabot (0/4 complete)
+### /api/metabot (4/4 complete)
 
-- [ ] `POST /api/metabot/agent-streaming` — `post-api-metabot-agent-streaming` — Send a chat message to the LLM via the AI Proxy.
-- [ ] `POST /api/metabot/feedback` — `post-api-metabot-feedback` — Proxy Metabot feedback to Harbormaster, adding the premium embedding token.
-- [ ] `GET /api/metabot/settings` — `get-api-metabot-settings` — Return available models for a provider using its configured API key.
-- [ ] `PUT /api/metabot/settings` — `put-api-metabot-settings` — Update the Metabot provider API key and/or model setting and return the refreshed settings payload.
+- [x] `POST /api/metabot/agent-streaming` — `post-api-metabot-agent-streaming` — Send a chat message to the LLM via the AI Proxy.
+- [x] `POST /api/metabot/feedback` — `post-api-metabot-feedback` — Proxy Metabot feedback to Harbormaster, adding the premium embedding token.
+- [x] `GET /api/metabot/settings` — `get-api-metabot-settings` — Return available models for a provider using its configured API key.
+- [x] `PUT /api/metabot/settings` — `put-api-metabot-settings` — Update the Metabot provider API key and/or model setting and return the refreshed settings payload.
 
-### /api/metabot/document (0/1 complete)
+### /api/metabot/document (1/1 complete)
 
-- [ ] `POST /api/metabot/document/generate-content` — `post-api-metabot-document-generate-content` — Create a new piece of content to insert into the document. Kept for backwards compatibility; now uses the native Clojure agent.
+- [x] `POST /api/metabot/document/generate-content` — `post-api-metabot-document-generate-content` — Create a new piece of content to insert into the document. Kept for backwards compatibility; now uses the native Clojure agent.
 
-### /api/metabot/metabot (0/7 complete)
+### /api/metabot/metabot (7/7 complete)
 
-- [ ] `GET /api/metabot/metabot` — `get-api-metabot-metabot` — List configured metabot instances
-- [ ] `GET /api/metabot/metabot/{id}` — `get-api-metabot-metabot-id` — Retrieve one metabot instance
-- [ ] `PUT /api/metabot/metabot/{id}` — `put-api-metabot-metabot-id` — Update a metabot instance
-- [ ] `GET /api/metabot/metabot/{id}/prompt-suggestions` — `get-api-metabot-metabot-id-prompt-suggestions` — Return the prompt suggestions for the metabot instance with `id`.
-- [ ] `DELETE /api/metabot/metabot/{id}/prompt-suggestions` — `delete-api-metabot-metabot-id-prompt-suggestions` — Delete all prompt suggestions for the metabot instance with `id`.
-- [ ] `POST /api/metabot/metabot/{id}/prompt-suggestions/regenerate` — `post-api-metabot-metabot-id-prompt-suggestions-regenerate` — Remove any existing prompt suggestions for the Metabot instance with `id` and generate new ones.
-- [ ] `DELETE /api/metabot/metabot/{id}/prompt-suggestions/{prompt-id}` — `delete-api-metabot-metabot-id-prompt-suggestions-prompt-id` — Delete the prompt suggestion with ID `prompt-id` for the metabot instance with `id`.
+- [x] `GET /api/metabot/metabot` — `get-api-metabot-metabot` — List configured metabot instances
+- [x] `GET /api/metabot/metabot/{id}` — `get-api-metabot-metabot-id` — Retrieve one metabot instance
+- [x] `PUT /api/metabot/metabot/{id}` — `put-api-metabot-metabot-id` — Update a metabot instance
+- [x] `GET /api/metabot/metabot/{id}/prompt-suggestions` — `get-api-metabot-metabot-id-prompt-suggestions` — Return the prompt suggestions for the metabot instance with `id`.
+- [x] `DELETE /api/metabot/metabot/{id}/prompt-suggestions` — `delete-api-metabot-metabot-id-prompt-suggestions` — Delete all prompt suggestions for the metabot instance with `id`.
+- [x] `POST /api/metabot/metabot/{id}/prompt-suggestions/regenerate` — `post-api-metabot-metabot-id-prompt-suggestions-regenerate` — Remove any existing prompt suggestions for the Metabot instance with `id` and generate new ones.
+- [x] `DELETE /api/metabot/metabot/{id}/prompt-suggestions/{prompt-id}` — `delete-api-metabot-metabot-id-prompt-suggestions-prompt-id` — Delete the prompt suggestion with ID `prompt-id` for the metabot instance with `id`.
 
-### /api/metabot/permissions (0/1 complete)
+### /api/metabot/permissions (1/1 complete)
 
-- [ ] `GET /api/metabot/permissions/user-permissions` — `get-api-metabot-permissions-user-permissions` — Return the current user's resolved metabot permissions, taking the most permissive value across all their groups.
+- [x] `GET /api/metabot/permissions/user-permissions` — `get-api-metabot-permissions-user-permissions` — Return the current user's resolved metabot permissions, taking the most permissive value across all their groups.
 
-### /api/metabot/slack (0/3 complete)
+### /api/metabot/slack (3/3 complete)
 
-- [ ] `POST /api/metabot/slack/events` — `post-api-metabot-slack-events` — Respond to activities in Slack
-- [ ] `POST /api/metabot/slack/interactive` — `post-api-metabot-slack-interactive` — Handle interactive payloads from Slack (button clicks, modal submissions).
-- [ ] `PUT /api/metabot/slack/settings` — `put-api-metabot-slack-settings` — Update Metabot Slack settings atomically. All credential fields must be provided together. Setting values requires the metabot-v3 feature, but clearing value...
+- [x] `POST /api/metabot/slack/events` — `post-api-metabot-slack-events` — Respond to activities in Slack
+- [x] `POST /api/metabot/slack/interactive` — `post-api-metabot-slack-interactive` — Handle interactive payloads from Slack (button clicks, modal submissions).
+- [x] `PUT /api/metabot/slack/settings` — `put-api-metabot-slack-settings` — Update Metabot Slack settings atomically. All credential fields must be provided together. Setting values requires the metabot-v3 feature, but clearing value...
 
 ### /api/metric (7/7 complete)
 
@@ -644,16 +644,16 @@ This file is a static implementation checklist derived from the latest Metabase 
 - [x] `GET /api/metric/{id}/dimension/{dimension-key}/search` — `get-api-metric-id-dimension-dimension-key-search` — Search for values of a dimension that contain the query string. Returns field values matching the search query in the same format as the field values API.
 - [x] `GET /api/metric/{id}/dimension/{dimension-key}/values` — `get-api-metric-id-dimension-dimension-key-values` — Fetch values for a dimension of a metric. Returns field values in the same format as the field values API: - values: list of [value] or [value, display-name]...
 
-### /api/model-index (0/4 complete)
+### /api/model-index (4/4 complete)
 
-- [ ] `POST /api/model-index` — `post-api-model-index` — Create ModelIndex.
-- [ ] `GET /api/model-index` — `get-api-model-index` — Retrieve list of ModelIndex.
-- [ ] `GET /api/model-index/{id}` — `get-api-model-index-id` — Retrieve ModelIndex.
-- [ ] `DELETE /api/model-index/{id}` — `delete-api-model-index-id` — Delete ModelIndex.
+- [x] `POST /api/model-index` — `post-api-model-index` — Create ModelIndex.
+- [x] `GET /api/model-index` — `get-api-model-index` — Retrieve list of ModelIndex.
+- [x] `GET /api/model-index/{id}` — `get-api-model-index-id` — Retrieve ModelIndex.
+- [x] `DELETE /api/model-index/{id}` — `delete-api-model-index-id` — Delete ModelIndex.
 
-### /api/moderation-review (0/1 complete)
+### /api/moderation-review (1/1 complete)
 
-- [ ] `POST /api/moderation-review` — `post-api-moderation-review` — Create a new `ModerationReview`.
+- [x] `POST /api/moderation-review` — `post-api-moderation-review` — Create a new `ModerationReview`.
 
 ### /api/mt/gtap (0/6 complete)
 
@@ -669,33 +669,33 @@ This file is a static implementation checklist derived from the latest Metabase 
 - [ ] `GET /api/mt/user/attributes` — `get-api-mt-user-attributes` — Fetch a list of possible keys for User `login_attributes`. This includes keys from tenant model attributes and keys that have already been set for existing U...
 - [ ] `PUT /api/mt/user/{id}/attributes` — `put-api-mt-user-id-attributes` — Update the `login_attributes` for a User.
 
-### /api/native-query-snippet (0/4 complete)
+### /api/native-query-snippet (4/4 complete)
 
-- [ ] `GET /api/native-query-snippet` — `get-api-native-query-snippet` — Fetch all snippets
-- [ ] `POST /api/native-query-snippet` — `post-api-native-query-snippet` — Create a new `NativeQuerySnippet`.
-- [ ] `GET /api/native-query-snippet/{id}` — `get-api-native-query-snippet-id` — Fetch native query snippet with ID.
-- [ ] `PUT /api/native-query-snippet/{id}` — `put-api-native-query-snippet-id` — Update an existing `NativeQuerySnippet`.
+- [x] `GET /api/native-query-snippet` — `get-api-native-query-snippet` — Fetch all snippets
+- [x] `POST /api/native-query-snippet` — `post-api-native-query-snippet` — Create a new `NativeQuerySnippet`.
+- [x] `GET /api/native-query-snippet/{id}` — `get-api-native-query-snippet-id` — Fetch native query snippet with ID.
+- [x] `PUT /api/native-query-snippet/{id}` — `put-api-native-query-snippet-id` — Update an existing `NativeQuerySnippet`.
 
-### /api/notification (0/7 complete)
+### /api/notification (7/7 complete)
 
-- [ ] `GET /api/notification` — `get-api-notification` — List notifications. - `creator_id`: if provided returns only notifications created by this user - `recipient_id`: if provided returns only notification that...
-- [ ] `POST /api/notification` — `post-api-notification` — Create a new notification, return the created notification.
-- [ ] `POST /api/notification/send` — `post-api-notification-send` — Send an unsaved notification.
-- [ ] `GET /api/notification/{id}` — `get-api-notification-id` — Get a notification by id.
-- [ ] `PUT /api/notification/{id}` — `put-api-notification-id` — Update a notification, can also update its subscriptions, handlers. Return the updated notification.
-- [ ] `POST /api/notification/{id}/send` — `post-api-notification-id-send` — Send a notification by id.
-- [ ] `POST /api/notification/{id}/unsubscribe` — `post-api-notification-id-unsubscribe` — Unsubscribe current user from a notification.
+- [x] `GET /api/notification` — `get-api-notification` — List notifications. - `creator_id`: if provided returns only notifications created by this user - `recipient_id`: if provided returns only notification that...
+- [x] `POST /api/notification` — `post-api-notification` — Create a new notification, return the created notification.
+- [x] `POST /api/notification/send` — `post-api-notification-send` — Send an unsaved notification.
+- [x] `GET /api/notification/{id}` — `get-api-notification-id` — Get a notification by id.
+- [x] `PUT /api/notification/{id}` — `put-api-notification-id` — Update a notification, can also update its subscriptions, handlers. Return the updated notification.
+- [x] `POST /api/notification/{id}/send` — `post-api-notification-id-send` — Send a notification by id.
+- [x] `POST /api/notification/{id}/unsubscribe` — `post-api-notification-id-unsubscribe` — Unsubscribe current user from a notification.
 
-### /api/notification/unsubscribe (0/2 complete)
+### /api/notification/unsubscribe (2/2 complete)
 
-- [ ] `POST /api/notification/unsubscribe` — `post-api-notification-unsubscribe` — Allow non-users to unsubscribe from notifications, with the hash given through email.
-- [ ] `POST /api/notification/unsubscribe/undo` — `post-api-notification-unsubscribe-undo` — Allow non-users to undo an unsubscribe from notifications, with the hash given through email.
+- [x] `POST /api/notification/unsubscribe` — `post-api-notification-unsubscribe` — Allow non-users to unsubscribe from notifications, with the hash given through email.
+- [x] `POST /api/notification/unsubscribe/undo` — `post-api-notification-unsubscribe-undo` — Allow non-users to undo an unsubscribe from notifications, with the hash given through email.
 
-### /api/notify (0/3 complete)
+### /api/notify (3/3 complete)
 
-- [ ] `POST /api/notify/db/attached_datawarehouse` — `post-api-notify-db-attached_datawarehouse` — Sync the attached datawarehouse. Can provide in the body: - table_name and schema_name: both strings. Will look for an existing table and sync it, otherwise...
-- [ ] `POST /api/notify/db/{id}` — `post-api-notify-db-id` — Notification about a potential schema change to one of our `Databases`. Caller can optionally specify a `:table_id` or `:table_name` in the body to limit upd...
-- [ ] `POST /api/notify/db/{id}/new-table` — `post-api-notify-db-id-new-table` — Sync a new table without running a full database sync. Requires `schema_name` and `table_name`. Will throw an error if the table already exists in Metabase o...
+- [x] `POST /api/notify/db/attached_datawarehouse` — `post-api-notify-db-attached_datawarehouse` — Sync the attached datawarehouse. Can provide in the body: - table_name and schema_name: both strings. Will look for an existing table and sync it, otherwise...
+- [x] `POST /api/notify/db/{id}` — `post-api-notify-db-id` — Notification about a potential schema change to one of our `Databases`. Caller can optionally specify a `:table_id` or `:table_name` in the body to limit upd...
+- [x] `POST /api/notify/db/{id}/new-table` — `post-api-notify-db-id-new-table` — Sync a new table without running a full database sync. Requires `schema_name` and `table_name`. Will throw an error if the table already exists in Metabase o...
 
 ### /api/permissions (14/14 complete)
 
@@ -714,24 +714,24 @@ This file is a static implementation checklist derived from the latest Metabase 
 - [x] `PUT /api/permissions/membership/{id}` — `put-api-permissions-membership-id` — Update a Permission Group membership. Returns the updated record.
 - [x] `DELETE /api/permissions/membership/{id}` — `delete-api-permissions-membership-id` — Remove a User from a PermissionsGroup (delete their membership).
 
-### /api/persist (0/11 complete)
+### /api/persist (11/11 complete)
 
-- [ ] `GET /api/persist` — `get-api-persist` — List the entries of [[PersistedInfo]] in order to show a status page.
-- [ ] `GET /api/persist/card/{card-id}` — `get-api-persist-card-card-id` — Fetch a particular [[PersistedInfo]] by card-id.
-- [ ] `POST /api/persist/card/{card-id}/persist` — `post-api-persist-card-card-id-persist` — Mark the model (card) as persisted. Runs the query and saves it to the database backing the card and hot swaps this query in place of the model's query.
-- [ ] `POST /api/persist/card/{card-id}/refresh` — `post-api-persist-card-card-id-refresh` — Refresh the persisted model caching `card-id`.
-- [ ] `POST /api/persist/card/{card-id}/unpersist` — `post-api-persist-card-card-id-unpersist` — Unpersist this model. Deletes the persisted table backing the model and all queries after this will use the card's query rather than the saved version of the...
-- [ ] `POST /api/persist/database/{id}/persist` — `post-api-persist-database-id-persist` — Attempt to enable model persistence for a database. If already enabled returns a generic 204.
-- [ ] `POST /api/persist/database/{id}/unpersist` — `post-api-persist-database-id-unpersist` — Attempt to disable model persistence for a database. If already not enabled, just returns a generic 204.
-- [ ] `POST /api/persist/disable` — `post-api-persist-disable` — Disable global setting to allow databases to persist models. This will remove all tasks to refresh tables, remove that option from databases which might have...
-- [ ] `POST /api/persist/enable` — `post-api-persist-enable` — Enable global setting to allow databases to persist models.
-- [ ] `POST /api/persist/set-refresh-schedule` — `post-api-persist-set-refresh-schedule` — Set the cron schedule to refresh persisted models. Shape should be JSON like {cron: "0 30 1/8 * * ? *"}.
-- [ ] `GET /api/persist/{persisted-info-id}` — `get-api-persist-persisted-info-id` — Fetch a particular [[PersistedInfo]] by id.
+- [x] `GET /api/persist` — `get-api-persist` — List the entries of [[PersistedInfo]] in order to show a status page.
+- [x] `GET /api/persist/card/{card-id}` — `get-api-persist-card-card-id` — Fetch a particular [[PersistedInfo]] by card-id.
+- [x] `POST /api/persist/card/{card-id}/persist` — `post-api-persist-card-card-id-persist` — Mark the model (card) as persisted. Runs the query and saves it to the database backing the card and hot swaps this query in place of the model's query.
+- [x] `POST /api/persist/card/{card-id}/refresh` — `post-api-persist-card-card-id-refresh` — Refresh the persisted model caching `card-id`.
+- [x] `POST /api/persist/card/{card-id}/unpersist` — `post-api-persist-card-card-id-unpersist` — Unpersist this model. Deletes the persisted table backing the model and all queries after this will use the card's query rather than the saved version of the...
+- [x] `POST /api/persist/database/{id}/persist` — `post-api-persist-database-id-persist` — Attempt to enable model persistence for a database. If already enabled returns a generic 204.
+- [x] `POST /api/persist/database/{id}/unpersist` — `post-api-persist-database-id-unpersist` — Attempt to disable model persistence for a database. If already not enabled, just returns a generic 204.
+- [x] `POST /api/persist/disable` — `post-api-persist-disable` — Disable global setting to allow databases to persist models. This will remove all tasks to refresh tables, remove that option from databases which might have...
+- [x] `POST /api/persist/enable` — `post-api-persist-enable` — Enable global setting to allow databases to persist models.
+- [x] `POST /api/persist/set-refresh-schedule` — `post-api-persist-set-refresh-schedule` — Set the cron schedule to refresh persisted models. Shape should be JSON like {cron: "0 30 1/8 * * ? *"}.
+- [x] `GET /api/persist/{persisted-info-id}` — `get-api-persist-persisted-info-id` — Fetch a particular [[PersistedInfo]] by id.
 
-### /api/premium-features (0/2 complete)
+### /api/premium-features (2/2 complete)
 
-- [ ] `POST /api/premium-features/token/refresh` — `post-api-premium-features-token-refresh` — Clear all token caches and re-check the premium features token against the MetaStore. Returns the fresh token status. Useful for the frontend after a purchas...
-- [ ] `GET /api/premium-features/token/status` — `get-api-premium-features-token-status` — Fetch info about the current Premium-Features premium features token including whether it is `valid`, a `trial` token, its `features`, when it is `valid-thru...
+- [x] `POST /api/premium-features/token/refresh` — `post-api-premium-features-token-refresh` — Clear all token caches and re-check the premium features token against the MetaStore. Returns the fresh token status. Useful for the frontend after a purchas...
+- [x] `GET /api/premium-features/token/status` — `get-api-premium-features-token-status` — Fetch info about the current Premium-Features premium features token including whether it is `valid`, a `trial` token, its `features`, when it is `valid-thru...
 
 ### /api/preview_embed (13/13 complete)
 
@@ -749,9 +749,9 @@ This file is a static implementation checklist derived from the latest Metabase 
 - [x] `GET /api/preview_embed/tiles/card/{token}/{zoom}/{x}/{y}` — `get-api-preview_embed-tiles-card-token-zoom-x-y` — Generates a single tile image for an embedded Card using the map visualization.
 - [x] `GET /api/preview_embed/tiles/dashboard/{token}/dashcard/{dashcard-id}/card/{card-id}/{zoom}/{x}/{y}` — `get-api-preview_embed-tiles-dashboard-token-dashcard-dashcard-id-card-card-id-zoom-x-y` — Generates a single tile image for a Card on an embedded Dashboard using the map visualization.
 
-### /api/product-feedback (0/1 complete)
+### /api/product-feedback (1/1 complete)
 
-- [ ] `POST /api/product-feedback` — `post-api-product-feedback` — Endpoint to provide feedback from the product
+- [x] `POST /api/product-feedback` — `post-api-product-feedback` — Endpoint to provide feedback from the product
 
 ### /api/public (24/24 complete)
 
@@ -836,16 +836,16 @@ This file is a static implementation checklist derived from the latest Metabase 
 - [x] `GET /api/setting/{key}` — `get-api-setting-key` — Fetch a single `Setting`.
 - [x] `PUT /api/setting/{key}` — `put-api-setting-key` — Create/update a `Setting`. If called by a non-admin, only user-local settings can be updated. This endpoint can also be used to delete Settings by passing `n...
 
-### /api/setup (0/1 complete)
+### /api/setup (1/1 complete)
 
-- [ ] `POST /api/setup` — `post-api-setup` — Special endpoint for creating the first user during setup. This endpoint both creates the user AND logs them in and returns a session ID. This endpoint can a...
+- [x] `POST /api/setup` — `post-api-setup` — Special endpoint for creating the first user during setup. This endpoint both creates the user AND logs them in and returns a session ID. This endpoint can a...
 
-### /api/slack (0/4 complete)
+### /api/slack (4/4 complete)
 
-- [ ] `GET /api/slack/app-info` — `get-api-slack-app-info` — Returns the Slack app_id and team_id. Used by the frontend to construct direct links to the Slack app settings page.
-- [ ] `POST /api/slack/bug-report` — `post-api-slack-bug-report` — Send diagnostic information to the configured Slack channels.
-- [ ] `GET /api/slack/manifest` — `get-api-slack-manifest` — Returns the JSON manifest file that should be used to bootstrap new Slack apps
-- [ ] `PUT /api/slack/settings` — `put-api-slack-settings` — Update Slack related settings. You must be a superuser to do this. Also updates the slack-cache. There are 3 cases where we alter the slack channel/user cach...
+- [x] `GET /api/slack/app-info` — `get-api-slack-app-info` — Returns the Slack app_id and team_id. Used by the frontend to construct direct links to the Slack app settings page.
+- [x] `POST /api/slack/bug-report` — `post-api-slack-bug-report` — Send diagnostic information to the configured Slack channels.
+- [x] `GET /api/slack/manifest` — `get-api-slack-manifest` — Returns the JSON manifest file that should be used to bootstrap new Slack apps
+- [x] `PUT /api/slack/settings` — `put-api-slack-settings` — Update Slack related settings. You must be a superuser to do this. Also updates the slack-cache. There are 3 cases where we alter the slack channel/user cach...
 
 ### /api/table (16/16 complete)
 
@@ -899,41 +899,41 @@ This file is a static implementation checklist derived from the latest Metabase 
 - [x] `PUT /api/timeline-event/{id}` — `put-api-timeline-event-id` — Update a [[TimelineEvent]].
 - [x] `DELETE /api/timeline-event/{id}` — `delete-api-timeline-event-id` — Delete a [[TimelineEvent]].
 
-### /api/transform (0/12 complete)
+### /api/transform (12/12 complete)
 
-- [ ] `GET /api/transform` — `get-api-transform` — Get a list of transforms.
-- [ ] `POST /api/transform` — `post-api-transform` — Create a new transform.
-- [ ] `GET /api/transform/run` — `get-api-transform-run` — Get transform runs based on a set of filter params.
-- [ ] `GET /api/transform/run/{run-id}` — `get-api-transform-run-run-id` — Get a transform run by ID.
-- [ ] `GET /api/transform/{id}` — `get-api-transform-id` — Get a specific transform.
-- [ ] `PUT /api/transform/{id}` — `put-api-transform-id` — Update a transform.
-- [ ] `DELETE /api/transform/{id}` — `delete-api-transform-id` — Delete a transform.
-- [ ] `POST /api/transform/{id}/cancel` — `post-api-transform-id-cancel` — Cancel the current run for a given transform.
-- [ ] `GET /api/transform/{id}/dependencies` — `get-api-transform-id-dependencies` — Get the dependencies of a specific transform.
-- [ ] `POST /api/transform/{id}/reset-checkpoint` — `post-api-transform-id-reset-checkpoint` — Reset the stored checkpoint for an incremental transform.
-- [ ] `POST /api/transform/{id}/run` — `post-api-transform-id-run` — Run a transform.
-- [ ] `DELETE /api/transform/{id}/table` — `delete-api-transform-id-table` — Delete a transform's output table.
+- [x] `GET /api/transform` — `get-api-transform` — Get a list of transforms.
+- [x] `POST /api/transform` — `post-api-transform` — Create a new transform.
+- [x] `GET /api/transform/run` — `get-api-transform-run` — Get transform runs based on a set of filter params.
+- [x] `GET /api/transform/run/{run-id}` — `get-api-transform-run-run-id` — Get a transform run by ID.
+- [x] `GET /api/transform/{id}` — `get-api-transform-id` — Get a specific transform.
+- [x] `PUT /api/transform/{id}` — `put-api-transform-id` — Update a transform.
+- [x] `DELETE /api/transform/{id}` — `delete-api-transform-id` — Delete a transform.
+- [x] `POST /api/transform/{id}/cancel` — `post-api-transform-id-cancel` — Cancel the current run for a given transform.
+- [x] `GET /api/transform/{id}/dependencies` — `get-api-transform-id-dependencies` — Get the dependencies of a specific transform.
+- [x] `POST /api/transform/{id}/reset-checkpoint` — `post-api-transform-id-reset-checkpoint` — Reset the stored checkpoint for an incremental transform.
+- [x] `POST /api/transform/{id}/run` — `post-api-transform-id-run` — Run a transform.
+- [x] `DELETE /api/transform/{id}/table` — `delete-api-transform-id-table` — Delete a transform's output table.
 
-### /api/transform-job (0/7 complete)
+### /api/transform-job (7/7 complete)
 
-- [ ] `POST /api/transform-job` — `post-api-transform-job` — Create a new transform job.
-- [ ] `GET /api/transform-job` — `get-api-transform-job` — Get all transform jobs.
-- [ ] `PUT /api/transform-job/{job-id}` — `put-api-transform-job-job-id` — Update a transform job.
-- [ ] `DELETE /api/transform-job/{job-id}` — `delete-api-transform-job-job-id` — Delete a transform job.
-- [ ] `GET /api/transform-job/{job-id}` — `get-api-transform-job-job-id` — Get a transform job by ID.
-- [ ] `POST /api/transform-job/{job-id}/run` — `post-api-transform-job-job-id-run` — Run a transform job manually.
-- [ ] `GET /api/transform-job/{job-id}/transforms` — `get-api-transform-job-job-id-transforms` — Get the transforms of job specified by the job's ID.
+- [x] `POST /api/transform-job` — `post-api-transform-job` — Create a new transform job.
+- [x] `GET /api/transform-job` — `get-api-transform-job` — Get all transform jobs.
+- [x] `PUT /api/transform-job/{job-id}` — `put-api-transform-job-job-id` — Update a transform job.
+- [x] `DELETE /api/transform-job/{job-id}` — `delete-api-transform-job-job-id` — Delete a transform job.
+- [x] `GET /api/transform-job/{job-id}` — `get-api-transform-job-job-id` — Get a transform job by ID.
+- [x] `POST /api/transform-job/{job-id}/run` — `post-api-transform-job-job-id-run` — Run a transform job manually.
+- [x] `GET /api/transform-job/{job-id}/transforms` — `get-api-transform-job-job-id-transforms` — Get the transforms of job specified by the job's ID.
 
-### /api/transform-tag (0/4 complete)
+### /api/transform-tag (4/4 complete)
 
-- [ ] `POST /api/transform-tag` — `post-api-transform-tag` — Create a new transform tag.
-- [ ] `GET /api/transform-tag` — `get-api-transform-tag` — Get a list of all transform tags.
-- [ ] `PUT /api/transform-tag/{tag-id}` — `put-api-transform-tag-tag-id` — Update a transform tag.
-- [ ] `DELETE /api/transform-tag/{tag-id}` — `delete-api-transform-tag-tag-id` — Delete a transform tag. Removes it from all transforms and jobs.
+- [x] `POST /api/transform-tag` — `post-api-transform-tag` — Create a new transform tag.
+- [x] `GET /api/transform-tag` — `get-api-transform-tag` — Get a list of all transform tags.
+- [x] `PUT /api/transform-tag/{tag-id}` — `put-api-transform-tag-tag-id` — Update a transform tag.
+- [x] `DELETE /api/transform-tag/{tag-id}` — `delete-api-transform-tag-tag-id` — Delete a transform tag. Removes it from all transforms and jobs.
 
-### /api/upload (0/1 complete)
+### /api/upload (1/1 complete)
 
-- [ ] `POST /api/upload/csv` — `post-api-upload-csv` — Create a table and model populated with the values from the attached CSV. Returns the model ID if successful.
+- [x] `POST /api/upload/csv` — `post-api-upload-csv` — Create a table and model populated with the values from the attached CSV. Returns the model ID if successful.
 
 ### /api/user (11/11 complete)
 

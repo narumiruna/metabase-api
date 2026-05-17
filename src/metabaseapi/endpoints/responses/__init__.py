@@ -2,22 +2,7 @@
 
 from __future__ import annotations
 
-from metabaseapi.endpoints.responses import action
-from metabaseapi.endpoints.responses import activity
-from metabaseapi.endpoints.responses import agent
-from metabaseapi.endpoints.responses import alert
-from metabaseapi.endpoints.responses import api_key
-from metabaseapi.endpoints.responses import bookmark
-from metabaseapi.endpoints.responses import card
-from metabaseapi.endpoints.responses import channel
-from metabaseapi.endpoints.responses import collection
-from metabaseapi.endpoints.responses import common
-from metabaseapi.endpoints.responses import dashboard
-from metabaseapi.endpoints.responses import database
-from metabaseapi.endpoints.responses import schema
-from metabaseapi.endpoints.responses import user
-
-__all__ = [
+RESPONSE_MODULES = (
     "action",
     "activity",
     "agent",
@@ -32,4 +17,19 @@ __all__ = [
     "database",
     "schema",
     "user",
+)
+
+
+def response_module_names() -> tuple[str, ...]:
+    return RESPONSE_MODULES
+
+
+def response_module_paths() -> tuple[str, ...]:
+    return tuple(f"{__name__}.{module_name}" for module_name in RESPONSE_MODULES)
+
+
+__all__ = [
+    "RESPONSE_MODULES",
+    "response_module_names",
+    "response_module_paths",
 ]

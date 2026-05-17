@@ -516,22 +516,24 @@ def test_endpoints_public_exports_are_submodules_only() -> None:
 
 def test_endpoints_response_package_does_not_reexport_response_classes() -> None:
     assert metabaseapi.endpoints.responses.__all__ == [
-        "action",
-        "activity",
-        "agent",
-        "alert",
-        "api_key",
-        "bookmark",
-        "card",
-        "channel",
-        "collection",
-        "common",
-        "dashboard",
-        "database",
-        "schema",
-        "user",
+        "RESPONSE_MODULES",
+        "response_module_names",
+        "response_module_paths",
     ]
     assert not hasattr(metabaseapi.endpoints.responses, "ListCardsResponse")
+
+
+def test_endpoints_response_registry_matches_package_files() -> None:
+    response_package_path = Path(metabaseapi.endpoints.responses.__file__).parent
+    response_module_files = tuple(
+        sorted(path.stem for path in response_package_path.glob("*.py") if path.stem != "__init__")
+    )
+    assert response_module_files == tuple(sorted(metabaseapi.endpoints.responses.RESPONSE_MODULES))
+    assert tuple(RESPONSE_MODULE_CONTRACTS) == metabaseapi.endpoints.responses.response_module_names()
+    assert metabaseapi.endpoints.responses.response_module_paths() == tuple(
+        f"metabaseapi.endpoints.responses.{module_name}"
+        for module_name in metabaseapi.endpoints.responses.RESPONSE_MODULES
+    )
 
 
 def test_endpoints_response_modules_own_response_classes() -> None:

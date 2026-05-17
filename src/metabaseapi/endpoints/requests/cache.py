@@ -6,12 +6,15 @@ from typing import ClassVar
 from pydantic import Field as PydanticField
 
 from metabaseapi.endpoints.execution import EndpointRequest
-from metabaseapi.endpoints.responses.common import GenericOperationResponse
+from metabaseapi.endpoints.responses.cache import CacheDeleteResponse
+from metabaseapi.endpoints.responses.cache import CacheInvalidationResponse
+from metabaseapi.endpoints.responses.cache import CacheResponse
+from metabaseapi.endpoints.responses.cache import CacheUpdateResponse
 from metabaseapi.wire import JSONValue
 from metabaseapi.wire import QueryParamValue
 
 
-class GetCacheRequest(EndpointRequest[GenericOperationResponse]):
+class GetCacheRequest(EndpointRequest[CacheResponse]):
     limit: int | None = None
     offset: int | None = None
     sort_column: str | None = None
@@ -19,7 +22,7 @@ class GetCacheRequest(EndpointRequest[GenericOperationResponse]):
 
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/cache"
-    response_model = GenericOperationResponse
+    response_model = CacheResponse
 
     def request_params(self) -> dict[str, QueryParamValue]:
         params: dict[str, QueryParamValue] = {}
@@ -34,31 +37,31 @@ class GetCacheRequest(EndpointRequest[GenericOperationResponse]):
         return params
 
 
-class PutCacheRequest(EndpointRequest[GenericOperationResponse]):
+class PutCacheRequest(EndpointRequest[CacheUpdateResponse]):
     body: dict[str, Any] = PydanticField(default_factory=dict)
 
     endpoint_method: ClassVar[str] = "PUT"
     endpoint_path: ClassVar[str] = "/api/cache"
-    response_model = GenericOperationResponse
+    response_model = CacheUpdateResponse
 
 
-class DeleteCacheRequest(EndpointRequest[GenericOperationResponse]):
+class DeleteCacheRequest(EndpointRequest[CacheDeleteResponse]):
     body: dict[str, Any] = PydanticField(default_factory=dict)
 
     endpoint_method: ClassVar[str] = "DELETE"
     endpoint_path: ClassVar[str] = "/api/cache"
-    response_model = GenericOperationResponse
+    response_model = CacheDeleteResponse
 
     def request_body(self) -> JSONValue:
         return self.body or None
 
 
-class InvalidateCacheRequest(EndpointRequest[GenericOperationResponse]):
+class InvalidateCacheRequest(EndpointRequest[CacheInvalidationResponse]):
     params: dict[str, QueryParamValue] = PydanticField(default_factory=dict)
 
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/cache/invalidate"
-    response_model = GenericOperationResponse
+    response_model = CacheInvalidationResponse
 
     def request_params(self) -> dict[str, QueryParamValue]:
         return dict(self.params)

@@ -54,6 +54,7 @@ import metabaseapi.endpoints.responses.agent
 import metabaseapi.endpoints.responses.alert
 import metabaseapi.endpoints.responses.api_key
 import metabaseapi.endpoints.responses.bookmark
+import metabaseapi.endpoints.responses.cache
 import metabaseapi.endpoints.responses.card
 import metabaseapi.endpoints.responses.channel
 import metabaseapi.endpoints.responses.collection
@@ -269,6 +270,12 @@ RESPONSE_MODULE_CONTRACTS = {
     "api_key": ("ApiKeyCountResponse", "DeleteApiKeyResponse", "ListApiKeysResponse"),
     "bookmark": ("BookmarkOrderingUpdateResponse", "DeleteBookmarkResponse", "ListBookmarksResponse"),
     "bug_reporting": ("BugReportingConnectionPoolDetailsResponse", "BugReportingDetailsResponse"),
+    "cache": (
+        "CacheDeleteResponse",
+        "CacheInvalidationResponse",
+        "CacheResponse",
+        "CacheUpdateResponse",
+    ),
     "card": ("CardsDashboardsResponse", "ListCardsResponse"),
     "channel": (
         "ChannelResponse",
@@ -366,14 +373,18 @@ def test_client_raw_package_is_not_importable() -> None:
 
 
 def _client_module_stems(package: object) -> tuple[str, ...]:
-    package_file = getattr(package, "__file__", None)
-    assert package_file is not None
-    package_path = Path(package_file).parent
+    package_path = _package_path(package)
     return tuple(sorted(path.stem for path in package_path.glob("*.py") if path.stem != "__init__"))
 
 
+def _package_path(package: object) -> Path:
+    package_file = getattr(package, "__file__", None)
+    assert package_file is not None
+    return Path(package_file).parent
+
+
 def test_cli_command_modules_depend_on_runtime_not_cli_facade() -> None:
-    command_package_path = Path(metabaseapi.cli.commands.__file__).parent
+    command_package_path = _package_path(metabaseapi.cli.commands)
     for source_path in command_package_path.glob("*.py"):
         if source_path.stem == "__init__":
             continue
@@ -403,8 +414,7 @@ def test_endpoints_execution_owns_request_interface() -> None:
         "metabaseapi.endpoints.execution"
     )
     assert (
-        metabaseapi.endpoints.requests.card.ListCardsRequest.__mro__[1].__name__
-        == "EndpointRequest[ListCardsResponse]"
+        metabaseapi.endpoints.requests.card.ListCardsRequest.__mro__[1].__name__ == "EndpointRequest[ListCardsResponse]"
     )
 
 
@@ -415,11 +425,7 @@ def test_endpoints_public_exports_are_submodules_only() -> None:
     assert metabaseapi.endpoints.requests is metabaseapi.endpoints.requests
     assert metabaseapi.endpoints.responses is metabaseapi.endpoints.responses
     assert not hasattr(metabaseapi.endpoints, "ListCardsRequest")
-    public_names = {
-        name
-        for name in vars(metabaseapi.endpoints)
-        if not name.startswith("_") and name != "annotations"
-    }
+    public_names = {name for name in vars(metabaseapi.endpoints) if not name.startswith("_") and name != "annotations"}
     assert public_names == {"entities", "execution", "requests", "responses"}
 
 
@@ -450,7 +456,7 @@ def test_endpoints_response_package_does_not_reexport_response_classes() -> None
 
 
 def test_endpoints_response_inventory_matches_package_files() -> None:
-    response_package_path = Path(metabaseapi.endpoints.responses.__file__).parent
+    response_package_path = _package_path(metabaseapi.endpoints.responses)
     response_module_files = tuple(
         sorted(path.stem for path in response_package_path.glob("*.py") if path.stem != "__init__")
     )
@@ -477,7 +483,7 @@ def test_endpoints_request_modules_own_request_classes() -> None:
 
 
 def test_endpoints_request_inventory_matches_package_files() -> None:
-    endpoint_package_path = Path(metabaseapi.endpoints.requests.__file__).parent
+    endpoint_package_path = _package_path(metabaseapi.endpoints.requests)
     endpoint_module_files = tuple(
         sorted(path.stem for path in endpoint_package_path.glob("*.py") if path.stem != "__init__")
     )
@@ -496,7 +502,7 @@ def test_endpoint_requests_use_base_execution_methods() -> None:
 
 
 def _command_module_names() -> tuple[str, ...]:
-    command_package_path = Path(metabaseapi.cli.commands.__file__).parent
+    command_package_path = _package_path(metabaseapi.cli.commands)
     return tuple(sorted(path.stem for path in command_package_path.glob("*.py") if path.stem != "__init__"))
 
 

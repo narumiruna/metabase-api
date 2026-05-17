@@ -145,6 +145,10 @@ from metabaseapi.endpoints.responses.bookmark import BookmarkOrderingUpdateRespo
 from metabaseapi.endpoints.responses.bookmark import DeleteBookmarkResponse
 from metabaseapi.endpoints.responses.bug_reporting import BugReportingConnectionPoolDetailsResponse
 from metabaseapi.endpoints.responses.bug_reporting import BugReportingDetailsResponse
+from metabaseapi.endpoints.responses.cache import CacheDeleteResponse
+from metabaseapi.endpoints.responses.cache import CacheInvalidationResponse
+from metabaseapi.endpoints.responses.cache import CacheResponse
+from metabaseapi.endpoints.responses.cache import CacheUpdateResponse
 from metabaseapi.endpoints.responses.card import CardsDashboardsResponse
 from metabaseapi.endpoints.responses.card import ListCardsResponse
 from metabaseapi.endpoints.responses.channel import ChannelResponse
@@ -383,18 +387,18 @@ def test_action_requests_use_expected_paths_and_payloads() -> None:
         ),
         (
             GetCacheRequest(limit=10, offset=20, sort_column="name", sort_direction="asc"),
-            GenericOperationResponse,
+            CacheResponse,
             ("GET", "/api/cache", {"limit": 10, "offset": 20, "sort_column": "name", "sort_direction": "asc"}, None),
         ),
-        (PutCacheRequest(body={"type": "lru"}), GenericOperationResponse, ("PUT", "/api/cache", {}, {"type": "lru"})),
+        (PutCacheRequest(body={"type": "lru"}), CacheUpdateResponse, ("PUT", "/api/cache", {}, {"type": "lru"})),
         (
             DeleteCacheRequest(body={"status": "all"}),
-            GenericOperationResponse,
+            CacheDeleteResponse,
             ("DELETE", "/api/cache", {}, {"status": "all"}),
         ),
         (
             InvalidateCacheRequest(params={"dashboard": [15], "include": ["question"]}),
-            GenericOperationResponse,
+            CacheInvalidationResponse,
             ("POST", "/api/cache/invalidate", {"dashboard": [15], "include": ["question"]}, None),
         ),
         (ListChannelsRequest(), ListChannelsResponse, ("GET", "/api/channel", {}, None)),
@@ -998,19 +1002,11 @@ def test_client_run_endpoint_requests_return_models() -> None:
     )
     dashboard_query_metadata = _run(client.run(GetDashboardQueryMetadataRequest(dashboard_id=3)))
     dashboard_related = _run(client.run(GetDashboardRelatedRequest(dashboard_id=3)))
-    data_studio_table_discard_values = _run(
-        client.run(DataStudioTableDiscardValuesRequest(body={"table_ids": [1]}))
-    )
+    data_studio_table_discard_values = _run(client.run(DataStudioTableDiscardValuesRequest(body={"table_ids": [1]})))
     data_studio_table_edit = _run(client.run(DataStudioTableEditRequest(body={"table_ids": [1]})))
-    data_studio_table_rescan_values = _run(
-        client.run(DataStudioTableRescanValuesRequest(body={"table_ids": [1]}))
-    )
-    data_studio_table_selection = _run(
-        client.run(DataStudioTableSelectionRequest(body={"table_ids": [1]}))
-    )
-    data_studio_table_sync_schema = _run(
-        client.run(DataStudioTableSyncSchemaRequest(body={"table_ids": [1]}))
-    )
+    data_studio_table_rescan_values = _run(client.run(DataStudioTableRescanValuesRequest(body={"table_ids": [1]})))
+    data_studio_table_selection = _run(client.run(DataStudioTableSelectionRequest(body={"table_ids": [1]})))
+    data_studio_table_sync_schema = _run(client.run(DataStudioTableSyncSchemaRequest(body={"table_ids": [1]})))
     users = _run(client.run(ListUsersRequest()))
     collections = _run(client.run(ListCollectionsRequest()))
     tables = _run(client.run(ListTablesRequest()))

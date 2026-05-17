@@ -38,6 +38,7 @@ from metabaseapi.metabase import CardsDashboardsRequest
 from metabaseapi.metabase import CardsDashboardsResponse
 from metabaseapi.metabase import Collection
 from metabaseapi.metabase import CopyCardRequest
+from metabaseapi.metabase import CopyDashboardRequest
 from metabaseapi.metabase import CountApiKeysRequest
 from metabaseapi.metabase import CreateActionPublicLinkRequest
 from metabaseapi.metabase import CreateActionRequest
@@ -49,12 +50,21 @@ from metabaseapi.metabase import CreateCardRequest
 from metabaseapi.metabase import CreateChannelRequest
 from metabaseapi.metabase import CreateCloudMigrationRequest
 from metabaseapi.metabase import CreateCollectionRequest
+from metabaseapi.metabase import CreateDashboardPublicLinkRequest
 from metabaseapi.metabase import CreateDatabaseRequest
 from metabaseapi.metabase import CreateRecentRequest
 from metabaseapi.metabase import CurrentUserRequest
 from metabaseapi.metabase import CurrentUserResponse
 from metabaseapi.metabase import Dashboard
+from metabaseapi.metabase import DashboardParamRemappingRequest
+from metabaseapi.metabase import DashboardParamSearchRequest
+from metabaseapi.metabase import DashboardParamValuesRequest
 from metabaseapi.metabase import Database
+from metabaseapi.metabase import DataStudioTableDiscardValuesRequest
+from metabaseapi.metabase import DataStudioTableEditRequest
+from metabaseapi.metabase import DataStudioTableRescanValuesRequest
+from metabaseapi.metabase import DataStudioTableSelectionRequest
+from metabaseapi.metabase import DataStudioTableSyncSchemaRequest
 from metabaseapi.metabase import DeleteActionPublicLinkRequest
 from metabaseapi.metabase import DeleteActionRequest
 from metabaseapi.metabase import DeleteAlertSubscriptionRequest
@@ -65,7 +75,10 @@ from metabaseapi.metabase import DeleteCardPublicLinkRequest
 from metabaseapi.metabase import DeleteCardRequest
 from metabaseapi.metabase import DeleteCollectionRequest
 from metabaseapi.metabase import DeleteCommentRequest
+from metabaseapi.metabase import DeleteDashboardPublicLinkRequest
+from metabaseapi.metabase import DeleteDashboardRequest
 from metabaseapi.metabase import ExecuteActionRequest
+from metabaseapi.metabase import ExecuteDashboardDashcardRequest
 from metabaseapi.metabase import GenericOperationResponse
 from metabaseapi.metabase import GetActionExecuteRequest
 from metabaseapi.metabase import GetActionRequest
@@ -98,8 +111,12 @@ from metabaseapi.metabase import GetCollectionTrashRequest
 from metabaseapi.metabase import GetCollectionTreeRequest
 from metabaseapi.metabase import GetCommentMentionsRequest
 from metabaseapi.metabase import GetCommentRequest
+from metabaseapi.metabase import GetDashboardDashcardExecuteRequest
 from metabaseapi.metabase import GetDashboardEmbeddableRequest
+from metabaseapi.metabase import GetDashboardItemsRequest
 from metabaseapi.metabase import GetDashboardPublicRequest
+from metabaseapi.metabase import GetDashboardQueryMetadataRequest
+from metabaseapi.metabase import GetDashboardRelatedRequest
 from metabaseapi.metabase import GetDashboardRequest
 from metabaseapi.metabase import GetDatabaseRequest
 from metabaseapi.metabase import GetFieldRequest
@@ -141,11 +158,14 @@ from metabaseapi.metabase import PostCollectionMoveDashboardQuestionCandidatesRe
 from metabaseapi.metabase import PostCollectionRootMoveDashboardQuestionCandidatesRequest
 from metabaseapi.metabase import PostCommentReactionRequest
 from metabaseapi.metabase import PostCommentRequest
+from metabaseapi.metabase import PostDashboardPivotQueryRequest
 from metabaseapi.metabase import PostDashboardRequest
 from metabaseapi.metabase import PutCacheRequest
 from metabaseapi.metabase import PutCollectionGraphRequest
 from metabaseapi.metabase import PutCollectionRequest
 from metabaseapi.metabase import RegenerateApiKeyRequest
+from metabaseapi.metabase import SaveDashboardRequest
+from metabaseapi.metabase import SaveDashboardToCollectionRequest
 from metabaseapi.metabase import Table
 from metabaseapi.metabase import TestChannelRequest
 from metabaseapi.metabase import UpdateActionRequest
@@ -154,6 +174,8 @@ from metabaseapi.metabase import UpdateBookmarkOrderingRequest
 from metabaseapi.metabase import UpdateCardRequest
 from metabaseapi.metabase import UpdateChannelRequest
 from metabaseapi.metabase import UpdateCommentRequest
+from metabaseapi.metabase import UpdateDashboardCardsRequest
+from metabaseapi.metabase import UpdateDashboardRequest
 from metabaseapi.metabase import User
 from metabaseapi.models import APIRequestModel
 from metabaseapi.models import APIResponseModel
@@ -880,6 +902,139 @@ class MetabaseClient:
             params=params or None,
         )
 
+    async def query_dashboard_card_pivot(
+        self,
+        dashboard_id: int | str,
+        dashcard_id: int | str,
+        card_id: int | str,
+        body: Mapping[str, object] | None = None,
+    ) -> JSONValue | None:
+        payload = dict(body) if body is not None else None
+        return await self.post(
+            f"/api/dashboard/pivot/{dashboard_id}/dashcard/{dashcard_id}/card/{card_id}/query",
+            body=payload,
+        )
+
+    async def save_dashboard(self, body: Mapping[str, object]) -> JSONValue | None:
+        return await self.post("/api/dashboard/save", body=dict(body))
+
+    async def save_dashboard_to_collection(
+        self,
+        parent_collection_id: int | str,
+        body: Mapping[str, object],
+    ) -> JSONValue | None:
+        return await self.post(f"/api/dashboard/save/collection/{parent_collection_id}", body=dict(body))
+
+    async def get_dashboard_dashcard_execute(
+        self,
+        dashboard_id: int | str,
+        dashcard_id: int | str,
+        *,
+        parameters: Mapping[str, QueryParamValue] | None = None,
+    ) -> JSONValue | None:
+        return await self.get(
+            f"/api/dashboard/{dashboard_id}/dashcard/{dashcard_id}/execute",
+            params=parameters,
+        )
+
+    async def execute_dashboard_dashcard(
+        self,
+        dashboard_id: int | str,
+        dashcard_id: int | str,
+        *,
+        parameters: Mapping[str, object] | None = None,
+    ) -> JSONValue | None:
+        return await self.post(
+            f"/api/dashboard/{dashboard_id}/dashcard/{dashcard_id}/execute",
+            body={"parameters": dict(parameters or {})},
+        )
+
+    async def create_dashboard_public_link(self, dashboard_id: int | str) -> JSONValue | None:
+        return await self.post(f"/api/dashboard/{dashboard_id}/public_link")
+
+    async def delete_dashboard_public_link(self, dashboard_id: int | str) -> JSONValue | None:
+        return await self.delete(f"/api/dashboard/{dashboard_id}/public_link")
+
+    async def copy_dashboard(
+        self,
+        from_dashboard_id: int | str,
+        body: Mapping[str, object] | None = None,
+    ) -> JSONValue | None:
+        return await self.post(
+            f"/api/dashboard/{from_dashboard_id}/copy",
+            body=dict(body) if body is not None else None,
+        )
+
+    async def delete_dashboard(self, dashboard_id: int | str) -> JSONValue | None:
+        return await self.delete(f"/api/dashboard/{dashboard_id}")
+
+    async def update_dashboard(self, dashboard_id: int | str, body: Mapping[str, object]) -> JSONValue | None:
+        return await self.put(f"/api/dashboard/{dashboard_id}", body=dict(body))
+
+    async def update_dashboard_cards(self, dashboard_id: int | str, body: Mapping[str, object]) -> JSONValue | None:
+        return await self.put(f"/api/dashboard/{dashboard_id}/cards", body=dict(body))
+
+    async def get_dashboard_items(self, dashboard_id: int | str) -> JSONValue | None:
+        return await self.get(f"/api/dashboard/{dashboard_id}/items")
+
+    async def get_dashboard_param_remapping(
+        self,
+        dashboard_id: int | str,
+        param_key: str,
+        *,
+        parameters: Mapping[str, QueryParamValue] | None = None,
+    ) -> JSONValue | None:
+        return await self.get(
+            f"/api/dashboard/{dashboard_id}/params/{param_key}/remapping",
+            params=parameters,
+        )
+
+    async def get_dashboard_param_search_values(
+        self,
+        dashboard_id: int | str,
+        param_key: str,
+        query: str,
+        *,
+        parameters: Mapping[str, QueryParamValue] | None = None,
+    ) -> JSONValue | None:
+        return await self.get(
+            f"/api/dashboard/{dashboard_id}/params/{param_key}/search/{query}",
+            params=parameters,
+        )
+
+    async def get_dashboard_param_values(
+        self,
+        dashboard_id: int | str,
+        param_key: str,
+        *,
+        parameters: Mapping[str, QueryParamValue] | None = None,
+    ) -> JSONValue | None:
+        return await self.get(
+            f"/api/dashboard/{dashboard_id}/params/{param_key}/values",
+            params=parameters,
+        )
+
+    async def get_dashboard_query_metadata(self, dashboard_id: int | str) -> JSONValue | None:
+        return await self.get(f"/api/dashboard/{dashboard_id}/query_metadata")
+
+    async def get_dashboard_related(self, dashboard_id: int | str) -> JSONValue | None:
+        return await self.get(f"/api/dashboard/{dashboard_id}/related")
+
+    async def data_studio_table_discard_values(self, body: Mapping[str, object]) -> JSONValue | None:
+        return await self.post("/api/data-studio/table/discard-values", body=dict(body))
+
+    async def data_studio_table_edit(self, body: Mapping[str, object]) -> JSONValue | None:
+        return await self.post("/api/data-studio/table/edit", body=dict(body))
+
+    async def data_studio_table_rescan_values(self, body: Mapping[str, object]) -> JSONValue | None:
+        return await self.post("/api/data-studio/table/rescan-values", body=dict(body))
+
+    async def data_studio_table_selection(self, body: Mapping[str, object]) -> JSONValue | None:
+        return await self.post("/api/data-studio/table/selection", body=dict(body))
+
+    async def data_studio_table_sync_schema(self, body: Mapping[str, object]) -> JSONValue | None:
+        return await self.post("/api/data-studio/table/sync-schema", body=dict(body))
+
     async def list_users(self) -> JSONValue | None:
         return await self.get("/api/user")
 
@@ -1445,6 +1600,159 @@ class MetabaseClient:
 
     async def get_dashboard_public_typed(self) -> GenericOperationResponse:
         return await self.run(GetDashboardPublicRequest())
+
+    async def query_dashboard_card_pivot_typed(
+        self,
+        dashboard_id: int | str,
+        dashcard_id: int | str,
+        card_id: int | str,
+        body: dict[str, object] | None = None,
+    ) -> GenericOperationResponse:
+        return await self.run(
+            PostDashboardPivotQueryRequest(
+                dashboard_id=dashboard_id,
+                dashcard_id=dashcard_id,
+                card_id=card_id,
+                body=body,
+            )
+        )
+
+    async def save_dashboard_typed(self, body: dict[str, object]) -> GenericOperationResponse:
+        return await self.run(SaveDashboardRequest(body=body))
+
+    async def save_dashboard_to_collection_typed(
+        self,
+        parent_collection_id: int | str,
+        body: dict[str, object],
+    ) -> GenericOperationResponse:
+        return await self.run(SaveDashboardToCollectionRequest(parent_collection_id=parent_collection_id, body=body))
+
+    async def get_dashboard_dashcard_execute_typed(
+        self,
+        dashboard_id: int | str,
+        dashcard_id: int | str,
+        *,
+        parameters: dict[str, QueryParamValue] | None = None,
+    ) -> GenericOperationResponse:
+        return await self.run(
+            GetDashboardDashcardExecuteRequest(
+                dashboard_id=dashboard_id,
+                dashcard_id=dashcard_id,
+                parameters=parameters or {},
+            )
+        )
+
+    async def execute_dashboard_dashcard_typed(
+        self,
+        dashboard_id: int | str,
+        dashcard_id: int | str,
+        *,
+        parameters: dict[str, object] | None = None,
+    ) -> GenericOperationResponse:
+        return await self.run(
+            ExecuteDashboardDashcardRequest(
+                dashboard_id=dashboard_id,
+                dashcard_id=dashcard_id,
+                parameters=parameters or {},
+            )
+        )
+
+    async def create_dashboard_public_link_typed(self, dashboard_id: int | str) -> GenericOperationResponse:
+        return await self.run(CreateDashboardPublicLinkRequest(dashboard_id=dashboard_id))
+
+    async def delete_dashboard_public_link_typed(self, dashboard_id: int | str) -> GenericOperationResponse:
+        return await self.run(DeleteDashboardPublicLinkRequest(dashboard_id=dashboard_id))
+
+    async def copy_dashboard_typed(
+        self,
+        from_dashboard_id: int | str,
+        body: dict[str, object] | None = None,
+    ) -> Dashboard:
+        return await self.run(CopyDashboardRequest(from_dashboard_id=from_dashboard_id, body=body))
+
+    async def delete_dashboard_typed(self, dashboard_id: int | str) -> GenericOperationResponse:
+        return await self.run(DeleteDashboardRequest(dashboard_id=dashboard_id))
+
+    async def update_dashboard_typed(self, dashboard_id: int | str, body: dict[str, object]) -> Dashboard:
+        return await self.run(UpdateDashboardRequest(dashboard_id=dashboard_id, body=body))
+
+    async def update_dashboard_cards_typed(
+        self,
+        dashboard_id: int | str,
+        body: dict[str, object],
+    ) -> GenericOperationResponse:
+        return await self.run(UpdateDashboardCardsRequest(dashboard_id=dashboard_id, body=body))
+
+    async def get_dashboard_items_typed(self, dashboard_id: int | str) -> GenericOperationResponse:
+        return await self.run(GetDashboardItemsRequest(dashboard_id=dashboard_id))
+
+    async def get_dashboard_param_remapping_typed(
+        self,
+        dashboard_id: int | str,
+        param_key: str,
+        *,
+        parameters: dict[str, QueryParamValue] | None = None,
+    ) -> GenericOperationResponse:
+        return await self.run(
+            DashboardParamRemappingRequest(
+                dashboard_id=dashboard_id,
+                param_key=param_key,
+                parameters=parameters or {},
+            )
+        )
+
+    async def get_dashboard_param_search_values_typed(
+        self,
+        dashboard_id: int | str,
+        param_key: str,
+        query: str,
+        *,
+        parameters: dict[str, QueryParamValue] | None = None,
+    ) -> GenericOperationResponse:
+        return await self.run(
+            DashboardParamSearchRequest(
+                dashboard_id=dashboard_id,
+                param_key=param_key,
+                query=query,
+                parameters=parameters or {},
+            )
+        )
+
+    async def get_dashboard_param_values_typed(
+        self,
+        dashboard_id: int | str,
+        param_key: str,
+        *,
+        parameters: dict[str, QueryParamValue] | None = None,
+    ) -> GenericOperationResponse:
+        return await self.run(
+            DashboardParamValuesRequest(
+                dashboard_id=dashboard_id,
+                param_key=param_key,
+                parameters=parameters or {},
+            )
+        )
+
+    async def get_dashboard_query_metadata_typed(self, dashboard_id: int | str) -> GenericOperationResponse:
+        return await self.run(GetDashboardQueryMetadataRequest(dashboard_id=dashboard_id))
+
+    async def get_dashboard_related_typed(self, dashboard_id: int | str) -> GenericOperationResponse:
+        return await self.run(GetDashboardRelatedRequest(dashboard_id=dashboard_id))
+
+    async def data_studio_table_discard_values_typed(self, body: dict[str, object]) -> GenericOperationResponse:
+        return await self.run(DataStudioTableDiscardValuesRequest(body=body))
+
+    async def data_studio_table_edit_typed(self, body: dict[str, object]) -> GenericOperationResponse:
+        return await self.run(DataStudioTableEditRequest(body=body))
+
+    async def data_studio_table_rescan_values_typed(self, body: dict[str, object]) -> GenericOperationResponse:
+        return await self.run(DataStudioTableRescanValuesRequest(body=body))
+
+    async def data_studio_table_selection_typed(self, body: dict[str, object]) -> GenericOperationResponse:
+        return await self.run(DataStudioTableSelectionRequest(body=body))
+
+    async def data_studio_table_sync_schema_typed(self, body: dict[str, object]) -> GenericOperationResponse:
+        return await self.run(DataStudioTableSyncSchemaRequest(body=body))
 
     async def get_user_typed(self, user_id: int | str) -> User:
         return await self.run(GetUserRequest(user_id=user_id))

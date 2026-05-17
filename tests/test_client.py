@@ -180,6 +180,26 @@ def test_convenience_paths_cover_handwritten_endpoint_surface() -> None:
         ),
         (client.current_user(), ("GET", "/api/user/current", None)),
         (client.list_databases(), ("GET", "/api/database", None)),
+        (
+            client.data_studio_table_discard_values({"table_ids": [1]}),
+            ("POST", "/api/data-studio/table/discard-values", {"table_ids": [1]}),
+        ),
+        (
+            client.data_studio_table_edit({"table_ids": [1]}),
+            ("POST", "/api/data-studio/table/edit", {"table_ids": [1]}),
+        ),
+        (
+            client.data_studio_table_rescan_values({"table_ids": [1]}),
+            ("POST", "/api/data-studio/table/rescan-values", {"table_ids": [1]}),
+        ),
+        (
+            client.data_studio_table_selection({"table_ids": [1]}),
+            ("POST", "/api/data-studio/table/selection", {"table_ids": [1]}),
+        ),
+        (
+            client.data_studio_table_sync_schema({"table_ids": [1]}),
+            ("POST", "/api/data-studio/table/sync-schema", {"table_ids": [1]}),
+        ),
         (client.list_channels(), ("GET", "/api/channel", None)),
         (client.create_channel({"name": "Slack"}), ("POST", "/api/channel", {"name": "Slack"})),
         (client.test_channel({"name": "Slack"}), ("POST", "/api/channel/test", {"name": "Slack"})),
@@ -300,6 +320,41 @@ def test_convenience_paths_cover_handwritten_endpoint_surface() -> None:
             client.query_dashboard_card_export(14, "22", "33", "xlsx", {"x": 1}, pivot_results=True, format_rows=False),
             ("POST", "/api/dashboard/14/dashcard/22/card/33/query/xlsx", {"x": 1}),
         ),
+        (
+            client.query_dashboard_card_pivot(14, "22", "33", {"x": 1}),
+            ("POST", "/api/dashboard/pivot/14/dashcard/22/card/33/query", {"x": 1}),
+        ),
+        (client.save_dashboard({"name": "Sales"}), ("POST", "/api/dashboard/save", {"name": "Sales"})),
+        (
+            client.save_dashboard_to_collection("root", {"name": "Sales"}),
+            ("POST", "/api/dashboard/save/collection/root", {"name": "Sales"}),
+        ),
+        (
+            client.get_dashboard_dashcard_execute(14, "22", parameters={"id": 1}),
+            ("GET", "/api/dashboard/14/dashcard/22/execute", None),
+        ),
+        (
+            client.execute_dashboard_dashcard(14, "22", parameters={"id": 1}),
+            ("POST", "/api/dashboard/14/dashcard/22/execute", {"parameters": {"id": 1}}),
+        ),
+        (client.create_dashboard_public_link(14), ("POST", "/api/dashboard/14/public_link", None)),
+        (client.delete_dashboard_public_link(14), ("DELETE", "/api/dashboard/14/public_link", None)),
+        (client.copy_dashboard(14), ("POST", "/api/dashboard/14/copy", None)),
+        (client.delete_dashboard(14), ("DELETE", "/api/dashboard/14", None)),
+        (client.update_dashboard(14, {"name": "Sales"}), ("PUT", "/api/dashboard/14", {"name": "Sales"})),
+        (client.update_dashboard_cards(14, {"cards": []}), ("PUT", "/api/dashboard/14/cards", {"cards": []})),
+        (client.get_dashboard_items(14), ("GET", "/api/dashboard/14/items", None)),
+        (
+            client.get_dashboard_param_remapping(14, "abc"),
+            ("GET", "/api/dashboard/14/params/abc/remapping", None),
+        ),
+        (
+            client.get_dashboard_param_search_values(14, "abc", "Orange"),
+            ("GET", "/api/dashboard/14/params/abc/search/Orange", None),
+        ),
+        (client.get_dashboard_param_values(14, "abc"), ("GET", "/api/dashboard/14/params/abc/values", None)),
+        (client.get_dashboard_query_metadata(14), ("GET", "/api/dashboard/14/query_metadata", None)),
+        (client.get_dashboard_related(14), ("GET", "/api/dashboard/14/related", None)),
         (
             client.get_dashboard_params_valid_filter_fields(filtered=[11], filtering=[22]),
             ("GET", "/api/dashboard/params/valid-filter-fields", None),

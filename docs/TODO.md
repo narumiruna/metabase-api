@@ -15,8 +15,8 @@ This file is a static implementation checklist derived from the latest Metabase 
 ## Coverage summary
 
 - Documented operations: 600
-- Complete hand-written endpoint implementations: 123
-- Remaining documented operations: 477
+- Complete hand-written endpoint implementations: 148
+- Remaining documented operations: 452
 - Raw `request` / `invoke`: disabled for CLI users and does not count toward TODO completion.
 
 ## Endpoint checklist
@@ -181,41 +181,41 @@ This file is a static implementation checklist derived from the latest Metabase 
 - [x] `DELETE /api/comment/{comment-id}` — `delete-api-comment-comment-id` — Soft delete a comment
 - [x] `POST /api/comment/{comment-id}/reaction` — `post-api-comment-comment-id-reaction` — Toggle a reaction on a comment
 
-### /api/dashboard (8/25 complete)
+### /api/dashboard (25/25 complete)
 
 - [x] `GET /api/dashboard` — `get-api-dashboard` — This endpoint is currently unused by the Metabase frontend and may be out of date with the rest of the application. It only exists for backwards compatibilit...
 - [x] `POST /api/dashboard` — `post-api-dashboard` — Create a new Dashboard.
 - [x] `GET /api/dashboard/embeddable` — `get-api-dashboard-embeddable` — Fetch a list of Dashboards where `enable_embedding` is `true`. The dashboards can be embedded using the embedding endpoints and a signed JWT.
 - [x] `GET /api/dashboard/params/valid-filter-fields` — `get-api-dashboard-params-valid-filter-fields` — Utility endpoint for powering Dashboard UI. Given some set of `filtered` Field IDs (presumably Fields used in parameters) and a set of `filtering` Field IDs...
-- [ ] `POST /api/dashboard/pivot/{dashboard-id}/dashcard/{dashcard-id}/card/{card-id}/query` — `post-api-dashboard-pivot-dashboard-id-dashcard-dashcard-id-card-card-id-query` — Run a pivot table query for a specific DashCard.
+- [x] `POST /api/dashboard/pivot/{dashboard-id}/dashcard/{dashcard-id}/card/{card-id}/query` — `post-api-dashboard-pivot-dashboard-id-dashcard-dashcard-id-card-card-id-query` — Run a pivot table query for a specific DashCard.
 - [x] `GET /api/dashboard/public` — `get-api-dashboard-public` — Fetch a list of Dashboards with public UUIDs. These dashboards are publicly-accessible *if* public sharing is enabled.
-- [ ] `POST /api/dashboard/save` — `post-api-dashboard-save` — Save a denormalized description of dashboard.
-- [ ] `POST /api/dashboard/save/collection/{parent-collection-id}` — `post-api-dashboard-save-collection-parent-collection-id` — Save a denormalized description of dashboard into collection with ID `:parent-collection-id`.
+- [x] `POST /api/dashboard/save` — `post-api-dashboard-save` — Save a denormalized description of dashboard.
+- [x] `POST /api/dashboard/save/collection/{parent-collection-id}` — `post-api-dashboard-save-collection-parent-collection-id` — Save a denormalized description of dashboard into collection with ID `:parent-collection-id`.
 - [x] `POST /api/dashboard/{dashboard-id}/dashcard/{dashcard-id}/card/{card-id}/query` — `post-api-dashboard-dashboard-id-dashcard-dashcard-id-card-card-id-query` — Run the query associated with a Saved Question (`Card`) in the context of a `Dashboard` that includes it.
 - [x] `POST /api/dashboard/{dashboard-id}/dashcard/{dashcard-id}/card/{card-id}/query/{export-format}` — `post-api-dashboard-dashboard-id-dashcard-dashcard-id-card-card-id-query-export-format` — Run the query associated with a Saved Question (`Card`) in the context of a `Dashboard` that includes it, and return its results as a file in the specified f...
-- [ ] `GET /api/dashboard/{dashboard-id}/dashcard/{dashcard-id}/execute` — `get-api-dashboard-dashboard-id-dashcard-dashcard-id-execute` — Fetches the values for filling in execution parameters. Pass PK parameters and values to select.
-- [ ] `POST /api/dashboard/{dashboard-id}/dashcard/{dashcard-id}/execute` — `post-api-dashboard-dashboard-id-dashcard-dashcard-id-execute` — Execute the associated Action in the context of a `Dashboard` and `DashboardCard` that includes it. `parameters` should be the mapped dashboard parameters wi...
-- [ ] `POST /api/dashboard/{dashboard-id}/public_link` — `post-api-dashboard-dashboard-id-public_link` — Generate publicly-accessible links for this Dashboard. Returns UUID to be used in public links. (If this Dashboard has already been shared, it will return th...
-- [ ] `DELETE /api/dashboard/{dashboard-id}/public_link` — `delete-api-dashboard-dashboard-id-public_link` — Delete the publicly-accessible link to this Dashboard.
-- [ ] `POST /api/dashboard/{from-dashboard-id}/copy` — `post-api-dashboard-from-dashboard-id-copy` — Copy a Dashboard.
+- [x] `GET /api/dashboard/{dashboard-id}/dashcard/{dashcard-id}/execute` — `get-api-dashboard-dashboard-id-dashcard-dashcard-id-execute` — Fetches the values for filling in execution parameters. Pass PK parameters and values to select.
+- [x] `POST /api/dashboard/{dashboard-id}/dashcard/{dashcard-id}/execute` — `post-api-dashboard-dashboard-id-dashcard-dashcard-id-execute` — Execute the associated Action in the context of a `Dashboard` and `DashboardCard` that includes it. `parameters` should be the mapped dashboard parameters wi...
+- [x] `POST /api/dashboard/{dashboard-id}/public_link` — `post-api-dashboard-dashboard-id-public_link` — Generate publicly-accessible links for this Dashboard. Returns UUID to be used in public links. (If this Dashboard has already been shared, it will return th...
+- [x] `DELETE /api/dashboard/{dashboard-id}/public_link` — `delete-api-dashboard-dashboard-id-public_link` — Delete the publicly-accessible link to this Dashboard.
+- [x] `POST /api/dashboard/{from-dashboard-id}/copy` — `post-api-dashboard-from-dashboard-id-copy` — Copy a Dashboard.
 - [x] `GET /api/dashboard/{id}` — `get-api-dashboard-id` — Get Dashboard with ID.
-- [ ] `DELETE /api/dashboard/{id}` — `delete-api-dashboard-id` — Hard delete a Dashboard. To soft delete, use `PUT /api/dashboard/:id` This will remove also any questions/models/segments/metrics that use this database.
-- [ ] `PUT /api/dashboard/{id}` — `put-api-dashboard-id` — Update a Dashboard, and optionally the `dashcards` and `tabs` of a Dashboard. The request body should be a JSON object with the same structure as the respons...
-- [ ] `PUT /api/dashboard/{id}/cards` — `put-api-dashboard-id-cards` — (DEPRECATED -- Use the `PUT /api/dashboard/:id` endpoint instead.) Update `Cards` and `Tabs` on a Dashboard. Request body should have the form: {:cards [{:id...
-- [ ] `GET /api/dashboard/{id}/items` — `get-api-dashboard-id-items` — Get Dashboard with ID.
-- [ ] `GET /api/dashboard/{id}/params/{param-key}/remapping` — `get-api-dashboard-id-params-param-key-remapping` — Fetch the remapped value for a given value of the parameter with ID `:param-key`. ;; fetch the remapped value for Dashboard 1 parameter 'abc' for value 100 G...
-- [ ] `GET /api/dashboard/{id}/params/{param-key}/search/{query}` — `get-api-dashboard-id-params-param-key-search-query` — Fetch possible values of the parameter whose ID is `:param-key` that contain `:query`. Optionally restrict these values by passing query parameters like `oth...
-- [ ] `GET /api/dashboard/{id}/params/{param-key}/values` — `get-api-dashboard-id-params-param-key-values` — Fetch possible values of the parameter whose ID is `:param-key`. If the values come directly from a query, optionally restrict these values by passing query...
-- [ ] `GET /api/dashboard/{id}/query_metadata` — `get-api-dashboard-id-query_metadata` — Get all of the required query metadata for the cards on dashboard.
-- [ ] `GET /api/dashboard/{id}/related` — `get-api-dashboard-id-related` — Return related entities.
+- [x] `DELETE /api/dashboard/{id}` — `delete-api-dashboard-id` — Hard delete a Dashboard. To soft delete, use `PUT /api/dashboard/:id` This will remove also any questions/models/segments/metrics that use this database.
+- [x] `PUT /api/dashboard/{id}` — `put-api-dashboard-id` — Update a Dashboard, and optionally the `dashcards` and `tabs` of a Dashboard. The request body should be a JSON object with the same structure as the respons...
+- [x] `PUT /api/dashboard/{id}/cards` — `put-api-dashboard-id-cards` — (DEPRECATED -- Use the `PUT /api/dashboard/:id` endpoint instead.) Update `Cards` and `Tabs` on a Dashboard. Request body should have the form: {:cards [{:id...
+- [x] `GET /api/dashboard/{id}/items` — `get-api-dashboard-id-items` — Get Dashboard with ID.
+- [x] `GET /api/dashboard/{id}/params/{param-key}/remapping` — `get-api-dashboard-id-params-param-key-remapping` — Fetch the remapped value for a given value of the parameter with ID `:param-key`. ;; fetch the remapped value for Dashboard 1 parameter 'abc' for value 100 G...
+- [x] `GET /api/dashboard/{id}/params/{param-key}/search/{query}` — `get-api-dashboard-id-params-param-key-search-query` — Fetch possible values of the parameter whose ID is `:param-key` that contain `:query`. Optionally restrict these values by passing query parameters like `oth...
+- [x] `GET /api/dashboard/{id}/params/{param-key}/values` — `get-api-dashboard-id-params-param-key-values` — Fetch possible values of the parameter whose ID is `:param-key`. If the values come directly from a query, optionally restrict these values by passing query...
+- [x] `GET /api/dashboard/{id}/query_metadata` — `get-api-dashboard-id-query_metadata` — Get all of the required query metadata for the cards on dashboard.
+- [x] `GET /api/dashboard/{id}/related` — `get-api-dashboard-id-related` — Return related entities.
 
-### /api/data-studio/table (0/5 complete)
+### /api/data-studio/table (5/5 complete)
 
-- [ ] `POST /api/data-studio/table/discard-values` — `post-api-data-studio-table-discard-values` — Batch version of /table/:id/discard_values. Takes an abstract table selection as /table/edit does.
-- [ ] `POST /api/data-studio/table/edit` — `post-api-data-studio-table-edit` — Bulk updating tables.
-- [ ] `POST /api/data-studio/table/rescan-values` — `post-api-data-studio-table-rescan-values` — Batch version of /table/:id/rescan_values. Takes an abstract table selection as /table/edit does.
-- [ ] `POST /api/data-studio/table/selection` — `post-api-data-studio-table-selection` — Gets information about selected tables
-- [ ] `POST /api/data-studio/table/sync-schema` — `post-api-data-studio-table-sync-schema` — Batch version of /table/:id/sync_schema. Takes an abstract table selection as /table/edit does. - Currently checks policy before returning (so you might rece...
+- [x] `POST /api/data-studio/table/discard-values` — `post-api-data-studio-table-discard-values` — Batch version of /table/:id/discard_values. Takes an abstract table selection as /table/edit does.
+- [x] `POST /api/data-studio/table/edit` — `post-api-data-studio-table-edit` — Bulk updating tables.
+- [x] `POST /api/data-studio/table/rescan-values` — `post-api-data-studio-table-rescan-values` — Batch version of /table/:id/rescan_values. Takes an abstract table selection as /table/edit does.
+- [x] `POST /api/data-studio/table/selection` — `post-api-data-studio-table-selection` — Gets information about selected tables
+- [x] `POST /api/data-studio/table/sync-schema` — `post-api-data-studio-table-sync-schema` — Batch version of /table/:id/sync_schema. Takes an abstract table selection as /table/edit does. - Currently checks policy before returning (so you might rece...
 
 ### /api/database (3/31 complete)
 

@@ -272,6 +272,21 @@ class _ConvenienceClient(_ClientWithRequestMethods):
     async def list_databases(self) -> dict[str, object]:
         return {"method": "GET", "path": "/api/database"}
 
+    async def data_studio_table_discard_values(self, body: dict[str, object]) -> dict[str, object]:
+        return {"method": "POST", "path": "/api/data-studio/table/discard-values", "body": body}
+
+    async def data_studio_table_edit(self, body: dict[str, object]) -> dict[str, object]:
+        return {"method": "POST", "path": "/api/data-studio/table/edit", "body": body}
+
+    async def data_studio_table_rescan_values(self, body: dict[str, object]) -> dict[str, object]:
+        return {"method": "POST", "path": "/api/data-studio/table/rescan-values", "body": body}
+
+    async def data_studio_table_selection(self, body: dict[str, object]) -> dict[str, object]:
+        return {"method": "POST", "path": "/api/data-studio/table/selection", "body": body}
+
+    async def data_studio_table_sync_schema(self, body: dict[str, object]) -> dict[str, object]:
+        return {"method": "POST", "path": "/api/data-studio/table/sync-schema", "body": body}
+
     async def list_channels(self) -> dict[str, object]:
         return {"method": "GET", "path": "/api/channel"}
 
@@ -500,6 +515,125 @@ class _ConvenienceClient(_ClientWithRequestMethods):
             response["params"] = params
         return response
 
+    async def query_dashboard_card_pivot(
+        self,
+        dashboard_id: str,
+        dashcard_id: str,
+        card_id: str,
+        body: dict[str, object] | None = None,
+    ) -> dict[str, object]:
+        return {
+            "method": "POST",
+            "path": f"/api/dashboard/pivot/{dashboard_id}/dashcard/{dashcard_id}/card/{card_id}/query",
+            "body": body,
+        }
+
+    async def save_dashboard(self, body: dict[str, object]) -> dict[str, object]:
+        return {"method": "POST", "path": "/api/dashboard/save", "body": body}
+
+    async def save_dashboard_to_collection(
+        self,
+        parent_collection_id: str,
+        body: dict[str, object],
+    ) -> dict[str, object]:
+        return {"method": "POST", "path": f"/api/dashboard/save/collection/{parent_collection_id}", "body": body}
+
+    async def get_dashboard_dashcard_execute(
+        self,
+        dashboard_id: str,
+        dashcard_id: str,
+        *,
+        parameters: dict[str, object] | None = None,
+    ) -> dict[str, object]:
+        return {
+            "method": "GET",
+            "path": f"/api/dashboard/{dashboard_id}/dashcard/{dashcard_id}/execute",
+            "params": parameters,
+        }
+
+    async def execute_dashboard_dashcard(
+        self,
+        dashboard_id: str,
+        dashcard_id: str,
+        *,
+        parameters: dict[str, object] | None = None,
+    ) -> dict[str, object]:
+        return {
+            "method": "POST",
+            "path": f"/api/dashboard/{dashboard_id}/dashcard/{dashcard_id}/execute",
+            "body": {"parameters": parameters or {}},
+        }
+
+    async def create_dashboard_public_link(self, dashboard_id: str) -> dict[str, object]:
+        return {"method": "POST", "path": f"/api/dashboard/{dashboard_id}/public_link"}
+
+    async def delete_dashboard_public_link(self, dashboard_id: str) -> dict[str, object]:
+        return {"method": "DELETE", "path": f"/api/dashboard/{dashboard_id}/public_link"}
+
+    async def copy_dashboard(self, from_dashboard_id: str, body: dict[str, object] | None = None) -> dict[str, object]:
+        response: dict[str, object] = {"method": "POST", "path": f"/api/dashboard/{from_dashboard_id}/copy"}
+        if body is not None:
+            response["body"] = body
+        return response
+
+    async def delete_dashboard(self, dashboard_id: str) -> dict[str, object]:
+        return {"method": "DELETE", "path": f"/api/dashboard/{dashboard_id}"}
+
+    async def update_dashboard(self, dashboard_id: str, body: dict[str, object]) -> dict[str, object]:
+        return {"method": "PUT", "path": f"/api/dashboard/{dashboard_id}", "body": body}
+
+    async def update_dashboard_cards(self, dashboard_id: str, body: dict[str, object]) -> dict[str, object]:
+        return {"method": "PUT", "path": f"/api/dashboard/{dashboard_id}/cards", "body": body}
+
+    async def get_dashboard_items(self, dashboard_id: str) -> dict[str, object]:
+        return {"method": "GET", "path": f"/api/dashboard/{dashboard_id}/items"}
+
+    async def get_dashboard_param_remapping(
+        self,
+        dashboard_id: str,
+        param_key: str,
+        *,
+        parameters: dict[str, object] | None = None,
+    ) -> dict[str, object]:
+        return {
+            "method": "GET",
+            "path": f"/api/dashboard/{dashboard_id}/params/{param_key}/remapping",
+            "params": parameters,
+        }
+
+    async def get_dashboard_param_search_values(
+        self,
+        dashboard_id: str,
+        param_key: str,
+        query: str,
+        *,
+        parameters: dict[str, object] | None = None,
+    ) -> dict[str, object]:
+        return {
+            "method": "GET",
+            "path": f"/api/dashboard/{dashboard_id}/params/{param_key}/search/{query}",
+            "params": parameters,
+        }
+
+    async def get_dashboard_param_values(
+        self,
+        dashboard_id: str,
+        param_key: str,
+        *,
+        parameters: dict[str, object] | None = None,
+    ) -> dict[str, object]:
+        return {
+            "method": "GET",
+            "path": f"/api/dashboard/{dashboard_id}/params/{param_key}/values",
+            "params": parameters,
+        }
+
+    async def get_dashboard_query_metadata(self, dashboard_id: str) -> dict[str, object]:
+        return {"method": "GET", "path": f"/api/dashboard/{dashboard_id}/query_metadata"}
+
+    async def get_dashboard_related(self, dashboard_id: str) -> dict[str, object]:
+        return {"method": "GET", "path": f"/api/dashboard/{dashboard_id}/related"}
+
     async def get_dashboard_embeddable(self) -> dict[str, object]:
         return {"method": "GET", "path": "/api/dashboard/embeddable"}
 
@@ -696,6 +830,11 @@ def test_help_lists_every_convenience_command() -> None:
         "create-recent",
         "current-user",
         "list-databases",
+        "data-studio-table-discard-values",
+        "data-studio-table-edit",
+        "data-studio-table-rescan-values",
+        "data-studio-table-selection",
+        "data-studio-table-sync-schema",
         "list-channels",
         "create-channel",
         "test-channel",
@@ -730,9 +869,26 @@ def test_help_lists_every_convenience_command() -> None:
         "get-dashboard",
         "query-dashboard-card",
         "query-dashboard-card-export",
+        "query-dashboard-card-pivot",
         "get-dashboard-embeddable",
         "get-dashboard-public",
         "create-dashboard",
+        "save-dashboard",
+        "save-dashboard-to-collection",
+        "get-dashboard-dashcard-execute",
+        "execute-dashboard-dashcard",
+        "create-dashboard-public-link",
+        "delete-dashboard-public-link",
+        "copy-dashboard",
+        "delete-dashboard",
+        "update-dashboard",
+        "update-dashboard-cards",
+        "get-dashboard-items",
+        "get-dashboard-param-remapping",
+        "get-dashboard-param-search",
+        "get-dashboard-param-values",
+        "get-dashboard-query-metadata",
+        "get-dashboard-related",
         "list-users",
         "get-user",
         "list-collections",
@@ -874,8 +1030,15 @@ def test_get_database_command_outputs_json(monkeypatch: pytest.MonkeyPatch) -> N
             ["get-dashboard-params-valid-filter-fields", "--filtered", "11", "--filtering", "22"],
             "/api/dashboard/params/valid-filter-fields",
         ),
+        (["get-dashboard-dashcard-execute", "14", "22"], "/api/dashboard/14/dashcard/22/execute"),
         (["get-dashboard-embeddable"], "/api/dashboard/embeddable"),
         (["get-dashboard-public"], "/api/dashboard/public"),
+        (["get-dashboard-items", "14"], "/api/dashboard/14/items"),
+        (["get-dashboard-param-remapping", "14", "abc"], "/api/dashboard/14/params/abc/remapping"),
+        (["get-dashboard-param-search", "14", "abc", "Orange"], "/api/dashboard/14/params/abc/search/Orange"),
+        (["get-dashboard-param-values", "14", "abc"], "/api/dashboard/14/params/abc/values"),
+        (["get-dashboard-query-metadata", "14"], "/api/dashboard/14/query_metadata"),
+        (["get-dashboard-related", "14"], "/api/dashboard/14/related"),
         (["get-user", "15"], "/api/user/15"),
         (["get-collection", "7"], "/api/collection/7"),
         (["get-collection", "root"], "/api/collection/root"),
@@ -930,6 +1093,24 @@ def test_read_endpoint_commands_cover_handwritten_surface(
             "POST",
             "/api/dashboard/14/dashcard/22/card/33/query/xlsx",
         ),
+        (
+            ["query-dashboard-card-pivot", "14", "22", "33", '{"x":1}'],
+            "POST",
+            "/api/dashboard/pivot/14/dashcard/22/card/33/query",
+        ),
+        (["save-dashboard", '{"name":"Sales"}'], "POST", "/api/dashboard/save"),
+        (["save-dashboard-to-collection", "root", '{"name":"Sales"}'], "POST", "/api/dashboard/save/collection/root"),
+        (
+            ["execute-dashboard-dashcard", "14", "22", "--parameters", '{"id":1}'],
+            "POST",
+            "/api/dashboard/14/dashcard/22/execute",
+        ),
+        (["create-dashboard-public-link", "14"], "POST", "/api/dashboard/14/public_link"),
+        (["delete-dashboard-public-link", "14"], "DELETE", "/api/dashboard/14/public_link"),
+        (["copy-dashboard", "14"], "POST", "/api/dashboard/14/copy"),
+        (["delete-dashboard", "14"], "DELETE", "/api/dashboard/14"),
+        (["update-dashboard", "14", '{"name":"Sales"}'], "PUT", "/api/dashboard/14"),
+        (["update-dashboard-cards", "14", '{"cards":[]}'], "PUT", "/api/dashboard/14/cards"),
         (["get-collection-graph"], "GET", "/api/collection/graph"),
         (["put-collection-graph", '{"groups":["admin"]}'], "PUT", "/api/collection/graph"),
         (
@@ -991,6 +1172,19 @@ def test_read_endpoint_commands_cover_handwritten_surface(
         (["agent-construct-query", '{"source":"x"}'], "POST", "/api/agent/v2/construct-query"),
         (["agent-query", '{"source":"x"}'], "POST", "/api/agent/v2/query"),
         (["create-recent", '{"model":"card","model_id":1}'], "POST", "/api/activity/recents"),
+        (
+            ["data-studio-table-discard-values", '{"table_ids":[1]}'],
+            "POST",
+            "/api/data-studio/table/discard-values",
+        ),
+        (["data-studio-table-edit", '{"table_ids":[1]}'], "POST", "/api/data-studio/table/edit"),
+        (
+            ["data-studio-table-rescan-values", '{"table_ids":[1]}'],
+            "POST",
+            "/api/data-studio/table/rescan-values",
+        ),
+        (["data-studio-table-selection", '{"table_ids":[1]}'], "POST", "/api/data-studio/table/selection"),
+        (["data-studio-table-sync-schema", '{"table_ids":[1]}'], "POST", "/api/data-studio/table/sync-schema"),
     ],
 )
 def test_action_mutation_commands_cover_handwritten_surface(

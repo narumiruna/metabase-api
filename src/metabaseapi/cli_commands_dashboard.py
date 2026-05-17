@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import cast
+
 import typer
 
 from metabaseapi.cli import _parse_json_body
@@ -9,9 +11,15 @@ from metabaseapi.cli import _parse_optional_json_object
 from metabaseapi.cli import _run_and_print
 from metabaseapi.cli import _run_client_call
 from metabaseapi.cli import app
+from metabaseapi.models import QueryParamValue
 
 _FILTERED_OPTION = typer.Option(None, "--filtered", help="Filtered field ID list")
 _FILTERING_OPTION = typer.Option(None, "--filtering", help="Filtering field ID list")
+
+
+def _parse_optional_query_params(raw: str | None) -> dict[str, QueryParamValue] | None:
+    payload = _parse_optional_json_object(raw, "params")
+    return cast("dict[str, QueryParamValue] | None", payload)
 
 
 @app.command("create-card")
@@ -358,10 +366,210 @@ def query_dashboard_card_export(
     )
 
 
+@app.command("query-dashboard-card-pivot")
+def query_dashboard_card_pivot(
+    ctx: typer.Context,
+    dashboard_id: str = typer.Argument(...),
+    dashcard_id: str = typer.Argument(...),
+    card_id: str = typer.Argument(...),
+    body: str | None = typer.Argument(None, help="Optional query payload JSON object"),
+) -> None:
+    payload = _parse_optional_json_object(body, "body") if body else None
+    _run_and_print(
+        _run_client_call(
+            ctx,
+            lambda client: client.query_dashboard_card_pivot(
+                dashboard_id,
+                dashcard_id,
+                card_id,
+                payload,
+            ),
+        )
+    )
+
+
 @app.command("create-dashboard")
 def create_dashboard(ctx: typer.Context, body: str = typer.Argument(..., help="Dashboard body JSON object")) -> None:
     payload = _parse_json_object(body, "body")
     _run_and_print(_run_client_call(ctx, lambda client: client.create_dashboard(payload)))
+
+
+@app.command("save-dashboard")
+def save_dashboard(ctx: typer.Context, body: str = typer.Argument(..., help="Dashboard save JSON object")) -> None:
+    payload = _parse_json_object(body, "body")
+    _run_and_print(_run_client_call(ctx, lambda client: client.save_dashboard(payload)))
+
+
+@app.command("save-dashboard-to-collection")
+def save_dashboard_to_collection(
+    ctx: typer.Context,
+    parent_collection_id: str = typer.Argument(...),
+    body: str = typer.Argument(..., help="Dashboard save JSON object"),
+) -> None:
+    payload = _parse_json_object(body, "body")
+    _run_and_print(
+        _run_client_call(ctx, lambda client: client.save_dashboard_to_collection(parent_collection_id, payload))
+    )
+
+
+@app.command("get-dashboard-dashcard-execute")
+def get_dashboard_dashcard_execute(
+    ctx: typer.Context,
+    dashboard_id: str = typer.Argument(...),
+    dashcard_id: str = typer.Argument(...),
+    params: str | None = typer.Option(None, "--params", help="Execution query parameters JSON object"),
+) -> None:
+    payload = _parse_optional_query_params(params)
+    _run_and_print(
+        _run_client_call(
+            ctx,
+            lambda client: client.get_dashboard_dashcard_execute(
+                dashboard_id,
+                dashcard_id,
+                parameters=payload,
+            ),
+        )
+    )
+
+
+@app.command("execute-dashboard-dashcard")
+def execute_dashboard_dashcard(
+    ctx: typer.Context,
+    dashboard_id: str = typer.Argument(...),
+    dashcard_id: str = typer.Argument(...),
+    parameters: str | None = typer.Option(None, "--parameters", help="Execution parameters JSON object"),
+) -> None:
+    payload = _parse_optional_json_object(parameters, "parameters")
+    _run_and_print(
+        _run_client_call(
+            ctx,
+            lambda client: client.execute_dashboard_dashcard(
+                dashboard_id,
+                dashcard_id,
+                parameters=payload,
+            ),
+        )
+    )
+
+
+@app.command("create-dashboard-public-link")
+def create_dashboard_public_link(ctx: typer.Context, dashboard_id: str = typer.Argument(...)) -> None:
+    """Create a public link for a dashboard."""
+
+    _run_and_print(_run_client_call(ctx, lambda client: client.create_dashboard_public_link(dashboard_id)))
+
+
+@app.command("delete-dashboard-public-link")
+def delete_dashboard_public_link(ctx: typer.Context, dashboard_id: str = typer.Argument(...)) -> None:
+    """Delete a public link for a dashboard."""
+
+    _run_and_print(_run_client_call(ctx, lambda client: client.delete_dashboard_public_link(dashboard_id)))
+
+
+@app.command("copy-dashboard")
+def copy_dashboard(
+    ctx: typer.Context,
+    from_dashboard_id: str = typer.Argument(...),
+    body: str | None = typer.Argument(None, help="Optional copy payload JSON object"),
+) -> None:
+    payload = _parse_optional_json_object(body, "body") if body else None
+    _run_and_print(_run_client_call(ctx, lambda client: client.copy_dashboard(from_dashboard_id, payload)))
+
+
+@app.command("delete-dashboard")
+def delete_dashboard(ctx: typer.Context, dashboard_id: str = typer.Argument(...)) -> None:
+    """Delete a dashboard."""
+
+    _run_and_print(_run_client_call(ctx, lambda client: client.delete_dashboard(dashboard_id)))
+
+
+@app.command("update-dashboard")
+def update_dashboard(
+    ctx: typer.Context, dashboard_id: str = typer.Argument(...), body: str = typer.Argument(...)
+) -> None:
+    payload = _parse_json_object(body, "body")
+    _run_and_print(_run_client_call(ctx, lambda client: client.update_dashboard(dashboard_id, payload)))
+
+
+@app.command("update-dashboard-cards")
+def update_dashboard_cards(
+    ctx: typer.Context,
+    dashboard_id: str = typer.Argument(...),
+    body: str = typer.Argument(..., help="Dashboard cards JSON object"),
+) -> None:
+    payload = _parse_json_object(body, "body")
+    _run_and_print(_run_client_call(ctx, lambda client: client.update_dashboard_cards(dashboard_id, payload)))
+
+
+@app.command("get-dashboard-items")
+def get_dashboard_items(ctx: typer.Context, dashboard_id: str = typer.Argument(...)) -> None:
+    """Get dashboard items."""
+
+    _run_and_print(_run_client_call(ctx, lambda client: client.get_dashboard_items(dashboard_id)))
+
+
+@app.command("get-dashboard-param-remapping")
+def get_dashboard_param_remapping(
+    ctx: typer.Context,
+    dashboard_id: str = typer.Argument(...),
+    param_key: str = typer.Argument(...),
+    params: str | None = typer.Option(None, "--params", help="Filter context JSON object"),
+) -> None:
+    payload = _parse_optional_query_params(params)
+    _run_and_print(
+        _run_client_call(
+            ctx,
+            lambda client: client.get_dashboard_param_remapping(dashboard_id, param_key, parameters=payload),
+        )
+    )
+
+
+@app.command("get-dashboard-param-search")
+def get_dashboard_param_search_values(
+    ctx: typer.Context,
+    dashboard_id: str = typer.Argument(...),
+    param_key: str = typer.Argument(...),
+    query: str = typer.Argument(...),
+    params: str | None = typer.Option(None, "--params", help="Filter context JSON object"),
+) -> None:
+    payload = _parse_optional_query_params(params)
+    _run_and_print(
+        _run_client_call(
+            ctx,
+            lambda client: client.get_dashboard_param_search_values(
+                dashboard_id,
+                param_key,
+                query,
+                parameters=payload,
+            ),
+        )
+    )
+
+
+@app.command("get-dashboard-param-values")
+def get_dashboard_param_values(
+    ctx: typer.Context,
+    dashboard_id: str = typer.Argument(...),
+    param_key: str = typer.Argument(...),
+    params: str | None = typer.Option(None, "--params", help="Filter context JSON object"),
+) -> None:
+    payload = _parse_optional_query_params(params)
+    _run_and_print(
+        _run_client_call(
+            ctx,
+            lambda client: client.get_dashboard_param_values(dashboard_id, param_key, parameters=payload),
+        )
+    )
+
+
+@app.command("get-dashboard-query-metadata")
+def get_dashboard_query_metadata(ctx: typer.Context, dashboard_id: str = typer.Argument(...)) -> None:
+    _run_and_print(_run_client_call(ctx, lambda client: client.get_dashboard_query_metadata(dashboard_id)))
+
+
+@app.command("get-dashboard-related")
+def get_dashboard_related(ctx: typer.Context, dashboard_id: str = typer.Argument(...)) -> None:
+    _run_and_print(_run_client_call(ctx, lambda client: client.get_dashboard_related(dashboard_id)))
 
 
 @app.command("get-user")

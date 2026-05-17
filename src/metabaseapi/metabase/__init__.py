@@ -30,6 +30,7 @@ from .requests import CardQueryRequest
 from .requests import CardRemappingRequest
 from .requests import CardsDashboardsRequest
 from .requests import CopyCardRequest
+from .requests import CopyDashboardRequest
 from .requests import CountApiKeysRequest
 from .requests import CreateActionPublicLinkRequest
 from .requests import CreateActionRequest
@@ -41,9 +42,18 @@ from .requests import CreateCardRequest
 from .requests import CreateChannelRequest
 from .requests import CreateCloudMigrationRequest
 from .requests import CreateCollectionRequest
+from .requests import CreateDashboardPublicLinkRequest
 from .requests import CreateDatabaseRequest
 from .requests import CreateRecentRequest
 from .requests import CurrentUserRequest
+from .requests import DashboardParamRemappingRequest
+from .requests import DashboardParamSearchRequest
+from .requests import DashboardParamValuesRequest
+from .requests import DataStudioTableDiscardValuesRequest
+from .requests import DataStudioTableEditRequest
+from .requests import DataStudioTableRescanValuesRequest
+from .requests import DataStudioTableSelectionRequest
+from .requests import DataStudioTableSyncSchemaRequest
 from .requests import DeleteActionPublicLinkRequest
 from .requests import DeleteActionRequest
 from .requests import DeleteAlertSubscriptionRequest
@@ -54,7 +64,10 @@ from .requests import DeleteCardPublicLinkRequest
 from .requests import DeleteCardRequest
 from .requests import DeleteCollectionRequest
 from .requests import DeleteCommentRequest
+from .requests import DeleteDashboardPublicLinkRequest
+from .requests import DeleteDashboardRequest
 from .requests import ExecuteActionRequest
+from .requests import ExecuteDashboardDashcardRequest
 from .requests import GetActionExecuteRequest
 from .requests import GetActionRequest
 from .requests import GetAgentMetricFieldValuesRequest
@@ -86,8 +99,12 @@ from .requests import GetCollectionTrashRequest
 from .requests import GetCollectionTreeRequest
 from .requests import GetCommentMentionsRequest
 from .requests import GetCommentRequest
+from .requests import GetDashboardDashcardExecuteRequest
 from .requests import GetDashboardEmbeddableRequest
+from .requests import GetDashboardItemsRequest
 from .requests import GetDashboardPublicRequest
+from .requests import GetDashboardQueryMetadataRequest
+from .requests import GetDashboardRelatedRequest
 from .requests import GetDashboardRequest
 from .requests import GetDatabaseRequest
 from .requests import GetFieldRequest
@@ -117,11 +134,14 @@ from .requests import PostCollectionMoveDashboardQuestionCandidatesRequest
 from .requests import PostCollectionRootMoveDashboardQuestionCandidatesRequest
 from .requests import PostCommentReactionRequest
 from .requests import PostCommentRequest
+from .requests import PostDashboardPivotQueryRequest
 from .requests import PostDashboardRequest
 from .requests import PutCacheRequest
 from .requests import PutCollectionGraphRequest
 from .requests import PutCollectionRequest
 from .requests import RegenerateApiKeyRequest
+from .requests import SaveDashboardRequest
+from .requests import SaveDashboardToCollectionRequest
 from .requests import TestChannelRequest
 from .requests import UpdateActionRequest
 from .requests import UpdateApiKeyRequest
@@ -129,6 +149,8 @@ from .requests import UpdateBookmarkOrderingRequest
 from .requests import UpdateCardRequest
 from .requests import UpdateChannelRequest
 from .requests import UpdateCommentRequest
+from .requests import UpdateDashboardCardsRequest
+from .requests import UpdateDashboardRequest
 from .responses import ActionExecutionResponse
 from .responses import ActivityMutationResponse
 from .responses import AgentResponse
@@ -176,6 +198,7 @@ __all__ = [
     "CardsDashboardsResponse",
     "Collection",
     "CopyCardRequest",
+    "CopyDashboardRequest",
     "CountApiKeysRequest",
     "CreateActionPublicLinkRequest",
     "CreateActionRequest",
@@ -187,11 +210,20 @@ __all__ = [
     "CreateChannelRequest",
     "CreateCloudMigrationRequest",
     "CreateCollectionRequest",
+    "CreateDashboardPublicLinkRequest",
     "CreateDatabaseRequest",
     "CreateRecentRequest",
     "CurrentUserRequest",
     "CurrentUserResponse",
     "Dashboard",
+    "DashboardParamRemappingRequest",
+    "DashboardParamSearchRequest",
+    "DashboardParamValuesRequest",
+    "DataStudioTableDiscardValuesRequest",
+    "DataStudioTableEditRequest",
+    "DataStudioTableRescanValuesRequest",
+    "DataStudioTableSelectionRequest",
+    "DataStudioTableSyncSchemaRequest",
     "Database",
     "DeleteActionPublicLinkRequest",
     "DeleteActionRequest",
@@ -203,7 +235,10 @@ __all__ = [
     "DeleteCardRequest",
     "DeleteCollectionRequest",
     "DeleteCommentRequest",
+    "DeleteDashboardPublicLinkRequest",
+    "DeleteDashboardRequest",
     "ExecuteActionRequest",
+    "ExecuteDashboardDashcardRequest",
     "GenericOperationResponse",
     "GetActionExecuteRequest",
     "GetActionRequest",
@@ -236,8 +271,12 @@ __all__ = [
     "GetCollectionTreeRequest",
     "GetCommentMentionsRequest",
     "GetCommentRequest",
+    "GetDashboardDashcardExecuteRequest",
     "GetDashboardEmbeddableRequest",
+    "GetDashboardItemsRequest",
     "GetDashboardPublicRequest",
+    "GetDashboardQueryMetadataRequest",
+    "GetDashboardRelatedRequest",
     "GetDashboardRequest",
     "GetDatabaseRequest",
     "GetFieldRequest",
@@ -280,11 +319,14 @@ __all__ = [
     "PostCollectionRootMoveDashboardQuestionCandidatesRequest",
     "PostCommentReactionRequest",
     "PostCommentRequest",
+    "PostDashboardPivotQueryRequest",
     "PostDashboardRequest",
     "PutCacheRequest",
     "PutCollectionGraphRequest",
     "PutCollectionRequest",
     "RegenerateApiKeyRequest",
+    "SaveDashboardRequest",
+    "SaveDashboardToCollectionRequest",
     "Table",
     "TestChannelRequest",
     "UpdateActionRequest",
@@ -293,5 +335,7 @@ __all__ = [
     "UpdateCardRequest",
     "UpdateChannelRequest",
     "UpdateCommentRequest",
+    "UpdateDashboardCardsRequest",
+    "UpdateDashboardRequest",
     "User",
 ]

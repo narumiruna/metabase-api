@@ -21,6 +21,7 @@ from metabaseapi.metabase import CardsDashboardsRequest
 from metabaseapi.metabase import CardsDashboardsResponse
 from metabaseapi.metabase import Collection
 from metabaseapi.metabase import CopyCardRequest
+from metabaseapi.metabase import CopyDashboardRequest
 from metabaseapi.metabase import CreateActionPublicLinkRequest
 from metabaseapi.metabase import CreateActionRequest
 from metabaseapi.metabase import CreateCardPublicLinkRequest
@@ -28,11 +29,20 @@ from metabaseapi.metabase import CreateCardRequest
 from metabaseapi.metabase import CreateChannelRequest
 from metabaseapi.metabase import CreateCloudMigrationRequest
 from metabaseapi.metabase import CreateCollectionRequest
+from metabaseapi.metabase import CreateDashboardPublicLinkRequest
 from metabaseapi.metabase import CreateDatabaseRequest
 from metabaseapi.metabase import CurrentUserRequest
 from metabaseapi.metabase import CurrentUserResponse
 from metabaseapi.metabase import Dashboard
+from metabaseapi.metabase import DashboardParamRemappingRequest
+from metabaseapi.metabase import DashboardParamSearchRequest
+from metabaseapi.metabase import DashboardParamValuesRequest
 from metabaseapi.metabase import Database
+from metabaseapi.metabase import DataStudioTableDiscardValuesRequest
+from metabaseapi.metabase import DataStudioTableEditRequest
+from metabaseapi.metabase import DataStudioTableRescanValuesRequest
+from metabaseapi.metabase import DataStudioTableSelectionRequest
+from metabaseapi.metabase import DataStudioTableSyncSchemaRequest
 from metabaseapi.metabase import DeleteActionPublicLinkRequest
 from metabaseapi.metabase import DeleteActionRequest
 from metabaseapi.metabase import DeleteCacheRequest
@@ -40,7 +50,10 @@ from metabaseapi.metabase import DeleteCardPublicLinkRequest
 from metabaseapi.metabase import DeleteCardRequest
 from metabaseapi.metabase import DeleteCollectionRequest
 from metabaseapi.metabase import DeleteCommentRequest
+from metabaseapi.metabase import DeleteDashboardPublicLinkRequest
+from metabaseapi.metabase import DeleteDashboardRequest
 from metabaseapi.metabase import ExecuteActionRequest
+from metabaseapi.metabase import ExecuteDashboardDashcardRequest
 from metabaseapi.metabase import GenericOperationResponse
 from metabaseapi.metabase import GetActionExecuteRequest
 from metabaseapi.metabase import GetActionRequest
@@ -65,8 +78,12 @@ from metabaseapi.metabase import GetCollectionTrashRequest
 from metabaseapi.metabase import GetCollectionTreeRequest
 from metabaseapi.metabase import GetCommentMentionsRequest
 from metabaseapi.metabase import GetCommentRequest
+from metabaseapi.metabase import GetDashboardDashcardExecuteRequest
 from metabaseapi.metabase import GetDashboardEmbeddableRequest
+from metabaseapi.metabase import GetDashboardItemsRequest
 from metabaseapi.metabase import GetDashboardPublicRequest
+from metabaseapi.metabase import GetDashboardQueryMetadataRequest
+from metabaseapi.metabase import GetDashboardRelatedRequest
 from metabaseapi.metabase import GetDashboardRequest
 from metabaseapi.metabase import GetDatabaseRequest
 from metabaseapi.metabase import GetFieldRequest
@@ -96,16 +113,21 @@ from metabaseapi.metabase import PostCollectionMoveDashboardQuestionCandidatesRe
 from metabaseapi.metabase import PostCollectionRootMoveDashboardQuestionCandidatesRequest
 from metabaseapi.metabase import PostCommentReactionRequest
 from metabaseapi.metabase import PostCommentRequest
+from metabaseapi.metabase import PostDashboardPivotQueryRequest
 from metabaseapi.metabase import PostDashboardRequest
 from metabaseapi.metabase import PutCacheRequest
 from metabaseapi.metabase import PutCollectionGraphRequest
 from metabaseapi.metabase import PutCollectionRequest
+from metabaseapi.metabase import SaveDashboardRequest
+from metabaseapi.metabase import SaveDashboardToCollectionRequest
 from metabaseapi.metabase import Table
 from metabaseapi.metabase import TestChannelRequest
 from metabaseapi.metabase import UpdateActionRequest
 from metabaseapi.metabase import UpdateCardRequest
 from metabaseapi.metabase import UpdateChannelRequest
 from metabaseapi.metabase import UpdateCommentRequest
+from metabaseapi.metabase import UpdateDashboardCardsRequest
+from metabaseapi.metabase import UpdateDashboardRequest
 from metabaseapi.metabase import User
 from metabaseapi.models import QueryParamValue
 
@@ -367,6 +389,108 @@ def test_action_requests_use_expected_paths_and_payloads() -> None:
         (GetDashboardPublicRequest(), GenericOperationResponse, ("GET", "/api/dashboard/public", {}, None)),
         (PostDashboardRequest(body={"name": "Sales"}), Dashboard, ("POST", "/api/dashboard", {}, {"name": "Sales"})),
         (
+            PostDashboardPivotQueryRequest(dashboard_id=9, dashcard_id=10, card_id=11, body={"x": 1}),
+            GenericOperationResponse,
+            ("POST", "/api/dashboard/pivot/9/dashcard/10/card/11/query", {}, {"x": 1}),
+        ),
+        (
+            SaveDashboardRequest(body={"name": "Sales"}),
+            GenericOperationResponse,
+            ("POST", "/api/dashboard/save", {}, {"name": "Sales"}),
+        ),
+        (
+            SaveDashboardToCollectionRequest(parent_collection_id="root", body={"name": "Sales"}),
+            GenericOperationResponse,
+            ("POST", "/api/dashboard/save/collection/root", {}, {"name": "Sales"}),
+        ),
+        (
+            GetDashboardDashcardExecuteRequest(dashboard_id=9, dashcard_id=10, parameters={"id": 1}),
+            GenericOperationResponse,
+            ("GET", "/api/dashboard/9/dashcard/10/execute", {"id": 1}, None),
+        ),
+        (
+            ExecuteDashboardDashcardRequest(dashboard_id=9, dashcard_id=10, parameters={"id": 1}),
+            GenericOperationResponse,
+            ("POST", "/api/dashboard/9/dashcard/10/execute", {}, {"parameters": {"id": 1}}),
+        ),
+        (
+            CreateDashboardPublicLinkRequest(dashboard_id=9),
+            GenericOperationResponse,
+            ("POST", "/api/dashboard/9/public_link", {}, None),
+        ),
+        (
+            DeleteDashboardPublicLinkRequest(dashboard_id=9),
+            GenericOperationResponse,
+            ("DELETE", "/api/dashboard/9/public_link", {}, None),
+        ),
+        (CopyDashboardRequest(from_dashboard_id=9), Dashboard, ("POST", "/api/dashboard/9/copy", {}, None)),
+        (DeleteDashboardRequest(dashboard_id=9), GenericOperationResponse, ("DELETE", "/api/dashboard/9", {}, None)),
+        (
+            UpdateDashboardRequest(dashboard_id=9, body={"name": "Sales"}),
+            Dashboard,
+            ("PUT", "/api/dashboard/9", {}, {"name": "Sales"}),
+        ),
+        (
+            UpdateDashboardCardsRequest(dashboard_id=9, body={"cards": []}),
+            GenericOperationResponse,
+            ("PUT", "/api/dashboard/9/cards", {}, {"cards": []}),
+        ),
+        (
+            GetDashboardItemsRequest(dashboard_id=9),
+            GenericOperationResponse,
+            ("GET", "/api/dashboard/9/items", {}, None),
+        ),
+        (
+            DashboardParamRemappingRequest(dashboard_id=9, param_key="abc", parameters={"value": 100}),
+            GenericOperationResponse,
+            ("GET", "/api/dashboard/9/params/abc/remapping", {"value": 100}, None),
+        ),
+        (
+            DashboardParamSearchRequest(dashboard_id=9, param_key="abc", query="Orange", parameters={"limit": 10}),
+            GenericOperationResponse,
+            ("GET", "/api/dashboard/9/params/abc/search/Orange", {"limit": 10}, None),
+        ),
+        (
+            DashboardParamValuesRequest(dashboard_id=9, param_key="abc", parameters={"limit": 10}),
+            GenericOperationResponse,
+            ("GET", "/api/dashboard/9/params/abc/values", {"limit": 10}, None),
+        ),
+        (
+            GetDashboardQueryMetadataRequest(dashboard_id=9),
+            GenericOperationResponse,
+            ("GET", "/api/dashboard/9/query_metadata", {}, None),
+        ),
+        (
+            GetDashboardRelatedRequest(dashboard_id=9),
+            GenericOperationResponse,
+            ("GET", "/api/dashboard/9/related", {}, None),
+        ),
+        (
+            DataStudioTableDiscardValuesRequest(body={"table_ids": [1]}),
+            GenericOperationResponse,
+            ("POST", "/api/data-studio/table/discard-values", {}, {"table_ids": [1]}),
+        ),
+        (
+            DataStudioTableEditRequest(body={"table_ids": [1]}),
+            GenericOperationResponse,
+            ("POST", "/api/data-studio/table/edit", {}, {"table_ids": [1]}),
+        ),
+        (
+            DataStudioTableRescanValuesRequest(body={"table_ids": [1]}),
+            GenericOperationResponse,
+            ("POST", "/api/data-studio/table/rescan-values", {}, {"table_ids": [1]}),
+        ),
+        (
+            DataStudioTableSelectionRequest(body={"table_ids": [1]}),
+            GenericOperationResponse,
+            ("POST", "/api/data-studio/table/selection", {}, {"table_ids": [1]}),
+        ),
+        (
+            DataStudioTableSyncSchemaRequest(body={"table_ids": [1]}),
+            GenericOperationResponse,
+            ("POST", "/api/data-studio/table/sync-schema", {}, {"table_ids": [1]}),
+        ),
+        (
             DeleteCommentRequest(comment_id="7"),
             GenericOperationResponse,
             ("DELETE", "/api/comment/7", {}, None),
@@ -578,6 +702,28 @@ def _build_mock_endpoint_responses() -> dict[tuple[str, str], dict[str, object]]
         ("GET", "/api/dashboard/embeddable"): {"ok": True},
         ("GET", "/api/dashboard/public"): {"ok": True},
         ("POST", "/api/dashboard"): {"id": 7, "name": "Sales", "collection_id": 1},
+        ("POST", "/api/dashboard/pivot/3/dashcard/4/card/5/query"): {"rows": []},
+        ("POST", "/api/dashboard/save"): {"id": 8},
+        ("POST", "/api/dashboard/save/collection/root"): {"id": 9},
+        ("GET", "/api/dashboard/3/dashcard/4/execute"): {"values": []},
+        ("POST", "/api/dashboard/3/dashcard/4/execute"): {"ok": True},
+        ("POST", "/api/dashboard/3/public_link"): {"uuid": "dash"},
+        ("DELETE", "/api/dashboard/3/public_link"): {"ok": True},
+        ("POST", "/api/dashboard/3/copy"): {"id": 10, "name": "Copied"},
+        ("DELETE", "/api/dashboard/3"): {"ok": True},
+        ("PUT", "/api/dashboard/3"): {"id": 3, "name": "Updated"},
+        ("PUT", "/api/dashboard/3/cards"): {"ok": True},
+        ("GET", "/api/dashboard/3/items"): {"items": []},
+        ("GET", "/api/dashboard/3/params/abc/remapping"): {"value": "A"},
+        ("GET", "/api/dashboard/3/params/abc/search/Orange"): {"values": ["Orange"]},
+        ("GET", "/api/dashboard/3/params/abc/values"): {"values": ["Orange"]},
+        ("GET", "/api/dashboard/3/query_metadata"): {"metadata": []},
+        ("GET", "/api/dashboard/3/related"): {"items": []},
+        ("POST", "/api/data-studio/table/discard-values"): {"ok": True},
+        ("POST", "/api/data-studio/table/edit"): {"ok": True},
+        ("POST", "/api/data-studio/table/rescan-values"): {"ok": True},
+        ("POST", "/api/data-studio/table/selection"): {"tables": []},
+        ("POST", "/api/data-studio/table/sync-schema"): {"ok": True},
         ("GET", "/api/user"): {"data": [{"id": 4, "email": "user@example.com", "first_name": "Ada"}]},
         ("GET", "/api/collection"): {"data": [{"id": 7, "name": "collection"}]},
         ("POST", "/api/collection"): {"id": 15, "name": "New"},
@@ -686,6 +832,30 @@ def test_typed_methods_in_client_return_models() -> None:
     dashboards = _run(client.list_dashboards_typed())
     dashboard_embeddable = _run(client.get_dashboard_embeddable_typed())
     dashboard_public = _run(client.get_dashboard_public_typed())
+    dashboard_pivot = _run(client.query_dashboard_card_pivot_typed(3, 4, 5, {"x": 1}))
+    saved_dashboard = _run(client.save_dashboard_typed({"name": "Sales"}))
+    saved_dashboard_to_collection = _run(client.save_dashboard_to_collection_typed("root", {"name": "Sales"}))
+    dashboard_dashcard_execute = _run(client.get_dashboard_dashcard_execute_typed(3, 4, parameters={"id": 1}))
+    executed_dashboard_dashcard = _run(client.execute_dashboard_dashcard_typed(3, 4, parameters={"id": 1}))
+    dashboard_public_link = _run(client.create_dashboard_public_link_typed(3))
+    deleted_dashboard_public_link = _run(client.delete_dashboard_public_link_typed(3))
+    copied_dashboard = _run(client.copy_dashboard_typed(3))
+    deleted_dashboard = _run(client.delete_dashboard_typed(3))
+    updated_dashboard = _run(client.update_dashboard_typed(3, {"name": "Updated"}))
+    updated_dashboard_cards = _run(client.update_dashboard_cards_typed(3, {"cards": []}))
+    dashboard_items = _run(client.get_dashboard_items_typed(3))
+    dashboard_param_remapping = _run(client.get_dashboard_param_remapping_typed(3, "abc", parameters={"value": 100}))
+    dashboard_param_search = _run(
+        client.get_dashboard_param_search_values_typed(3, "abc", "Orange", parameters={"limit": 10})
+    )
+    dashboard_param_values = _run(client.get_dashboard_param_values_typed(3, "abc", parameters={"limit": 10}))
+    dashboard_query_metadata = _run(client.get_dashboard_query_metadata_typed(3))
+    dashboard_related = _run(client.get_dashboard_related_typed(3))
+    data_studio_table_discard_values = _run(client.data_studio_table_discard_values_typed({"table_ids": [1]}))
+    data_studio_table_edit = _run(client.data_studio_table_edit_typed({"table_ids": [1]}))
+    data_studio_table_rescan_values = _run(client.data_studio_table_rescan_values_typed({"table_ids": [1]}))
+    data_studio_table_selection = _run(client.data_studio_table_selection_typed({"table_ids": [1]}))
+    data_studio_table_sync_schema = _run(client.data_studio_table_sync_schema_typed({"table_ids": [1]}))
     users = _run(client.list_users_typed())
     collections = _run(client.list_collections_typed())
     tables = _run(client.list_tables_typed())
@@ -756,6 +926,28 @@ def test_typed_methods_in_client_return_models() -> None:
     assert isinstance(dashboards, ListDashboardsResponse)
     assert isinstance(dashboard_embeddable, GenericOperationResponse)
     assert isinstance(dashboard_public, GenericOperationResponse)
+    assert isinstance(dashboard_pivot, GenericOperationResponse)
+    assert isinstance(saved_dashboard, GenericOperationResponse)
+    assert isinstance(saved_dashboard_to_collection, GenericOperationResponse)
+    assert isinstance(dashboard_dashcard_execute, GenericOperationResponse)
+    assert isinstance(executed_dashboard_dashcard, GenericOperationResponse)
+    assert isinstance(dashboard_public_link, GenericOperationResponse)
+    assert isinstance(deleted_dashboard_public_link, GenericOperationResponse)
+    assert isinstance(copied_dashboard, Dashboard)
+    assert isinstance(deleted_dashboard, GenericOperationResponse)
+    assert isinstance(updated_dashboard, Dashboard)
+    assert isinstance(updated_dashboard_cards, GenericOperationResponse)
+    assert isinstance(dashboard_items, GenericOperationResponse)
+    assert isinstance(dashboard_param_remapping, GenericOperationResponse)
+    assert isinstance(dashboard_param_search, GenericOperationResponse)
+    assert isinstance(dashboard_param_values, GenericOperationResponse)
+    assert isinstance(dashboard_query_metadata, GenericOperationResponse)
+    assert isinstance(dashboard_related, GenericOperationResponse)
+    assert isinstance(data_studio_table_discard_values, GenericOperationResponse)
+    assert isinstance(data_studio_table_edit, GenericOperationResponse)
+    assert isinstance(data_studio_table_rescan_values, GenericOperationResponse)
+    assert isinstance(data_studio_table_selection, GenericOperationResponse)
+    assert isinstance(data_studio_table_sync_schema, GenericOperationResponse)
     assert isinstance(users, ListUsersResponse)
     assert isinstance(collections, ListCollectionsResponse)
     assert isinstance(tables, ListTablesResponse)

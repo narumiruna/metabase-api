@@ -272,6 +272,30 @@ class _ConvenienceClient(_ClientWithRequestMethods):
     async def list_databases(self) -> dict[str, object]:
         return {"method": "GET", "path": "/api/database"}
 
+    async def list_channels(self) -> dict[str, object]:
+        return {"method": "GET", "path": "/api/channel"}
+
+    async def create_channel(self, body: dict[str, object]) -> dict[str, object]:
+        return {"method": "POST", "path": "/api/channel", "body": body}
+
+    async def test_channel(self, body: dict[str, object]) -> dict[str, object]:
+        return {"method": "POST", "path": "/api/channel/test", "body": body}
+
+    async def get_channel(self, channel_id: str) -> dict[str, object]:
+        return {"method": "GET", "path": f"/api/channel/{channel_id}"}
+
+    async def update_channel(self, channel_id: str, body: dict[str, object]) -> dict[str, object]:
+        return {"method": "PUT", "path": f"/api/channel/{channel_id}", "body": body}
+
+    async def create_cloud_migration(self, body: dict[str, object]) -> dict[str, object]:
+        return {"method": "POST", "path": "/api/cloud-migration", "body": body}
+
+    async def get_cloud_migration(self) -> dict[str, object]:
+        return {"method": "GET", "path": "/api/cloud-migration"}
+
+    async def cancel_cloud_migration(self) -> dict[str, object]:
+        return {"method": "PUT", "path": "/api/cloud-migration/cancel"}
+
     async def create_database(
         self,
         *,
@@ -348,6 +372,89 @@ class _ConvenienceClient(_ClientWithRequestMethods):
     async def get_card(self, card_id: str) -> dict[str, object]:
         return {"method": "GET", "path": f"/api/card/{card_id}"}
 
+    async def card_collections(
+        self,
+        card_ids: list[int] | list[str],
+        collection_id: str | None = None,
+    ) -> dict[str, object]:
+        return {
+            "method": "POST",
+            "path": "/api/card/collections",
+            "body": {"card_ids": card_ids, **({"collection_id": collection_id} if collection_id else {})},
+        }
+
+    async def list_embeddable_cards(self) -> dict[str, object]:
+        return {"method": "GET", "path": "/api/card/embeddable"}
+
+    async def pivot_query(self, card_id: str, body: dict[str, object] | None = None) -> dict[str, object]:
+        return {"method": "POST", "path": f"/api/card/pivot/{card_id}/query", "body": body}
+
+    async def list_public_cards(self) -> dict[str, object]:
+        return {"method": "GET", "path": "/api/card/public"}
+
+    async def get_card_param_search_values(self, card_id: str, param_key: str, query: str) -> dict[str, object]:
+        return {"method": "GET", "path": f"/api/card/{card_id}/params/{param_key}/search/{query}"}
+
+    async def get_card_param_values(self, card_id: str, param_key: str) -> dict[str, object]:
+        return {"method": "GET", "path": f"/api/card/{card_id}/params/{param_key}/values"}
+
+    async def create_card_public_link(self, card_id: str) -> dict[str, object]:
+        return {"method": "POST", "path": f"/api/card/{card_id}/public_link"}
+
+    async def delete_card_public_link(self, card_id: str) -> dict[str, object]:
+        return {"method": "DELETE", "path": f"/api/card/{card_id}/public_link"}
+
+    async def query_card(self, card_id: str, body: dict[str, object] | None = None) -> dict[str, object]:
+        return {"method": "POST", "path": f"/api/card/{card_id}/query", "body": body}
+
+    async def query_card_export(
+        self,
+        card_id: str,
+        export_format: str,
+        body: dict[str, object] | None = None,
+        *,
+        pivot_results: bool | None = None,
+        format_rows: bool | None = None,
+    ) -> dict[str, object]:
+        params: dict[str, object] = {}
+        if pivot_results is not None:
+            params["pivot-results"] = pivot_results
+        if format_rows is not None:
+            params["format-rows"] = format_rows
+        payload: dict[str, object] = {"method": "POST", "path": f"/api/card/{card_id}/query/{export_format}"}
+        if params:
+            payload["params"] = params
+        if body is not None:
+            payload["body"] = body
+        return payload
+
+    async def update_card(self, card_id: str, body: dict[str, object]) -> dict[str, object]:
+        return {"method": "PUT", "path": f"/api/card/{card_id}", "body": body}
+
+    async def delete_card(self, card_id: str) -> dict[str, object]:
+        return {"method": "DELETE", "path": f"/api/card/{card_id}"}
+
+    async def copy_card(self, card_id: str) -> dict[str, object]:
+        return {"method": "POST", "path": f"/api/card/{card_id}/copy"}
+
+    async def cards_dashboards(self, card_ids: list[int] | list[str]) -> dict[str, object]:
+        return {"method": "POST", "path": "/api/cards/dashboards", "body": {"card_ids": card_ids}}
+
+    async def move_cards(self, body: dict[str, object]) -> dict[str, object]:
+        return {"method": "POST", "path": "/api/cards/move", "body": body}
+
+    async def get_card_dashboards(self, card_id: str) -> dict[str, object]:
+        return {"method": "GET", "path": f"/api/card/{card_id}/dashboards"}
+
+    async def get_card_param_remapping(self, card_id: str, param_key: str) -> dict[str, object]:
+        return {"method": "GET", "path": f"/api/card/{card_id}/params/{param_key}/remapping"}
+
+    async def get_card_query_metadata(self, card_id: str) -> dict[str, object]:
+        return {"method": "GET", "path": f"/api/card/{card_id}/query_metadata"}
+
+    async def get_card_series(self, card_id: str) -> dict[str, object]:
+        return {"method": "GET", "path": f"/api/card/{card_id}/series"}
+
     async def list_dashboards(self) -> dict[str, object]:
         return {"method": "GET", "path": "/api/dashboard"}
 
@@ -363,8 +470,20 @@ class _ConvenienceClient(_ClientWithRequestMethods):
     async def list_collections(self) -> dict[str, object]:
         return {"method": "GET", "path": "/api/collection"}
 
+    async def create_collection(self, body: dict[str, object]) -> dict[str, object]:
+        return {"method": "POST", "path": "/api/collection", "body": body}
+
     async def get_collection(self, collection_id: str) -> dict[str, object]:
         return {"method": "GET", "path": f"/api/collection/{collection_id}"}
+
+    async def get_collection_root(self) -> dict[str, object]:
+        return {"method": "GET", "path": "/api/collection/root"}
+
+    async def get_collection_graph(self) -> dict[str, object]:
+        return {"method": "GET", "path": "/api/collection/graph"}
+
+    async def put_collection_graph(self, body: dict[str, object]) -> dict[str, object]:
+        return {"method": "PUT", "path": "/api/collection/graph", "body": body}
 
     async def list_tables(self) -> dict[str, object]:
         return {"method": "GET", "path": "/api/table"}
@@ -456,12 +575,36 @@ def test_help_lists_every_convenience_command() -> None:
         "create-recent",
         "current-user",
         "list-databases",
+        "list-channels",
+        "create-channel",
+        "test-channel",
+        "get-channel",
+        "update-channel",
+        "create-cloud-migration",
+        "get-cloud-migration",
+        "cancel-cloud-migration",
         "create-database",
         "get-database",
         "list-cards",
         "create-card",
         "create-question",
         "get-card",
+        "list-embeddable-cards",
+        "pivot-query",
+        "list-public-cards",
+        "get-card-param-search",
+        "get-card-param-values",
+        "query-card",
+        "query-card-export",
+        "update-card",
+        "delete-card",
+        "cards-dashboards",
+        "copy-card",
+        "get-card-dashboards",
+        "move-cards",
+        "get-card-param-remapping",
+        "get-card-query-metadata",
+        "get-card-series",
         "list-dashboards",
         "get-dashboard",
         "list-users",
@@ -471,6 +614,10 @@ def test_help_lists_every_convenience_command() -> None:
         "list-tables",
         "get-table",
         "get-field",
+        "create-collection",
+        "get-collection-root",
+        "get-collection-graph",
+        "put-collection-graph",
     ]:
         assert command in result.stdout
 
@@ -561,7 +708,9 @@ def test_get_database_command_outputs_json(monkeypatch: pytest.MonkeyPatch) -> N
         (["list-popular-items"], "/api/activity/popular_items"),
         (["list-recent-views"], "/api/activity/recent_views"),
         (["list-recents"], "/api/activity/recents"),
+        (["get-cloud-migration"], "/api/cloud-migration"),
         (["list-databases"], "/api/database"),
+        (["list-channels"], "/api/channel"),
         (["list-cards"], "/api/card"),
         (["list-dashboards"], "/api/dashboard"),
         (["list-users"], "/api/user"),
@@ -569,9 +718,19 @@ def test_get_database_command_outputs_json(monkeypatch: pytest.MonkeyPatch) -> N
         (["list-tables"], "/api/table"),
         (["get-database", "12"], "/api/database/12"),
         (["get-card", "13"], "/api/card/13"),
+        (["list-embeddable-cards"], "/api/card/embeddable"),
+        (["list-public-cards"], "/api/card/public"),
+        (["get-card-param-search", "13", "abc", "Orange"], "/api/card/13/params/abc/search/Orange"),
+        (["get-card-param-values", "13", "abc"], "/api/card/13/params/abc/values"),
+        (["get-card-dashboards", "13"], "/api/card/13/dashboards"),
+        (["get-card-param-remapping", "13", "abc"], "/api/card/13/params/abc/remapping"),
+        (["get-card-query-metadata", "13"], "/api/card/13/query_metadata"),
+        (["get-card-series", "13"], "/api/card/13/series"),
         (["get-dashboard", "14"], "/api/dashboard/14"),
         (["get-user", "15"], "/api/user/15"),
         (["get-collection", "root"], "/api/collection/root"),
+        (["get-collection-root"], "/api/collection/root"),
+        (["get-collection-graph"], "/api/collection/graph"),
         (["get-table", "16"], "/api/table/16"),
         (["get-field", "17"], "/api/field/17"),
     ],
@@ -597,7 +756,33 @@ def test_read_endpoint_commands_cover_handwritten_surface(
     ("command", "expected_method", "expected_path"),
     [
         (["create-action", '{"name":"action"}'], "POST", "/api/action"),
+        (["create-channel", '{"name":"Slack"}'], "POST", "/api/channel"),
+        (["test-channel", '{"name":"Slack"}'], "POST", "/api/channel/test"),
+        (["get-channel", "11"], "GET", "/api/channel/11"),
+        (["update-channel", "11", '{"name":"Slack"}'], "PUT", "/api/channel/11"),
+        (["create-cloud-migration", '{"environment":"prod"}'], "POST", "/api/cloud-migration"),
+        (["cancel-cloud-migration"], "PUT", "/api/cloud-migration/cancel"),
+        (["create-collection", '{"name":"New"}'], "POST", "/api/collection"),
+        (["get-collection-graph"], "GET", "/api/collection/graph"),
+        (["put-collection-graph", '{"groups":["admin"]}'], "PUT", "/api/collection/graph"),
         (["delete-action", "11"], "DELETE", "/api/action/11"),
+        (["card-collections", "1,2", "--collection-id", "root"], "POST", "/api/card/collections"),
+        (["cards-dashboards", "1,2"], "POST", "/api/cards/dashboards"),
+        (["list-embeddable-cards"], "GET", "/api/card/embeddable"),
+        (["pivot-query", "13", '{"x":1}'], "POST", "/api/card/pivot/13/query"),
+        (["list-public-cards"], "GET", "/api/card/public"),
+        (["create-card-public-link", "13"], "POST", "/api/card/13/public_link"),
+        (["delete-card-public-link", "13"], "DELETE", "/api/card/13/public_link"),
+        (["query-card", "13", '{"x":1}'], "POST", "/api/card/13/query"),
+        (["query-card-export", "13", "csv", '{"x":1}'], "POST", "/api/card/13/query/csv"),
+        (["move-cards", '{"card_ids":[1],"collection_id":"root"}'], "POST", "/api/cards/move"),
+        (["update-card", "13", '{"name":"copy"}'], "PUT", "/api/card/13"),
+        (["delete-card", "13"], "DELETE", "/api/card/13"),
+        (["copy-card", "13"], "POST", "/api/card/13/copy"),
+        (["get-card-dashboards", "13"], "GET", "/api/card/13/dashboards"),
+        (["get-card-param-remapping", "13", "abc"], "GET", "/api/card/13/params/abc/remapping"),
+        (["get-card-query-metadata", "13"], "GET", "/api/card/13/query_metadata"),
+        (["get-card-series", "13"], "GET", "/api/card/13/series"),
         (["update-action", "11", '{"name":"action"}'], "PUT", "/api/action/11"),
         (["execute-action", "11", "--parameters", '{"id":1}'], "POST", "/api/action/11/execute"),
         (["create-action-public-link", "11"], "POST", "/api/action/11/public_link"),

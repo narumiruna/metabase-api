@@ -27,15 +27,28 @@ from metabaseapi.metabase import AutomagicDashboardRequest
 from metabaseapi.metabase import AutomagicDatabaseCandidatesRequest
 from metabaseapi.metabase import AutomagicModelIndexPrimaryKeyRequest
 from metabaseapi.metabase import Bookmark
+from metabaseapi.metabase import CancelCloudMigrationRequest
 from metabaseapi.metabase import Card
+from metabaseapi.metabase import CardParamsSearchRequest
+from metabaseapi.metabase import CardParamsValuesRequest
+from metabaseapi.metabase import CardQueryExportRequest
+from metabaseapi.metabase import CardQueryRequest
+from metabaseapi.metabase import CardRemappingRequest
+from metabaseapi.metabase import CardsDashboardsRequest
+from metabaseapi.metabase import CardsDashboardsResponse
 from metabaseapi.metabase import Collection
+from metabaseapi.metabase import CopyCardRequest
 from metabaseapi.metabase import CountApiKeysRequest
 from metabaseapi.metabase import CreateActionPublicLinkRequest
 from metabaseapi.metabase import CreateActionRequest
 from metabaseapi.metabase import CreateAnalyticsEventBatchRequest
 from metabaseapi.metabase import CreateApiKeyRequest
 from metabaseapi.metabase import CreateBookmarkRequest
+from metabaseapi.metabase import CreateCardPublicLinkRequest
 from metabaseapi.metabase import CreateCardRequest
+from metabaseapi.metabase import CreateChannelRequest
+from metabaseapi.metabase import CreateCloudMigrationRequest
+from metabaseapi.metabase import CreateCollectionRequest
 from metabaseapi.metabase import CreateDatabaseRequest
 from metabaseapi.metabase import CreateRecentRequest
 from metabaseapi.metabase import CurrentUserRequest
@@ -48,6 +61,8 @@ from metabaseapi.metabase import DeleteAlertSubscriptionRequest
 from metabaseapi.metabase import DeleteApiKeyRequest
 from metabaseapi.metabase import DeleteBookmarkRequest
 from metabaseapi.metabase import DeleteCacheRequest
+from metabaseapi.metabase import DeleteCardPublicLinkRequest
+from metabaseapi.metabase import DeleteCardRequest
 from metabaseapi.metabase import ExecuteActionRequest
 from metabaseapi.metabase import GenericOperationResponse
 from metabaseapi.metabase import GetActionExecuteRequest
@@ -61,8 +76,18 @@ from metabaseapi.metabase import GetAnonymousStatsRequest
 from metabaseapi.metabase import GetBugReportingConnectionPoolDetailsRequest
 from metabaseapi.metabase import GetBugReportingDetailsRequest
 from metabaseapi.metabase import GetCacheRequest
+from metabaseapi.metabase import GetCardCollectionsRequest
+from metabaseapi.metabase import GetCardDashboardsRequest
+from metabaseapi.metabase import GetCardEmbeddableRequest
+from metabaseapi.metabase import GetCardPublicRequest
+from metabaseapi.metabase import GetCardQueryMetadataRequest
 from metabaseapi.metabase import GetCardRequest
+from metabaseapi.metabase import GetCardSeriesRequest
+from metabaseapi.metabase import GetChannelRequest
+from metabaseapi.metabase import GetCloudMigrationRequest
+from metabaseapi.metabase import GetCollectionGraphRequest
 from metabaseapi.metabase import GetCollectionRequest
+from metabaseapi.metabase import GetCollectionRootRequest
 from metabaseapi.metabase import GetDashboardRequest
 from metabaseapi.metabase import GetDatabaseRequest
 from metabaseapi.metabase import GetFieldRequest
@@ -81,6 +106,8 @@ from metabaseapi.metabase import ListBookmarksRequest
 from metabaseapi.metabase import ListBookmarksResponse
 from metabaseapi.metabase import ListCardsRequest
 from metabaseapi.metabase import ListCardsResponse
+from metabaseapi.metabase import ListChannelsRequest
+from metabaseapi.metabase import ListChannelsResponse
 from metabaseapi.metabase import ListCollectionsRequest
 from metabaseapi.metabase import ListCollectionsResponse
 from metabaseapi.metabase import ListDashboardsRequest
@@ -96,12 +123,18 @@ from metabaseapi.metabase import ListTablesResponse
 from metabaseapi.metabase import ListUsersRequest
 from metabaseapi.metabase import ListUsersResponse
 from metabaseapi.metabase import MetabaseField
+from metabaseapi.metabase import MoveCardsRequest
+from metabaseapi.metabase import PostCardPivotQueryRequest
 from metabaseapi.metabase import PutCacheRequest
+from metabaseapi.metabase import PutCollectionGraphRequest
 from metabaseapi.metabase import RegenerateApiKeyRequest
 from metabaseapi.metabase import Table
+from metabaseapi.metabase import TestChannelRequest
 from metabaseapi.metabase import UpdateActionRequest
 from metabaseapi.metabase import UpdateApiKeyRequest
 from metabaseapi.metabase import UpdateBookmarkOrderingRequest
+from metabaseapi.metabase import UpdateCardRequest
+from metabaseapi.metabase import UpdateChannelRequest
 from metabaseapi.metabase import User
 from metabaseapi.models import APIRequestModel
 from metabaseapi.models import APIResponseModel
@@ -560,6 +593,30 @@ class MetabaseClient:
     async def list_databases(self) -> JSONValue | None:
         return await self.get("/api/database")
 
+    async def list_channels(self) -> JSONValue | None:
+        return await self.get("/api/channel")
+
+    async def create_channel(self, body: Mapping[str, object]) -> JSONValue | None:
+        return await self.post("/api/channel", body=dict(body))
+
+    async def test_channel(self, body: Mapping[str, object]) -> JSONValue | None:
+        return await self.post("/api/channel/test", body=dict(body))
+
+    async def get_channel(self, channel_id: int | str) -> JSONValue | None:
+        return await self.get(f"/api/channel/{channel_id}")
+
+    async def update_channel(self, channel_id: int | str, body: Mapping[str, object]) -> JSONValue | None:
+        return await self.put(f"/api/channel/{channel_id}", body=dict(body))
+
+    async def create_cloud_migration(self, body: Mapping[str, object]) -> JSONValue | None:
+        return await self.post("/api/cloud-migration", body=dict(body))
+
+    async def get_cloud_migration(self) -> JSONValue | None:
+        return await self.get("/api/cloud-migration")
+
+    async def cancel_cloud_migration(self) -> JSONValue | None:
+        return await self.put("/api/cloud-migration/cancel")
+
     async def create_database(
         self,
         *,
@@ -633,6 +690,101 @@ class MetabaseClient:
             result_metadata=result_metadata,
         )
 
+    async def card_collections(
+        self,
+        card_ids: list[int | str],
+        collection_id: int | str | None = None,
+    ) -> JSONValue | None:
+        body: dict[str, object] = {"card_ids": card_ids}
+        if collection_id is not None:
+            body["collection_id"] = collection_id
+        return await self.post("/api/card/collections", body=body)
+
+    async def list_embeddable_cards(self) -> JSONValue | None:
+        return await self.get("/api/card/embeddable")
+
+    async def pivot_query(
+        self,
+        card_id: int | str,
+        body: Mapping[str, object] | None = None,
+    ) -> JSONValue | None:
+        return await self.post(
+            f"/api/card/pivot/{card_id}/query",
+            body=dict(body) if body is not None else None,
+        )
+
+    async def list_public_cards(self) -> JSONValue | None:
+        return await self.get("/api/card/public")
+
+    async def get_card_param_search_values(self, card_id: int | str, param_key: str, query: str) -> JSONValue | None:
+        return await self.get(f"/api/card/{card_id}/params/{param_key}/search/{query}")
+
+    async def get_card_param_values(self, card_id: int | str, param_key: str) -> JSONValue | None:
+        return await self.get(f"/api/card/{card_id}/params/{param_key}/values")
+
+    async def create_card_public_link(self, card_id: int | str) -> JSONValue | None:
+        return await self.post(f"/api/card/{card_id}/public_link")
+
+    async def delete_card_public_link(self, card_id: int | str) -> JSONValue | None:
+        return await self.delete(f"/api/card/{card_id}/public_link")
+
+    async def query_card(
+        self,
+        card_id: int | str,
+        body: Mapping[str, object] | None = None,
+    ) -> JSONValue | None:
+        return await self.post(
+            f"/api/card/{card_id}/query",
+            body=dict(body) if body is not None else None,
+        )
+
+    async def query_card_export(
+        self,
+        card_id: int | str,
+        export_format: str,
+        body: Mapping[str, object] | None = None,
+        *,
+        pivot_results: bool | None = None,
+        format_rows: bool | None = None,
+    ) -> JSONValue | None:
+        params: dict[str, QueryParamValue] = {}
+        if pivot_results is not None:
+            params["pivot-results"] = pivot_results
+        if format_rows is not None:
+            params["format-rows"] = format_rows
+        return await self.post(
+            f"/api/card/{card_id}/query/{export_format}",
+            body=dict(body) if body is not None else None,
+            params=params or None,
+        )
+
+    async def update_card(self, card_id: int | str, body: Mapping[str, object]) -> JSONValue | None:
+        return await self.put(f"/api/card/{card_id}", body=dict(body))
+
+    async def delete_card(self, card_id: int | str) -> JSONValue | None:
+        return await self.delete(f"/api/card/{card_id}")
+
+    async def copy_card(self, card_id: int | str) -> JSONValue | None:
+        return await self.post(f"/api/card/{card_id}/copy")
+
+    async def cards_dashboards(self, card_ids: list[int | str]) -> JSONValue | None:
+        return await self.post("/api/cards/dashboards", body={"card_ids": card_ids})
+
+    async def move_cards(self, body: Mapping[str, object]) -> JSONValue | None:
+        return await self.post("/api/cards/move", body=dict(body))
+
+    async def get_card_dashboards(self, card_id: int | str) -> JSONValue | None:
+        return await self.get(f"/api/card/{card_id}/dashboards")
+
+    async def get_card_param_remapping(self, card_id: int | str, param_key: str) -> JSONValue | None:
+        return await self.get(f"/api/card/{card_id}/params/{param_key}/remapping")
+
+    async def get_card_query_metadata(self, card_id: int | str) -> JSONValue | None:
+        return await self.get(f"/api/card/{card_id}/query_metadata")
+
+    async def get_card_series(self, card_id: int | str) -> JSONValue | None:
+        return await self.get(f"/api/card/{card_id}/series")
+
     async def get_card(self, card_id: int | str) -> JSONValue | None:
         return await self.get(f"/api/card/{card_id}")
 
@@ -651,8 +803,20 @@ class MetabaseClient:
     async def list_collections(self) -> JSONValue | None:
         return await self.get("/api/collection")
 
+    async def create_collection(self, body: Mapping[str, object]) -> JSONValue | None:
+        return await self.post("/api/collection", body=dict(body))
+
     async def get_collection(self, collection_id: int | str) -> JSONValue | None:
         return await self.get(f"/api/collection/{collection_id}")
+
+    async def get_collection_graph(self) -> JSONValue | None:
+        return await self.get("/api/collection/graph")
+
+    async def put_collection_graph(self, body: Mapping[str, object]) -> JSONValue | None:
+        return await self.put("/api/collection/graph", body=dict(body))
+
+    async def get_collection_root(self) -> JSONValue | None:
+        return await self.get("/api/collection/root")
 
     async def list_tables(self) -> JSONValue | None:
         return await self.get("/api/table")
@@ -849,6 +1013,30 @@ class MetabaseClient:
     async def list_databases_typed(self) -> ListDatabasesResponse:
         return await self.run(ListDatabasesRequest())
 
+    async def list_channels_typed(self) -> ListChannelsResponse:
+        return await self.run(ListChannelsRequest())
+
+    async def create_channel_typed(self, body: dict[str, object]) -> GenericOperationResponse:
+        return await self.run(CreateChannelRequest(body=body))
+
+    async def test_channel_typed(self, body: dict[str, object]) -> GenericOperationResponse:
+        return await self.run(TestChannelRequest(body=body))
+
+    async def get_channel_typed(self, channel_id: int | str) -> GenericOperationResponse:
+        return await self.run(GetChannelRequest(channel_id=channel_id))
+
+    async def update_channel_typed(self, channel_id: int | str, body: dict[str, object]) -> GenericOperationResponse:
+        return await self.run(UpdateChannelRequest(channel_id=channel_id, body=body))
+
+    async def create_cloud_migration_typed(self, body: dict[str, object]) -> GenericOperationResponse:
+        return await self.run(CreateCloudMigrationRequest(body=body))
+
+    async def get_cloud_migration_typed(self) -> GenericOperationResponse:
+        return await self.run(GetCloudMigrationRequest())
+
+    async def cancel_cloud_migration_typed(self) -> GenericOperationResponse:
+        return await self.run(CancelCloudMigrationRequest())
+
     async def list_cards_typed(self) -> ListCardsResponse:
         return await self.run(ListCardsRequest())
 
@@ -860,6 +1048,18 @@ class MetabaseClient:
 
     async def list_collections_typed(self) -> ListCollectionsResponse:
         return await self.run(ListCollectionsRequest())
+
+    async def create_collection_typed(self, body: dict[str, object]) -> Collection:
+        return await self.run(CreateCollectionRequest(body=body))
+
+    async def get_collection_graph_typed(self) -> GenericOperationResponse:
+        return await self.run(GetCollectionGraphRequest())
+
+    async def put_collection_graph_typed(self, body: dict[str, object]) -> GenericOperationResponse:
+        return await self.run(PutCollectionGraphRequest(body=body))
+
+    async def get_collection_root_typed(self) -> Collection:
+        return await self.run(GetCollectionRootRequest())
 
     async def list_tables_typed(self) -> ListTablesResponse:
         return await self.run(ListTablesRequest())
@@ -929,6 +1129,100 @@ class MetabaseClient:
 
     async def get_card_typed(self, card_id: int | str) -> Card:
         return await self.run(GetCardRequest(card_id=card_id))
+
+    async def get_card_collections_typed(
+        self,
+        card_ids: list[int | str],
+        collection_id: int | str | None = None,
+    ) -> GenericOperationResponse:
+        return await self.run(GetCardCollectionsRequest(card_ids=card_ids, collection_id=collection_id))
+
+    async def list_card_embeddable_typed(self) -> GenericOperationResponse:
+        return await self.run(GetCardEmbeddableRequest())
+
+    async def pivot_card_query_typed(
+        self,
+        card_id: int | str,
+        body: dict[str, object] | None = None,
+    ) -> GenericOperationResponse:
+        return await self.run(PostCardPivotQueryRequest(card_id=card_id, body=body or {}))
+
+    async def list_public_cards_typed(self) -> GenericOperationResponse:
+        return await self.run(GetCardPublicRequest())
+
+    async def get_card_param_search_values_typed(
+        self,
+        card_id: int | str,
+        param_key: str,
+        query: str,
+    ) -> GenericOperationResponse:
+        return await self.run(CardParamsSearchRequest(card_id=card_id, param_key=param_key, query=query))
+
+    async def get_card_param_values_typed(self, card_id: int | str, param_key: str) -> GenericOperationResponse:
+        return await self.run(CardParamsValuesRequest(card_id=card_id, param_key=param_key))
+
+    async def create_card_public_link_typed(self, card_id: int | str) -> GenericOperationResponse:
+        return await self.run(CreateCardPublicLinkRequest(card_id=card_id))
+
+    async def delete_card_public_link_typed(self, card_id: int | str) -> GenericOperationResponse:
+        return await self.run(DeleteCardPublicLinkRequest(card_id=card_id))
+
+    async def query_card_typed(
+        self,
+        card_id: int | str,
+        body: dict[str, object] | None = None,
+    ) -> GenericOperationResponse:
+        return await self.run(CardQueryRequest(card_id=card_id, body=body or {}))
+
+    async def query_card_export_typed(
+        self,
+        card_id: int | str,
+        export_format: str,
+        body: dict[str, object] | None = None,
+        *,
+        pivot_results: bool | None = None,
+        format_rows: bool | None = None,
+    ) -> GenericOperationResponse:
+        return await self.run(
+            CardQueryExportRequest(
+                card_id=card_id,
+                export_format=export_format,
+                body=body or {},
+                pivot_results=pivot_results,
+                format_rows=format_rows,
+            )
+        )
+
+    async def cards_dashboards_typed(self, card_ids: list[int | str]) -> CardsDashboardsResponse:
+        return await self.run(CardsDashboardsRequest(card_ids=card_ids))
+
+    async def move_cards_typed(self, body: Mapping[str, object]) -> GenericOperationResponse:
+        return await self.run(MoveCardsRequest(body=dict(body)))
+
+    async def update_card_typed(self, card_id: int | str, body: dict[str, object]) -> Card:
+        return await self.run(UpdateCardRequest(card_id=card_id, body=body))
+
+    async def delete_card_typed(self, card_id: int | str) -> GenericOperationResponse:
+        return await self.run(DeleteCardRequest(card_id=card_id))
+
+    async def copy_card_typed(self, card_id: int | str, body: dict[str, object] | None = None) -> Card:
+        return await self.run(CopyCardRequest(card_id=card_id, body=body or {}))
+
+    async def get_card_dashboards_typed(self, card_id: int | str) -> GenericOperationResponse:
+        return await self.run(GetCardDashboardsRequest(card_id=card_id))
+
+    async def get_card_param_remapping_typed(
+        self,
+        card_id: int | str,
+        param_key: str,
+    ) -> GenericOperationResponse:
+        return await self.run(CardRemappingRequest(card_id=card_id, param_key=param_key))
+
+    async def get_card_query_metadata_typed(self, card_id: int | str) -> GenericOperationResponse:
+        return await self.run(GetCardQueryMetadataRequest(card_id=card_id))
+
+    async def get_card_series_typed(self, card_id: int | str) -> GenericOperationResponse:
+        return await self.run(GetCardSeriesRequest(card_id=card_id))
 
     async def get_dashboard_typed(self, dashboard_id: int | str) -> Dashboard:
         return await self.run(GetDashboardRequest(dashboard_id=dashboard_id))

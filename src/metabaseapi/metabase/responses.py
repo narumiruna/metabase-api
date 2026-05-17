@@ -56,6 +56,44 @@ class ListActivityItemsResponse(BaseModel):
         return _normalize_list_payload(values, "items")
 
 
+class CardsDashboardsResponse(BaseModel):
+    cards: list[dict[str, Any]] = PydanticField(default_factory=list)
+    raw: JSONValue | None = None
+    model_config = ConfigDict(extra="allow")
+
+    @classmethod
+    @model_validator(mode="before")
+    def normalize_payload(cls, values: object) -> dict[str, Any]:
+        if values is None:
+            return {"cards": []}
+
+        if isinstance(values, list):
+            return {"cards": values}
+
+        if isinstance(values, dict):
+            dict_values = cast(dict[str, object], values)
+            if isinstance(dict_values.get("cards"), list):
+                return dict_values
+            if "data" in dict_values and isinstance(dict_values["data"], list):
+                remainder = dict(dict_values)
+                del remainder["data"]
+                return {"cards": dict_values["data"], **remainder}
+            return {"cards": [], "raw": dict_values}
+
+        return {"cards": [], "raw": values}
+
+
+class ListChannelsResponse(BaseModel):
+    channels: list[dict[str, Any]] = PydanticField(default_factory=list)
+    raw: JSONValue | None = None
+    model_config = ConfigDict(extra="allow")
+
+    @model_validator(mode="before")
+    @classmethod
+    def normalize_payload(cls, values: object) -> dict[str, Any]:
+        return _normalize_list_payload(values, "channels")
+
+
 class GenericOperationResponse(BaseModel):
     raw: JSONValue | None = None
     model_config = ConfigDict(extra="allow")
@@ -219,6 +257,7 @@ __all__ = [
     "ActionExecutionResponse",
     "ActivityMutationResponse",
     "AgentResponse",
+    "CardsDashboardsResponse",
     "GenericOperationResponse",
     "ListActionsResponse",
     "ListActivityItemsResponse",
@@ -226,6 +265,7 @@ __all__ = [
     "ListApiKeysResponse",
     "ListBookmarksResponse",
     "ListCardsResponse",
+    "ListChannelsResponse",
     "ListCollectionsResponse",
     "ListDashboardsResponse",
     "ListDatabasesResponse",

@@ -10,11 +10,24 @@ import httpx
 from metabaseapi.client import MetabaseClient
 from metabaseapi.metabase import Action
 from metabaseapi.metabase import ActionExecutionResponse
+from metabaseapi.metabase import CancelCloudMigrationRequest
 from metabaseapi.metabase import Card
+from metabaseapi.metabase import CardParamsSearchRequest
+from metabaseapi.metabase import CardParamsValuesRequest
+from metabaseapi.metabase import CardQueryExportRequest
+from metabaseapi.metabase import CardQueryRequest
+from metabaseapi.metabase import CardRemappingRequest
+from metabaseapi.metabase import CardsDashboardsRequest
+from metabaseapi.metabase import CardsDashboardsResponse
 from metabaseapi.metabase import Collection
+from metabaseapi.metabase import CopyCardRequest
 from metabaseapi.metabase import CreateActionPublicLinkRequest
 from metabaseapi.metabase import CreateActionRequest
+from metabaseapi.metabase import CreateCardPublicLinkRequest
 from metabaseapi.metabase import CreateCardRequest
+from metabaseapi.metabase import CreateChannelRequest
+from metabaseapi.metabase import CreateCloudMigrationRequest
+from metabaseapi.metabase import CreateCollectionRequest
 from metabaseapi.metabase import CreateDatabaseRequest
 from metabaseapi.metabase import CurrentUserRequest
 from metabaseapi.metabase import CurrentUserResponse
@@ -23,13 +36,25 @@ from metabaseapi.metabase import Database
 from metabaseapi.metabase import DeleteActionPublicLinkRequest
 from metabaseapi.metabase import DeleteActionRequest
 from metabaseapi.metabase import DeleteCacheRequest
+from metabaseapi.metabase import DeleteCardPublicLinkRequest
+from metabaseapi.metabase import DeleteCardRequest
 from metabaseapi.metabase import ExecuteActionRequest
 from metabaseapi.metabase import GenericOperationResponse
 from metabaseapi.metabase import GetActionExecuteRequest
 from metabaseapi.metabase import GetActionRequest
 from metabaseapi.metabase import GetCacheRequest
+from metabaseapi.metabase import GetCardCollectionsRequest
+from metabaseapi.metabase import GetCardDashboardsRequest
+from metabaseapi.metabase import GetCardEmbeddableRequest
+from metabaseapi.metabase import GetCardPublicRequest
+from metabaseapi.metabase import GetCardQueryMetadataRequest
 from metabaseapi.metabase import GetCardRequest
+from metabaseapi.metabase import GetCardSeriesRequest
+from metabaseapi.metabase import GetChannelRequest
+from metabaseapi.metabase import GetCloudMigrationRequest
+from metabaseapi.metabase import GetCollectionGraphRequest
 from metabaseapi.metabase import GetCollectionRequest
+from metabaseapi.metabase import GetCollectionRootRequest
 from metabaseapi.metabase import GetDashboardRequest
 from metabaseapi.metabase import GetDatabaseRequest
 from metabaseapi.metabase import GetFieldRequest
@@ -40,6 +65,8 @@ from metabaseapi.metabase import ListActionsRequest
 from metabaseapi.metabase import ListActionsResponse
 from metabaseapi.metabase import ListCardsRequest
 from metabaseapi.metabase import ListCardsResponse
+from metabaseapi.metabase import ListChannelsRequest
+from metabaseapi.metabase import ListChannelsResponse
 from metabaseapi.metabase import ListCollectionsRequest
 from metabaseapi.metabase import ListCollectionsResponse
 from metabaseapi.metabase import ListDashboardsResponse
@@ -51,9 +78,15 @@ from metabaseapi.metabase import ListTablesResponse
 from metabaseapi.metabase import ListUsersRequest
 from metabaseapi.metabase import ListUsersResponse
 from metabaseapi.metabase import MetabaseField
+from metabaseapi.metabase import MoveCardsRequest
+from metabaseapi.metabase import PostCardPivotQueryRequest
 from metabaseapi.metabase import PutCacheRequest
+from metabaseapi.metabase import PutCollectionGraphRequest
 from metabaseapi.metabase import Table
+from metabaseapi.metabase import TestChannelRequest
 from metabaseapi.metabase import UpdateActionRequest
+from metabaseapi.metabase import UpdateCardRequest
+from metabaseapi.metabase import UpdateChannelRequest
 from metabaseapi.metabase import User
 from metabaseapi.models import QueryParamValue
 
@@ -241,6 +274,119 @@ def test_action_requests_use_expected_paths_and_payloads() -> None:
             GenericOperationResponse,
             ("POST", "/api/cache/invalidate", {"dashboard": [15], "include": ["question"]}, None),
         ),
+        (ListChannelsRequest(), ListChannelsResponse, ("GET", "/api/channel", {}, None)),
+        (
+            CreateChannelRequest(body={"name": "Slack"}),
+            GenericOperationResponse,
+            ("POST", "/api/channel", {}, {"name": "Slack"}),
+        ),
+        (
+            TestChannelRequest(body={"name": "Slack"}),
+            GenericOperationResponse,
+            ("POST", "/api/channel/test", {}, {"name": "Slack"}),
+        ),
+        (GetChannelRequest(channel_id=11), GenericOperationResponse, ("GET", "/api/channel/11", {}, None)),
+        (
+            UpdateChannelRequest(channel_id=11, body={"name": "Slack"}),
+            GenericOperationResponse,
+            ("PUT", "/api/channel/11", {}, {"name": "Slack"}),
+        ),
+        (
+            CreateCloudMigrationRequest(body={"environment": "prod"}),
+            GenericOperationResponse,
+            ("POST", "/api/cloud-migration", {}, {"environment": "prod"}),
+        ),
+        (
+            GetCloudMigrationRequest(),
+            GenericOperationResponse,
+            ("GET", "/api/cloud-migration", {}, None),
+        ),
+        (
+            CancelCloudMigrationRequest(),
+            GenericOperationResponse,
+            ("PUT", "/api/cloud-migration/cancel", {}, None),
+        ),
+        (CreateCollectionRequest(body={"name": "New"}), Collection, ("POST", "/api/collection", {}, {"name": "New"})),
+        (GetCollectionGraphRequest(), GenericOperationResponse, ("GET", "/api/collection/graph", {}, None)),
+        (GetCollectionRootRequest(), Collection, ("GET", "/api/collection/root", {}, None)),
+        (
+            PutCollectionGraphRequest(body={"groups": ["admin"]}),
+            GenericOperationResponse,
+            ("PUT", "/api/collection/graph", {}, {"groups": ["admin"]}),
+        ),
+        (
+            GetCardCollectionsRequest(card_ids=[1, 2], collection_id="root"),
+            GenericOperationResponse,
+            ("POST", "/api/card/collections", {}, {"card_ids": [1, 2], "collection_id": "root"}),
+        ),
+        (GetCardEmbeddableRequest(), GenericOperationResponse, ("GET", "/api/card/embeddable", {}, None)),
+        (
+            PostCardPivotQueryRequest(card_id=13, body={"x": 1}),
+            GenericOperationResponse,
+            ("POST", "/api/card/pivot/13/query", {}, {"x": 1}),
+        ),
+        (GetCardPublicRequest(), GenericOperationResponse, ("GET", "/api/card/public", {}, None)),
+        (
+            CardParamsSearchRequest(card_id=13, param_key="abc", query="Orange"),
+            GenericOperationResponse,
+            ("GET", "/api/card/13/params/abc/search/Orange", {}, None),
+        ),
+        (
+            CardParamsValuesRequest(card_id=13, param_key="abc"),
+            GenericOperationResponse,
+            ("GET", "/api/card/13/params/abc/values", {}, None),
+        ),
+        (
+            CreateCardPublicLinkRequest(card_id=13),
+            GenericOperationResponse,
+            ("POST", "/api/card/13/public_link", {}, None),
+        ),
+        (
+            DeleteCardPublicLinkRequest(card_id=13),
+            GenericOperationResponse,
+            ("DELETE", "/api/card/13/public_link", {}, None),
+        ),
+        (
+            CardQueryRequest(card_id=13, body={"x": 1}),
+            GenericOperationResponse,
+            ("POST", "/api/card/13/query", {}, {"x": 1}),
+        ),
+        (
+            CardQueryExportRequest(
+                card_id=13, export_format="csv", body={"x": 1}, pivot_results=True, format_rows=False
+            ),
+            GenericOperationResponse,
+            ("POST", "/api/card/13/query/csv", {"pivot-results": True, "format-rows": False}, {"x": 1}),
+        ),
+        (UpdateCardRequest(card_id=13, body={"name": "x"}), Card, ("PUT", "/api/card/13", {}, {"name": "x"})),
+        (DeleteCardRequest(card_id=13), GenericOperationResponse, ("DELETE", "/api/card/13", {}, None)),
+        (
+            CardsDashboardsRequest(card_ids=[1, 2]),
+            CardsDashboardsResponse,
+            ("POST", "/api/cards/dashboards", {}, {"card_ids": [1, 2]}),
+        ),
+        (
+            MoveCardsRequest(body={"card_ids": [1], "collection_id": "root"}),
+            GenericOperationResponse,
+            ("POST", "/api/cards/move", {}, {"card_ids": [1], "collection_id": "root"}),
+        ),
+        (
+            CopyCardRequest(card_id=13, body={"name": "Copy"}),
+            Card,
+            ("POST", "/api/card/13/copy", {}, {"name": "Copy"}),
+        ),
+        (GetCardDashboardsRequest(card_id=13), GenericOperationResponse, ("GET", "/api/card/13/dashboards", {}, None)),
+        (
+            CardRemappingRequest(card_id=13, param_key="abc"),
+            GenericOperationResponse,
+            ("GET", "/api/card/13/params/abc/remapping", {}, None),
+        ),
+        (
+            GetCardQueryMetadataRequest(card_id=13),
+            GenericOperationResponse,
+            ("GET", "/api/card/13/query_metadata", {}, None),
+        ),
+        (GetCardSeriesRequest(card_id=13), GenericOperationResponse, ("GET", "/api/card/13/series", {}, None)),
     ]
 
     for request_model, response_type, expected_call in cases:
@@ -254,6 +400,7 @@ def test_action_requests_use_expected_paths_and_payloads() -> None:
 def test_list_requests_use_expected_paths() -> None:
     for request_model, response_type, expected_path in [
         (ListCardsRequest(), ListCardsResponse, "/api/card"),
+        (ListChannelsRequest(), ListChannelsResponse, "/api/channel"),
         (ListUsersRequest(), ListUsersResponse, "/api/user"),
         (ListCollectionsRequest(), ListCollectionsResponse, "/api/collection"),
         (ListTablesRequest(), ListTablesResponse, "/api/table"),
@@ -322,6 +469,10 @@ def _build_mock_endpoint_responses() -> dict[tuple[str, str], dict[str, object]]
         ("GET", "/api/dashboard"): {"data": [{"id": 6, "name": "dash", "collection_id": 1}]},
         ("GET", "/api/user"): {"data": [{"id": 4, "email": "user@example.com", "first_name": "Ada"}]},
         ("GET", "/api/collection"): {"data": [{"id": 7, "name": "collection"}]},
+        ("POST", "/api/collection"): {"id": 15, "name": "New"},
+        ("GET", "/api/collection/graph"): {"groups": ["admin"]},
+        ("PUT", "/api/collection/graph"): {"id": 1},
+        ("GET", "/api/collection/root"): {"id": "root", "name": "Root"},
         ("GET", "/api/table"): {"data": [{"id": 8, "name": "table", "schema": "public", "db_id": 1}]},
         ("GET", "/api/database/4"): {"id": 4, "name": "db4", "engine": "postgres"},
         ("GET", "/api/user/10"): {"id": 10, "email": "u10@example.com", "first_name": "Turing"},
@@ -369,7 +520,21 @@ def test_typed_methods_in_client_return_models() -> None:
         ),
     )
     databases = _run(client.list_databases_typed())
+    channels = _run(client.list_channels_typed())
+    create_channel = _run(client.create_channel_typed({"name": "Slack"}))
+    test_channel = _run(client.test_channel_typed({"name": "Slack"}))
+    channel = _run(client.get_channel_typed(11))
+    updated_channel = _run(client.update_channel_typed(11, {"name": "Slack"}))
+    cloud_migration = _run(client.create_cloud_migration_typed({"environment": "prod"}))
+    latest_cloud_migration = _run(client.get_cloud_migration_typed())
+    canceled_cloud_migration = _run(client.cancel_cloud_migration_typed())
+    created_collection = _run(client.create_collection_typed({"name": "New"}))
+    collection_graph = _run(client.get_collection_graph_typed())
+    collection_graph_update = _run(client.put_collection_graph_typed({"groups": ["admin"]}))
+    collection_root = _run(client.get_collection_root_typed())
     cards = _run(client.list_cards_typed())
+    cards_dashboards = _run(client.cards_dashboards_typed([1, 2]))
+    moved_cards = _run(client.move_cards_typed({"card_ids": [1], "collection_id": "root"}))
     dashboards = _run(client.list_dashboards_typed())
     users = _run(client.list_users_typed())
     collections = _run(client.list_collections_typed())
@@ -399,7 +564,24 @@ def test_typed_methods_in_client_return_models() -> None:
     assert created_card.name == "Orders"
     assert isinstance(databases, ListDatabasesResponse)
     assert databases.databases[0].engine == "postgres"
+    assert isinstance(channels, ListChannelsResponse)
+    assert isinstance(create_channel, GenericOperationResponse)
+    assert isinstance(test_channel, GenericOperationResponse)
+    assert isinstance(channel, GenericOperationResponse)
+    assert isinstance(updated_channel, GenericOperationResponse)
+    assert isinstance(cloud_migration, GenericOperationResponse)
+    assert isinstance(latest_cloud_migration, GenericOperationResponse)
+    assert isinstance(canceled_cloud_migration, GenericOperationResponse)
+    assert isinstance(created_collection, Collection)
+    assert created_collection.name == "New"
+    assert isinstance(collection_graph, GenericOperationResponse)
+    assert isinstance(collection_graph_update, GenericOperationResponse)
+    assert isinstance(collection_root, Collection)
+    assert collection_root.id == "root"
+    assert collection_root.name == "Root"
     assert isinstance(cards, ListCardsResponse)
+    assert isinstance(cards_dashboards, CardsDashboardsResponse)
+    assert isinstance(moved_cards, GenericOperationResponse)
     assert isinstance(dashboards, ListDashboardsResponse)
     assert isinstance(users, ListUsersResponse)
     assert isinstance(collections, ListCollectionsResponse)

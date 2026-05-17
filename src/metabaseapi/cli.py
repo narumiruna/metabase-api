@@ -650,6 +650,73 @@ def list_databases(ctx: typer.Context) -> None:
     _run_and_print(_run_client_call(ctx, lambda client: client.list_databases()))
 
 
+@app.command("list-channels")
+def list_channels(ctx: typer.Context) -> None:
+    """List notification channels."""
+
+    _run_and_print(_run_client_call(ctx, lambda client: client.list_channels()))
+
+
+@app.command("create-channel")
+def create_channel(ctx: typer.Context, body: str = typer.Argument(..., help="Channel JSON object")) -> None:
+    """Create a channel."""
+
+    payload = _parse_json_object(body, "body")
+    _run_and_print(_run_client_call(ctx, lambda client: client.create_channel(payload)))
+
+
+@app.command("test-channel")
+def test_channel(ctx: typer.Context, body: str = typer.Argument(..., help="Channel JSON object")) -> None:
+    """Test a channel connection."""
+
+    payload = _parse_json_object(body, "body")
+    _run_and_print(_run_client_call(ctx, lambda client: client.test_channel(payload)))
+
+
+@app.command("get-channel")
+def get_channel(ctx: typer.Context, channel_id: str = typer.Argument(..., help="Channel ID")) -> None:
+    """Get a channel."""
+
+    _run_and_print(_run_client_call(ctx, lambda client: client.get_channel(channel_id)))
+
+
+@app.command("update-channel")
+def update_channel(
+    ctx: typer.Context,
+    channel_id: str = typer.Argument(..., help="Channel ID"),
+    body: str = typer.Argument(..., help="Channel JSON object"),
+) -> None:
+    """Update a channel."""
+
+    payload = _parse_json_object(body, "body")
+    _run_and_print(_run_client_call(ctx, lambda client: client.update_channel(channel_id, payload)))
+
+
+@app.command("create-cloud-migration")
+def create_cloud_migration(
+    ctx: typer.Context,
+    body: str = typer.Argument(..., help="Cloud migration JSON object"),
+) -> None:
+    """Initiate a new cloud migration."""
+
+    payload = _parse_json_object(body, "body")
+    _run_and_print(_run_client_call(ctx, lambda client: client.create_cloud_migration(payload)))
+
+
+@app.command("get-cloud-migration")
+def get_cloud_migration(ctx: typer.Context) -> None:
+    """Get the latest cloud migration, if any."""
+
+    _run_and_print(_run_client_call(ctx, lambda client: client.get_cloud_migration()))
+
+
+@app.command("cancel-cloud-migration")
+def cancel_cloud_migration(ctx: typer.Context) -> None:
+    """Cancel any ongoing cloud migrations, if any."""
+
+    _run_and_print(_run_client_call(ctx, lambda client: client.cancel_cloud_migration()))
+
+
 @app.command("list-cards")
 def list_cards(ctx: typer.Context) -> None:
     """List cards."""
@@ -787,6 +854,163 @@ def get_card(ctx: typer.Context, card_id: str = typer.Argument(...)) -> None:
     _run_and_print(_run_client_call(ctx, lambda client: client.get_card(card_id)))
 
 
+@app.command("card-collections")
+def card_collections(
+    ctx: typer.Context,
+    card_ids: str = typer.Argument(..., help="Comma-separated card IDs"),
+    collection_id: str | None = typer.Option(None, "--collection-id", help="Target collection ID"),
+) -> None:
+    ids: list[int | str]
+    ids = [cid if not cid.isdigit() else int(cid) for cid in card_ids.split(",") if cid]
+    _run_and_print(_run_client_call(ctx, lambda client: client.card_collections(ids, collection_id=collection_id)))
+
+
+@app.command("list-embeddable-cards")
+def list_embeddable_cards(ctx: typer.Context) -> None:
+    """List embeddable cards."""
+
+    _run_and_print(_run_client_call(ctx, lambda client: client.list_embeddable_cards()))
+
+
+@app.command("pivot-query")
+def pivot_query(
+    ctx: typer.Context,
+    card_id: str = typer.Argument(...),
+    body: str = typer.Argument(None, help="Optional query body JSON object"),
+) -> None:
+    payload = _parse_optional_json_object(body, "body") if body else None
+    _run_and_print(_run_client_call(ctx, lambda client: client.pivot_query(card_id, body=payload)))
+
+
+@app.command("list-public-cards")
+def list_public_cards(ctx: typer.Context) -> None:
+    """List publicly shared cards."""
+
+    _run_and_print(_run_client_call(ctx, lambda client: client.list_public_cards()))
+
+
+@app.command("get-card-param-search")
+def get_card_param_search_values(
+    ctx: typer.Context,
+    card_id: str = typer.Argument(...),
+    param_key: str = typer.Argument(...),
+    query: str = typer.Argument(...),
+) -> None:
+    _run_and_print(_run_client_call(ctx, lambda client: client.get_card_param_search_values(card_id, param_key, query)))
+
+
+@app.command("get-card-param-values")
+def get_card_param_values(
+    ctx: typer.Context, card_id: str = typer.Argument(...), param_key: str = typer.Argument(...)
+) -> None:
+    _run_and_print(_run_client_call(ctx, lambda client: client.get_card_param_values(card_id, param_key)))
+
+
+@app.command("create-card-public-link")
+def create_card_public_link(ctx: typer.Context, card_id: str = typer.Argument(...)) -> None:
+    """Create a public link for a card."""
+
+    _run_and_print(_run_client_call(ctx, lambda client: client.create_card_public_link(card_id)))
+
+
+@app.command("delete-card-public-link")
+def delete_card_public_link(ctx: typer.Context, card_id: str = typer.Argument(...)) -> None:
+    """Delete a public link for a card."""
+
+    _run_and_print(_run_client_call(ctx, lambda client: client.delete_card_public_link(card_id)))
+
+
+@app.command("query-card")
+def query_card(
+    ctx: typer.Context,
+    card_id: str = typer.Argument(...),
+    body: str = typer.Argument(None, help="Optional query payload JSON object"),
+) -> None:
+    payload = _parse_optional_json_object(body, "body") if body else None
+    _run_and_print(_run_client_call(ctx, lambda client: client.query_card(card_id, body=payload)))
+
+
+@app.command("query-card-export")
+def query_card_export(
+    ctx: typer.Context,
+    card_id: str = typer.Argument(...),
+    export_format: str = typer.Argument(...),
+    body: str = typer.Argument(None, help="Optional payload JSON object"),
+    pivot_results: bool | None = typer.Option(None, "--pivot-results"),
+    format_rows: bool | None = typer.Option(None, "--format-rows"),
+) -> None:
+    payload = _parse_optional_json_object(body, "body") if body else None
+    _run_and_print(
+        _run_client_call(
+            ctx,
+            lambda client: client.query_card_export(
+                card_id,
+                export_format,
+                body=payload,
+                pivot_results=pivot_results,
+                format_rows=format_rows,
+            ),
+        ),
+    )
+
+
+@app.command("update-card")
+def update_card(ctx: typer.Context, card_id: str = typer.Argument(...), body: str = typer.Argument(...)) -> None:
+    payload = _parse_json_object(body, "body")
+    _run_and_print(_run_client_call(ctx, lambda client: client.update_card(card_id, payload)))
+
+
+@app.command("delete-card")
+def delete_card(ctx: typer.Context, card_id: str = typer.Argument(...)) -> None:
+    """Delete a card."""
+
+    _run_and_print(_run_client_call(ctx, lambda client: client.delete_card(card_id)))
+
+
+@app.command("copy-card")
+def copy_card(ctx: typer.Context, card_id: str = typer.Argument(...)) -> None:
+    """Copy a card."""
+
+    _run_and_print(_run_client_call(ctx, lambda client: client.copy_card(card_id)))
+
+
+@app.command("cards-dashboards")
+def cards_dashboards(ctx: typer.Context, card_ids: str = typer.Argument(..., help="Comma-separated card IDs")) -> None:
+    ids: list[int | str]
+    ids = [card_id if not card_id.isdigit() else int(card_id) for card_id in card_ids.split(",") if card_id]
+    _run_and_print(_run_client_call(ctx, lambda client: client.cards_dashboards(ids)))
+
+
+@app.command("move-cards")
+def move_cards(ctx: typer.Context, body: str = typer.Argument(..., help="Move payload JSON object")) -> None:
+    payload = _parse_json_body(body)
+    if not isinstance(payload, dict):
+        raise typer.BadParameter("body must be a JSON object")
+    _run_and_print(_run_client_call(ctx, lambda client: client.move_cards(payload)))
+
+
+@app.command("get-card-dashboards")
+def get_card_dashboards(ctx: typer.Context, card_id: str = typer.Argument(...)) -> None:
+    _run_and_print(_run_client_call(ctx, lambda client: client.get_card_dashboards(card_id)))
+
+
+@app.command("get-card-param-remapping")
+def get_card_param_remapping(
+    ctx: typer.Context, card_id: str = typer.Argument(...), param_key: str = typer.Argument(...)
+) -> None:
+    _run_and_print(_run_client_call(ctx, lambda client: client.get_card_param_remapping(card_id, param_key)))
+
+
+@app.command("get-card-query-metadata")
+def get_card_query_metadata(ctx: typer.Context, card_id: str = typer.Argument(...)) -> None:
+    _run_and_print(_run_client_call(ctx, lambda client: client.get_card_query_metadata(card_id)))
+
+
+@app.command("get-card-series")
+def get_card_series(ctx: typer.Context, card_id: str = typer.Argument(...)) -> None:
+    _run_and_print(_run_client_call(ctx, lambda client: client.get_card_series(card_id)))
+
+
 @app.command("get-dashboard")
 def get_dashboard(ctx: typer.Context, dashboard_id: str = typer.Argument(...)) -> None:
     """Get a dashboard by ID."""
@@ -801,11 +1025,43 @@ def get_user(ctx: typer.Context, user_id: str = typer.Argument(...)) -> None:
     _run_and_print(_run_client_call(ctx, lambda client: client.get_user(user_id)))
 
 
+@app.command("create-collection")
+def create_collection(ctx: typer.Context, body: str = typer.Argument(..., help="Collection JSON object")) -> None:
+    """Create a collection."""
+
+    payload = _parse_json_object(body, "body")
+    _run_and_print(_run_client_call(ctx, lambda client: client.create_collection(payload)))
+
+
 @app.command("get-collection")
 def get_collection(ctx: typer.Context, collection_id: str = typer.Argument(...)) -> None:
     """Get a collection by ID."""
 
     _run_and_print(_run_client_call(ctx, lambda client: client.get_collection(collection_id)))
+
+
+@app.command("get-collection-root")
+def get_collection_root(ctx: typer.Context) -> None:
+    """Get the root collection."""
+
+    _run_and_print(_run_client_call(ctx, lambda client: client.get_collection_root()))
+
+
+@app.command("get-collection-graph")
+def get_collection_graph(ctx: typer.Context) -> None:
+    """Fetch the collection permissions graph."""
+
+    _run_and_print(_run_client_call(ctx, lambda client: client.get_collection_graph()))
+
+
+@app.command("put-collection-graph")
+def put_collection_graph(
+    ctx: typer.Context, body: str = typer.Argument(..., help="Collection graph JSON object")
+) -> None:
+    """Update collection permissions via graph payload."""
+
+    payload = _parse_json_object(body, "body")
+    _run_and_print(_run_client_call(ctx, lambda client: client.put_collection_graph(payload)))
 
 
 @app.command("get-table")

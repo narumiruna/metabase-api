@@ -15,8 +15,8 @@ This file is a static implementation checklist derived from the latest Metabase 
 ## Coverage summary
 
 - Documented operations: 600
-- Complete hand-written endpoint implementations: 73
-- Remaining documented operations: 527
+- Complete hand-written endpoint implementations: 104
+- Remaining documented operations: 496
 - Raw `request` / `invoke`: disabled for CLI users and does not count toward TODO completion.
 
 ## Endpoint checklist
@@ -111,55 +111,55 @@ This file is a static implementation checklist derived from the latest Metabase 
 - [x] `DELETE /api/cache` — `delete-api-cache` — Delete cache configurations.
 - [x] `POST /api/cache/invalidate` — `post-api-cache-invalidate` — Invalidate cache entries. Use it like `/api/cache/invalidate?database=1&dashboard=15` (any number of database/dashboard/question can be supplied). `&include=...
 
-### /api/card (3/20 complete)
+### /api/card (20/20 complete)
 
 - [x] `GET /api/card` — `get-api-card` — Get all the Cards. Option filter param `f` can be used to change the set of Cards that are returned; default is `all`, but other options include `mine`, `boo...
 - [x] `POST /api/card` — `post-api-card` — Create a new `Card`. Card `type` can be `question`, `metric`, or `model`.
-- [ ] `POST /api/card/collections` — `post-api-card-collections` — Bulk update endpoint for Card Collections. Move a set of `Cards` with `card_ids` into a `Collection` with `collection_id`, or remove them from any Collection...
-- [ ] `GET /api/card/embeddable` — `get-api-card-embeddable` — Fetch a list of Cards where `enable_embedding` is `true`. The cards can be embedded using the embedding endpoints and a signed JWT.
-- [ ] `POST /api/card/pivot/{card-id}/query` — `post-api-card-pivot-card-id-query` — Run the query associated with a Card.
-- [ ] `GET /api/card/public` — `get-api-card-public` — Fetch a list of Cards with public UUIDs. These cards are publicly-accessible *if* public sharing is enabled.
-- [ ] `GET /api/card/{card-id}/params/{param-key}/search/{query}` — `get-api-card-card-id-params-param-key-search-query` — Fetch possible values of the parameter whose ID is `:param-key` that contain `:query`. ;; fetch values for Card 1 parameter 'abc' that contain 'Orange'; GET...
-- [ ] `GET /api/card/{card-id}/params/{param-key}/values` — `get-api-card-card-id-params-param-key-values` — Fetch possible values of the parameter whose ID is `:param-key`. ;; fetch values for Card 1 parameter 'abc' that are possible GET /api/queries/1/params/abc/v...
-- [ ] `POST /api/card/{card-id}/public_link` — `post-api-card-card-id-public_link` — Generate publicly-accessible links for this Card. Returns UUID to be used in public links. (If this Card has already been shared, it will return the existing...
-- [ ] `DELETE /api/card/{card-id}/public_link` — `delete-api-card-card-id-public_link` — Delete the publicly-accessible link to this Card.
-- [ ] `POST /api/card/{card-id}/query` — `post-api-card-card-id-query` — Run the query associated with a Card.
-- [ ] `POST /api/card/{card-id}/query/{export-format}` — `post-api-card-card-id-query-export-format` — Run the query associated with a Card, and return its results as a file in the specified format. `parameters`, `pivot-results?` and `format-rows?` should be p...
+- [x] `POST /api/card/collections` — `post-api-card-collections` — Bulk update endpoint for Card Collections. Move a set of `Cards` with `card_ids` into a `Collection` with `collection_id`, or remove them from any Collection...
+- [x] `GET /api/card/embeddable` — `get-api-card-embeddable` — Fetch a list of Cards where `enable_embedding` is `true`. The cards can be embedded using the embedding endpoints and a signed JWT.
+- [x] `POST /api/card/pivot/{card-id}/query` — `post-api-card-pivot-card-id-query` — Run the query associated with a Card.
+- [x] `GET /api/card/public` — `get-api-card-public` — Fetch a list of Cards with public UUIDs. These cards are publicly-accessible *if* public sharing is enabled.
+- [x] `GET /api/card/{card-id}/params/{param-key}/search/{query}` — `get-api-card-card-id-params-param-key-search-query` — Fetch possible values of the parameter whose ID is `:param-key` that contain `:query`. ;; fetch values for Card 1 parameter 'abc' that contain 'Orange'; GET...
+- [x] `GET /api/card/{card-id}/params/{param-key}/values` — `get-api-card-card-id-params-param-key-values` — Fetch possible values of the parameter whose ID is `:param-key`. ;; fetch values for Card 1 parameter 'abc' that are possible GET /api/queries/1/params/abc/v...
+- [x] `POST /api/card/{card-id}/public_link` — `post-api-card-card-id-public_link` — Generate publicly-accessible links for this Card. Returns UUID to be used in public links. (If this Card has already been shared, it will return the existing...
+- [x] `DELETE /api/card/{card-id}/public_link` — `delete-api-card-card-id-public_link` — Delete the publicly-accessible link to this Card.
+- [x] `POST /api/card/{card-id}/query` — `post-api-card-card-id-query` — Run the query associated with a Card.
+- [x] `POST /api/card/{card-id}/query/{export-format}` — `post-api-card-card-id-query-export-format` — Run the query associated with a Card, and return its results as a file in the specified format. `parameters`, `pivot-results?` and `format-rows?` should be p...
 - [x] `GET /api/card/{id}` — `get-api-card-id` — Get `Card` with ID. As of v57, returns the MBQL query (`dataset_query`) as MBQL 5; to return the query as MBQL 4 (aka legacy MBQL) instead, you can specify `...
-- [ ] `PUT /api/card/{id}` — `put-api-card-id` — Update a `Card`.
-- [ ] `DELETE /api/card/{id}` — `delete-api-card-id` — Hard delete a Card. To soft delete, use `PUT /api/queries/:id`
-- [ ] `POST /api/card/{id}/copy` — `post-api-card-id-copy` — Copy a `Card`, with the new name 'Copy of _name_'
-- [ ] `GET /api/card/{id}/dashboards` — `get-api-card-id-dashboards` — Get a list of `{:name ... :id ...}` pairs for all the dashboards this card appears in.
-- [ ] `GET /api/card/{id}/params/{param-key}/remapping` — `get-api-card-id-params-param-key-remapping` — Fetch the remapped value for a given value of the parameter with ID `:param-key`. ;; fetch the remapped value for Card 1 parameter 'abc' for value 100 GET /a...
-- [ ] `GET /api/card/{id}/query_metadata` — `get-api-card-id-query_metadata` — Get all of the required query metadata for a card.
-- [ ] `GET /api/card/{id}/series` — `get-api-card-id-series` — Fetches a list of compatible series with the card with id `card_id`. - `last_cursor` with value is the id of the last card from the previous page to fetch th...
+- [x] `PUT /api/card/{id}` — `put-api-card-id` — Update a `Card`.
+- [x] `DELETE /api/card/{id}` — `delete-api-card-id` — Hard delete a Card. To soft delete, use `PUT /api/queries/:id`
+- [x] `POST /api/card/{id}/copy` — `post-api-card-id-copy` — Copy a `Card`, with the new name 'Copy of _name_'
+- [x] `GET /api/card/{id}/dashboards` — `get-api-card-id-dashboards` — Get a list of `{:name ... :id ...}` pairs for all the dashboards this card appears in.
+- [x] `GET /api/card/{id}/params/{param-key}/remapping` — `get-api-card-id-params-param-key-remapping` — Fetch the remapped value for a given value of the parameter with ID `:param-key`. ;; fetch the remapped value for Card 1 parameter 'abc' for value 100 GET /a...
+- [x] `GET /api/card/{id}/query_metadata` — `get-api-card-id-query_metadata` — Get all of the required query metadata for a card.
+- [x] `GET /api/card/{id}/series` — `get-api-card-id-series` — Fetches a list of compatible series with the card with id `card_id`. - `last_cursor` with value is the id of the last card from the previous page to fetch th...
 
-### /api/cards (0/2 complete)
+### /api/cards (2/2 complete)
 
-- [ ] `POST /api/cards/dashboards` — `post-api-cards-dashboards` — Get the dashboards that multiple cards appear in. The response is a sequence of maps, each of which has a `card_id` and `dashboards`. `dashboard` may include...
-- [ ] `POST /api/cards/move` — `post-api-cards-move` — Moves a number of Cards to a single collection or dashboard. For now, just either succeed or fail as a batch - we can think more about error handling later d...
+- [x] `POST /api/cards/dashboards` — `post-api-cards-dashboards` — Get the dashboards that multiple cards appear in. The response is a sequence of maps, each of which has a `card_id` and `dashboards`. `dashboard` may include...
+- [x] `POST /api/cards/move` — `post-api-cards-move` — Moves a number of Cards to a single collection or dashboard. For now, just either succeed or fail as a batch - we can think more about error handling later d...
 
-### /api/channel (0/5 complete)
+### /api/channel (5/5 complete)
 
-- [ ] `GET /api/channel` — `get-api-channel` — Get all channels
-- [ ] `POST /api/channel` — `post-api-channel` — Create a channel
-- [ ] `POST /api/channel/test` — `post-api-channel-test` — Test a channel connection
-- [ ] `GET /api/channel/{id}` — `get-api-channel-id` — Get a channel
-- [ ] `PUT /api/channel/{id}` — `put-api-channel-id` — Update a channel
+- [x] `GET /api/channel` — `get-api-channel` — Get all channels
+- [x] `POST /api/channel` — `post-api-channel` — Create a channel
+- [x] `POST /api/channel/test` — `post-api-channel-test` — Test a channel connection
+- [x] `GET /api/channel/{id}` — `get-api-channel-id` — Get a channel
+- [x] `PUT /api/channel/{id}` — `put-api-channel-id` — Update a channel
 
-### /api/cloud-migration (0/3 complete)
+### /api/cloud-migration (3/3 complete)
 
-- [ ] `POST /api/cloud-migration` — `post-api-cloud-migration` — Initiate a new cloud migration.
-- [ ] `GET /api/cloud-migration` — `get-api-cloud-migration` — Get the latest cloud migration, if any.
-- [ ] `PUT /api/cloud-migration/cancel` — `put-api-cloud-migration-cancel` — Cancel any ongoing cloud migrations, if any.
+- [x] `POST /api/cloud-migration` — `post-api-cloud-migration` — Initiate a new cloud migration.
+- [x] `GET /api/cloud-migration` — `get-api-cloud-migration` — Get the latest cloud migration, if any.
+- [x] `PUT /api/cloud-migration/cancel` — `put-api-cloud-migration-cancel` — Cancel any ongoing cloud migrations, if any.
 
-### /api/collection (2/16 complete)
+### /api/collection (6/16 complete)
 
 - [x] `GET /api/collection` — `get-api-collection` — Fetch a list of all Collections that the current user has read permissions for (`:can_write` is returned as an additional property of each Collection so you...
-- [ ] `POST /api/collection` — `post-api-collection` — Create a new Collection.
-- [ ] `GET /api/collection/graph` — `get-api-collection-graph` — Fetch a graph of all Collection Permissions.
-- [ ] `PUT /api/collection/graph` — `put-api-collection-graph` — Do a batch update of Collections Permissions by passing in a modified graph. Will overwrite parts of the graph that are present in the request, and leave the...
-- [ ] `GET /api/collection/root` — `get-api-collection-root` — Return the 'Root' Collection object with standard details added
+- [x] `POST /api/collection` — `post-api-collection` — Create a new Collection.
+- [x] `GET /api/collection/graph` — `get-api-collection-graph` — Fetch a graph of all Collection Permissions.
+- [x] `PUT /api/collection/graph` — `put-api-collection-graph` — Do a batch update of Collections Permissions by passing in a modified graph. Will overwrite parts of the graph that are present in the request, and leave the...
+- [x] `GET /api/collection/root` — `get-api-collection-root` — Return the 'Root' Collection object with standard details added
 - [ ] `GET /api/collection/root/dashboard-question-candidates` — `get-api-collection-root-dashboard-question-candidates` — Find cards in the root collection that can be moved into dashboards in the root collection. (Same as the above endpoint, but for the root collection)
 - [ ] `GET /api/collection/root/items` — `get-api-collection-root-items` — Fetch objects that the current user should see at their root level. As mentioned elsewhere, the 'Root' Collection doesn't actually exist as a row in the appl...
 - [ ] `POST /api/collection/root/move-dashboard-question-candidates` — `post-api-collection-root-move-dashboard-question-candidates` — Move candidate cards to the dashboards they appear in (for the root collection)

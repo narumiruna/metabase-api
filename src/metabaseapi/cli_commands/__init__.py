@@ -7,7 +7,7 @@ from types import ModuleType
 from typing import Final
 from typing import Literal
 
-ACTION_COMMAND_MODULE = "actions_commands"
+ACTION_COMMAND_MODULE = "action_commands"
 ACTIVITY_COMMAND_MODULE = "activity_commands"
 ALERT_COMMAND_MODULE = "alert_commands"
 ANALYTICS_COMMAND_MODULE = "analytics_commands"

@@ -9,46 +9,48 @@ from typing import TypeVar
 
 import httpx
 
-from metabaseapi.client.raw.actions import _MetabaseClientRawMixin as _MetabaseClientActionsRawMixin
+from metabaseapi.client.raw.action import _MetabaseClientRawMixin as _MetabaseClientActionRawMixin
 from metabaseapi.client.raw.activity import _MetabaseClientRawMixin as _MetabaseClientActivityRawMixin
 from metabaseapi.client.raw.agent import _MetabaseClientRawMixin as _MetabaseClientAgentRawMixin
-from metabaseapi.client.raw.alerts import _MetabaseClientRawMixin as _MetabaseClientAlertsRawMixin
+from metabaseapi.client.raw.alert import _MetabaseClientRawMixin as _MetabaseClientAlertRawMixin
 from metabaseapi.client.raw.analytics import _MetabaseClientRawMixin as _MetabaseClientAnalyticsRawMixin
 from metabaseapi.client.raw.api_key import _MetabaseClientRawMixin as _MetabaseClientApiKeyRawMixin
 from metabaseapi.client.raw.automagic import _MetabaseClientRawMixin as _MetabaseClientAutomagicRawMixin
-from metabaseapi.client.raw.bookmarks import _MetabaseClientRawMixin as _MetabaseClientBookmarksRawMixin
+from metabaseapi.client.raw.bookmark import _MetabaseClientRawMixin as _MetabaseClientBookmarkRawMixin
 from metabaseapi.client.raw.bug_reporting import _MetabaseClientRawMixin as _MetabaseClientBugReportingRawMixin
 from metabaseapi.client.raw.cache import _MetabaseClientRawMixin as _MetabaseClientCacheRawMixin
-from metabaseapi.client.raw.cards import _MetabaseClientRawMixin as _MetabaseClientCardsRawMixin
-from metabaseapi.client.raw.channels import _MetabaseClientRawMixin as _MetabaseClientChannelsRawMixin
-from metabaseapi.client.raw.cloud import _MetabaseClientRawMixin as _MetabaseClientCloudRawMixin
-from metabaseapi.client.raw.collections import _MetabaseClientRawMixin as _MetabaseClientCollectionsRawMixin
-from metabaseapi.client.raw.comments import _MetabaseClientRawMixin as _MetabaseClientCommentsRawMixin
-from metabaseapi.client.raw.dashboards import _MetabaseClientRawMixin as _MetabaseClientDashboardsRawMixin
+from metabaseapi.client.raw.card import _MetabaseClientRawMixin as _MetabaseClientCardRawMixin
+from metabaseapi.client.raw.channel import _MetabaseClientRawMixin as _MetabaseClientChannelRawMixin
+from metabaseapi.client.raw.cloud_migration import _MetabaseClientRawMixin as _MetabaseClientCloudMigrationRawMixin
+from metabaseapi.client.raw.collection import _MetabaseClientRawMixin as _MetabaseClientCollectionRawMixin
+from metabaseapi.client.raw.comment import _MetabaseClientRawMixin as _MetabaseClientCommentRawMixin
+from metabaseapi.client.raw.dashboard import _MetabaseClientRawMixin as _MetabaseClientDashboardRawMixin
 from metabaseapi.client.raw.data_studio import _MetabaseClientRawMixin as _MetabaseClientDataStudioRawMixin
-from metabaseapi.client.raw.databases import _MetabaseClientRawMixin as _MetabaseClientDatabasesRawMixin
-from metabaseapi.client.raw.tables import _MetabaseClientRawMixin as _MetabaseClientTablesRawMixin
-from metabaseapi.client.raw.users import _MetabaseClientRawMixin as _MetabaseClientUsersRawMixin
-from metabaseapi.client.typed.actions import _MetabaseClientTypedMixin as _MetabaseClientActionsTypedMixin
+from metabaseapi.client.raw.database import _MetabaseClientRawMixin as _MetabaseClientDatabaseRawMixin
+from metabaseapi.client.raw.schema import _MetabaseClientRawMixin as _MetabaseClientSchemaRawMixin
+from metabaseapi.client.raw.user import _MetabaseClientRawMixin as _MetabaseClientUserRawMixin
+from metabaseapi.client.typed.action import _MetabaseClientTypedMixin as _MetabaseClientActionTypedMixin
 from metabaseapi.client.typed.activity import _MetabaseClientTypedMixin as _MetabaseClientActivityTypedMixin
 from metabaseapi.client.typed.agent import _MetabaseClientTypedMixin as _MetabaseClientAgentTypedMixin
-from metabaseapi.client.typed.alerts import _MetabaseClientTypedMixin as _MetabaseClientAlertsTypedMixin
+from metabaseapi.client.typed.alert import _MetabaseClientTypedMixin as _MetabaseClientAlertTypedMixin
 from metabaseapi.client.typed.analytics import _MetabaseClientTypedMixin as _MetabaseClientAnalyticsTypedMixin
 from metabaseapi.client.typed.api_key import _MetabaseClientTypedMixin as _MetabaseClientApiKeyTypedMixin
 from metabaseapi.client.typed.automagic import _MetabaseClientTypedMixin as _MetabaseClientAutomagicTypedMixin
-from metabaseapi.client.typed.bookmarks import _MetabaseClientTypedMixin as _MetabaseClientBookmarksTypedMixin
+from metabaseapi.client.typed.bookmark import _MetabaseClientTypedMixin as _MetabaseClientBookmarkTypedMixin
 from metabaseapi.client.typed.bug_reporting import _MetabaseClientTypedMixin as _MetabaseClientBugReportingTypedMixin
 from metabaseapi.client.typed.cache import _MetabaseClientTypedMixin as _MetabaseClientCacheTypedMixin
-from metabaseapi.client.typed.cards import _MetabaseClientTypedMixin as _MetabaseClientCardsTypedMixin
-from metabaseapi.client.typed.channels import _MetabaseClientTypedMixin as _MetabaseClientChannelsTypedMixin
-from metabaseapi.client.typed.cloud import _MetabaseClientTypedMixin as _MetabaseClientCloudTypedMixin
-from metabaseapi.client.typed.collections import _MetabaseClientTypedMixin as _MetabaseClientCollectionsTypedMixin
-from metabaseapi.client.typed.comments import _MetabaseClientTypedMixin as _MetabaseClientCommentsTypedMixin
-from metabaseapi.client.typed.dashboards import _MetabaseClientTypedMixin as _MetabaseClientDashboardsTypedMixin
+from metabaseapi.client.typed.card import _MetabaseClientTypedMixin as _MetabaseClientCardTypedMixin
+from metabaseapi.client.typed.channel import _MetabaseClientTypedMixin as _MetabaseClientChannelTypedMixin
+from metabaseapi.client.typed.cloud_migration import (
+    _MetabaseClientTypedMixin as _MetabaseClientCloudMigrationTypedMixin,
+)
+from metabaseapi.client.typed.collection import _MetabaseClientTypedMixin as _MetabaseClientCollectionTypedMixin
+from metabaseapi.client.typed.comment import _MetabaseClientTypedMixin as _MetabaseClientCommentTypedMixin
+from metabaseapi.client.typed.dashboard import _MetabaseClientTypedMixin as _MetabaseClientDashboardTypedMixin
 from metabaseapi.client.typed.data_studio import _MetabaseClientTypedMixin as _MetabaseClientDataStudioTypedMixin
-from metabaseapi.client.typed.databases import _MetabaseClientTypedMixin as _MetabaseClientDatabasesTypedMixin
-from metabaseapi.client.typed.tables import _MetabaseClientTypedMixin as _MetabaseClientTablesTypedMixin
-from metabaseapi.client.typed.users import _MetabaseClientTypedMixin as _MetabaseClientUsersTypedMixin
+from metabaseapi.client.typed.database import _MetabaseClientTypedMixin as _MetabaseClientDatabaseTypedMixin
+from metabaseapi.client.typed.schema import _MetabaseClientTypedMixin as _MetabaseClientSchemaTypedMixin
+from metabaseapi.client.typed.user import _MetabaseClientTypedMixin as _MetabaseClientUserTypedMixin
 from metabaseapi.errors import MetabaseDecodeError
 from metabaseapi.errors import MetabaseHTTPStatusError
 from metabaseapi.errors import MetabaseNetworkError
@@ -77,26 +79,26 @@ __all__ = [
 
 CLIENT_MIXIN_SEAM_REGISTRY: Mapping[str, tuple[type, type]] = MappingProxyType(
     {
-        "actions": (_MetabaseClientActionsRawMixin, _MetabaseClientActionsTypedMixin),
-        "users": (_MetabaseClientUsersRawMixin, _MetabaseClientUsersTypedMixin),
+        "action": (_MetabaseClientActionRawMixin, _MetabaseClientActionTypedMixin),
+        "user": (_MetabaseClientUserRawMixin, _MetabaseClientUserTypedMixin),
         "analytics": (_MetabaseClientAnalyticsRawMixin, _MetabaseClientAnalyticsTypedMixin),
-        "alerts": (_MetabaseClientAlertsRawMixin, _MetabaseClientAlertsTypedMixin),
+        "alert": (_MetabaseClientAlertRawMixin, _MetabaseClientAlertTypedMixin),
         "api_key": (_MetabaseClientApiKeyRawMixin, _MetabaseClientApiKeyTypedMixin),
         "agent": (_MetabaseClientAgentRawMixin, _MetabaseClientAgentTypedMixin),
         "activity": (_MetabaseClientActivityRawMixin, _MetabaseClientActivityTypedMixin),
-        "bookmarks": (_MetabaseClientBookmarksRawMixin, _MetabaseClientBookmarksTypedMixin),
+        "bookmark": (_MetabaseClientBookmarkRawMixin, _MetabaseClientBookmarkTypedMixin),
         "cache": (_MetabaseClientCacheRawMixin, _MetabaseClientCacheTypedMixin),
-        "collections": (_MetabaseClientCollectionsRawMixin, _MetabaseClientCollectionsTypedMixin),
-        "channels": (_MetabaseClientChannelsRawMixin, _MetabaseClientChannelsTypedMixin),
-        "cloud": (_MetabaseClientCloudRawMixin, _MetabaseClientCloudTypedMixin),
-        "cards": (_MetabaseClientCardsRawMixin, _MetabaseClientCardsTypedMixin),
-        "databases": (_MetabaseClientDatabasesRawMixin, _MetabaseClientDatabasesTypedMixin),
+        "collection": (_MetabaseClientCollectionRawMixin, _MetabaseClientCollectionTypedMixin),
+        "channel": (_MetabaseClientChannelRawMixin, _MetabaseClientChannelTypedMixin),
+        "cloud_migration": (_MetabaseClientCloudMigrationRawMixin, _MetabaseClientCloudMigrationTypedMixin),
+        "card": (_MetabaseClientCardRawMixin, _MetabaseClientCardTypedMixin),
+        "database": (_MetabaseClientDatabaseRawMixin, _MetabaseClientDatabaseTypedMixin),
         "automagic": (_MetabaseClientAutomagicRawMixin, _MetabaseClientAutomagicTypedMixin),
-        "dashboards": (_MetabaseClientDashboardsRawMixin, _MetabaseClientDashboardsTypedMixin),
-        "comments": (_MetabaseClientCommentsRawMixin, _MetabaseClientCommentsTypedMixin),
+        "dashboard": (_MetabaseClientDashboardRawMixin, _MetabaseClientDashboardTypedMixin),
+        "comment": (_MetabaseClientCommentRawMixin, _MetabaseClientCommentTypedMixin),
         "bug_reporting": (_MetabaseClientBugReportingRawMixin, _MetabaseClientBugReportingTypedMixin),
         "data_studio": (_MetabaseClientDataStudioRawMixin, _MetabaseClientDataStudioTypedMixin),
-        "tables": (_MetabaseClientTablesRawMixin, _MetabaseClientTablesTypedMixin),
+        "schema": (_MetabaseClientSchemaRawMixin, _MetabaseClientSchemaTypedMixin),
     }
 )
 
@@ -156,52 +158,52 @@ def client_mixins_for_group(
 
 
 class _MetabaseClientRawMixin(
-    _MetabaseClientActionsRawMixin,
-    _MetabaseClientUsersRawMixin,
+    _MetabaseClientActionRawMixin,
+    _MetabaseClientUserRawMixin,
     _MetabaseClientAnalyticsRawMixin,
-    _MetabaseClientAlertsRawMixin,
+    _MetabaseClientAlertRawMixin,
     _MetabaseClientApiKeyRawMixin,
     _MetabaseClientAgentRawMixin,
     _MetabaseClientActivityRawMixin,
-    _MetabaseClientBookmarksRawMixin,
+    _MetabaseClientBookmarkRawMixin,
     _MetabaseClientCacheRawMixin,
-    _MetabaseClientCollectionsRawMixin,
-    _MetabaseClientChannelsRawMixin,
-    _MetabaseClientCloudRawMixin,
-    _MetabaseClientCardsRawMixin,
-    _MetabaseClientDatabasesRawMixin,
+    _MetabaseClientCollectionRawMixin,
+    _MetabaseClientChannelRawMixin,
+    _MetabaseClientCloudMigrationRawMixin,
+    _MetabaseClientCardRawMixin,
+    _MetabaseClientDatabaseRawMixin,
     _MetabaseClientAutomagicRawMixin,
-    _MetabaseClientDashboardsRawMixin,
-    _MetabaseClientCommentsRawMixin,
+    _MetabaseClientDashboardRawMixin,
+    _MetabaseClientCommentRawMixin,
     _MetabaseClientBugReportingRawMixin,
     _MetabaseClientDataStudioRawMixin,
-    _MetabaseClientTablesRawMixin,
+    _MetabaseClientSchemaRawMixin,
 ):
     """Resource-scoped raw mixin."""
 
 
 class _MetabaseClientTypedMixin(
     _MetabaseClientRawMixin,
-    _MetabaseClientActionsTypedMixin,
-    _MetabaseClientUsersTypedMixin,
+    _MetabaseClientActionTypedMixin,
+    _MetabaseClientUserTypedMixin,
     _MetabaseClientAnalyticsTypedMixin,
-    _MetabaseClientAlertsTypedMixin,
+    _MetabaseClientAlertTypedMixin,
     _MetabaseClientApiKeyTypedMixin,
     _MetabaseClientAgentTypedMixin,
     _MetabaseClientActivityTypedMixin,
-    _MetabaseClientBookmarksTypedMixin,
+    _MetabaseClientBookmarkTypedMixin,
     _MetabaseClientCacheTypedMixin,
-    _MetabaseClientCollectionsTypedMixin,
-    _MetabaseClientChannelsTypedMixin,
-    _MetabaseClientCloudTypedMixin,
-    _MetabaseClientCardsTypedMixin,
-    _MetabaseClientDatabasesTypedMixin,
+    _MetabaseClientCollectionTypedMixin,
+    _MetabaseClientChannelTypedMixin,
+    _MetabaseClientCloudMigrationTypedMixin,
+    _MetabaseClientCardTypedMixin,
+    _MetabaseClientDatabaseTypedMixin,
     _MetabaseClientAutomagicTypedMixin,
-    _MetabaseClientDashboardsTypedMixin,
-    _MetabaseClientCommentsTypedMixin,
+    _MetabaseClientDashboardTypedMixin,
+    _MetabaseClientCommentTypedMixin,
     _MetabaseClientBugReportingTypedMixin,
     _MetabaseClientDataStudioTypedMixin,
-    _MetabaseClientTablesTypedMixin,
+    _MetabaseClientSchemaTypedMixin,
 ):
     """Resource-scoped typed mixin."""
 

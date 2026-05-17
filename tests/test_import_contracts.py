@@ -16,6 +16,220 @@ import metabaseapi.client
 import metabaseapi.client.http
 import metabaseapi.client.raw
 import metabaseapi.client.typed
+import metabaseapi.metabase
+import metabaseapi.metabase.endpoint_requests
+import metabaseapi.metabase.endpoint_requests.action
+import metabaseapi.metabase.endpoint_requests.activity
+import metabaseapi.metabase.endpoint_requests.agent
+import metabaseapi.metabase.endpoint_requests.ai_entity_analysis
+import metabaseapi.metabase.endpoint_requests.alert
+import metabaseapi.metabase.endpoint_requests.analytics
+import metabaseapi.metabase.endpoint_requests.api_key
+import metabaseapi.metabase.endpoint_requests.automagic
+import metabaseapi.metabase.endpoint_requests.bookmark
+import metabaseapi.metabase.endpoint_requests.bug_reporting
+import metabaseapi.metabase.endpoint_requests.cache
+import metabaseapi.metabase.endpoint_requests.card
+import metabaseapi.metabase.endpoint_requests.channel
+import metabaseapi.metabase.endpoint_requests.cloud_migration
+import metabaseapi.metabase.endpoint_requests.collection
+import metabaseapi.metabase.endpoint_requests.comment
+import metabaseapi.metabase.endpoint_requests.dashboard
+import metabaseapi.metabase.endpoint_requests.data_studio
+import metabaseapi.metabase.endpoint_requests.database
+import metabaseapi.metabase.endpoint_requests.schema
+import metabaseapi.metabase.endpoint_requests.user
+import metabaseapi.metabase.endpoint_requests.user_key_value
+import metabaseapi.metabase.entities
+import metabaseapi.metabase.request_base
+import metabaseapi.metabase.requests
+import metabaseapi.metabase.responses
+
+ENDPOINT_REQUEST_MODULE_CONTRACTS = {
+    "action": (
+        "ListActionsRequest",
+        "CreateActionRequest",
+        "ListPublicActionsRequest",
+        "GetActionRequest",
+        "DeleteActionRequest",
+        "GetActionExecuteRequest",
+        "UpdateActionRequest",
+        "ExecuteActionRequest",
+        "CreateActionPublicLinkRequest",
+        "DeleteActionPublicLinkRequest",
+    ),
+    "activity": (
+        "GetMostRecentlyViewedDashboardRequest",
+        "ListPopularItemsRequest",
+        "ListRecentViewsRequest",
+        "ListRecentsRequest",
+        "CreateRecentRequest",
+    ),
+    "ai_entity_analysis": ("AnalyzeChartRequest",),
+    "agent": (
+        "AgentExecuteRequest",
+        "GetAgentMetricRequest",
+        "GetAgentMetricFieldValuesRequest",
+        "AgentPingRequest",
+        "AgentSearchRequest",
+        "GetAgentTableRequest",
+        "GetAgentTableFieldValuesRequest",
+        "AgentConstructQueryRequest",
+        "AgentQueryRequest",
+    ),
+    "alert": (
+        "ListAlertsRequest",
+        "GetAlertRequest",
+        "DeleteAlertSubscriptionRequest",
+    ),
+    "analytics": (
+        "GetAnonymousStatsRequest",
+        "CreateAnalyticsEventBatchRequest",
+    ),
+    "api_key": (
+        "CreateApiKeyRequest",
+        "ListApiKeysRequest",
+        "CountApiKeysRequest",
+        "UpdateApiKeyRequest",
+        "DeleteApiKeyRequest",
+        "RegenerateApiKeyRequest",
+    ),
+    "automagic": (
+        "AutomagicDashboardRequest",
+        "AutomagicDatabaseCandidatesRequest",
+        "AutomagicModelIndexPrimaryKeyRequest",
+    ),
+    "bookmark": (
+        "ListBookmarksRequest",
+        "UpdateBookmarkOrderingRequest",
+        "CreateBookmarkRequest",
+        "DeleteBookmarkRequest",
+    ),
+    "bug_reporting": (
+        "GetBugReportingConnectionPoolDetailsRequest",
+        "GetBugReportingDetailsRequest",
+    ),
+    "cache": (
+        "GetCacheRequest",
+        "PutCacheRequest",
+        "DeleteCacheRequest",
+        "InvalidateCacheRequest",
+    ),
+    "card": (
+        "ListCardsRequest",
+        "CreateCardRequest",
+        "GetCardRequest",
+        "GetCardCollectionsRequest",
+        "GetCardEmbeddableRequest",
+        "PostCardPivotQueryRequest",
+        "GetCardPublicRequest",
+        "CardParamsSearchRequest",
+        "CardParamsValuesRequest",
+        "CreateCardPublicLinkRequest",
+        "DeleteCardPublicLinkRequest",
+        "CardQueryRequest",
+        "CardQueryExportRequest",
+        "UpdateCardRequest",
+        "DeleteCardRequest",
+        "CopyCardRequest",
+        "GetCardDashboardsRequest",
+        "CardRemappingRequest",
+        "GetCardQueryMetadataRequest",
+        "GetCardSeriesRequest",
+        "CardsDashboardsRequest",
+        "MoveCardsRequest",
+    ),
+    "channel": (
+        "ListChannelsRequest",
+        "CreateChannelRequest",
+        "TestChannelRequest",
+        "GetChannelRequest",
+        "UpdateChannelRequest",
+    ),
+    "comment": (
+        "GetCommentMentionsRequest",
+        "UpdateCommentRequest",
+        "GetCommentRequest",
+        "PostCommentRequest",
+        "DeleteCommentRequest",
+        "PostCommentReactionRequest",
+    ),
+    "cloud_migration": (
+        "CreateCloudMigrationRequest",
+        "GetCloudMigrationRequest",
+        "CancelCloudMigrationRequest",
+    ),
+    "collection": (
+        "CreateCollectionRequest",
+        "GetCollectionGraphRequest",
+        "PutCollectionGraphRequest",
+        "GetCollectionRootRequest",
+        "GetCollectionTreeRequest",
+        "GetCollectionRootDashboardQuestionCandidatesRequest",
+        "GetCollectionRootItemsRequest",
+        "GetCollectionDashboardQuestionCandidatesRequest",
+        "GetCollectionItemsRequest",
+        "GetCollectionTrashRequest",
+        "PostCollectionRootMoveDashboardQuestionCandidatesRequest",
+        "PostCollectionMoveDashboardQuestionCandidatesRequest",
+        "ListCollectionsRequest",
+        "GetCollectionRequest",
+        "PutCollectionRequest",
+        "DeleteCollectionRequest",
+    ),
+    "database": (
+        "ListDatabasesRequest",
+        "CreateDatabaseRequest",
+        "GetDatabaseRequest",
+    ),
+    "data_studio": (
+        "DataStudioTableDiscardValuesRequest",
+        "DataStudioTableEditRequest",
+        "DataStudioTableRescanValuesRequest",
+        "DataStudioTableSelectionRequest",
+        "DataStudioTableSyncSchemaRequest",
+    ),
+    "dashboard": (
+        "ListDashboardsRequest",
+        "PostDashboardRequest",
+        "GetDashboardRequest",
+        "GetDashboardEmbeddableRequest",
+        "GetDashboardPublicRequest",
+        "PostDashboardPivotQueryRequest",
+        "SaveDashboardRequest",
+        "SaveDashboardToCollectionRequest",
+        "GetDashboardDashcardExecuteRequest",
+        "ExecuteDashboardDashcardRequest",
+        "CreateDashboardPublicLinkRequest",
+        "DeleteDashboardPublicLinkRequest",
+        "CopyDashboardRequest",
+        "DeleteDashboardRequest",
+        "UpdateDashboardRequest",
+        "UpdateDashboardCardsRequest",
+        "GetDashboardItemsRequest",
+        "DashboardParamRemappingRequest",
+        "DashboardParamSearchRequest",
+        "DashboardParamValuesRequest",
+        "GetDashboardQueryMetadataRequest",
+        "GetDashboardRelatedRequest",
+    ),
+    "schema": (
+        "ListTablesRequest",
+        "GetTableRequest",
+        "GetFieldRequest",
+    ),
+    "user": (
+        "CurrentUserRequest",
+        "ListUsersRequest",
+        "GetUserRequest",
+    ),
+    "user_key_value": (
+        "GetUserKeyValueNamespaceRequest",
+        "PutUserKeyValueNamespaceKeyRequest",
+        "GetUserKeyValueNamespaceKeyRequest",
+        "DeleteUserKeyValueNamespaceKeyRequest",
+    ),
+}
 
 
 def test_cli_command_modules_import_from_package() -> None:
@@ -126,6 +340,45 @@ def test_client_data_studio_replaces_misc_module_name() -> None:
         importlib.import_module("metabaseapi.client.typed.misc")
 
 
+def test_client_domain_modules_use_singular_names() -> None:
+    singular_domains = (
+        "action",
+        "alert",
+        "bookmark",
+        "card",
+        "channel",
+        "cloud_migration",
+        "collection",
+        "comment",
+        "dashboard",
+        "database",
+        "schema",
+        "user",
+    )
+    legacy_domains = (
+        "actions",
+        "alerts",
+        "bookmarks",
+        "cards",
+        "channels",
+        "cloud",
+        "collections",
+        "comments",
+        "dashboards",
+        "databases",
+        "tables",
+        "users",
+    )
+    for domain in singular_domains:
+        importlib.import_module(f"metabaseapi.client.raw.{domain}")
+        importlib.import_module(f"metabaseapi.client.typed.{domain}")
+    for domain in legacy_domains:
+        with pytest.raises(ModuleNotFoundError):
+            importlib.import_module(f"metabaseapi.client.raw.{domain}")
+        with pytest.raises(ModuleNotFoundError):
+            importlib.import_module(f"metabaseapi.client.typed.{domain}")
+
+
 def _client_module_stems(package: object) -> tuple[str, ...]:
     package_file = getattr(package, "__file__", None)
     assert package_file is not None
@@ -145,26 +398,26 @@ def test_client_raw_and_typed_module_names_match_registry() -> None:
 def test_client_mixin_groups_are_explicit_and_stable() -> None:
     assert metabaseapi.client.http.client_mixin_layers() == metabaseapi.client.http.CLIENT_MIXIN_LAYERS
     assert tuple(metabaseapi.client.http.client_mixin_group_names()) == (
-        "actions",
-        "users",
+        "action",
+        "user",
         "analytics",
-        "alerts",
+        "alert",
         "api_key",
         "agent",
         "activity",
-        "bookmarks",
+        "bookmark",
         "cache",
-        "collections",
-        "channels",
-        "cloud",
-        "cards",
-        "databases",
+        "collection",
+        "channel",
+        "cloud_migration",
+        "card",
+        "database",
         "automagic",
-        "dashboards",
-        "comments",
+        "dashboard",
+        "comment",
         "bug_reporting",
         "data_studio",
-        "tables",
+        "schema",
     )
     raw_groups = metabaseapi.client.http.CLIENT_RAW_MIXIN_GROUPS
     typed_groups = metabaseapi.client.http.CLIENT_TYPED_MIXIN_GROUPS
@@ -198,6 +451,59 @@ def test_client_public_module_exports_concrete_http_implementation() -> None:
     assert metabaseapi.client.MetabaseClient.__module__ == "metabaseapi.client.http"
     assert metabaseapi.client._MetabaseClientRawMixin.__module__ == "metabaseapi.client.http"
     assert metabaseapi.client._MetabaseClientTypedMixin.__module__ == "metabaseapi.client.http"
+
+
+def test_metabase_request_base_owns_execution_interface() -> None:
+    assert metabaseapi.metabase.MetabaseRequestClient is metabaseapi.metabase.request_base.MetabaseRequestClient
+    assert (
+        metabaseapi.metabase.requests.MetabaseRequestClient is metabaseapi.metabase.request_base.MetabaseRequestClient
+    )
+    assert metabaseapi.metabase.requests.ListCardsRequest.__mro__[1].__module__ == "metabaseapi.metabase.request_base"
+
+
+def test_metabase_public_exports_are_composed_from_source_modules() -> None:
+    expected_exports = sorted(
+        (
+            *metabaseapi.metabase.entities.__all__,
+            *metabaseapi.metabase.requests.__all__,
+            *metabaseapi.metabase.responses.__all__,
+            "MetabaseRequestClient",
+        )
+    )
+    assert metabaseapi.metabase.__all__ == expected_exports
+    for name in expected_exports:
+        if name == "MetabaseRequestClient":
+            expected_symbol = metabaseapi.metabase.request_base.MetabaseRequestClient
+        elif hasattr(metabaseapi.metabase.entities, name):
+            expected_symbol = getattr(metabaseapi.metabase.entities, name)
+        elif hasattr(metabaseapi.metabase.requests, name):
+            expected_symbol = getattr(metabaseapi.metabase.requests, name)
+        else:
+            expected_symbol = getattr(metabaseapi.metabase.responses, name)
+        assert getattr(metabaseapi.metabase, name) is expected_symbol
+
+
+def test_metabase_endpoint_request_modules_reexport_through_requests_aggregate() -> None:
+    for module_name, request_names in ENDPOINT_REQUEST_MODULE_CONTRACTS.items():
+        domain_module = importlib.import_module(f"metabaseapi.metabase.endpoint_requests.{module_name}")
+        for request_name in request_names:
+            assert getattr(metabaseapi.metabase.requests, request_name) is getattr(domain_module, request_name)
+
+
+def test_metabase_endpoint_request_registry_matches_package_files() -> None:
+    endpoint_package_path = Path(metabaseapi.metabase.endpoint_requests.__file__).parent
+    endpoint_module_files = tuple(
+        sorted(path.stem for path in endpoint_package_path.glob("*.py") if path.stem != "__init__")
+    )
+    assert endpoint_module_files == tuple(sorted(metabaseapi.metabase.endpoint_requests.ENDPOINT_REQUEST_MODULES))
+    assert (
+        tuple(ENDPOINT_REQUEST_MODULE_CONTRACTS)
+        == metabaseapi.metabase.endpoint_requests.endpoint_request_module_names()
+    )
+    assert metabaseapi.metabase.endpoint_requests.endpoint_request_module_paths() == tuple(
+        f"metabaseapi.metabase.endpoint_requests.{module_name}"
+        for module_name in metabaseapi.metabase.endpoint_requests.ENDPOINT_REQUEST_MODULES
+    )
 
 
 def _command_names_from_sources() -> list[str]:

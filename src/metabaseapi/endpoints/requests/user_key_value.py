@@ -3,7 +3,6 @@ from __future__ import annotations
 from typing import ClassVar
 
 from metabaseapi.endpoints.execution import EndpointRequest
-from metabaseapi.endpoints.execution import _ResponseModel
 from metabaseapi.endpoints.responses.common import GenericOperationResponse
 from metabaseapi.wire import JSONValue
 
@@ -13,7 +12,7 @@ class GetUserKeyValueNamespaceRequest(EndpointRequest[GenericOperationResponse])
 
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/user-key-value/namespace/{namespace}"
-    response_model: ClassVar[_ResponseModel] = GenericOperationResponse
+    response_model = GenericOperationResponse
 
 
 class PutUserKeyValueNamespaceKeyRequest(EndpointRequest[GenericOperationResponse]):
@@ -23,7 +22,7 @@ class PutUserKeyValueNamespaceKeyRequest(EndpointRequest[GenericOperationRespons
 
     endpoint_method: ClassVar[str] = "PUT"
     endpoint_path: ClassVar[str] = "/api/user-key-value/namespace/{namespace}/key/{key}"
-    response_model: ClassVar[_ResponseModel] = GenericOperationResponse
+    response_model = GenericOperationResponse
 
 
 class GetUserKeyValueNamespaceKeyRequest(EndpointRequest[GenericOperationResponse]):
@@ -32,7 +31,7 @@ class GetUserKeyValueNamespaceKeyRequest(EndpointRequest[GenericOperationRespons
 
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/user-key-value/namespace/{namespace}/key/{key}"
-    response_model: ClassVar[_ResponseModel] = GenericOperationResponse
+    response_model = GenericOperationResponse
 
 
 class DeleteUserKeyValueNamespaceKeyRequest(EndpointRequest[GenericOperationResponse]):
@@ -41,4 +40,4 @@ class DeleteUserKeyValueNamespaceKeyRequest(EndpointRequest[GenericOperationResp
 
     endpoint_method: ClassVar[str] = "DELETE"
     endpoint_path: ClassVar[str] = "/api/user-key-value/namespace/{namespace}/key/{key}"
-    response_model: ClassVar[_ResponseModel] = GenericOperationResponse
+    response_model = GenericOperationResponse

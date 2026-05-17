@@ -3,17 +3,16 @@ from __future__ import annotations
 from typing import ClassVar
 
 from metabaseapi.endpoints.execution import EndpointRequest
-from metabaseapi.endpoints.execution import _ResponseModel
 from metabaseapi.endpoints.responses.common import GenericOperationResponse
 
 
 class GetBugReportingConnectionPoolDetailsRequest(EndpointRequest[GenericOperationResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/bug-reporting/connection-pool-details"
-    response_model: ClassVar[_ResponseModel] = GenericOperationResponse
+    response_model = GenericOperationResponse
 
 
 class GetBugReportingDetailsRequest(EndpointRequest[GenericOperationResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/bug-reporting/details"
-    response_model: ClassVar[_ResponseModel] = GenericOperationResponse
+    response_model = GenericOperationResponse

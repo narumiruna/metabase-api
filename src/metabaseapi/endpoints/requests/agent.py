@@ -4,7 +4,6 @@ from typing import Any
 from typing import ClassVar
 
 from metabaseapi.endpoints.execution import EndpointRequest
-from metabaseapi.endpoints.execution import _ResponseModel
 from metabaseapi.endpoints.responses.agent import AgentResponse
 
 
@@ -13,7 +12,7 @@ class AgentExecuteRequest(EndpointRequest[AgentResponse]):
 
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/agent/v1/execute"
-    response_model: ClassVar[_ResponseModel] = AgentResponse
+    response_model = AgentResponse
 
 
 class GetAgentMetricRequest(EndpointRequest[AgentResponse]):
@@ -21,7 +20,7 @@ class GetAgentMetricRequest(EndpointRequest[AgentResponse]):
 
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/agent/v1/metric/{metric_id}"
-    response_model: ClassVar[_ResponseModel] = AgentResponse
+    response_model = AgentResponse
 
 
 class GetAgentMetricFieldValuesRequest(EndpointRequest[AgentResponse]):
@@ -30,13 +29,13 @@ class GetAgentMetricFieldValuesRequest(EndpointRequest[AgentResponse]):
 
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/agent/v1/metric/{metric_id}/field/{field_id}/values"
-    response_model: ClassVar[_ResponseModel] = AgentResponse
+    response_model = AgentResponse
 
 
 class AgentPingRequest(EndpointRequest[AgentResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/agent/v1/ping"
-    response_model: ClassVar[_ResponseModel] = AgentResponse
+    response_model = AgentResponse
 
 
 class AgentSearchRequest(EndpointRequest[AgentResponse]):
@@ -44,7 +43,7 @@ class AgentSearchRequest(EndpointRequest[AgentResponse]):
 
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/agent/v1/search"
-    response_model: ClassVar[_ResponseModel] = AgentResponse
+    response_model = AgentResponse
 
 
 class GetAgentTableRequest(EndpointRequest[AgentResponse]):
@@ -52,7 +51,7 @@ class GetAgentTableRequest(EndpointRequest[AgentResponse]):
 
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/agent/v1/table/{table_id}"
-    response_model: ClassVar[_ResponseModel] = AgentResponse
+    response_model = AgentResponse
 
 
 class GetAgentTableFieldValuesRequest(EndpointRequest[AgentResponse]):
@@ -61,7 +60,7 @@ class GetAgentTableFieldValuesRequest(EndpointRequest[AgentResponse]):
 
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/agent/v1/table/{table_id}/field/{field_id}/values"
-    response_model: ClassVar[_ResponseModel] = AgentResponse
+    response_model = AgentResponse
 
 
 class AgentConstructQueryRequest(EndpointRequest[AgentResponse]):
@@ -69,7 +68,7 @@ class AgentConstructQueryRequest(EndpointRequest[AgentResponse]):
 
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/agent/v2/construct-query"
-    response_model: ClassVar[_ResponseModel] = AgentResponse
+    response_model = AgentResponse
 
 
 class AgentQueryRequest(EndpointRequest[AgentResponse]):
@@ -77,4 +76,4 @@ class AgentQueryRequest(EndpointRequest[AgentResponse]):
 
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/agent/v2/query"
-    response_model: ClassVar[_ResponseModel] = AgentResponse
+    response_model = AgentResponse

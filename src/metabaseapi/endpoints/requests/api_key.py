@@ -5,7 +5,6 @@ from typing import ClassVar
 
 from metabaseapi.endpoints.entities import ApiKey
 from metabaseapi.endpoints.execution import EndpointRequest
-from metabaseapi.endpoints.execution import _ResponseModel
 from metabaseapi.endpoints.responses.api_key import ListApiKeysResponse
 from metabaseapi.endpoints.responses.common import GenericOperationResponse
 
@@ -15,19 +14,19 @@ class CreateApiKeyRequest(EndpointRequest[ApiKey]):
 
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/api-key"
-    response_model: ClassVar[_ResponseModel] = ApiKey
+    response_model = ApiKey
 
 
 class ListApiKeysRequest(EndpointRequest[ListApiKeysResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/api-key"
-    response_model: ClassVar[_ResponseModel] = ListApiKeysResponse
+    response_model = ListApiKeysResponse
 
 
 class CountApiKeysRequest(EndpointRequest[GenericOperationResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/api-key/count"
-    response_model: ClassVar[_ResponseModel] = GenericOperationResponse
+    response_model = GenericOperationResponse
 
 
 class UpdateApiKeyRequest(EndpointRequest[ApiKey]):
@@ -36,7 +35,7 @@ class UpdateApiKeyRequest(EndpointRequest[ApiKey]):
 
     endpoint_method: ClassVar[str] = "PUT"
     endpoint_path: ClassVar[str] = "/api/api-key/{api_key_id}"
-    response_model: ClassVar[_ResponseModel] = ApiKey
+    response_model = ApiKey
 
 
 class DeleteApiKeyRequest(EndpointRequest[GenericOperationResponse]):
@@ -44,7 +43,7 @@ class DeleteApiKeyRequest(EndpointRequest[GenericOperationResponse]):
 
     endpoint_method: ClassVar[str] = "DELETE"
     endpoint_path: ClassVar[str] = "/api/api-key/{api_key_id}"
-    response_model: ClassVar[_ResponseModel] = GenericOperationResponse
+    response_model = GenericOperationResponse
 
 
 class RegenerateApiKeyRequest(EndpointRequest[ApiKey]):
@@ -52,4 +51,4 @@ class RegenerateApiKeyRequest(EndpointRequest[ApiKey]):
 
     endpoint_method: ClassVar[str] = "PUT"
     endpoint_path: ClassVar[str] = "/api/api-key/{api_key_id}/regenerate"
-    response_model: ClassVar[_ResponseModel] = ApiKey
+    response_model = ApiKey

@@ -6,7 +6,6 @@ from typing import ClassVar
 from pydantic import Field as PydanticField
 
 from metabaseapi.endpoints.execution import EndpointRequest
-from metabaseapi.endpoints.execution import _ResponseModel
 from metabaseapi.endpoints.responses.common import GenericOperationResponse
 from metabaseapi.wire import JSONValue
 from metabaseapi.wire import QueryParamValue
@@ -20,7 +19,7 @@ class GetCacheRequest(EndpointRequest[GenericOperationResponse]):
 
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/cache"
-    response_model: ClassVar[_ResponseModel] = GenericOperationResponse
+    response_model = GenericOperationResponse
 
     def request_params(self) -> dict[str, QueryParamValue]:
         params: dict[str, QueryParamValue] = {}
@@ -40,7 +39,7 @@ class PutCacheRequest(EndpointRequest[GenericOperationResponse]):
 
     endpoint_method: ClassVar[str] = "PUT"
     endpoint_path: ClassVar[str] = "/api/cache"
-    response_model: ClassVar[_ResponseModel] = GenericOperationResponse
+    response_model = GenericOperationResponse
 
 
 class DeleteCacheRequest(EndpointRequest[GenericOperationResponse]):
@@ -48,7 +47,7 @@ class DeleteCacheRequest(EndpointRequest[GenericOperationResponse]):
 
     endpoint_method: ClassVar[str] = "DELETE"
     endpoint_path: ClassVar[str] = "/api/cache"
-    response_model: ClassVar[_ResponseModel] = GenericOperationResponse
+    response_model = GenericOperationResponse
 
     def request_body(self) -> JSONValue:
         return self.body or None
@@ -59,7 +58,7 @@ class InvalidateCacheRequest(EndpointRequest[GenericOperationResponse]):
 
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/cache/invalidate"
-    response_model: ClassVar[_ResponseModel] = GenericOperationResponse
+    response_model = GenericOperationResponse
 
     def request_params(self) -> dict[str, QueryParamValue]:
         return dict(self.params)

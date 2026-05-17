@@ -5,7 +5,6 @@ from typing import ClassVar
 
 from metabaseapi.endpoints.entities import ActivityItem
 from metabaseapi.endpoints.execution import EndpointRequest
-from metabaseapi.endpoints.execution import _ResponseModel
 from metabaseapi.endpoints.responses.activity import ActivityMutationResponse
 from metabaseapi.endpoints.responses.activity import ListActivityItemsResponse
 from metabaseapi.wire import QueryParamValue
@@ -14,19 +13,19 @@ from metabaseapi.wire import QueryParamValue
 class GetMostRecentlyViewedDashboardRequest(EndpointRequest[ActivityItem]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/activity/most_recently_viewed_dashboard"
-    response_model: ClassVar[_ResponseModel] = ActivityItem
+    response_model = ActivityItem
 
 
 class ListPopularItemsRequest(EndpointRequest[ListActivityItemsResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/activity/popular_items"
-    response_model: ClassVar[_ResponseModel] = ListActivityItemsResponse
+    response_model = ListActivityItemsResponse
 
 
 class ListRecentViewsRequest(EndpointRequest[ListActivityItemsResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/activity/recent_views"
-    response_model: ClassVar[_ResponseModel] = ListActivityItemsResponse
+    response_model = ListActivityItemsResponse
 
 
 class ListRecentsRequest(EndpointRequest[ListActivityItemsResponse]):
@@ -34,7 +33,7 @@ class ListRecentsRequest(EndpointRequest[ListActivityItemsResponse]):
 
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/activity/recents"
-    response_model: ClassVar[_ResponseModel] = ListActivityItemsResponse
+    response_model = ListActivityItemsResponse
 
     def request_params(self) -> dict[str, QueryParamValue]:
         if self.context is None:
@@ -47,4 +46,4 @@ class CreateRecentRequest(EndpointRequest[ActivityMutationResponse]):
 
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/activity/recents"
-    response_model: ClassVar[_ResponseModel] = ActivityMutationResponse
+    response_model = ActivityMutationResponse

@@ -6,7 +6,6 @@ from typing import ClassVar
 from pydantic import Field as PydanticField
 
 from metabaseapi.endpoints.execution import EndpointRequest
-from metabaseapi.endpoints.execution import _ResponseModel
 from metabaseapi.endpoints.responses.common import GenericOperationResponse
 
 
@@ -15,7 +14,7 @@ class DataStudioTableDiscardValuesRequest(EndpointRequest[GenericOperationRespon
 
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/data-studio/table/discard-values"
-    response_model: ClassVar[_ResponseModel] = GenericOperationResponse
+    response_model = GenericOperationResponse
 
 
 class DataStudioTableEditRequest(EndpointRequest[GenericOperationResponse]):
@@ -23,7 +22,7 @@ class DataStudioTableEditRequest(EndpointRequest[GenericOperationResponse]):
 
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/data-studio/table/edit"
-    response_model: ClassVar[_ResponseModel] = GenericOperationResponse
+    response_model = GenericOperationResponse
 
 
 class DataStudioTableRescanValuesRequest(EndpointRequest[GenericOperationResponse]):
@@ -31,7 +30,7 @@ class DataStudioTableRescanValuesRequest(EndpointRequest[GenericOperationRespons
 
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/data-studio/table/rescan-values"
-    response_model: ClassVar[_ResponseModel] = GenericOperationResponse
+    response_model = GenericOperationResponse
 
 
 class DataStudioTableSelectionRequest(EndpointRequest[GenericOperationResponse]):
@@ -39,7 +38,7 @@ class DataStudioTableSelectionRequest(EndpointRequest[GenericOperationResponse])
 
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/data-studio/table/selection"
-    response_model: ClassVar[_ResponseModel] = GenericOperationResponse
+    response_model = GenericOperationResponse
 
 
 class DataStudioTableSyncSchemaRequest(EndpointRequest[GenericOperationResponse]):
@@ -47,4 +46,4 @@ class DataStudioTableSyncSchemaRequest(EndpointRequest[GenericOperationResponse]
 
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/data-studio/table/sync-schema"
-    response_model: ClassVar[_ResponseModel] = GenericOperationResponse
+    response_model = GenericOperationResponse

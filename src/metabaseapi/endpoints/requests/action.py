@@ -7,7 +7,6 @@ from pydantic import Field as PydanticField
 
 from metabaseapi.endpoints.entities import Action
 from metabaseapi.endpoints.execution import EndpointRequest
-from metabaseapi.endpoints.execution import _ResponseModel
 from metabaseapi.endpoints.responses.action import ActionExecutionResponse
 from metabaseapi.endpoints.responses.action import ListActionsResponse
 from metabaseapi.wire import JSONValue
@@ -19,7 +18,7 @@ class ListActionsRequest(EndpointRequest[ListActionsResponse]):
 
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/action"
-    response_model: ClassVar[_ResponseModel] = ListActionsResponse
+    response_model = ListActionsResponse
 
     def request_params(self) -> dict[str, QueryParamValue]:
         if self.model_id is None:
@@ -32,13 +31,13 @@ class CreateActionRequest(EndpointRequest[Action]):
 
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/action"
-    response_model: ClassVar[_ResponseModel] = Action
+    response_model = Action
 
 
 class ListPublicActionsRequest(EndpointRequest[ListActionsResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/action/public"
-    response_model: ClassVar[_ResponseModel] = ListActionsResponse
+    response_model = ListActionsResponse
 
 
 class GetActionRequest(EndpointRequest[Action]):
@@ -46,7 +45,7 @@ class GetActionRequest(EndpointRequest[Action]):
 
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/action/{action_id}"
-    response_model: ClassVar[_ResponseModel] = Action
+    response_model = Action
 
 
 class DeleteActionRequest(EndpointRequest[ActionExecutionResponse]):
@@ -54,7 +53,7 @@ class DeleteActionRequest(EndpointRequest[ActionExecutionResponse]):
 
     endpoint_method: ClassVar[str] = "DELETE"
     endpoint_path: ClassVar[str] = "/api/action/{action_id}"
-    response_model: ClassVar[_ResponseModel] = ActionExecutionResponse
+    response_model = ActionExecutionResponse
 
 
 class GetActionExecuteRequest(EndpointRequest[ActionExecutionResponse]):
@@ -63,7 +62,7 @@ class GetActionExecuteRequest(EndpointRequest[ActionExecutionResponse]):
 
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/action/{action_id}/execute"
-    response_model: ClassVar[_ResponseModel] = ActionExecutionResponse
+    response_model = ActionExecutionResponse
 
     def request_params(self) -> dict[str, QueryParamValue]:
         return self.parameters
@@ -75,7 +74,7 @@ class UpdateActionRequest(EndpointRequest[Action]):
 
     endpoint_method: ClassVar[str] = "PUT"
     endpoint_path: ClassVar[str] = "/api/action/{action_id}"
-    response_model: ClassVar[_ResponseModel] = Action
+    response_model = Action
 
 
 class ExecuteActionRequest(EndpointRequest[ActionExecutionResponse]):
@@ -84,7 +83,7 @@ class ExecuteActionRequest(EndpointRequest[ActionExecutionResponse]):
 
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/action/{action_id}/execute"
-    response_model: ClassVar[_ResponseModel] = ActionExecutionResponse
+    response_model = ActionExecutionResponse
 
     def request_body(self) -> JSONValue:
         return {"parameters": self.parameters}
@@ -95,7 +94,7 @@ class CreateActionPublicLinkRequest(EndpointRequest[ActionExecutionResponse]):
 
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/action/{action_id}/public_link"
-    response_model: ClassVar[_ResponseModel] = ActionExecutionResponse
+    response_model = ActionExecutionResponse
 
 
 class DeleteActionPublicLinkRequest(EndpointRequest[ActionExecutionResponse]):
@@ -103,4 +102,4 @@ class DeleteActionPublicLinkRequest(EndpointRequest[ActionExecutionResponse]):
 
     endpoint_method: ClassVar[str] = "DELETE"
     endpoint_path: ClassVar[str] = "/api/action/{action_id}/public_link"
-    response_model: ClassVar[_ResponseModel] = ActionExecutionResponse
+    response_model = ActionExecutionResponse

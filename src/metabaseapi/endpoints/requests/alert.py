@@ -4,7 +4,6 @@ from typing import ClassVar
 
 from metabaseapi.endpoints.entities import Alert
 from metabaseapi.endpoints.execution import EndpointRequest
-from metabaseapi.endpoints.execution import _ResponseModel
 from metabaseapi.endpoints.responses.alert import ListAlertsResponse
 from metabaseapi.endpoints.responses.common import GenericOperationResponse
 from metabaseapi.wire import QueryParamValue
@@ -15,7 +14,7 @@ class ListAlertsRequest(EndpointRequest[ListAlertsResponse]):
 
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/alert"
-    response_model: ClassVar[_ResponseModel] = ListAlertsResponse
+    response_model = ListAlertsResponse
 
     def request_params(self) -> dict[str, QueryParamValue]:
         if self.user_id is None:
@@ -28,7 +27,7 @@ class GetAlertRequest(EndpointRequest[Alert]):
 
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/alert/{alert_id}"
-    response_model: ClassVar[_ResponseModel] = Alert
+    response_model = Alert
 
 
 class DeleteAlertSubscriptionRequest(EndpointRequest[GenericOperationResponse]):
@@ -36,4 +35,4 @@ class DeleteAlertSubscriptionRequest(EndpointRequest[GenericOperationResponse]):
 
     endpoint_method: ClassVar[str] = "DELETE"
     endpoint_path: ClassVar[str] = "/api/alert/{alert_id}/subscription"
-    response_model: ClassVar[_ResponseModel] = GenericOperationResponse
+    response_model = GenericOperationResponse

@@ -7,7 +7,6 @@ from pydantic import Field as PydanticField
 
 from metabaseapi.endpoints.entities import Dashboard
 from metabaseapi.endpoints.execution import EndpointRequest
-from metabaseapi.endpoints.execution import _ResponseModel
 from metabaseapi.endpoints.responses.common import GenericOperationResponse
 from metabaseapi.endpoints.responses.dashboard import ListDashboardsResponse
 
@@ -15,7 +14,7 @@ from metabaseapi.endpoints.responses.dashboard import ListDashboardsResponse
 class ListDashboardsRequest(EndpointRequest[ListDashboardsResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/dashboard"
-    response_model: ClassVar[_ResponseModel] = ListDashboardsResponse
+    response_model = ListDashboardsResponse
 
 
 class PostDashboardRequest(EndpointRequest[Dashboard]):
@@ -23,7 +22,7 @@ class PostDashboardRequest(EndpointRequest[Dashboard]):
 
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/dashboard"
-    response_model: ClassVar[_ResponseModel] = Dashboard
+    response_model = Dashboard
 
 
 class GetDashboardRequest(EndpointRequest[Dashboard]):
@@ -31,19 +30,19 @@ class GetDashboardRequest(EndpointRequest[Dashboard]):
 
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/dashboard/{dashboard_id}"
-    response_model: ClassVar[_ResponseModel] = Dashboard
+    response_model = Dashboard
 
 
 class GetDashboardEmbeddableRequest(EndpointRequest[GenericOperationResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/dashboard/embeddable"
-    response_model: ClassVar[_ResponseModel] = GenericOperationResponse
+    response_model = GenericOperationResponse
 
 
 class GetDashboardPublicRequest(EndpointRequest[GenericOperationResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/dashboard/public"
-    response_model: ClassVar[_ResponseModel] = GenericOperationResponse
+    response_model = GenericOperationResponse
 
 
 class SaveDashboardRequest(EndpointRequest[GenericOperationResponse]):
@@ -51,7 +50,7 @@ class SaveDashboardRequest(EndpointRequest[GenericOperationResponse]):
 
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/dashboard/save"
-    response_model: ClassVar[_ResponseModel] = GenericOperationResponse
+    response_model = GenericOperationResponse
 
 
 class SaveDashboardToCollectionRequest(EndpointRequest[GenericOperationResponse]):
@@ -60,7 +59,7 @@ class SaveDashboardToCollectionRequest(EndpointRequest[GenericOperationResponse]
 
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/dashboard/save/collection/{parent_collection_id}"
-    response_model: ClassVar[_ResponseModel] = GenericOperationResponse
+    response_model = GenericOperationResponse
 
 
 class CreateDashboardPublicLinkRequest(EndpointRequest[GenericOperationResponse]):
@@ -68,7 +67,7 @@ class CreateDashboardPublicLinkRequest(EndpointRequest[GenericOperationResponse]
 
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/dashboard/{dashboard_id}/public_link"
-    response_model: ClassVar[_ResponseModel] = GenericOperationResponse
+    response_model = GenericOperationResponse
 
 
 class DeleteDashboardPublicLinkRequest(EndpointRequest[GenericOperationResponse]):
@@ -76,7 +75,7 @@ class DeleteDashboardPublicLinkRequest(EndpointRequest[GenericOperationResponse]
 
     endpoint_method: ClassVar[str] = "DELETE"
     endpoint_path: ClassVar[str] = "/api/dashboard/{dashboard_id}/public_link"
-    response_model: ClassVar[_ResponseModel] = GenericOperationResponse
+    response_model = GenericOperationResponse
 
 
 class CopyDashboardRequest(EndpointRequest[Dashboard]):
@@ -85,7 +84,7 @@ class CopyDashboardRequest(EndpointRequest[Dashboard]):
 
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/dashboard/{from_dashboard_id}/copy"
-    response_model: ClassVar[_ResponseModel] = Dashboard
+    response_model = Dashboard
 
 
 class DeleteDashboardRequest(EndpointRequest[GenericOperationResponse]):
@@ -93,7 +92,7 @@ class DeleteDashboardRequest(EndpointRequest[GenericOperationResponse]):
 
     endpoint_method: ClassVar[str] = "DELETE"
     endpoint_path: ClassVar[str] = "/api/dashboard/{dashboard_id}"
-    response_model: ClassVar[_ResponseModel] = GenericOperationResponse
+    response_model = GenericOperationResponse
 
 
 class UpdateDashboardRequest(EndpointRequest[Dashboard]):
@@ -102,7 +101,7 @@ class UpdateDashboardRequest(EndpointRequest[Dashboard]):
 
     endpoint_method: ClassVar[str] = "PUT"
     endpoint_path: ClassVar[str] = "/api/dashboard/{dashboard_id}"
-    response_model: ClassVar[_ResponseModel] = Dashboard
+    response_model = Dashboard
 
 
 class UpdateDashboardCardsRequest(EndpointRequest[GenericOperationResponse]):
@@ -111,7 +110,7 @@ class UpdateDashboardCardsRequest(EndpointRequest[GenericOperationResponse]):
 
     endpoint_method: ClassVar[str] = "PUT"
     endpoint_path: ClassVar[str] = "/api/dashboard/{dashboard_id}/cards"
-    response_model: ClassVar[_ResponseModel] = GenericOperationResponse
+    response_model = GenericOperationResponse
 
 
 class GetDashboardItemsRequest(EndpointRequest[GenericOperationResponse]):
@@ -119,4 +118,4 @@ class GetDashboardItemsRequest(EndpointRequest[GenericOperationResponse]):
 
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/dashboard/{dashboard_id}/items"
-    response_model: ClassVar[_ResponseModel] = GenericOperationResponse
+    response_model = GenericOperationResponse

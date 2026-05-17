@@ -844,6 +844,19 @@ class MetabaseClient:
             params["filtering"] = filtering_values
         return await self.get("/api/dashboard/params/valid-filter-fields", params=params or None)
 
+    async def query_dashboard_card(
+        self,
+        dashboard_id: int | str,
+        dashcard_id: int | str,
+        card_id: int | str,
+        body: Mapping[str, object] | None = None,
+    ) -> JSONValue | None:
+        payload = dict(body) if body is not None else None
+        return await self.post(
+            f"/api/dashboard/{dashboard_id}/dashcard/{dashcard_id}/card/{card_id}/query",
+            body=payload,
+        )
+
     async def list_users(self) -> JSONValue | None:
         return await self.get("/api/user")
 

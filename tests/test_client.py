@@ -293,6 +293,10 @@ def test_convenience_paths_cover_handwritten_endpoint_surface() -> None:
         (client.list_dashboards(), ("GET", "/api/dashboard", None)),
         (client.get_dashboard(14), ("GET", "/api/dashboard/14", None)),
         (
+            client.query_dashboard_card(14, "22", "33", {"x": 1}),
+            ("POST", "/api/dashboard/14/dashcard/22/card/33/query", {"x": 1}),
+        ),
+        (
             client.get_dashboard_params_valid_filter_fields(filtered=[11], filtering=[22]),
             ("GET", "/api/dashboard/params/valid-filter-fields", None),
         ),

@@ -461,6 +461,19 @@ class _ConvenienceClient(_ClientWithRequestMethods):
     async def get_dashboard(self, dashboard_id: str) -> dict[str, object]:
         return {"method": "GET", "path": f"/api/dashboard/{dashboard_id}"}
 
+    async def query_dashboard_card(
+        self,
+        dashboard_id: str,
+        dashcard_id: str,
+        card_id: str,
+        body: dict[str, object] | None = None,
+    ) -> dict[str, object]:
+        return {
+            "method": "POST",
+            "path": f"/api/dashboard/{dashboard_id}/dashcard/{dashcard_id}/card/{card_id}/query",
+            "body": body,
+        }
+
     async def get_dashboard_embeddable(self) -> dict[str, object]:
         return {"method": "GET", "path": "/api/dashboard/embeddable"}
 
@@ -689,6 +702,7 @@ def test_help_lists_every_convenience_command() -> None:
         "get-card-series",
         "list-dashboards",
         "get-dashboard",
+        "query-dashboard-card",
         "get-dashboard-embeddable",
         "get-dashboard-public",
         "create-dashboard",
@@ -883,6 +897,7 @@ def test_read_endpoint_commands_cover_handwritten_surface(
         (["cancel-cloud-migration"], "PUT", "/api/cloud-migration/cancel"),
         (["create-collection", '{"name":"New"}'], "POST", "/api/collection"),
         (["create-dashboard", '{"name":"Sales"}'], "POST", "/api/dashboard"),
+        (["query-dashboard-card", "14", "22", "33", '{"x":1}'], "POST", "/api/dashboard/14/dashcard/22/card/33/query"),
         (["get-collection-graph"], "GET", "/api/collection/graph"),
         (["put-collection-graph", '{"groups":["admin"]}'], "PUT", "/api/collection/graph"),
         (

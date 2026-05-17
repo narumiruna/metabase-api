@@ -308,6 +308,28 @@ def get_dashboard_public(ctx: typer.Context) -> None:
     _run_and_print(_run_client_call(ctx, lambda client: client.get_dashboard_public()))
 
 
+@app.command("query-dashboard-card")
+def query_dashboard_card(
+    ctx: typer.Context,
+    dashboard_id: str = typer.Argument(...),
+    dashcard_id: str = typer.Argument(...),
+    card_id: str = typer.Argument(...),
+    body: str = typer.Argument(None, help="Optional query payload JSON object"),
+) -> None:
+    payload = _parse_optional_json_object(body, "body") if body else None
+    _run_and_print(
+        _run_client_call(
+            ctx,
+            lambda client: client.query_dashboard_card(
+                dashboard_id,
+                dashcard_id,
+                card_id,
+                payload,
+            ),
+        )
+    )
+
+
 @app.command("create-dashboard")
 def create_dashboard(ctx: typer.Context, body: str = typer.Argument(..., help="Dashboard body JSON object")) -> None:
     payload = _parse_json_object(body, "body")

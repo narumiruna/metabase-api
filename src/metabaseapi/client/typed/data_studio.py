@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 
 
 class _MetabaseClientTypedMixin:
-    """Resource-scoped typed mixin for miscellaneous endpoints."""
+    """Resource-scoped typed mixin for Data Studio endpoints."""
 
     async def data_studio_table_discard_values_typed(
         self: MetabaseClient, body: dict[str, object]

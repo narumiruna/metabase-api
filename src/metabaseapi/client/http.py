@@ -1,6 +1,9 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
+from types import MappingProxyType
+from typing import Final
+from typing import Literal
 from typing import Protocol
 from typing import TypeVar
 
@@ -22,8 +25,8 @@ from metabaseapi.client.raw.cloud import _MetabaseClientRawMixin as _MetabaseCli
 from metabaseapi.client.raw.collections import _MetabaseClientRawMixin as _MetabaseClientCollectionsRawMixin
 from metabaseapi.client.raw.comments import _MetabaseClientRawMixin as _MetabaseClientCommentsRawMixin
 from metabaseapi.client.raw.dashboards import _MetabaseClientRawMixin as _MetabaseClientDashboardsRawMixin
+from metabaseapi.client.raw.data_studio import _MetabaseClientRawMixin as _MetabaseClientDataStudioRawMixin
 from metabaseapi.client.raw.databases import _MetabaseClientRawMixin as _MetabaseClientDatabasesRawMixin
-from metabaseapi.client.raw.misc import _MetabaseClientRawMixin as _MetabaseClientMiscRawMixin
 from metabaseapi.client.raw.tables import _MetabaseClientRawMixin as _MetabaseClientTablesRawMixin
 from metabaseapi.client.raw.users import _MetabaseClientRawMixin as _MetabaseClientUsersRawMixin
 from metabaseapi.client.typed.actions import _MetabaseClientTypedMixin as _MetabaseClientActionsTypedMixin
@@ -42,8 +45,8 @@ from metabaseapi.client.typed.cloud import _MetabaseClientTypedMixin as _Metabas
 from metabaseapi.client.typed.collections import _MetabaseClientTypedMixin as _MetabaseClientCollectionsTypedMixin
 from metabaseapi.client.typed.comments import _MetabaseClientTypedMixin as _MetabaseClientCommentsTypedMixin
 from metabaseapi.client.typed.dashboards import _MetabaseClientTypedMixin as _MetabaseClientDashboardsTypedMixin
+from metabaseapi.client.typed.data_studio import _MetabaseClientTypedMixin as _MetabaseClientDataStudioTypedMixin
 from metabaseapi.client.typed.databases import _MetabaseClientTypedMixin as _MetabaseClientDatabasesTypedMixin
-from metabaseapi.client.typed.misc import _MetabaseClientTypedMixin as _MetabaseClientMiscTypedMixin
 from metabaseapi.client.typed.tables import _MetabaseClientTypedMixin as _MetabaseClientTablesTypedMixin
 from metabaseapi.client.typed.users import _MetabaseClientTypedMixin as _MetabaseClientUsersTypedMixin
 from metabaseapi.errors import MetabaseDecodeError
@@ -54,6 +57,102 @@ from metabaseapi.models import APIResponseModel
 from metabaseapi.models import JSONValue
 from metabaseapi.models import QueryParamValue
 from metabaseapi.settings import Settings
+
+__all__ = [
+    "CLIENT_MIXIN_LAYERS",
+    "CLIENT_MIXIN_SEAM_REGISTRY",
+    "CLIENT_RAW_MIXINS",
+    "CLIENT_RAW_MIXIN_GROUPS",
+    "CLIENT_TYPED_MIXINS",
+    "CLIENT_TYPED_MIXIN_GROUPS",
+    "MetabaseClient",
+    "_MetabaseClientRawMixin",
+    "_MetabaseClientTypedMixin",
+    "client_mixin_group_names",
+    "client_mixin_layers",
+    "client_mixins_for_group",
+    "client_mixins_in_layer",
+]
+
+
+CLIENT_MIXIN_SEAM_REGISTRY: Mapping[str, tuple[type, type]] = MappingProxyType(
+    {
+        "actions": (_MetabaseClientActionsRawMixin, _MetabaseClientActionsTypedMixin),
+        "users": (_MetabaseClientUsersRawMixin, _MetabaseClientUsersTypedMixin),
+        "analytics": (_MetabaseClientAnalyticsRawMixin, _MetabaseClientAnalyticsTypedMixin),
+        "alerts": (_MetabaseClientAlertsRawMixin, _MetabaseClientAlertsTypedMixin),
+        "api_key": (_MetabaseClientApiKeyRawMixin, _MetabaseClientApiKeyTypedMixin),
+        "agent": (_MetabaseClientAgentRawMixin, _MetabaseClientAgentTypedMixin),
+        "activity": (_MetabaseClientActivityRawMixin, _MetabaseClientActivityTypedMixin),
+        "bookmarks": (_MetabaseClientBookmarksRawMixin, _MetabaseClientBookmarksTypedMixin),
+        "cache": (_MetabaseClientCacheRawMixin, _MetabaseClientCacheTypedMixin),
+        "collections": (_MetabaseClientCollectionsRawMixin, _MetabaseClientCollectionsTypedMixin),
+        "channels": (_MetabaseClientChannelsRawMixin, _MetabaseClientChannelsTypedMixin),
+        "cloud": (_MetabaseClientCloudRawMixin, _MetabaseClientCloudTypedMixin),
+        "cards": (_MetabaseClientCardsRawMixin, _MetabaseClientCardsTypedMixin),
+        "databases": (_MetabaseClientDatabasesRawMixin, _MetabaseClientDatabasesTypedMixin),
+        "automagic": (_MetabaseClientAutomagicRawMixin, _MetabaseClientAutomagicTypedMixin),
+        "dashboards": (_MetabaseClientDashboardsRawMixin, _MetabaseClientDashboardsTypedMixin),
+        "comments": (_MetabaseClientCommentsRawMixin, _MetabaseClientCommentsTypedMixin),
+        "bug_reporting": (_MetabaseClientBugReportingRawMixin, _MetabaseClientBugReportingTypedMixin),
+        "data_studio": (_MetabaseClientDataStudioRawMixin, _MetabaseClientDataStudioTypedMixin),
+        "tables": (_MetabaseClientTablesRawMixin, _MetabaseClientTablesTypedMixin),
+    }
+)
+
+ClientMixinLayer = Literal["raw", "typed"]
+CLIENT_MIXIN_LAYERS: Final[tuple[ClientMixinLayer, ClientMixinLayer]] = ("raw", "typed")
+
+
+def _build_client_mixin_layer_groups(layer: ClientMixinLayer) -> Mapping[str, tuple[type, ...]]:
+    """Build raw or typed mixin groups from the seam registry."""
+    index = 0 if layer == "raw" else 1
+    return MappingProxyType({group_name: (mixins[index],) for group_name, mixins in CLIENT_MIXIN_SEAM_REGISTRY.items()})
+
+
+CLIENT_RAW_MIXIN_GROUPS: Mapping[str, tuple[type, ...]] = _build_client_mixin_layer_groups("raw")
+CLIENT_TYPED_MIXIN_GROUPS: Mapping[str, tuple[type, ...]] = _build_client_mixin_layer_groups("typed")
+
+
+def _flatten_mixins(groups: Mapping[str, tuple[type, ...]]) -> tuple[type, ...]:
+    return tuple(mixin for module_mixins in groups.values() for mixin in module_mixins)
+
+
+CLIENT_RAW_MIXINS = _flatten_mixins(CLIENT_RAW_MIXIN_GROUPS)
+CLIENT_TYPED_MIXINS = _flatten_mixins(CLIENT_TYPED_MIXIN_GROUPS)
+
+
+def client_mixin_layers() -> tuple[ClientMixinLayer, ...]:
+    """Return available client mixin layers."""
+    return CLIENT_MIXIN_LAYERS
+
+
+def _client_mixin_groups(layer: ClientMixinLayer) -> Mapping[str, tuple[type, ...]]:
+    if layer == "raw":
+        return CLIENT_RAW_MIXIN_GROUPS
+    if layer == "typed":
+        return CLIENT_TYPED_MIXIN_GROUPS
+    raise ValueError(f"unsupported client layer: {layer}")
+
+
+def client_mixin_group_names(layer: ClientMixinLayer = "raw") -> tuple[str, ...]:
+    """Return registered client mixin group names."""
+    return tuple(_client_mixin_groups(layer))
+
+
+def client_mixins_in_layer(layer: ClientMixinLayer = "raw") -> tuple[type, ...]:
+    """Return flattened mixins for a client layer."""
+    return _flatten_mixins(_client_mixin_groups(layer))
+
+
+def client_mixins_for_group(
+    group_name: str,
+    *,
+    layer: ClientMixinLayer = "raw",
+) -> tuple[type, ...]:
+    """Return mixins assigned to a client mixin group."""
+    groups = _client_mixin_groups(layer)
+    return groups[group_name]
 
 
 class _MetabaseClientRawMixin(
@@ -75,7 +174,7 @@ class _MetabaseClientRawMixin(
     _MetabaseClientDashboardsRawMixin,
     _MetabaseClientCommentsRawMixin,
     _MetabaseClientBugReportingRawMixin,
-    _MetabaseClientMiscRawMixin,
+    _MetabaseClientDataStudioRawMixin,
     _MetabaseClientTablesRawMixin,
 ):
     """Resource-scoped raw mixin."""
@@ -89,6 +188,7 @@ class _MetabaseClientTypedMixin(
     _MetabaseClientAlertsTypedMixin,
     _MetabaseClientApiKeyTypedMixin,
     _MetabaseClientAgentTypedMixin,
+    _MetabaseClientActivityTypedMixin,
     _MetabaseClientBookmarksTypedMixin,
     _MetabaseClientCacheTypedMixin,
     _MetabaseClientCollectionsTypedMixin,
@@ -100,9 +200,8 @@ class _MetabaseClientTypedMixin(
     _MetabaseClientDashboardsTypedMixin,
     _MetabaseClientCommentsTypedMixin,
     _MetabaseClientBugReportingTypedMixin,
-    _MetabaseClientMiscTypedMixin,
+    _MetabaseClientDataStudioTypedMixin,
     _MetabaseClientTablesTypedMixin,
-    _MetabaseClientActivityTypedMixin,
 ):
     """Resource-scoped typed mixin."""
 

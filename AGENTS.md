@@ -16,7 +16,7 @@
 - Keep `uv run metabaseapi --help` working so users can discover every command and option.
 - Use `just all` as the local aggregate gate; it runs Ruff format, Ruff lint with fixes, ty type checking, and pytest with coverage.
 - CI also runs `uv run ruff check .`, `uv run ty check .`, and `uv run pytest -v -s --cov=src --cov-report=xml tests`.
-- Always run Python code paths through `uv run python` (or `UV_CACHE_DIR=/tmp/uv-cache uv run python`) so dependency environment is consistent with the project.
+- All Python execution and script entrypoints in this repo must use `uv run python` (or `UV_CACHE_DIR=/tmp/uv-cache uv run python`); never use bare `python` or `python3` directly for project code paths.
 - 確認：專案中的 Python 路徑、腳本、臨時執行都**一定要**用 `uv run python`（可配 `UV_CACHE_DIR=/tmp/uv-cache`）執行。
 
 ## Coding rules

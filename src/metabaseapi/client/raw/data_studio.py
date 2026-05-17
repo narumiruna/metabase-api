@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 
 
 class _MetabaseClientRawMixin:
-    """Resource-scoped raw mixin for miscellaneous endpoints."""
+    """Resource-scoped raw mixin for Data Studio endpoints."""
 
     async def data_studio_table_discard_values(self: MetabaseClient, body: Mapping[str, object]) -> JSONValue | None:
         return await self.post("/api/data-studio/table/discard-values", body=dict(body))

@@ -10,6 +10,8 @@ from collections.abc import Coroutine
 import typer
 
 from metabaseapi import settings
+from metabaseapi.cli_error_adapter import error_payload
+from metabaseapi.cli_output import render_payload
 from metabaseapi.client import MetabaseClient
 from metabaseapi.errors import MetabaseError
 from metabaseapi.models import JSONValue
@@ -21,10 +23,6 @@ def create_client(
     client_settings: settings.Settings,
 ) -> MetabaseClient:
     return MetabaseClient.from_settings(client_settings)
-
-
-def _format_json(payload: JSONValue) -> str:
-    return json.dumps(payload, indent=2, ensure_ascii=False, sort_keys=True)
 
 
 def _build_client_settings(
@@ -86,13 +84,10 @@ def _run_and_print(coro: Coroutine[object, object, JSONValue | None]) -> None:
     try:
         result = _run_async(coro)
     except (MetabaseError, ValueError) as exc:
-        typer.echo(_format_json({"error": str(exc)}), err=True)
+        typer.echo(render_payload(error_payload(exc)), err=True)
         raise typer.Exit(code=1) from exc
 
-    if result is None:
-        typer.echo("null")
-    else:
-        typer.echo(_format_json(result))
+    typer.echo(render_payload(result))
 
 
 def _get_settings(ctx: typer.Context) -> settings.Settings:
@@ -133,8 +128,9 @@ def configure(
 
 
 def _register_commands() -> None:
-    import metabaseapi.cli_commands_core
-    import metabaseapi.cli_commands_dashboard  # noqa: F401
+    from metabaseapi.cli_commands import register_commands
+
+    register_commands()
 
 
 _register_commands()

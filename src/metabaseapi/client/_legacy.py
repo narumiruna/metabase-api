@@ -7,7 +7,9 @@ from typing import cast
 
 import httpx
 
+from metabaseapi.client.raw.analytics import _MetabaseClientRawMixin as _MetabaseClientAnalyticsRawMixin
 from metabaseapi.client.raw.users import _MetabaseClientRawMixin as _MetabaseClientUsersRawMixin
+from metabaseapi.client.typed.analytics import _MetabaseClientTypedMixin as _MetabaseClientAnalyticsTypedMixin
 from metabaseapi.client.typed.users import _MetabaseClientTypedMixin as _MetabaseClientUsersTypedMixin
 from metabaseapi.errors import MetabaseDecodeError
 from metabaseapi.errors import MetabaseHTTPStatusError
@@ -23,7 +25,6 @@ from metabaseapi.metabase import AgentQueryRequest
 from metabaseapi.metabase import AgentResponse
 from metabaseapi.metabase import AgentSearchRequest
 from metabaseapi.metabase import Alert
-from metabaseapi.metabase import AnalyzeChartRequest
 from metabaseapi.metabase import ApiKey
 from metabaseapi.metabase import AutomagicDashboardRequest
 from metabaseapi.metabase import AutomagicDatabaseCandidatesRequest
@@ -44,7 +45,6 @@ from metabaseapi.metabase import CopyDashboardRequest
 from metabaseapi.metabase import CountApiKeysRequest
 from metabaseapi.metabase import CreateActionPublicLinkRequest
 from metabaseapi.metabase import CreateActionRequest
-from metabaseapi.metabase import CreateAnalyticsEventBatchRequest
 from metabaseapi.metabase import CreateApiKeyRequest
 from metabaseapi.metabase import CreateBookmarkRequest
 from metabaseapi.metabase import CreateCardPublicLinkRequest
@@ -87,7 +87,6 @@ from metabaseapi.metabase import GetAgentMetricRequest
 from metabaseapi.metabase import GetAgentTableFieldValuesRequest
 from metabaseapi.metabase import GetAgentTableRequest
 from metabaseapi.metabase import GetAlertRequest
-from metabaseapi.metabase import GetAnonymousStatsRequest
 from metabaseapi.metabase import GetBugReportingConnectionPoolDetailsRequest
 from metabaseapi.metabase import GetBugReportingDetailsRequest
 from metabaseapi.metabase import GetCacheRequest
@@ -181,11 +180,13 @@ from metabaseapi.models import QueryParamValue
 from metabaseapi.settings import Settings
 
 
-class _MetabaseClientRawMixin(_MetabaseClientUsersRawMixin):
+class _MetabaseClientRawMixin(_MetabaseClientUsersRawMixin, _MetabaseClientAnalyticsRawMixin):
     """Resource-scoped raw mixin."""
 
 
-class _MetabaseClientTypedMixin(_MetabaseClientRawMixin, _MetabaseClientUsersTypedMixin):
+class _MetabaseClientTypedMixin(
+    _MetabaseClientRawMixin, _MetabaseClientUsersTypedMixin, _MetabaseClientAnalyticsTypedMixin
+):
     """Resource-scoped typed mixin."""
 
 
@@ -571,9 +572,6 @@ class MetabaseClient(_MetabaseClientTypedMixin):
     async def regenerate_api_key(self, api_key_id: int | str) -> JSONValue | None:
         return await self.put(f"/api/api-key/{api_key_id}/regenerate")
 
-    async def analyze_chart(self, body: Mapping[str, object]) -> JSONValue | None:
-        return await self.post("/api/ai-entity-analysis/analyze-chart", body=dict(body))
-
     async def list_alerts(self, *, user_id: int | str | None = None) -> JSONValue | None:
         params = {"user_id": user_id} if user_id is not None else None
         return await self.get("/api/alert", params=params)
@@ -583,12 +581,6 @@ class MetabaseClient(_MetabaseClientTypedMixin):
 
     async def delete_alert_subscription(self, alert_id: int | str) -> JSONValue | None:
         return await self.delete(f"/api/alert/{alert_id}/subscription")
-
-    async def anonymous_stats(self) -> JSONValue | None:
-        return await self.get("/api/analytics/anonymous-stats")
-
-    async def create_analytics_event_batch(self, body: Mapping[str, object]) -> JSONValue | None:
-        return await self.post("/api/analytics/internal", body=dict(body))
 
     async def agent_execute(self, body: Mapping[str, object]) -> JSONValue | None:
         return await self.post("/api/agent/v1/execute", body=dict(body))
@@ -1239,9 +1231,6 @@ class MetabaseClient(_MetabaseClientTypedMixin):
     async def regenerate_api_key_typed(self, api_key_id: int | str) -> ApiKey:
         return await self.run(RegenerateApiKeyRequest(api_key_id=api_key_id))
 
-    async def analyze_chart_typed(self, body: dict[str, object]) -> GenericOperationResponse:
-        return await self.run(AnalyzeChartRequest(body=body))
-
     async def list_alerts_typed(self, *, user_id: int | str | None = None) -> ListAlertsResponse:
         return await self.run(ListAlertsRequest(user_id=user_id))
 
@@ -1250,12 +1239,6 @@ class MetabaseClient(_MetabaseClientTypedMixin):
 
     async def delete_alert_subscription_typed(self, alert_id: int | str) -> GenericOperationResponse:
         return await self.run(DeleteAlertSubscriptionRequest(alert_id=alert_id))
-
-    async def anonymous_stats_typed(self) -> GenericOperationResponse:
-        return await self.run(GetAnonymousStatsRequest())
-
-    async def create_analytics_event_batch_typed(self, body: dict[str, object]) -> GenericOperationResponse:
-        return await self.run(CreateAnalyticsEventBatchRequest(body=body))
 
     async def agent_execute_typed(self, body: dict[str, object]) -> AgentResponse:
         return await self.run(AgentExecuteRequest(body=body))

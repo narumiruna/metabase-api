@@ -169,7 +169,7 @@ def test_current_user_request_parses_response_model() -> None:
     payload = {"id": 1, "email": "alice@example.com"}
     client = _StubClient(payload)
 
-    result = CurrentUserRequest().do_sync(client)
+    result = _run(CurrentUserRequest().do(client))
 
     assert isinstance(result, CurrentUserResponse)
     assert result.id == 1
@@ -195,7 +195,7 @@ def test_list_databases_request_posts_to_expected_endpoint() -> None:
     client = _StubClient(payload)
 
     request = ListDatabasesRequest()
-    response = request.do_sync(client)
+    response = _run(request.do(client))
 
     assert isinstance(response, ListDatabasesResponse)
     assert len(response.databases) == 1
@@ -208,7 +208,7 @@ def test_create_database_request_includes_body_for_post() -> None:
     client = _StubClient(payload)
 
     request = CreateDatabaseRequest(name="analytics", engine="postgres", details={"host": "db.local"})
-    response = request.do_sync(client)
+    response = _run(request.do(client))
 
     assert isinstance(response, Database)
     assert response.name == "analytics"
@@ -235,7 +235,7 @@ def test_create_card_request_includes_question_body_for_post() -> None:
         collection_id="root",
         description="Orders question",
     )
-    response = request.do_sync(client)
+    response = _run(request.do(client))
 
     assert isinstance(response, Card)
     assert response.name == "Orders"
@@ -648,7 +648,7 @@ def test_action_requests_use_expected_paths_and_payloads() -> None:
 
     for request_model, response_type, expected_call in cases:
         stub = _StubClient({"id": 5, "name": "action"})
-        response = request_model.do_sync(stub)
+        response = _run(request_model.do(stub))
 
         assert isinstance(response, response_type)
         assert stub.calls == [expected_call]
@@ -663,7 +663,7 @@ def test_list_requests_use_expected_paths() -> None:
         (ListTablesRequest(), ListTablesResponse, "/api/table"),
     ]:
         stub = _StubClient({"data": []})
-        response = request_model.do_sync(stub)
+        response = _run(request_model.do(stub))
 
         assert isinstance(response, response_type)
         assert stub.calls == [("GET", expected_path, {}, None)]
@@ -691,7 +691,7 @@ def test_get_path_based_requests_use_expected_paths() -> None:
     ]
     for request, path, model_type in expectations:
         stub = _StubClient({"id": 1, "name": "x"})
-        response = request.do_sync(stub)
+        response = _run(request.do(stub))
         assert isinstance(response, model_type)
         assert stub.calls[0][0] == "GET"
         assert stub.calls[0][1] == path
@@ -701,8 +701,8 @@ def test_get_card_and_dashboard_requests_use_path_parameters() -> None:
     card_client = _StubClient({"id": 7, "name": "card", "display": "table"})
     dashboard_client = _StubClient({"id": 8, "name": "dashboard", "collection_id": 3})
 
-    card_result = GetCardRequest(card_id=7).do_sync(card_client)
-    dashboard_result = GetDashboardRequest(dashboard_id=8).do_sync(dashboard_client)
+    card_result = _run(GetCardRequest(card_id=7).do(card_client))
+    dashboard_result = _run(GetDashboardRequest(dashboard_id=8).do(dashboard_client))
 
     assert card_result.id == 7
     assert card_client.calls[0][0] == "GET"

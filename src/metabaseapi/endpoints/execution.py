@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import asyncio
 from typing import ClassVar
 from typing import Protocol
 from typing import TypeVar
@@ -52,9 +51,6 @@ class EndpointRequest[ResponseT](BaseModel):
             json_data=self.request_body(),
         )
         return cast(ResponseT, self.response_model.model_validate(payload or {}))
-
-    def do_sync(self, client: MetabaseRequestClient) -> ResponseT:
-        return asyncio.run(self.do(client))
 
 
 __all__ = ["EndpointRequest", "MetabaseRequestClient"]

@@ -446,6 +446,7 @@ def test_client_public_module_exports_concrete_http_implementation() -> None:
 def test_endpoints_execution_owns_request_interface() -> None:
     assert metabaseapi.endpoints.execution.__all__ == ["EndpointRequest", "MetabaseRequestClient"]
     assert not hasattr(metabaseapi.endpoints.execution, "_BaseMetabaseRequest")
+    assert not hasattr(metabaseapi.endpoints.execution.EndpointRequest, "do_sync")
     assert metabaseapi.endpoints.requests.card.ListCardsRequest.__mro__[1].__module__ == (
         "metabaseapi.endpoints.execution"
     )

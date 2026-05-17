@@ -20,6 +20,7 @@
 - Run commands from the repository root. Use `uv sync` to install dependencies.
 - Keep `uv run metabaseapi --help` working so users can discover every command and option.
 - Current local required gate is Ruff plus ty only: run `uv run ruff check .` and `uv run ty check .` before finishing code changes.
+- You may run `prek run` directly for pre-commit hooks; keep routine required verification to `uv run ruff check .` and `uv run ty check .`.
 - Do not run pytest unless the user explicitly asks for tests or the change specifically needs test evidence.
 - `just all` remains the full aggregate gate; it also runs pytest with coverage, so do not use it for routine verification under the current workflow.
 - CI also runs `uv run ruff check .`, `uv run ty check .`, and `uv run pytest -v -s --cov=src --cov-report=xml tests`.

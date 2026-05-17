@@ -54,6 +54,8 @@ from metabaseapi.metabase import GetChannelRequest
 from metabaseapi.metabase import GetCloudMigrationRequest
 from metabaseapi.metabase import GetCollectionGraphRequest
 from metabaseapi.metabase import GetCollectionRequest
+from metabaseapi.metabase import GetCollectionRootDashboardQuestionCandidatesRequest
+from metabaseapi.metabase import GetCollectionRootItemsRequest
 from metabaseapi.metabase import GetCollectionRootRequest
 from metabaseapi.metabase import GetDashboardRequest
 from metabaseapi.metabase import GetDatabaseRequest
@@ -310,6 +312,16 @@ def test_action_requests_use_expected_paths_and_payloads() -> None:
         (GetCollectionGraphRequest(), GenericOperationResponse, ("GET", "/api/collection/graph", {}, None)),
         (GetCollectionRootRequest(), Collection, ("GET", "/api/collection/root", {}, None)),
         (
+            GetCollectionRootDashboardQuestionCandidatesRequest(),
+            GenericOperationResponse,
+            ("GET", "/api/collection/root/dashboard-question-candidates", {}, None),
+        ),
+        (
+            GetCollectionRootItemsRequest(),
+            GenericOperationResponse,
+            ("GET", "/api/collection/root/items", {}, None),
+        ),
+        (
             PutCollectionGraphRequest(body={"groups": ["admin"]}),
             GenericOperationResponse,
             ("PUT", "/api/collection/graph", {}, {"groups": ["admin"]}),
@@ -473,6 +485,8 @@ def _build_mock_endpoint_responses() -> dict[tuple[str, str], dict[str, object]]
         ("GET", "/api/collection/graph"): {"groups": ["admin"]},
         ("PUT", "/api/collection/graph"): {"id": 1},
         ("GET", "/api/collection/root"): {"id": "root", "name": "Root"},
+        ("GET", "/api/collection/root/dashboard-question-candidates"): {"cards": [{"id": 1}]},
+        ("GET", "/api/collection/root/items"): {"cards": [{"id": 2}]},
         ("GET", "/api/table"): {"data": [{"id": 8, "name": "table", "schema": "public", "db_id": 1}]},
         ("GET", "/api/database/4"): {"id": 4, "name": "db4", "engine": "postgres"},
         ("GET", "/api/user/10"): {"id": 10, "email": "u10@example.com", "first_name": "Turing"},
@@ -532,6 +546,8 @@ def test_typed_methods_in_client_return_models() -> None:
     collection_graph = _run(client.get_collection_graph_typed())
     collection_graph_update = _run(client.put_collection_graph_typed({"groups": ["admin"]}))
     collection_root = _run(client.get_collection_root_typed())
+    collection_root_candidates = _run(client.get_collection_root_dashboard_question_candidates_typed())
+    collection_root_items = _run(client.get_collection_root_items_typed())
     cards = _run(client.list_cards_typed())
     cards_dashboards = _run(client.cards_dashboards_typed([1, 2]))
     moved_cards = _run(client.move_cards_typed({"card_ids": [1], "collection_id": "root"}))
@@ -579,6 +595,8 @@ def test_typed_methods_in_client_return_models() -> None:
     assert isinstance(collection_root, Collection)
     assert collection_root.id == "root"
     assert collection_root.name == "Root"
+    assert isinstance(collection_root_candidates, GenericOperationResponse)
+    assert isinstance(collection_root_items, GenericOperationResponse)
     assert isinstance(cards, ListCardsResponse)
     assert isinstance(cards_dashboards, CardsDashboardsResponse)
     assert isinstance(moved_cards, GenericOperationResponse)

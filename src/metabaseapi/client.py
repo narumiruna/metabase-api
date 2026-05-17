@@ -87,6 +87,8 @@ from metabaseapi.metabase import GetChannelRequest
 from metabaseapi.metabase import GetCloudMigrationRequest
 from metabaseapi.metabase import GetCollectionGraphRequest
 from metabaseapi.metabase import GetCollectionRequest
+from metabaseapi.metabase import GetCollectionRootDashboardQuestionCandidatesRequest
+from metabaseapi.metabase import GetCollectionRootItemsRequest
 from metabaseapi.metabase import GetCollectionRootRequest
 from metabaseapi.metabase import GetDashboardRequest
 from metabaseapi.metabase import GetDatabaseRequest
@@ -818,6 +820,12 @@ class MetabaseClient:
     async def get_collection_root(self) -> JSONValue | None:
         return await self.get("/api/collection/root")
 
+    async def get_collection_root_dashboard_question_candidates(self) -> JSONValue | None:
+        return await self.get("/api/collection/root/dashboard-question-candidates")
+
+    async def get_collection_root_items(self) -> JSONValue | None:
+        return await self.get("/api/collection/root/items")
+
     async def list_tables(self) -> JSONValue | None:
         return await self.get("/api/table")
 
@@ -1060,6 +1068,12 @@ class MetabaseClient:
 
     async def get_collection_root_typed(self) -> Collection:
         return await self.run(GetCollectionRootRequest())
+
+    async def get_collection_root_dashboard_question_candidates_typed(self) -> GenericOperationResponse:
+        return await self.run(GetCollectionRootDashboardQuestionCandidatesRequest())
+
+    async def get_collection_root_items_typed(self) -> GenericOperationResponse:
+        return await self.run(GetCollectionRootItemsRequest())
 
     async def list_tables_typed(self) -> ListTablesResponse:
         return await self.run(ListTablesRequest())

@@ -1047,6 +1047,20 @@ def get_collection_root(ctx: typer.Context) -> None:
     _run_and_print(_run_client_call(ctx, lambda client: client.get_collection_root()))
 
 
+@app.command("get-collection-root-dashboard-question-candidates")
+def get_collection_root_dashboard_question_candidates(ctx: typer.Context) -> None:
+    """Find cards in root collection that can be moved into dashboards."""
+
+    _run_and_print(_run_client_call(ctx, lambda client: client.get_collection_root_dashboard_question_candidates()))
+
+
+@app.command("get-collection-root-items")
+def get_collection_root_items(ctx: typer.Context) -> None:
+    """Fetch objects that the current user should see at root level."""
+
+    _run_and_print(_run_client_call(ctx, lambda client: client.get_collection_root_items()))
+
+
 @app.command("get-collection-graph")
 def get_collection_graph(ctx: typer.Context) -> None:
     """Fetch the collection permissions graph."""

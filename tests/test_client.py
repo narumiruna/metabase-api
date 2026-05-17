@@ -190,6 +190,14 @@ def test_convenience_paths_cover_handwritten_endpoint_surface() -> None:
         (client.put_collection_graph({"groups": ["admin"]}), ("PUT", "/api/collection/graph", {"groups": ["admin"]})),
         (client.get_collection_root(), ("GET", "/api/collection/root", None)),
         (
+            client.get_collection_root_dashboard_question_candidates(),
+            ("GET", "/api/collection/root/dashboard-question-candidates", None),
+        ),
+        (
+            client.get_collection_root_items(),
+            ("GET", "/api/collection/root/items", None),
+        ),
+        (
             client.create_database(name="analytics", engine="postgres", details={"host": "db.local"}),
             (
                 "POST",

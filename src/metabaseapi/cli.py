@@ -537,6 +537,12 @@ def get_comment(
     _run_and_print(_run_client_call(ctx, lambda client: client.get_comment(model=model, model_id=model_id)))
 
 
+@app.command("create-comment")
+def create_comment(ctx: typer.Context, body: str = typer.Argument(..., help="Comment body JSON object")) -> None:
+    payload = _parse_json_object(body, "body")
+    _run_and_print(_run_client_call(ctx, lambda client: client.create_comment(payload)))
+
+
 @app.command("delete-comment")
 def delete_comment(ctx: typer.Context, comment_id: str = typer.Argument(...)) -> None:
     """Delete a comment."""

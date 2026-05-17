@@ -136,6 +136,7 @@ from metabaseapi.metabase import MoveCardsRequest
 from metabaseapi.metabase import PostCardPivotQueryRequest
 from metabaseapi.metabase import PostCollectionMoveDashboardQuestionCandidatesRequest
 from metabaseapi.metabase import PostCollectionRootMoveDashboardQuestionCandidatesRequest
+from metabaseapi.metabase import PostCommentRequest
 from metabaseapi.metabase import PutCacheRequest
 from metabaseapi.metabase import PutCollectionGraphRequest
 from metabaseapi.metabase import PutCollectionRequest
@@ -840,6 +841,9 @@ class MetabaseClient:
             params["model-id"] = model_id
         return await self.get("/api/comment", params=params or None)
 
+    async def create_comment(self, body: Mapping[str, object]) -> JSONValue | None:
+        return await self.post("/api/comment", body=dict(body))
+
     async def delete_comment(self, comment_id: int | str) -> JSONValue | None:
         return await self.delete(f"/api/comment/{comment_id}")
 
@@ -1134,6 +1138,9 @@ class MetabaseClient:
         model_id: int | str | None = None,
     ) -> GenericOperationResponse:
         return await self.run(GetCommentRequest(model=model, model_id=model_id))
+
+    async def create_comment_typed(self, body: dict[str, object]) -> GenericOperationResponse:
+        return await self.run(PostCommentRequest(body=dict(body)))
 
     async def get_collection_graph_typed(self) -> GenericOperationResponse:
         return await self.run(GetCollectionGraphRequest())

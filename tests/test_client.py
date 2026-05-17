@@ -146,6 +146,7 @@ def test_convenience_paths_cover_handwritten_endpoint_surface() -> None:
         (client.update_api_key(7, {"name": "key"}), ("PUT", "/api/api-key/7", {"name": "key"})),
         (client.delete_api_key(7), ("DELETE", "/api/api-key/7", None)),
         (client.get_comment(), ("GET", "/api/comment", None)),
+        (client.create_comment({"text": "Hello"}), ("POST", "/api/comment", {"text": "Hello"})),
         (client.delete_comment(7), ("DELETE", "/api/comment/7", None)),
         (client.regenerate_api_key(7), ("PUT", "/api/api-key/7/regenerate", None)),
         (

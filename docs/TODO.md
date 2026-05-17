@@ -15,8 +15,8 @@ This file is a static implementation checklist derived from the latest Metabase 
 ## Coverage summary
 
 - Documented operations: 600
-- Complete hand-written endpoint implementations: 116
-- Remaining documented operations: 484
+- Complete hand-written endpoint implementations: 117
+- Remaining documented operations: 483
 - Raw `request` / `invoke`: disabled for CLI users and does not count toward TODO completion.
 
 ## Endpoint checklist
@@ -172,10 +172,10 @@ This file is a static implementation checklist derived from the latest Metabase 
 - [x] `GET /api/collection/{id}/items` — `get-api-collection-id-items` — Fetch a specific Collection's items with the following options: * `models` - only include objects of a specific set of `models`. If unspecified, returns obje...
 - [x] `POST /api/collection/{id}/move-dashboard-question-candidates` — `post-api-collection-id-move-dashboard-question-candidates` — Move candidate cards to the dashboards they appear in.
 
-### /api/comment (2/6 complete)
+### /api/comment (3/6 complete)
 
 - [x] `GET /api/comment` — `get-api-comment` — Get comments for an entity
-- [ ] `POST /api/comment` — `post-api-comment` — Create a new comment
+- [x] `POST /api/comment` — `post-api-comment` — Create a new comment
 - [ ] `GET /api/comment/mentions` — `get-api-comment-mentions` — Get a list of entities suitable for mentions. NOTE: only users for now.
 - [ ] `PUT /api/comment/{comment-id}` — `put-api-comment-comment-id` — Update a comment
 - [x] `DELETE /api/comment/{comment-id}` — `delete-api-comment-comment-id` — Soft delete a comment

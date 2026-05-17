@@ -38,9 +38,8 @@ class EndpointRequest[ResponseT](BaseModel):
         if "{" not in self.endpoint_path:
             return self.endpoint_path
         values = self.model_dump(mode="python", exclude_none=False)
-        format_values = values | {key.replace("_", "-"): value for key, value in values.items()}
         try:
-            return self.endpoint_path.format_map(format_values)
+            return self.endpoint_path.format_map(values)
         except KeyError:
             return self.endpoint_path
 

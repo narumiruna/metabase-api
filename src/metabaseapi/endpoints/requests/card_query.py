@@ -23,7 +23,7 @@ class PostCardPivotQueryRequest(EndpointRequest[CardQueryResponse]):
     body: dict[str, Any] = PydanticField(default_factory=dict)
 
     endpoint_method: ClassVar[str] = "POST"
-    endpoint_path: ClassVar[str] = "/api/card/pivot/{card-id}/query"
+    endpoint_path: ClassVar[str] = "/api/card/pivot/{card_id}/query"
     response_model = CardQueryResponse
 
     def request_body(self) -> JSONValue:

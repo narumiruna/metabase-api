@@ -572,6 +572,14 @@ def test_endpoint_requests_use_base_execution_methods() -> None:
             assert "do_sync" not in request_class.__dict__
 
 
+def test_endpoint_request_paths_use_python_field_placeholders() -> None:
+    for module_name, request_names in REQUEST_MODULE_CONTRACTS.items():
+        module = importlib.import_module(f"metabaseapi.endpoints.requests.{module_name}")
+        for request_name in request_names:
+            request_class = getattr(module, request_name)
+            assert not re.search(r"\{[^}]*-[^}]*\}", request_class.endpoint_path)
+
+
 def _command_module_names() -> tuple[str, ...]:
     command_package_path = _package_path(metabaseapi.cli.commands)
     return tuple(sorted(path.stem for path in command_package_path.glob("*.py") if path.stem != "__init__"))

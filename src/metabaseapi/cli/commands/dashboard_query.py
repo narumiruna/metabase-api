@@ -7,7 +7,6 @@ import typer
 from metabaseapi.cli.runtime import app
 from metabaseapi.cli.runtime import parse_optional_json_object
 from metabaseapi.cli.runtime import run_client_command
-from metabaseapi.client.raw import dashboard as _raw_dashboard
 from metabaseapi.client.raw import dashboard_query as _raw_dashboard_query
 from metabaseapi.wire import QueryParamValue
 
@@ -18,13 +17,6 @@ _FILTERING_OPTION = typer.Option(None, "--filtering", help="Filtering field ID l
 def _parse_optional_query_params(raw: str | None) -> dict[str, QueryParamValue] | None:
     payload = parse_optional_json_object(raw, "params")
     return cast("dict[str, QueryParamValue] | None", payload)
-
-
-@app.command("get-dashboard")
-def get_dashboard(ctx: typer.Context, dashboard_id: str = typer.Argument(...)) -> None:
-    """Get a dashboard by ID."""
-
-    run_client_command(ctx, lambda client: _raw_dashboard.get_dashboard(client, dashboard_id))
 
 
 @app.command("get-dashboard-params-valid-filter-fields")
@@ -43,30 +35,6 @@ def get_dashboard_params_valid_filter_fields(
             client,
             filtered=filtered_values or None,
             filtering=filtering_values or None,
-        ),
-    )
-
-
-@app.command("get-dashboard-embeddable")
-def get_dashboard_embeddable(ctx: typer.Context) -> None:
-    """List embeddable dashboards."""
-
-    run_client_command(
-        ctx,
-        lambda client: _raw_dashboard.get_dashboard_embeddable(
-            client,
-        ),
-    )
-
-
-@app.command("get-dashboard-public")
-def get_dashboard_public(ctx: typer.Context) -> None:
-    """List public dashboards."""
-
-    run_client_command(
-        ctx,
-        lambda client: _raw_dashboard.get_dashboard_public(
-            client,
         ),
     )
 

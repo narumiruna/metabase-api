@@ -45,6 +45,37 @@ def save_dashboard_to_collection(
     )
 
 
+@app.command("get-dashboard")
+def get_dashboard(ctx: typer.Context, dashboard_id: str = typer.Argument(...)) -> None:
+    """Get a dashboard by ID."""
+
+    run_client_command(ctx, lambda client: _raw_dashboard.get_dashboard(client, dashboard_id))
+
+
+@app.command("get-dashboard-embeddable")
+def get_dashboard_embeddable(ctx: typer.Context) -> None:
+    """List embeddable dashboards."""
+
+    run_client_command(
+        ctx,
+        lambda client: _raw_dashboard.get_dashboard_embeddable(
+            client,
+        ),
+    )
+
+
+@app.command("get-dashboard-public")
+def get_dashboard_public(ctx: typer.Context) -> None:
+    """List public dashboards."""
+
+    run_client_command(
+        ctx,
+        lambda client: _raw_dashboard.get_dashboard_public(
+            client,
+        ),
+    )
+
+
 @app.command("create-dashboard-public-link")
 def create_dashboard_public_link(ctx: typer.Context, dashboard_id: str = typer.Argument(...)) -> None:
     """Create a public link for a dashboard."""

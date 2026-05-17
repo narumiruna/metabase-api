@@ -639,6 +639,17 @@ def test_resource_list_commands_live_with_resource_modules() -> None:
     assert "list-tables" in command_names[metabaseapi.cli.commands.TABLE_COMMAND_MODULE]
 
 
+def test_dashboard_resource_commands_live_with_dashboard_module() -> None:
+    command_names = _command_names_by_module()
+    for command_name in (
+        "get-dashboard",
+        "get-dashboard-embeddable",
+        "get-dashboard-public",
+    ):
+        assert command_name in command_names[metabaseapi.cli.commands.DASHBOARD_COMMAND_MODULE]
+        assert command_name not in command_names[metabaseapi.cli.commands.DASHBOARD_QUERY_COMMAND_MODULE]
+
+
 def test_collection_graph_commands_live_with_collection_graph_module() -> None:
     command_names = _command_names_by_module()
     assert "get-collection-graph" in command_names[metabaseapi.cli.commands.COLLECTION_GRAPH_COMMAND_MODULE]

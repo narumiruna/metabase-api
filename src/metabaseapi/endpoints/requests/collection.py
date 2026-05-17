@@ -70,13 +70,13 @@ class GetCollectionRequest(EndpointRequest[Collection]):
     response_model = Collection
 
 
-class PutCollectionRequest(EndpointRequest[GenericOperationResponse]):
+class PutCollectionRequest(EndpointRequest[Collection]):
     body: dict[str, Any]
     collection_id: int | str
 
     endpoint_method: ClassVar[str] = "PUT"
     endpoint_path: ClassVar[str] = "/api/collection/{collection_id}"
-    response_model = GenericOperationResponse
+    response_model = Collection
 
 
 class DeleteCollectionRequest(EndpointRequest[GenericOperationResponse]):

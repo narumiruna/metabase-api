@@ -387,7 +387,7 @@ def test_action_requests_use_expected_paths_and_payloads() -> None:
         (GetCollectionGraphRequest(), GenericOperationResponse, ("GET", "/api/collection/graph", {}, None)),
         (
             PutCollectionRequest(collection_id="7", body={"name": "Updated"}),
-            GenericOperationResponse,
+            Collection,
             ("PUT", "/api/collection/7", {}, {"name": "Updated"}),
         ),
         (
@@ -808,7 +808,7 @@ def _build_mock_endpoint_responses() -> dict[tuple[str, str], dict[str, object]]
         ("GET", "/api/collection/tree"): {"id": "collections", "children": []},
         ("POST", "/api/collection/root/move-dashboard-question-candidates"): {"updated": True},
         ("POST", "/api/collection/7/move-dashboard-question-candidates"): {"updated": True},
-        ("PUT", "/api/collection/7"): {"updated": True},
+        ("PUT", "/api/collection/7"): {"id": 7, "name": "Updated"},
         ("DELETE", "/api/collection/7"): {"ok": True},
         ("GET", "/api/comment"): {"comments": [{"id": 1, "text": "Hi"}]},
         ("GET", "/api/comment/mentions"): {"mentions": [{"id": 1, "name": "alice"}]},
@@ -998,7 +998,8 @@ def test_client_run_endpoint_requests_return_models() -> None:
     assert created_collection.name == "New"
     assert isinstance(created_dashboard, Dashboard)
     assert created_dashboard.name == "Sales"
-    assert isinstance(updated_collection, GenericOperationResponse)
+    assert isinstance(updated_collection, Collection)
+    assert updated_collection.name == "Updated"
     assert isinstance(deleted_collection, GenericOperationResponse)
     assert isinstance(comments, GenericOperationResponse)
     assert isinstance(comments_mentions, GenericOperationResponse)

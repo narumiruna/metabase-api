@@ -263,7 +263,7 @@ RESPONSE_MODULE_CONTRACTS = {
     "activity": ("ActivityMutationResponse", "ListActivityItemsResponse"),
     "agent": ("AgentResponse",),
     "ai_entity_analysis": ("AnalyzeChartResponse",),
-    "alert": ("ListAlertsResponse",),
+    "alert": ("AlertSubscriptionDeleteResponse", "ListAlertsResponse"),
     "analytics": ("AnalyticsEventBatchResponse", "AnonymousStatsResponse"),
     "api_key": ("ListApiKeysResponse",),
     "bookmark": ("ListBookmarksResponse",),

@@ -28,6 +28,7 @@ from metabaseapi.endpoints.requests.action import ListActionsRequest
 from metabaseapi.endpoints.requests.action import ListPublicActionsRequest
 from metabaseapi.endpoints.requests.action import UpdateActionRequest
 from metabaseapi.endpoints.requests.ai_entity_analysis import AnalyzeChartRequest
+from metabaseapi.endpoints.requests.alert import DeleteAlertSubscriptionRequest
 from metabaseapi.endpoints.requests.analytics import CreateAnalyticsEventBatchRequest
 from metabaseapi.endpoints.requests.analytics import GetAnonymousStatsRequest
 from metabaseapi.endpoints.requests.bug_reporting import GetBugReportingConnectionPoolDetailsRequest
@@ -131,6 +132,7 @@ from metabaseapi.endpoints.requests.user_key_value import PutUserKeyValueNamespa
 from metabaseapi.endpoints.responses.action import ActionExecutionResponse
 from metabaseapi.endpoints.responses.action import ListActionsResponse
 from metabaseapi.endpoints.responses.ai_entity_analysis import AnalyzeChartResponse
+from metabaseapi.endpoints.responses.alert import AlertSubscriptionDeleteResponse
 from metabaseapi.endpoints.responses.analytics import AnalyticsEventBatchResponse
 from metabaseapi.endpoints.responses.analytics import AnonymousStatsResponse
 from metabaseapi.endpoints.responses.bug_reporting import BugReportingConnectionPoolDetailsResponse
@@ -327,6 +329,11 @@ def test_action_requests_use_expected_paths_and_payloads() -> None:
             CreateAnalyticsEventBatchRequest(body={"events": []}),
             AnalyticsEventBatchResponse,
             ("POST", "/api/analytics/internal", {}, {"events": []}),
+        ),
+        (
+            DeleteAlertSubscriptionRequest(alert_id=7),
+            AlertSubscriptionDeleteResponse,
+            ("DELETE", "/api/alert/7/subscription", {}, None),
         ),
         (
             GetBugReportingConnectionPoolDetailsRequest(),

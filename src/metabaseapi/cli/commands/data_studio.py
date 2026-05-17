@@ -3,8 +3,7 @@ from __future__ import annotations
 import typer
 
 from metabaseapi.cli.runtime import app
-from metabaseapi.cli.runtime import parse_json_object
-from metabaseapi.cli.runtime import run_endpoint_command
+from metabaseapi.cli.runtime import run_json_body_endpoint_command
 from metabaseapi.endpoints.requests.data_studio import DataStudioTableDiscardValuesRequest
 from metabaseapi.endpoints.requests.data_studio import DataStudioTableEditRequest
 from metabaseapi.endpoints.requests.data_studio import DataStudioTableRescanValuesRequest
@@ -19,8 +18,7 @@ def data_studio_table_discard_values(
 ) -> None:
     """Discard saved field values for selected tables."""
 
-    payload = parse_json_object(body, "body")
-    run_endpoint_command(ctx, DataStudioTableDiscardValuesRequest(body=payload))
+    run_json_body_endpoint_command(ctx, body, lambda payload: DataStudioTableDiscardValuesRequest(body=payload))
 
 
 @app.command("data-studio-table-edit")
@@ -30,8 +28,7 @@ def data_studio_table_edit(
 ) -> None:
     """Bulk update selected tables."""
 
-    payload = parse_json_object(body, "body")
-    run_endpoint_command(ctx, DataStudioTableEditRequest(body=payload))
+    run_json_body_endpoint_command(ctx, body, lambda payload: DataStudioTableEditRequest(body=payload))
 
 
 @app.command("data-studio-table-rescan-values")
@@ -41,8 +38,7 @@ def data_studio_table_rescan_values(
 ) -> None:
     """Rescan field values for selected tables."""
 
-    payload = parse_json_object(body, "body")
-    run_endpoint_command(ctx, DataStudioTableRescanValuesRequest(body=payload))
+    run_json_body_endpoint_command(ctx, body, lambda payload: DataStudioTableRescanValuesRequest(body=payload))
 
 
 @app.command("data-studio-table-selection")
@@ -52,8 +48,7 @@ def data_studio_table_selection(
 ) -> None:
     """Fetch information about selected tables."""
 
-    payload = parse_json_object(body, "body")
-    run_endpoint_command(ctx, DataStudioTableSelectionRequest(body=payload))
+    run_json_body_endpoint_command(ctx, body, lambda payload: DataStudioTableSelectionRequest(body=payload))
 
 
 @app.command("data-studio-table-sync-schema")
@@ -63,5 +58,4 @@ def data_studio_table_sync_schema(
 ) -> None:
     """Sync schema for selected tables."""
 
-    payload = parse_json_object(body, "body")
-    run_endpoint_command(ctx, DataStudioTableSyncSchemaRequest(body=payload))
+    run_json_body_endpoint_command(ctx, body, lambda payload: DataStudioTableSyncSchemaRequest(body=payload))

@@ -3,8 +3,8 @@ from __future__ import annotations
 import typer
 
 from metabaseapi.cli.runtime import app
-from metabaseapi.cli.runtime import parse_json_object
 from metabaseapi.cli.runtime import run_endpoint_command
+from metabaseapi.cli.runtime import run_json_body_endpoint_command
 from metabaseapi.endpoints.requests.comment import DeleteCommentRequest
 from metabaseapi.endpoints.requests.comment import GetCommentMentionsRequest
 from metabaseapi.endpoints.requests.comment import GetCommentRequest
@@ -29,24 +29,25 @@ def get_comment_mentions(ctx: typer.Context) -> None:
 
 @app.command("create-comment")
 def create_comment(ctx: typer.Context, body: str = typer.Argument(..., help="Comment body JSON object")) -> None:
-    payload = parse_json_object(body, "body")
-    run_endpoint_command(ctx, PostCommentRequest(body=payload))
+    run_json_body_endpoint_command(ctx, body, lambda payload: PostCommentRequest(body=payload))
 
 
 @app.command("update-comment")
 def update_comment(
     ctx: typer.Context, comment_id: str, body: str = typer.Argument(..., help="Comment body JSON object")
 ) -> None:
-    payload = parse_json_object(body, "body")
-    run_endpoint_command(ctx, UpdateCommentRequest(comment_id=comment_id, body=payload))
+    run_json_body_endpoint_command(ctx, body, lambda payload: UpdateCommentRequest(comment_id=comment_id, body=payload))
 
 
 @app.command("post-comment-reaction")
 def post_comment_reaction(
     ctx: typer.Context, comment_id: str, body: str = typer.Argument(..., help="Reaction body JSON object")
 ) -> None:
-    payload = parse_json_object(body, "body")
-    run_endpoint_command(ctx, PostCommentReactionRequest(comment_id=comment_id, body=payload))
+    run_json_body_endpoint_command(
+        ctx,
+        body,
+        lambda payload: PostCommentReactionRequest(comment_id=comment_id, body=payload),
+    )
 
 
 @app.command("delete-comment")

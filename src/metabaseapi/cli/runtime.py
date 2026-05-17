@@ -3,6 +3,7 @@ from __future__ import annotations
 import asyncio
 import json
 import logging
+from collections.abc import Callable
 from collections.abc import Coroutine
 from typing import Protocol
 from typing import TypeVar
@@ -117,6 +118,14 @@ def run_endpoint_command(ctx: typer.Context, request: EndpointCommandRequest[obj
             return await request.do(client)
 
     _run_and_print(do_request())
+
+
+def run_json_body_endpoint_command(
+    ctx: typer.Context,
+    raw_body: str,
+    build_request: Callable[[dict[str, object]], EndpointCommandRequest[object]],
+) -> None:
+    run_endpoint_command(ctx, build_request(parse_json_object(raw_body, "body")))
 
 
 @app.callback()

@@ -3,6 +3,7 @@ from __future__ import annotations
 import typer
 
 from metabaseapi.cli.runtime import app
+from metabaseapi.cli.runtime import parse_id_csv
 from metabaseapi.cli.runtime import parse_optional_json_object
 from metabaseapi.cli.runtime import run_endpoint_command
 from metabaseapi.endpoints.requests.card_query import CardParamsSearchRequest
@@ -61,9 +62,7 @@ def query_card_export(
 
 @app.command("cards-dashboards")
 def cards_dashboards(ctx: typer.Context, card_ids: str = typer.Argument(..., help="Comma-separated card IDs")) -> None:
-    ids: list[int | str]
-    ids = [card_id if not card_id.isdigit() else int(card_id) for card_id in card_ids.split(",") if card_id]
-    run_endpoint_command(ctx, CardsDashboardsRequest(card_ids=ids))
+    run_endpoint_command(ctx, CardsDashboardsRequest(card_ids=parse_id_csv(card_ids)))
 
 
 @app.command("get-card-dashboards")

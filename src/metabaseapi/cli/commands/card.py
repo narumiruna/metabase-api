@@ -3,6 +3,7 @@ from __future__ import annotations
 import typer
 
 from metabaseapi.cli.runtime import app
+from metabaseapi.cli.runtime import parse_id_csv
 from metabaseapi.cli.runtime import parse_json_body
 from metabaseapi.cli.runtime import parse_json_object
 from metabaseapi.cli.runtime import parse_optional_json_list
@@ -128,9 +129,7 @@ def card_collections(
     card_ids: str = typer.Argument(..., help="Comma-separated card IDs"),
     collection_id: str | None = typer.Option(None, "--collection-id", help="Target collection ID"),
 ) -> None:
-    ids: list[int | str]
-    ids = [card_id if not card_id.isdigit() else int(card_id) for card_id in card_ids.split(",") if card_id]
-    run_endpoint_command(ctx, GetCardCollectionsRequest(card_ids=ids, collection_id=collection_id))
+    run_endpoint_command(ctx, GetCardCollectionsRequest(card_ids=parse_id_csv(card_ids), collection_id=collection_id))
 
 
 @app.command("list-embeddable-cards")

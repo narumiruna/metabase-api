@@ -538,6 +538,26 @@ def test_action_mutation_commands_cover_handwritten_surface(
     _assert_json_contains(result.stdout, {"method": expected_method, "path": expected_path})
 
 
+@pytest.mark.parametrize(
+    ("command", "expected_body"),
+    [
+        (["card-collections", "1,abc", "--collection-id", "root"], {"card_ids": [1, "abc"], "collection_id": "root"}),
+        (["cards-dashboards", "1,abc"], {"card_ids": [1, "abc"]}),
+    ],
+)
+def test_card_id_csv_commands_coerce_numeric_ids(
+    monkeypatch: pytest.MonkeyPatch,
+    command: list[str],
+    expected_body: dict[str, object],
+) -> None:
+    monkeypatch.setattr(cli.runtime, "create_client", lambda _settings: _ClientWithRequestMethods())
+
+    result = runner.invoke(cli.app, ["--base-url", "http://localhost:3000", "--api-key", "abc", *command])
+
+    assert result.exit_code == 0
+    assert _LAST_CALL["body"] == expected_body
+
+
 def test_create_question_command_posts_card_json(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(cli.runtime, "create_client", lambda _settings: _ClientWithRequestMethods())
 

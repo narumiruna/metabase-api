@@ -20,6 +20,7 @@ from metabaseapi.wire import JSONValue
 
 app = typer.Typer(help="Async Metabase API CLI")
 
+
 def create_client(
     client_settings: settings.Settings,
 ) -> MetabaseClient:
@@ -75,6 +76,10 @@ def parse_optional_json_list(raw: str | None, parameter_name: str) -> list[objec
     if not isinstance(parsed, list):
         raise typer.BadParameter(f"{parameter_name} must be a JSON array")
     return parsed
+
+
+def parse_id_csv(raw: str) -> list[int | str]:
+    return [value if not value.isdigit() else int(value) for value in raw.split(",") if value]
 
 
 def _json_payload(result: object) -> JSONValue | None:

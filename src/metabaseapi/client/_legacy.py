@@ -3,14 +3,15 @@ from __future__ import annotations
 from collections.abc import Mapping
 from typing import Protocol
 from typing import TypeVar
-from typing import cast
 
 import httpx
 
 from metabaseapi.client.raw.activity import _MetabaseClientRawMixin as _MetabaseClientActivityRawMixin
+from metabaseapi.client.raw.agent import _MetabaseClientRawMixin as _MetabaseClientAgentRawMixin
 from metabaseapi.client.raw.alerts import _MetabaseClientRawMixin as _MetabaseClientAlertsRawMixin
 from metabaseapi.client.raw.analytics import _MetabaseClientRawMixin as _MetabaseClientAnalyticsRawMixin
 from metabaseapi.client.raw.api_key import _MetabaseClientRawMixin as _MetabaseClientApiKeyRawMixin
+from metabaseapi.client.raw.automagic import _MetabaseClientRawMixin as _MetabaseClientAutomagicRawMixin
 from metabaseapi.client.raw.bookmarks import _MetabaseClientRawMixin as _MetabaseClientBookmarksRawMixin
 from metabaseapi.client.raw.bug_reporting import _MetabaseClientRawMixin as _MetabaseClientBugReportingRawMixin
 from metabaseapi.client.raw.cache import _MetabaseClientRawMixin as _MetabaseClientCacheRawMixin
@@ -18,12 +19,15 @@ from metabaseapi.client.raw.channels import _MetabaseClientRawMixin as _Metabase
 from metabaseapi.client.raw.cloud import _MetabaseClientRawMixin as _MetabaseClientCloudRawMixin
 from metabaseapi.client.raw.collections import _MetabaseClientRawMixin as _MetabaseClientCollectionsRawMixin
 from metabaseapi.client.raw.comments import _MetabaseClientRawMixin as _MetabaseClientCommentsRawMixin
+from metabaseapi.client.raw.databases import _MetabaseClientRawMixin as _MetabaseClientDatabasesRawMixin
 from metabaseapi.client.raw.tables import _MetabaseClientRawMixin as _MetabaseClientTablesRawMixin
 from metabaseapi.client.raw.users import _MetabaseClientRawMixin as _MetabaseClientUsersRawMixin
 from metabaseapi.client.typed.activity import _MetabaseClientTypedMixin as _MetabaseClientActivityTypedMixin
+from metabaseapi.client.typed.agent import _MetabaseClientTypedMixin as _MetabaseClientAgentTypedMixin
 from metabaseapi.client.typed.alerts import _MetabaseClientTypedMixin as _MetabaseClientAlertsTypedMixin
 from metabaseapi.client.typed.analytics import _MetabaseClientTypedMixin as _MetabaseClientAnalyticsTypedMixin
 from metabaseapi.client.typed.api_key import _MetabaseClientTypedMixin as _MetabaseClientApiKeyTypedMixin
+from metabaseapi.client.typed.automagic import _MetabaseClientTypedMixin as _MetabaseClientAutomagicTypedMixin
 from metabaseapi.client.typed.bookmarks import _MetabaseClientTypedMixin as _MetabaseClientBookmarksTypedMixin
 from metabaseapi.client.typed.bug_reporting import _MetabaseClientTypedMixin as _MetabaseClientBugReportingTypedMixin
 from metabaseapi.client.typed.cache import _MetabaseClientTypedMixin as _MetabaseClientCacheTypedMixin
@@ -31,22 +35,12 @@ from metabaseapi.client.typed.channels import _MetabaseClientTypedMixin as _Meta
 from metabaseapi.client.typed.cloud import _MetabaseClientTypedMixin as _MetabaseClientCloudTypedMixin
 from metabaseapi.client.typed.collections import _MetabaseClientTypedMixin as _MetabaseClientCollectionsTypedMixin
 from metabaseapi.client.typed.comments import _MetabaseClientTypedMixin as _MetabaseClientCommentsTypedMixin
+from metabaseapi.client.typed.databases import _MetabaseClientTypedMixin as _MetabaseClientDatabasesTypedMixin
 from metabaseapi.client.typed.tables import _MetabaseClientTypedMixin as _MetabaseClientTablesTypedMixin
 from metabaseapi.client.typed.users import _MetabaseClientTypedMixin as _MetabaseClientUsersTypedMixin
 from metabaseapi.errors import MetabaseDecodeError
 from metabaseapi.errors import MetabaseHTTPStatusError
 from metabaseapi.errors import MetabaseNetworkError
-from metabaseapi.metabase import Action
-from metabaseapi.metabase import ActionExecutionResponse
-from metabaseapi.metabase import AgentConstructQueryRequest
-from metabaseapi.metabase import AgentExecuteRequest
-from metabaseapi.metabase import AgentPingRequest
-from metabaseapi.metabase import AgentQueryRequest
-from metabaseapi.metabase import AgentResponse
-from metabaseapi.metabase import AgentSearchRequest
-from metabaseapi.metabase import AutomagicDashboardRequest
-from metabaseapi.metabase import AutomagicDatabaseCandidatesRequest
-from metabaseapi.metabase import AutomagicModelIndexPrimaryKeyRequest
 from metabaseapi.metabase import Card
 from metabaseapi.metabase import CardParamsSearchRequest
 from metabaseapi.metabase import CardParamsValuesRequest
@@ -57,37 +51,24 @@ from metabaseapi.metabase import CardsDashboardsRequest
 from metabaseapi.metabase import CardsDashboardsResponse
 from metabaseapi.metabase import CopyCardRequest
 from metabaseapi.metabase import CopyDashboardRequest
-from metabaseapi.metabase import CreateActionPublicLinkRequest
-from metabaseapi.metabase import CreateActionRequest
 from metabaseapi.metabase import CreateCardPublicLinkRequest
 from metabaseapi.metabase import CreateCardRequest
 from metabaseapi.metabase import CreateDashboardPublicLinkRequest
-from metabaseapi.metabase import CreateDatabaseRequest
 from metabaseapi.metabase import Dashboard
 from metabaseapi.metabase import DashboardParamRemappingRequest
 from metabaseapi.metabase import DashboardParamSearchRequest
 from metabaseapi.metabase import DashboardParamValuesRequest
-from metabaseapi.metabase import Database
 from metabaseapi.metabase import DataStudioTableDiscardValuesRequest
 from metabaseapi.metabase import DataStudioTableEditRequest
 from metabaseapi.metabase import DataStudioTableRescanValuesRequest
 from metabaseapi.metabase import DataStudioTableSelectionRequest
 from metabaseapi.metabase import DataStudioTableSyncSchemaRequest
-from metabaseapi.metabase import DeleteActionPublicLinkRequest
-from metabaseapi.metabase import DeleteActionRequest
 from metabaseapi.metabase import DeleteCardPublicLinkRequest
 from metabaseapi.metabase import DeleteCardRequest
 from metabaseapi.metabase import DeleteDashboardPublicLinkRequest
 from metabaseapi.metabase import DeleteDashboardRequest
-from metabaseapi.metabase import ExecuteActionRequest
 from metabaseapi.metabase import ExecuteDashboardDashcardRequest
 from metabaseapi.metabase import GenericOperationResponse
-from metabaseapi.metabase import GetActionExecuteRequest
-from metabaseapi.metabase import GetActionRequest
-from metabaseapi.metabase import GetAgentMetricFieldValuesRequest
-from metabaseapi.metabase import GetAgentMetricRequest
-from metabaseapi.metabase import GetAgentTableFieldValuesRequest
-from metabaseapi.metabase import GetAgentTableRequest
 from metabaseapi.metabase import GetCardCollectionsRequest
 from metabaseapi.metabase import GetCardDashboardsRequest
 from metabaseapi.metabase import GetCardEmbeddableRequest
@@ -102,23 +83,16 @@ from metabaseapi.metabase import GetDashboardPublicRequest
 from metabaseapi.metabase import GetDashboardQueryMetadataRequest
 from metabaseapi.metabase import GetDashboardRelatedRequest
 from metabaseapi.metabase import GetDashboardRequest
-from metabaseapi.metabase import GetDatabaseRequest
-from metabaseapi.metabase import ListActionsRequest
-from metabaseapi.metabase import ListActionsResponse
 from metabaseapi.metabase import ListCardsRequest
 from metabaseapi.metabase import ListCardsResponse
 from metabaseapi.metabase import ListDashboardsRequest
 from metabaseapi.metabase import ListDashboardsResponse
-from metabaseapi.metabase import ListDatabasesRequest
-from metabaseapi.metabase import ListDatabasesResponse
-from metabaseapi.metabase import ListPublicActionsRequest
 from metabaseapi.metabase import MoveCardsRequest
 from metabaseapi.metabase import PostCardPivotQueryRequest
 from metabaseapi.metabase import PostDashboardPivotQueryRequest
 from metabaseapi.metabase import PostDashboardRequest
 from metabaseapi.metabase import SaveDashboardRequest
 from metabaseapi.metabase import SaveDashboardToCollectionRequest
-from metabaseapi.metabase import UpdateActionRequest
 from metabaseapi.metabase import UpdateCardRequest
 from metabaseapi.metabase import UpdateDashboardCardsRequest
 from metabaseapi.metabase import UpdateDashboardRequest
@@ -135,12 +109,15 @@ class _MetabaseClientRawMixin(
     _MetabaseClientAnalyticsRawMixin,
     _MetabaseClientAlertsRawMixin,
     _MetabaseClientApiKeyRawMixin,
+    _MetabaseClientAgentRawMixin,
     _MetabaseClientActivityRawMixin,
     _MetabaseClientBookmarksRawMixin,
     _MetabaseClientCacheRawMixin,
     _MetabaseClientCollectionsRawMixin,
     _MetabaseClientChannelsRawMixin,
     _MetabaseClientCloudRawMixin,
+    _MetabaseClientDatabasesRawMixin,
+    _MetabaseClientAutomagicRawMixin,
     _MetabaseClientCommentsRawMixin,
     _MetabaseClientBugReportingRawMixin,
     _MetabaseClientTablesRawMixin,
@@ -154,11 +131,14 @@ class _MetabaseClientTypedMixin(
     _MetabaseClientAnalyticsTypedMixin,
     _MetabaseClientAlertsTypedMixin,
     _MetabaseClientApiKeyTypedMixin,
+    _MetabaseClientAgentTypedMixin,
     _MetabaseClientBookmarksTypedMixin,
     _MetabaseClientCacheTypedMixin,
     _MetabaseClientCollectionsTypedMixin,
     _MetabaseClientChannelsTypedMixin,
     _MetabaseClientCloudTypedMixin,
+    _MetabaseClientDatabasesTypedMixin,
+    _MetabaseClientAutomagicTypedMixin,
     _MetabaseClientCommentsTypedMixin,
     _MetabaseClientBugReportingTypedMixin,
     _MetabaseClientTablesTypedMixin,
@@ -363,172 +343,7 @@ class MetabaseClient(_MetabaseClientTypedMixin):
     ) -> JSONValue | None:
         return await self.request("DELETE", path, params=params, json_data=body)
 
-    async def list_actions(self, *, model_id: int | str | None = None) -> JSONValue | None:
-        params = {"model-id": model_id} if model_id is not None else None
-        return await self.get("/api/action", params=params)
-
-    async def create_action(self, body: Mapping[str, object]) -> JSONValue | None:
-        return await self.post("/api/action", body=dict(body))
-
-    async def list_public_actions(self) -> JSONValue | None:
-        return await self.get("/api/action/public")
-
-    async def get_action(self, action_id: int | str) -> JSONValue | None:
-        return await self.get(f"/api/action/{action_id}")
-
-    async def delete_action(self, action_id: int | str) -> JSONValue | None:
-        return await self.delete(f"/api/action/{action_id}")
-
-    async def get_action_execute(
-        self,
-        action_id: int | str,
-        *,
-        parameters: Mapping[str, object] | None = None,
-    ) -> JSONValue | None:
-        query_params = cast(Mapping[str, QueryParamValue] | None, parameters)
-        return await self.get(f"/api/action/{action_id}/execute", params=query_params)
-
-    async def update_action(self, action_id: int | str, body: Mapping[str, object]) -> JSONValue | None:
-        return await self.put(f"/api/action/{action_id}", body=dict(body))
-
-    async def execute_action(
-        self,
-        action_id: int | str,
-        *,
-        parameters: Mapping[str, object] | None = None,
-    ) -> JSONValue | None:
-        return await self.post(f"/api/action/{action_id}/execute", body={"parameters": dict(parameters or {})})
-
-    async def create_action_public_link(self, action_id: int | str) -> JSONValue | None:
-        return await self.post(f"/api/action/{action_id}/public_link")
-
-    async def delete_action_public_link(self, action_id: int | str) -> JSONValue | None:
-        return await self.delete(f"/api/action/{action_id}/public_link")
-
-    async def automagic_database_candidates(self, database_id: int | str) -> JSONValue | None:
-        return await self.get(f"/api/automagic-dashboards/database/{database_id}/candidates")
-
-    async def automagic_model_index_primary_key(
-        self,
-        model_index_id: int | str,
-        primary_key_id: int | str,
-    ) -> JSONValue | None:
-        return await self.get(f"/api/automagic-dashboards/model_index/{model_index_id}/primary_key/{primary_key_id}")
-
-    async def automagic_dashboard_path(self, path: str) -> JSONValue | None:
-        return await self.get(f"/api/automagic-dashboards/{path.lstrip('/')}")
-
-    async def automagic_entity(self, entity: str, entity_id_or_query: str) -> JSONValue | None:
-        return await self.automagic_dashboard_path(f"{entity}/{entity_id_or_query}")
-
-    async def automagic_entity_cell(self, entity: str, entity_id_or_query: str, cell_query: str) -> JSONValue | None:
-        return await self.automagic_dashboard_path(f"{entity}/{entity_id_or_query}/cell/{cell_query}")
-
-    async def automagic_entity_cell_compare(
-        self,
-        entity: str,
-        entity_id_or_query: str,
-        cell_query: str,
-        comparison_entity: str,
-        comparison_entity_id_or_query: str,
-    ) -> JSONValue | None:
-        return await self.automagic_dashboard_path(
-            f"{entity}/{entity_id_or_query}/cell/{cell_query}/compare/{comparison_entity}/{comparison_entity_id_or_query}"
-        )
-
-    async def automagic_entity_cell_rule(
-        self, entity: str, entity_id_or_query: str, cell_query: str, prefix: str, dashboard_template: str
-    ) -> JSONValue | None:
-        return await self.automagic_dashboard_path(
-            f"{entity}/{entity_id_or_query}/cell/{cell_query}/rule/{prefix}/{dashboard_template}"
-        )
-
-    async def automagic_entity_cell_rule_compare(
-        self,
-        entity: str,
-        entity_id_or_query: str,
-        cell_query: str,
-        prefix: str,
-        dashboard_template: str,
-        comparison_entity: str,
-        comparison_entity_id_or_query: str,
-    ) -> JSONValue | None:
-        return await self.automagic_dashboard_path(
-            f"{entity}/{entity_id_or_query}/cell/{cell_query}/rule/{prefix}/{dashboard_template}/compare/{comparison_entity}/{comparison_entity_id_or_query}"
-        )
-
-    async def automagic_entity_compare(
-        self, entity: str, entity_id_or_query: str, comparison_entity: str, comparison_entity_id_or_query: str
-    ) -> JSONValue | None:
-        return await self.automagic_dashboard_path(
-            f"{entity}/{entity_id_or_query}/compare/{comparison_entity}/{comparison_entity_id_or_query}"
-        )
-
-    async def automagic_entity_query_metadata(self, entity: str, entity_id_or_query: str) -> JSONValue | None:
-        return await self.automagic_dashboard_path(f"{entity}/{entity_id_or_query}/query_metadata")
-
-    async def automagic_entity_rule(
-        self, entity: str, entity_id_or_query: str, prefix: str, dashboard_template: str
-    ) -> JSONValue | None:
-        return await self.automagic_dashboard_path(f"{entity}/{entity_id_or_query}/rule/{prefix}/{dashboard_template}")
-
-    async def automagic_entity_rule_compare(
-        self,
-        entity: str,
-        entity_id_or_query: str,
-        prefix: str,
-        dashboard_template: str,
-        comparison_entity: str,
-        comparison_entity_id_or_query: str,
-    ) -> JSONValue | None:
-        return await self.automagic_dashboard_path(
-            f"{entity}/{entity_id_or_query}/rule/{prefix}/{dashboard_template}/compare/{comparison_entity}/{comparison_entity_id_or_query}"
-        )
-
-    async def agent_execute(self, body: Mapping[str, object]) -> JSONValue | None:
-        return await self.post("/api/agent/v1/execute", body=dict(body))
-
-    async def get_agent_metric(self, metric_id: int | str) -> JSONValue | None:
-        return await self.get(f"/api/agent/v1/metric/{metric_id}")
-
-    async def get_agent_metric_field_values(self, metric_id: int | str, field_id: int | str) -> JSONValue | None:
-        return await self.get(f"/api/agent/v1/metric/{metric_id}/field/{field_id}/values")
-
-    async def agent_ping(self) -> JSONValue | None:
-        return await self.get("/api/agent/v1/ping")
-
-    async def agent_search(self, body: Mapping[str, object]) -> JSONValue | None:
-        return await self.post("/api/agent/v1/search", body=dict(body))
-
-    async def get_agent_table(self, table_id: int | str) -> JSONValue | None:
-        return await self.get(f"/api/agent/v1/table/{table_id}")
-
-    async def get_agent_table_field_values(self, table_id: int | str, field_id: int | str) -> JSONValue | None:
-        return await self.get(f"/api/agent/v1/table/{table_id}/field/{field_id}/values")
-
-    async def agent_construct_query(self, body: Mapping[str, object]) -> JSONValue | None:
-        return await self.post("/api/agent/v2/construct-query", body=dict(body))
-
-    async def agent_query(self, body: Mapping[str, object]) -> JSONValue | None:
-        return await self.post("/api/agent/v2/query", body=dict(body))
-
-    async def list_databases(self) -> JSONValue | None:
-        return await self.get("/api/database")
-
-    async def create_database(
-        self,
-        *,
-        name: str,
-        engine: str,
-        details: Mapping[str, object] | None = None,
-    ) -> JSONValue | None:
-        body: dict[str, object] = {"name": name, "engine": engine}
-        if details is not None:
-            body["details"] = dict(details)
-        return await self.post("/api/database", body=body)
-
-    async def get_database(self, database_id: int | str) -> JSONValue | None:
-        return await self.get(f"/api/database/{database_id}")
+    # action, automagic, agent, and database methods are now moved into dedicated mixins.
 
     async def list_cards(self) -> JSONValue | None:
         return await self.get("/api/card")
@@ -888,90 +703,7 @@ class MetabaseClient(_MetabaseClientTypedMixin):
     async def run[ResponseT](self, request_model: _ExecutableRequest[ResponseT]) -> ResponseT:
         return await request_model.do(self)
 
-    async def list_actions_typed(self, *, model_id: int | str | None = None) -> ListActionsResponse:
-        return await self.run(ListActionsRequest(model_id=model_id))
-
-    async def create_action_typed(self, body: dict[str, object]) -> Action:
-        return await self.run(CreateActionRequest(body=body))
-
-    async def list_public_actions_typed(self) -> ListActionsResponse:
-        return await self.run(ListPublicActionsRequest())
-
-    async def get_action_typed(self, action_id: int | str) -> Action:
-        return await self.run(GetActionRequest(action_id=action_id))
-
-    async def delete_action_typed(self, action_id: int | str) -> ActionExecutionResponse:
-        return await self.run(DeleteActionRequest(action_id=action_id))
-
-    async def get_action_execute_typed(
-        self,
-        action_id: int | str,
-        *,
-        parameters: dict[str, object] | None = None,
-    ) -> ActionExecutionResponse:
-        return await self.run(GetActionExecuteRequest(action_id=action_id, parameters=parameters or {}))
-
-    async def update_action_typed(self, action_id: int | str, body: dict[str, object]) -> Action:
-        return await self.run(UpdateActionRequest(action_id=action_id, body=body))
-
-    async def execute_action_typed(
-        self,
-        action_id: int | str,
-        *,
-        parameters: dict[str, object] | None = None,
-    ) -> ActionExecutionResponse:
-        return await self.run(ExecuteActionRequest(action_id=action_id, parameters=parameters or {}))
-
-    async def create_action_public_link_typed(self, action_id: int | str) -> ActionExecutionResponse:
-        return await self.run(CreateActionPublicLinkRequest(action_id=action_id))
-
-    async def delete_action_public_link_typed(self, action_id: int | str) -> ActionExecutionResponse:
-        return await self.run(DeleteActionPublicLinkRequest(action_id=action_id))
-
-    async def automagic_database_candidates_typed(self, database_id: int | str) -> GenericOperationResponse:
-        return await self.run(AutomagicDatabaseCandidatesRequest(database_id=database_id))
-
-    async def automagic_model_index_primary_key_typed(
-        self,
-        model_index_id: int | str,
-        primary_key_id: int | str,
-    ) -> GenericOperationResponse:
-        return await self.run(
-            AutomagicModelIndexPrimaryKeyRequest(model_index_id=model_index_id, primary_key_id=primary_key_id),
-        )
-
-    async def automagic_dashboard_path_typed(self, path: str) -> GenericOperationResponse:
-        return await self.run(AutomagicDashboardRequest(path=path))
-
-    async def agent_execute_typed(self, body: dict[str, object]) -> AgentResponse:
-        return await self.run(AgentExecuteRequest(body=body))
-
-    async def get_agent_metric_typed(self, metric_id: int | str) -> AgentResponse:
-        return await self.run(GetAgentMetricRequest(metric_id=metric_id))
-
-    async def get_agent_metric_field_values_typed(self, metric_id: int | str, field_id: int | str) -> AgentResponse:
-        return await self.run(GetAgentMetricFieldValuesRequest(metric_id=metric_id, field_id=field_id))
-
-    async def agent_ping_typed(self) -> AgentResponse:
-        return await self.run(AgentPingRequest())
-
-    async def agent_search_typed(self, body: dict[str, object]) -> AgentResponse:
-        return await self.run(AgentSearchRequest(body=body))
-
-    async def get_agent_table_typed(self, table_id: int | str) -> AgentResponse:
-        return await self.run(GetAgentTableRequest(table_id=table_id))
-
-    async def get_agent_table_field_values_typed(self, table_id: int | str, field_id: int | str) -> AgentResponse:
-        return await self.run(GetAgentTableFieldValuesRequest(table_id=table_id, field_id=field_id))
-
-    async def agent_construct_query_typed(self, body: dict[str, object]) -> AgentResponse:
-        return await self.run(AgentConstructQueryRequest(body=body))
-
-    async def agent_query_typed(self, body: dict[str, object]) -> AgentResponse:
-        return await self.run(AgentQueryRequest(body=body))
-
-    async def list_databases_typed(self) -> ListDatabasesResponse:
-        return await self.run(ListDatabasesRequest())
+    # action, automagic, agent, and database typed methods are now moved into dedicated mixins.
 
     async def list_cards_typed(self) -> ListCardsResponse:
         return await self.run(ListCardsRequest())
@@ -981,16 +713,6 @@ class MetabaseClient(_MetabaseClientTypedMixin):
 
     async def create_dashboard_typed(self, body: dict[str, object]) -> Dashboard:
         return await self.run(PostDashboardRequest(body=dict(body)))
-
-    async def create_database_typed(
-        self,
-        *,
-        name: str,
-        engine: str,
-        details: dict[str, object] | None = None,
-    ) -> Database:
-        request = CreateDatabaseRequest(name=name, engine=engine, details=details or {})
-        return await self.run(request)
 
     async def create_card_typed(
         self,
@@ -1041,9 +763,6 @@ class MetabaseClient(_MetabaseClientTypedMixin):
             parameters=parameters,
             result_metadata=result_metadata,
         )
-
-    async def get_database_typed(self, database_id: int | str) -> Database:
-        return await self.run(GetDatabaseRequest(database_id=database_id))
 
     async def get_card_typed(self, card_id: int | str) -> Card:
         return await self.run(GetCardRequest(card_id=card_id))

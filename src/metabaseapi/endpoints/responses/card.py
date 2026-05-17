@@ -8,7 +8,7 @@ from pydantic import ConfigDict
 from pydantic import Field as PydanticField
 from pydantic import model_validator
 
-from metabaseapi.endpoints._response_payload import normalize_list_payload
+from metabaseapi.endpoints._response_payload import normalize_strict_list_payload
 from metabaseapi.endpoints._response_payload import normalize_unstructured_payload
 from metabaseapi.endpoints.entities import Card
 from metabaseapi.endpoints.entities import Dashboard
@@ -17,13 +17,12 @@ from metabaseapi.wire import JSONValue
 
 class ListCardsResponse(BaseModel):
     cards: list[Card] = PydanticField(default_factory=list)
-    raw: JSONValue | None = None
-    model_config = ConfigDict(extra="allow")
+    model_config = ConfigDict(extra="forbid")
 
     @model_validator(mode="before")
     @classmethod
     def normalize_payload(cls, values: object) -> dict[str, Any]:
-        return normalize_list_payload(values, "cards")
+        return normalize_strict_list_payload(values, "cards")
 
 
 class CardsDashboardsResponse(BaseModel):
@@ -69,13 +68,12 @@ class CardCollectionsResponse(_CardOperationResponse):
 
 class CardEmbeddableResponse(BaseModel):
     cards: list[Card] = PydanticField(default_factory=list)
-    raw: JSONValue | None = None
-    model_config = ConfigDict(extra="allow")
+    model_config = ConfigDict(extra="forbid")
 
     @model_validator(mode="before")
     @classmethod
     def normalize_payload(cls, values: object) -> dict[str, Any]:
-        return normalize_list_payload(values, "cards")
+        return normalize_strict_list_payload(values, "cards")
 
 
 class CardPublicResponse(CardEmbeddableResponse):
@@ -108,13 +106,12 @@ class CardQueryExportResponse(_CardOperationResponse):
 
 class CardParameterValuesResponse(BaseModel):
     values: list[JSONValue] = PydanticField(default_factory=list)
-    raw: JSONValue | None = None
-    model_config = ConfigDict(extra="allow")
+    model_config = ConfigDict(extra="forbid")
 
     @model_validator(mode="before")
     @classmethod
     def normalize_payload(cls, values: object) -> dict[str, Any]:
-        return normalize_list_payload(values, "values")
+        return normalize_strict_list_payload(values, "values")
 
 
 class CardRemappingResponse(_CardOperationResponse):
@@ -127,21 +124,19 @@ class CardQueryMetadataResponse(_CardOperationResponse):
 
 class CardDashboardsResponse(BaseModel):
     dashboards: list[Dashboard] = PydanticField(default_factory=list)
-    raw: JSONValue | None = None
-    model_config = ConfigDict(extra="allow")
+    model_config = ConfigDict(extra="forbid")
 
     @model_validator(mode="before")
     @classmethod
     def normalize_payload(cls, values: object) -> dict[str, Any]:
-        return normalize_list_payload(values, "dashboards")
+        return normalize_strict_list_payload(values, "dashboards")
 
 
 class CardSeriesResponse(BaseModel):
     series: list[Card] = PydanticField(default_factory=list)
-    raw: JSONValue | None = None
-    model_config = ConfigDict(extra="allow")
+    model_config = ConfigDict(extra="forbid")
 
     @model_validator(mode="before")
     @classmethod
     def normalize_payload(cls, values: object) -> dict[str, Any]:
-        return normalize_list_payload(values, "series")
+        return normalize_strict_list_payload(values, "series")

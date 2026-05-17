@@ -45,7 +45,28 @@ class _ClientWithRequestMethods:
     ) -> dict[str, object]:
         if path == "/api/user/current":
             return {"name": "Alice"}
-        return {"method": method, "path": path, "params": params, "body": json_data}
+        call = {"method": method, "path": path, "params": params, "body": json_data}
+        return {
+            **call,
+            "actions": [call],
+            "alerts": [call],
+            "api_keys": [call],
+            "bookmarks": [call],
+            "candidates": [call],
+            "cards": [call],
+            "channels": [call],
+            "collections": [call],
+            "comments": [call],
+            "dashboards": [call],
+            "databases": [call],
+            "fields": [call],
+            "items": [call],
+            "mentions": [call],
+            "series": [call],
+            "tables": [call],
+            "users": [call],
+            "values": [call],
+        }
 
     async def run(self, request_model: EndpointRequest[BaseModel]) -> object:
         return await request_model.do(self)

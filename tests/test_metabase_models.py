@@ -52,6 +52,7 @@ from metabaseapi.metabase import DeleteCollectionRequest
 from metabaseapi.metabase import DeleteCommentRequest
 from metabaseapi.metabase import DeleteDashboardPublicLinkRequest
 from metabaseapi.metabase import DeleteDashboardRequest
+from metabaseapi.metabase import DeleteUserKeyValueNamespaceKeyRequest
 from metabaseapi.metabase import ExecuteActionRequest
 from metabaseapi.metabase import ExecuteDashboardDashcardRequest
 from metabaseapi.metabase import GenericOperationResponse
@@ -88,6 +89,8 @@ from metabaseapi.metabase import GetDashboardRequest
 from metabaseapi.metabase import GetDatabaseRequest
 from metabaseapi.metabase import GetFieldRequest
 from metabaseapi.metabase import GetTableRequest
+from metabaseapi.metabase import GetUserKeyValueNamespaceKeyRequest
+from metabaseapi.metabase import GetUserKeyValueNamespaceRequest
 from metabaseapi.metabase import GetUserRequest
 from metabaseapi.metabase import InvalidateCacheRequest
 from metabaseapi.metabase import ListActionsRequest
@@ -118,6 +121,7 @@ from metabaseapi.metabase import PostDashboardRequest
 from metabaseapi.metabase import PutCacheRequest
 from metabaseapi.metabase import PutCollectionGraphRequest
 from metabaseapi.metabase import PutCollectionRequest
+from metabaseapi.metabase import PutUserKeyValueNamespaceKeyRequest
 from metabaseapi.metabase import SaveDashboardRequest
 from metabaseapi.metabase import SaveDashboardToCollectionRequest
 from metabaseapi.metabase import Table
@@ -619,6 +623,26 @@ def test_action_requests_use_expected_paths_and_payloads() -> None:
             ("GET", "/api/card/13/query_metadata", {}, None),
         ),
         (GetCardSeriesRequest(card_id=13), GenericOperationResponse, ("GET", "/api/card/13/series", {}, None)),
+        (
+            GetUserKeyValueNamespaceRequest(namespace="user"),
+            GenericOperationResponse,
+            ("GET", "/api/user-key-value/namespace/user", {}, None),
+        ),
+        (
+            PutUserKeyValueNamespaceKeyRequest(namespace="user", key="foo", body={"value": "bar"}),
+            GenericOperationResponse,
+            ("PUT", "/api/user-key-value/namespace/user/key/foo", {}, {"value": "bar"}),
+        ),
+        (
+            GetUserKeyValueNamespaceKeyRequest(namespace="user", key="foo"),
+            GenericOperationResponse,
+            ("GET", "/api/user-key-value/namespace/user/key/foo", {}, None),
+        ),
+        (
+            DeleteUserKeyValueNamespaceKeyRequest(namespace="user", key="foo"),
+            GenericOperationResponse,
+            ("DELETE", "/api/user-key-value/namespace/user/key/foo", {}, None),
+        ),
     ]
 
     for request_model, response_type, expected_call in cases:
@@ -650,6 +674,16 @@ def test_get_path_based_requests_use_expected_paths() -> None:
         (GetCardRequest(card_id=8), "/api/card/8", Card),
         (GetDashboardRequest(dashboard_id=9), "/api/dashboard/9", Dashboard),
         (GetUserRequest(user_id=10), "/api/user/10", User),
+        (
+            GetUserKeyValueNamespaceRequest(namespace="user"),
+            "/api/user-key-value/namespace/user",
+            GenericOperationResponse,
+        ),
+        (
+            GetUserKeyValueNamespaceKeyRequest(namespace="user", key="foo"),
+            "/api/user-key-value/namespace/user/key/foo",
+            GenericOperationResponse,
+        ),
         (GetCollectionRequest(collection_id="c1"), "/api/collection/c1", Collection),
         (GetTableRequest(table_id=11), "/api/table/11", Table),
         (GetFieldRequest(field_id=12), "/api/field/12", MetabaseField),
@@ -725,6 +759,10 @@ def _build_mock_endpoint_responses() -> dict[tuple[str, str], dict[str, object]]
         ("POST", "/api/data-studio/table/selection"): {"tables": []},
         ("POST", "/api/data-studio/table/sync-schema"): {"ok": True},
         ("GET", "/api/user"): {"data": [{"id": 4, "email": "user@example.com", "first_name": "Ada"}]},
+        ("GET", "/api/user-key-value/namespace/user"): {"namespace": "user", "data": {"foo": "bar"}},
+        ("PUT", "/api/user-key-value/namespace/user/key/foo"): {"status": "stored", "value": "bar"},
+        ("GET", "/api/user-key-value/namespace/user/key/foo"): {"value": "bar"},
+        ("DELETE", "/api/user-key-value/namespace/user/key/foo"): {"status": "deleted"},
         ("GET", "/api/collection"): {"data": [{"id": 7, "name": "collection"}]},
         ("POST", "/api/collection"): {"id": 15, "name": "New"},
         ("GET", "/api/collection/graph"): {"groups": ["admin"]},
@@ -811,6 +849,10 @@ def test_typed_methods_in_client_return_models() -> None:
     updated_comment = _run(client.update_comment_typed("7", {"text": "updated"}))
     reaction_comment = _run(client.post_comment_reaction_typed("11", {"emoji": "👍"}))
     deleted_comment = _run(client.delete_comment_typed("7"))
+    user_key_values = _run(client.get_user_key_value_namespace_typed("user"))
+    put_user_key_value = _run(client.put_user_key_value_namespace_key_typed("user", "foo", {"value": "bar"}))
+    get_user_key_value = _run(client.get_user_key_value_namespace_key_typed("user", "foo"))
+    delete_user_key_value = _run(client.delete_user_key_value_namespace_key_typed("user", "foo"))
     collection_graph = _run(client.get_collection_graph_typed())
     collection_graph_update = _run(client.put_collection_graph_typed({"groups": ["admin"]}))
     collection_root = _run(client.get_collection_root_typed())
@@ -904,6 +946,10 @@ def test_typed_methods_in_client_return_models() -> None:
     assert isinstance(updated_comment, GenericOperationResponse)
     assert isinstance(reaction_comment, GenericOperationResponse)
     assert isinstance(deleted_comment, GenericOperationResponse)
+    assert isinstance(user_key_values, GenericOperationResponse)
+    assert isinstance(put_user_key_value, GenericOperationResponse)
+    assert isinstance(get_user_key_value, GenericOperationResponse)
+    assert isinstance(delete_user_key_value, GenericOperationResponse)
     assert isinstance(collection_graph, GenericOperationResponse)
     assert isinstance(collection_graph_update, GenericOperationResponse)
     assert isinstance(collection_root, Collection)

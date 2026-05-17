@@ -363,6 +363,19 @@ def test_convenience_paths_cover_handwritten_endpoint_surface() -> None:
         (client.get_dashboard_public(), ("GET", "/api/dashboard/public", None)),
         (client.list_users(), ("GET", "/api/user", None)),
         (client.get_user(15), ("GET", "/api/user/15", None)),
+        (client.get_user_key_value_namespace("user"), ("GET", "/api/user-key-value/namespace/user", None)),
+        (
+            client.put_user_key_value_namespace_key("user", "foo", {"value": "bar"}),
+            ("PUT", "/api/user-key-value/namespace/user/key/foo", {"value": "bar"}),
+        ),
+        (
+            client.get_user_key_value_namespace_key("user", "foo"),
+            ("GET", "/api/user-key-value/namespace/user/key/foo", None),
+        ),
+        (
+            client.delete_user_key_value_namespace_key("user", "foo"),
+            ("DELETE", "/api/user-key-value/namespace/user/key/foo", None),
+        ),
         (client.list_collections(), ("GET", "/api/collection", None)),
         (client.get_collection("root"), ("GET", "/api/collection/root", None)),
         (client.list_tables(), ("GET", "/api/table", None)),

@@ -658,6 +658,18 @@ class _ConvenienceClient(_ClientWithRequestMethods):
     async def get_user(self, user_id: str) -> dict[str, object]:
         return {"method": "GET", "path": f"/api/user/{user_id}"}
 
+    async def get_user_key_value_namespace(self, namespace: str) -> dict[str, object]:
+        return {"method": "GET", "path": f"/api/user-key-value/namespace/{namespace}"}
+
+    async def put_user_key_value_namespace_key(self, namespace: str, key: str, body: object) -> dict[str, object]:
+        return {"method": "PUT", "path": f"/api/user-key-value/namespace/{namespace}/key/{key}", "body": body}
+
+    async def get_user_key_value_namespace_key(self, namespace: str, key: str) -> dict[str, object]:
+        return {"method": "GET", "path": f"/api/user-key-value/namespace/{namespace}/key/{key}"}
+
+    async def delete_user_key_value_namespace_key(self, namespace: str, key: str) -> dict[str, object]:
+        return {"method": "DELETE", "path": f"/api/user-key-value/namespace/{namespace}/key/{key}"}
+
     async def list_collections(self) -> dict[str, object]:
         return {"method": "GET", "path": "/api/collection"}
 
@@ -891,6 +903,10 @@ def test_help_lists_every_convenience_command() -> None:
         "get-dashboard-related",
         "list-users",
         "get-user",
+        "get-user-key-value-namespace",
+        "put-user-key-value-namespace-key",
+        "get-user-key-value-namespace-key",
+        "delete-user-key-value-namespace-key",
         "list-collections",
         "get-collection",
         "update-collection",
@@ -1040,6 +1056,8 @@ def test_get_database_command_outputs_json(monkeypatch: pytest.MonkeyPatch) -> N
         (["get-dashboard-query-metadata", "14"], "/api/dashboard/14/query_metadata"),
         (["get-dashboard-related", "14"], "/api/dashboard/14/related"),
         (["get-user", "15"], "/api/user/15"),
+        (["get-user-key-value-namespace", "user"], "/api/user-key-value/namespace/user"),
+        (["get-user-key-value-namespace-key", "user", "foo"], "/api/user-key-value/namespace/user/key/foo"),
         (["get-collection", "7"], "/api/collection/7"),
         (["get-collection", "root"], "/api/collection/root"),
         (["get-collection-dashboard-question-candidates", "7"], "/api/collection/7/dashboard-question-candidates"),
@@ -1185,6 +1203,16 @@ def test_read_endpoint_commands_cover_handwritten_surface(
         ),
         (["data-studio-table-selection", '{"table_ids":[1]}'], "POST", "/api/data-studio/table/selection"),
         (["data-studio-table-sync-schema", '{"table_ids":[1]}'], "POST", "/api/data-studio/table/sync-schema"),
+        (
+            ["put-user-key-value-namespace-key", "user", "foo", '{"value":"bar"}'],
+            "PUT",
+            "/api/user-key-value/namespace/user/key/foo",
+        ),
+        (
+            ["delete-user-key-value-namespace-key", "user", "foo"],
+            "DELETE",
+            "/api/user-key-value/namespace/user/key/foo",
+        ),
     ],
 )
 def test_action_mutation_commands_cover_handwritten_surface(

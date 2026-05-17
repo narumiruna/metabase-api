@@ -7,6 +7,8 @@ from typing import cast
 
 import httpx
 
+from metabaseapi.client.raw.users import _MetabaseClientRawMixin as _MetabaseClientUsersRawMixin
+from metabaseapi.client.typed.users import _MetabaseClientTypedMixin as _MetabaseClientUsersTypedMixin
 from metabaseapi.errors import MetabaseDecodeError
 from metabaseapi.errors import MetabaseHTTPStatusError
 from metabaseapi.errors import MetabaseNetworkError
@@ -185,10 +187,12 @@ from metabaseapi.models import QueryParamValue
 from metabaseapi.settings import Settings
 
 
-class _MetabaseClientRawMixin: ...
+class _MetabaseClientRawMixin(_MetabaseClientUsersRawMixin):
+    """Resource-scoped raw mixin."""
 
 
-class _MetabaseClientTypedMixin(_MetabaseClientRawMixin): ...
+class _MetabaseClientTypedMixin(_MetabaseClientRawMixin, _MetabaseClientUsersTypedMixin):
+    """Resource-scoped typed mixin."""
 
 
 class _ExecutableRequest[ResponseT](Protocol):
@@ -198,7 +202,7 @@ class _ExecutableRequest[ResponseT](Protocol):
 ResponseT = TypeVar("ResponseT")
 
 
-class MetabaseClient:
+class MetabaseClient(_MetabaseClientTypedMixin):
     """Async Metabase API client with a small convenience API surface."""
 
     def __init__(

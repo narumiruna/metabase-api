@@ -1965,6 +1965,77 @@ class DataStudioTableSyncSchemaRequest(_BaseMetabaseRequest[GenericOperationResp
         return self.body
 
 
+class GetUserKeyValueNamespaceRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+    namespace: str
+
+    endpoint_method: ClassVar[str] = "GET"
+    endpoint_path: ClassVar[str] = "/api/user-key-value/namespace/{namespace}"
+
+    async def do(self, client: MetabaseRequestClient) -> GenericOperationResponse:
+        return await self.execute(client, GenericOperationResponse)
+
+    def do_sync(self, client: MetabaseRequestClient) -> GenericOperationResponse:
+        return self.execute_sync(client, GenericOperationResponse)
+
+    def resolve_path(self) -> str:
+        return f"/api/user-key-value/namespace/{self.namespace}"
+
+
+class PutUserKeyValueNamespaceKeyRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+    namespace: str
+    key: str
+    body: JSONValue | None = None
+
+    endpoint_method: ClassVar[str] = "PUT"
+    endpoint_path: ClassVar[str] = "/api/user-key-value/namespace/{namespace}/key/{key}"
+
+    async def do(self, client: MetabaseRequestClient) -> GenericOperationResponse:
+        return await self.execute(client, GenericOperationResponse)
+
+    def do_sync(self, client: MetabaseRequestClient) -> GenericOperationResponse:
+        return self.execute_sync(client, GenericOperationResponse)
+
+    def resolve_path(self) -> str:
+        return f"/api/user-key-value/namespace/{self.namespace}/key/{self.key}"
+
+    def request_body(self) -> JSONValue | None:
+        return self.body
+
+
+class GetUserKeyValueNamespaceKeyRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+    namespace: str
+    key: str
+
+    endpoint_method: ClassVar[str] = "GET"
+    endpoint_path: ClassVar[str] = "/api/user-key-value/namespace/{namespace}/key/{key}"
+
+    async def do(self, client: MetabaseRequestClient) -> GenericOperationResponse:
+        return await self.execute(client, GenericOperationResponse)
+
+    def do_sync(self, client: MetabaseRequestClient) -> GenericOperationResponse:
+        return self.execute_sync(client, GenericOperationResponse)
+
+    def resolve_path(self) -> str:
+        return f"/api/user-key-value/namespace/{self.namespace}/key/{self.key}"
+
+
+class DeleteUserKeyValueNamespaceKeyRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+    namespace: str
+    key: str
+
+    endpoint_method: ClassVar[str] = "DELETE"
+    endpoint_path: ClassVar[str] = "/api/user-key-value/namespace/{namespace}/key/{key}"
+
+    async def do(self, client: MetabaseRequestClient) -> GenericOperationResponse:
+        return await self.execute(client, GenericOperationResponse)
+
+    def do_sync(self, client: MetabaseRequestClient) -> GenericOperationResponse:
+        return self.execute_sync(client, GenericOperationResponse)
+
+    def resolve_path(self) -> str:
+        return f"/api/user-key-value/namespace/{self.namespace}/key/{self.key}"
+
+
 class ListUsersRequest(_BaseMetabaseRequest[ListUsersResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/user"
@@ -2338,6 +2409,7 @@ __all__ = [
     "DeleteCommentRequest",
     "DeleteDashboardPublicLinkRequest",
     "DeleteDashboardRequest",
+    "DeleteUserKeyValueNamespaceKeyRequest",
     "ExecuteActionRequest",
     "ExecuteDashboardDashcardRequest",
     "GetActionExecuteRequest",
@@ -2382,6 +2454,8 @@ __all__ = [
     "GetFieldRequest",
     "GetMostRecentlyViewedDashboardRequest",
     "GetTableRequest",
+    "GetUserKeyValueNamespaceKeyRequest",
+    "GetUserKeyValueNamespaceRequest",
     "GetUserRequest",
     "InvalidateCacheRequest",
     "ListActionsRequest",
@@ -2411,6 +2485,7 @@ __all__ = [
     "PutCacheRequest",
     "PutCollectionGraphRequest",
     "PutCollectionRequest",
+    "PutUserKeyValueNamespaceKeyRequest",
     "RegenerateApiKeyRequest",
     "SaveDashboardRequest",
     "SaveDashboardToCollectionRequest",

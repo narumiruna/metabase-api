@@ -15,8 +15,8 @@ This file is a static implementation checklist derived from the latest Metabase 
 ## Coverage summary
 
 - Documented operations: 600
-- Complete hand-written endpoint implementations: 148
-- Remaining documented operations: 452
+- Complete hand-written endpoint implementations: 152
+- Remaining documented operations: 448
 - Raw `request` / `invoke`: disabled for CLI users and does not count toward TODO completion.
 
 ## Endpoint checklist
@@ -949,12 +949,12 @@ This file is a static implementation checklist derived from the latest Metabase 
 - [ ] `POST /api/user/{id}/password-reset-url` — `post-api-user-id-password-reset-url` — Generate a password reset URL for a user. Admins can share this URL directly with the user. The link expires in 48 hours.
 - [ ] `PUT /api/user/{id}/reactivate` — `put-api-user-id-reactivate` — Reactivate user at `:id`
 
-### /api/user-key-value (0/4 complete)
+### /api/user-key-value (4/4 complete)
 
-- [ ] `GET /api/user-key-value/namespace/{namespace}` — `get-api-user-key-value-namespace-namespace` — Returns all KV pairs in a given namespace for the current user
-- [ ] `PUT /api/user-key-value/namespace/{namespace}/key/{key}` — `put-api-user-key-value-namespace-namespace-key-key` — Upsert a KV-pair for the user
-- [ ] `GET /api/user-key-value/namespace/{namespace}/key/{key}` — `get-api-user-key-value-namespace-namespace-key-key` — Get a value for the user
-- [ ] `DELETE /api/user-key-value/namespace/{namespace}/key/{key}` — `delete-api-user-key-value-namespace-namespace-key-key` — Deletes a KV-pair for the user
+- [x] `GET /api/user-key-value/namespace/{namespace}` — `get-api-user-key-value-namespace-namespace` — Returns all KV pairs in a given namespace for the current user
+- [x] `PUT /api/user-key-value/namespace/{namespace}/key/{key}` — `put-api-user-key-value-namespace-namespace-key-key` — Upsert a KV-pair for the user
+- [x] `GET /api/user-key-value/namespace/{namespace}/key/{key}` — `get-api-user-key-value-namespace-namespace-key-key` — Get a value for the user
+- [x] `DELETE /api/user-key-value/namespace/{namespace}/key/{key}` — `delete-api-user-key-value-namespace-namespace-key-key` — Deletes a KV-pair for the user
 
 ### /api/util (0/1 complete)
 

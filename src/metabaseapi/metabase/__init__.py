@@ -66,6 +66,7 @@ from .requests import DeleteCollectionRequest
 from .requests import DeleteCommentRequest
 from .requests import DeleteDashboardPublicLinkRequest
 from .requests import DeleteDashboardRequest
+from .requests import DeleteUserKeyValueNamespaceKeyRequest
 from .requests import ExecuteActionRequest
 from .requests import ExecuteDashboardDashcardRequest
 from .requests import GetActionExecuteRequest
@@ -110,6 +111,8 @@ from .requests import GetDatabaseRequest
 from .requests import GetFieldRequest
 from .requests import GetMostRecentlyViewedDashboardRequest
 from .requests import GetTableRequest
+from .requests import GetUserKeyValueNamespaceKeyRequest
+from .requests import GetUserKeyValueNamespaceRequest
 from .requests import GetUserRequest
 from .requests import InvalidateCacheRequest
 from .requests import ListActionsRequest
@@ -139,6 +142,7 @@ from .requests import PostDashboardRequest
 from .requests import PutCacheRequest
 from .requests import PutCollectionGraphRequest
 from .requests import PutCollectionRequest
+from .requests import PutUserKeyValueNamespaceKeyRequest
 from .requests import RegenerateApiKeyRequest
 from .requests import SaveDashboardRequest
 from .requests import SaveDashboardToCollectionRequest
@@ -237,6 +241,7 @@ __all__ = [
     "DeleteCommentRequest",
     "DeleteDashboardPublicLinkRequest",
     "DeleteDashboardRequest",
+    "DeleteUserKeyValueNamespaceKeyRequest",
     "ExecuteActionRequest",
     "ExecuteDashboardDashcardRequest",
     "GenericOperationResponse",
@@ -282,6 +287,8 @@ __all__ = [
     "GetFieldRequest",
     "GetMostRecentlyViewedDashboardRequest",
     "GetTableRequest",
+    "GetUserKeyValueNamespaceKeyRequest",
+    "GetUserKeyValueNamespaceRequest",
     "GetUserRequest",
     "InvalidateCacheRequest",
     "ListActionsRequest",
@@ -324,6 +331,7 @@ __all__ = [
     "PutCacheRequest",
     "PutCollectionGraphRequest",
     "PutCollectionRequest",
+    "PutUserKeyValueNamespaceKeyRequest",
     "RegenerateApiKeyRequest",
     "SaveDashboardRequest",
     "SaveDashboardToCollectionRequest",

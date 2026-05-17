@@ -1,10 +1,32 @@
 from __future__ import annotations
 
-from metabaseapi.client._legacy import _MetabaseClientRawMixin as _MetabaseClientLegacyRawMixin
+from typing import TYPE_CHECKING
+
+from metabaseapi.models import JSONValue
+
+if TYPE_CHECKING:
+    from metabaseapi.client._legacy import MetabaseClient
 
 
-class _MetabaseClientRawMixin(_MetabaseClientLegacyRawMixin):
-    """Resource-scoped raw mixin façade."""
+class _MetabaseClientRawMixin:
+    """Resource-scoped raw user helper methods."""
+
+    async def get_user_key_value_namespace(self: MetabaseClient, namespace: str) -> JSONValue | None:
+        return await self.get(f"/api/user-key-value/namespace/{namespace}")
+
+    async def get_user_key_value_namespace_key(self: MetabaseClient, namespace: str, key: str) -> JSONValue | None:
+        return await self.get(f"/api/user-key-value/namespace/{namespace}/key/{key}")
+
+    async def put_user_key_value_namespace_key(
+        self: MetabaseClient,
+        namespace: str,
+        key: str,
+        body: JSONValue,
+    ) -> JSONValue | None:
+        return await self.put(f"/api/user-key-value/namespace/{namespace}/key/{key}", body=body)
+
+    async def delete_user_key_value_namespace_key(self: MetabaseClient, namespace: str, key: str) -> JSONValue | None:
+        return await self.delete(f"/api/user-key-value/namespace/{namespace}/key/{key}")
 
 
 __all__ = ["_MetabaseClientRawMixin"]

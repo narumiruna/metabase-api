@@ -8,8 +8,8 @@ from pydantic import ConfigDict
 from pydantic import Field as PydanticField
 from pydantic import model_validator
 
+from metabaseapi.endpoints._response_payload import normalize_known_payload
 from metabaseapi.endpoints._response_payload import normalize_strict_list_payload
-from metabaseapi.endpoints._response_payload import normalize_unstructured_payload
 from metabaseapi.endpoints.entities import Card
 from metabaseapi.endpoints.entities import Dashboard
 from metabaseapi.wire import JSONValue
@@ -36,13 +36,13 @@ class CardsDashboardsResponse(BaseModel):
 
 
 class _CardOperationResponse(BaseModel):
-    raw: JSONValue | None = None
-    model_config = ConfigDict(extra="allow")
+    result: JSONValue | None = None
+    model_config = ConfigDict(extra="forbid")
 
     @model_validator(mode="before")
     @classmethod
     def normalize_payload(cls, values: object) -> dict[str, Any]:
-        return normalize_unstructured_payload(values)
+        return normalize_known_payload(values, cls.model_fields, "result")
 
 
 class _CardStatusResponse(BaseModel):
@@ -61,7 +61,20 @@ class _CardStatusResponse(BaseModel):
 
 
 class CardCollectionsResponse(_CardOperationResponse):
-    pass
+    collections: list[JSONValue] = PydanticField(default_factory=list)
+
+    @model_validator(mode="before")
+    @classmethod
+    def normalize_payload(cls, values: object) -> dict[str, Any]:
+        if isinstance(values, list):
+            return {"collections": values}
+        if isinstance(values, dict):
+            dict_values = cast(dict[str, object], values)
+            if "collections" in dict_values and isinstance(dict_values["collections"], list):
+                return {"collections": dict_values["collections"]}
+            if "data" in dict_values and isinstance(dict_values["data"], list):
+                return {"collections": dict_values["data"]}
+        return normalize_known_payload(values, cls.model_fields, "result")
 
 
 class CardEmbeddableResponse(BaseModel):
@@ -95,11 +108,25 @@ class MoveCardsResponse(_CardStatusResponse):
 
 
 class CardQueryResponse(_CardOperationResponse):
-    pass
+    data: JSONValue | None = None
+    status: str | None = None
+    row_count: int | None = None
+    running_time: int | float | None = None
+    average_execution_time: int | float | None = None
+    database_id: int | str | None = None
+    started_at: str | None = None
+    json_query: dict[str, Any] | None = None
 
 
 class CardQueryExportResponse(_CardOperationResponse):
-    pass
+    value: JSONValue | None = None
+
+    @model_validator(mode="before")
+    @classmethod
+    def normalize_payload(cls, values: object) -> dict[str, Any]:
+        if not isinstance(values, dict):
+            return {"value": values}
+        return normalize_known_payload(values, cls.model_fields, "result")
 
 
 class CardParameterValuesResponse(BaseModel):
@@ -113,11 +140,19 @@ class CardParameterValuesResponse(BaseModel):
 
 
 class CardRemappingResponse(_CardOperationResponse):
-    pass
+    data: JSONValue | None = None
 
 
 class CardQueryMetadataResponse(_CardOperationResponse):
-    pass
+    metadata: JSONValue | None = None
+
+    @model_validator(mode="before")
+    @classmethod
+    def normalize_payload(cls, values: object) -> dict[str, Any]:
+        payload = normalize_known_payload(values, cls.model_fields, "result")
+        if set(payload) == {"result"}:
+            return {"metadata": payload["result"]}
+        return payload
 
 
 class CardDashboardsResponse(BaseModel):

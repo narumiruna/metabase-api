@@ -19,7 +19,7 @@ test:
 
 # Run read-only live checks against the Metabase API configured by .env
 live-test:
-    uv run python scripts/live_test.py
+    METABASE_LIVE_TEST=1 uv run pytest -q tests/test_live.py
 
 # Build and publish the package to PyPI
 publish:

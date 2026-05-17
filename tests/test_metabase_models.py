@@ -92,6 +92,7 @@ from metabaseapi.metabase import MoveCardsRequest
 from metabaseapi.metabase import PostCardPivotQueryRequest
 from metabaseapi.metabase import PostCollectionMoveDashboardQuestionCandidatesRequest
 from metabaseapi.metabase import PostCollectionRootMoveDashboardQuestionCandidatesRequest
+from metabaseapi.metabase import PostCommentReactionRequest
 from metabaseapi.metabase import PostCommentRequest
 from metabaseapi.metabase import PutCacheRequest
 from metabaseapi.metabase import PutCollectionGraphRequest
@@ -349,6 +350,11 @@ def test_action_requests_use_expected_paths_and_payloads() -> None:
             ("PUT", "/api/comment/7", {}, {"text": "updated"}),
         ),
         (
+            PostCommentReactionRequest(comment_id="11", body={"emoji": "👍"}),
+            GenericOperationResponse,
+            ("POST", "/api/comment/11/reaction", {}, {"emoji": "👍"}),
+        ),
+        (
             PostCommentRequest(body={"text": "Hi"}),
             GenericOperationResponse,
             ("POST", "/api/comment", {}, {"text": "Hi"}),
@@ -576,6 +582,7 @@ def _build_mock_endpoint_responses() -> dict[tuple[str, str], dict[str, object]]
         ("GET", "/api/comment"): {"comments": [{"id": 1, "text": "Hi"}]},
         ("GET", "/api/comment/mentions"): {"mentions": [{"id": 1, "name": "alice"}]},
         ("PUT", "/api/comment/7"): {"ok": True},
+        ("POST", "/api/comment/11/reaction"): {"ok": True},
         ("POST", "/api/comment"): {"ok": True},
         ("DELETE", "/api/comment/7"): {"ok": True},
         ("GET", "/api/table"): {"data": [{"id": 8, "name": "table", "schema": "public", "db_id": 1}]},
@@ -640,6 +647,7 @@ def test_typed_methods_in_client_return_models() -> None:
     comments_mentions = _run(client.get_comment_mentions_typed())
     created_comment = _run(client.create_comment_typed({"text": "Hi"}))
     updated_comment = _run(client.update_comment_typed("7", {"text": "updated"}))
+    reaction_comment = _run(client.post_comment_reaction_typed("11", {"emoji": "👍"}))
     deleted_comment = _run(client.delete_comment_typed("7"))
     collection_graph = _run(client.get_collection_graph_typed())
     collection_graph_update = _run(client.put_collection_graph_typed({"groups": ["admin"]}))
@@ -704,6 +712,7 @@ def test_typed_methods_in_client_return_models() -> None:
     assert isinstance(comments_mentions, GenericOperationResponse)
     assert isinstance(created_comment, GenericOperationResponse)
     assert isinstance(updated_comment, GenericOperationResponse)
+    assert isinstance(reaction_comment, GenericOperationResponse)
     assert isinstance(deleted_comment, GenericOperationResponse)
     assert isinstance(collection_graph, GenericOperationResponse)
     assert isinstance(collection_graph_update, GenericOperationResponse)

@@ -556,6 +556,14 @@ def update_comment(
     _run_and_print(_run_client_call(ctx, lambda client: client.update_comment(comment_id, payload)))
 
 
+@app.command("post-comment-reaction")
+def post_comment_reaction(
+    ctx: typer.Context, comment_id: str, body: str = typer.Argument(..., help="Reaction body JSON object")
+) -> None:
+    payload = _parse_json_object(body, "body")
+    _run_and_print(_run_client_call(ctx, lambda client: client.post_comment_reaction(comment_id, payload)))
+
+
 @app.command("delete-comment")
 def delete_comment(ctx: typer.Context, comment_id: str = typer.Argument(...)) -> None:
     """Delete a comment."""

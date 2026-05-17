@@ -1684,6 +1684,26 @@ class GetCollectionTrashRequest(_BaseMetabaseRequest[Collection]):
         return self.execute_sync(client, Collection)
 
 
+class PostCommentReactionRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+    comment_id: int | str
+    body: dict[str, Any] = PydanticField(default_factory=dict)
+
+    endpoint_method: ClassVar[str] = "POST"
+    endpoint_path: ClassVar[str] = "/api/comment/{comment_id}/reaction"
+
+    async def do(self, client: MetabaseRequestClient) -> GenericOperationResponse:
+        return await self.execute(client, GenericOperationResponse)
+
+    def do_sync(self, client: MetabaseRequestClient) -> GenericOperationResponse:
+        return self.execute_sync(client, GenericOperationResponse)
+
+    def resolve_path(self) -> str:
+        return self.endpoint_path.format(comment_id=self.comment_id)
+
+    def request_body(self) -> JSONValue:
+        return self.body
+
+
 class PostCollectionRootMoveDashboardQuestionCandidatesRequest(_BaseMetabaseRequest[GenericOperationResponse]):
     body: dict[str, Any] = PydanticField(default_factory=dict)
 
@@ -1927,6 +1947,7 @@ __all__ = [
     "PostCardPivotQueryRequest",
     "PostCollectionMoveDashboardQuestionCandidatesRequest",
     "PostCollectionRootMoveDashboardQuestionCandidatesRequest",
+    "PostCommentReactionRequest",
     "PostCommentRequest",
     "PutCacheRequest",
     "PutCollectionGraphRequest",

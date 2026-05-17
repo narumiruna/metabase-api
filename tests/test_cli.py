@@ -495,6 +495,9 @@ class _ConvenienceClient(_ClientWithRequestMethods):
     async def update_comment(self, comment_id: str, body: dict[str, object]) -> dict[str, object]:
         return {"method": "PUT", "path": f"/api/comment/{comment_id}", "body": body}
 
+    async def post_comment_reaction(self, comment_id: str, body: dict[str, object]) -> dict[str, object]:
+        return {"method": "POST", "path": f"/api/comment/{comment_id}/reaction", "body": body}
+
     async def delete_comment(self, comment_id: str) -> dict[str, object]:
         return {"method": "DELETE", "path": f"/api/comment/{comment_id}"}
 
@@ -676,6 +679,7 @@ def test_help_lists_every_convenience_command() -> None:
         "create-comment",
         "get-comment-mentions",
         "update-comment",
+        "post-comment-reaction",
         "get-collection-dashboard-question-candidates",
         "get-collection-items",
         "list-tables",
@@ -842,6 +846,7 @@ def test_read_endpoint_commands_cover_handwritten_surface(
         (["create-comment", '{"text":"Hi","model":"card","model_id":13}'], "POST", "/api/comment"),
         (["get-comment-mentions"], "GET", "/api/comment/mentions"),
         (["update-comment", "11", '{"text":"updated"}'], "PUT", "/api/comment/11"),
+        (["post-comment-reaction", "11", '{"emoji":"👍"}'], "POST", "/api/comment/11/reaction"),
         (["get-channel", "11"], "GET", "/api/channel/11"),
         (["update-channel", "11", '{"name":"Slack"}'], "PUT", "/api/channel/11"),
         (["create-cloud-migration", '{"environment":"prod"}'], "POST", "/api/cloud-migration"),

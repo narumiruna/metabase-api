@@ -15,8 +15,8 @@ This file is a static implementation checklist derived from the latest Metabase 
 ## Coverage summary
 
 - Documented operations: 600
-- Complete hand-written endpoint implementations: 198
-- Remaining documented operations: 402
+- Complete hand-written endpoint implementations: 231
+- Remaining documented operations: 369
 - Raw `request` / `invoke`: disabled for CLI users and does not count toward TODO completion.
 
 ## Endpoint checklist
@@ -537,20 +537,20 @@ This file is a static implementation checklist derived from the latest Metabase 
 - [ ] `DELETE /api/embed-theme/{id}` — `delete-api-embed-theme-id` — Delete an embedding theme.
 - [ ] `POST /api/embed-theme/{id}/copy` — `post-api-embed-theme-id-copy` — Copy an embedding theme.
 
-### /api/field (1/12 complete)
+### /api/field (12/12 complete)
 
 - [x] `GET /api/field/{id}` — `get-api-field-id` — Get `Field` with ID.
-- [ ] `PUT /api/field/{id}` — `put-api-field-id` — Update `Field` with ID.
-- [ ] `POST /api/field/{id}/dimension` — `post-api-field-id-dimension` — Sets the dimension for the given field at ID
-- [ ] `DELETE /api/field/{id}/dimension` — `delete-api-field-id-dimension` — Remove the dimension associated to field at ID
-- [ ] `POST /api/field/{id}/discard_values` — `post-api-field-id-discard_values` — Discard the FieldValues belonging to this Field. Only applies to fields that have FieldValues. If this Field's Database is set up to automatically sync Field...
-- [ ] `GET /api/field/{id}/related` — `get-api-field-id-related` — Return related entities.
-- [ ] `GET /api/field/{id}/remapping/{remapped-id}` — `get-api-field-id-remapping-remapped-id` — Fetch remapped Field values.
-- [ ] `POST /api/field/{id}/rescan_values` — `post-api-field-id-rescan_values` — Manually trigger an update for the FieldValues for this Field. Only applies to Fields that are eligible for FieldValues.
-- [ ] `GET /api/field/{id}/search/{search-id}` — `get-api-field-id-search-search-id` — Search for values of a Field with `search-id` that start with `value`. See docstring for [[metabase.parameters.field/search-values]] for a more detailed expl...
-- [ ] `GET /api/field/{id}/summary` — `get-api-field-id-summary` — Get the count and distinct count of `Field` with ID.
-- [ ] `GET /api/field/{id}/values` — `get-api-field-id-values` — If a Field's value of `has_field_values` is `:list`, return a list of all the distinct values of the Field (or remapped Field), and (if defined by a User) a...
-- [ ] `POST /api/field/{id}/values` — `post-api-field-id-values` — Update the fields values and human-readable values for a `Field` whose semantic type is `category`/`city`/`state`/`country` or whose base type is `type/Boole...
+- [x] `PUT /api/field/{id}` — `put-api-field-id` — Update `Field` with ID.
+- [x] `POST /api/field/{id}/dimension` — `post-api-field-id-dimension` — Sets the dimension for the given field at ID
+- [x] `DELETE /api/field/{id}/dimension` — `delete-api-field-id-dimension` — Remove the dimension associated to field at ID
+- [x] `POST /api/field/{id}/discard_values` — `post-api-field-id-discard_values` — Discard the FieldValues belonging to this Field. Only applies to fields that have FieldValues. If this Field's Database is set up to automatically sync Field...
+- [x] `GET /api/field/{id}/related` — `get-api-field-id-related` — Return related entities.
+- [x] `GET /api/field/{id}/remapping/{remapped-id}` — `get-api-field-id-remapping-remapped-id` — Fetch remapped Field values.
+- [x] `POST /api/field/{id}/rescan_values` — `post-api-field-id-rescan_values` — Manually trigger an update for the FieldValues for this Field. Only applies to Fields that are eligible for FieldValues.
+- [x] `GET /api/field/{id}/search/{search-id}` — `get-api-field-id-search-search-id` — Search for values of a Field with `search-id` that start with `value`. See docstring for [[metabase.parameters.field/search-values]] for a more detailed expl...
+- [x] `GET /api/field/{id}/summary` — `get-api-field-id-summary` — Get the count and distinct count of `Field` with ID.
+- [x] `GET /api/field/{id}/values` — `get-api-field-id-values` — If a Field's value of `has_field_values` is `:list`, return a list of all the distinct values of the Field (or remapped Field), and (if defined by a User) a...
+- [x] `POST /api/field/{id}/values` — `post-api-field-id-values` — Update the fields values and human-readable values for a `Field` whose semantic type is `category`/`city`/`state`/`country` or whose base type is `type/Boole...
 
 ### /api/frontend-errors (0/1 complete)
 
@@ -847,24 +847,24 @@ This file is a static implementation checklist derived from the latest Metabase 
 - [ ] `GET /api/slack/manifest` — `get-api-slack-manifest` — Returns the JSON manifest file that should be used to bootstrap new Slack apps
 - [ ] `PUT /api/slack/settings` — `put-api-slack-settings` — Update Slack related settings. You must be a superuser to do this. Also updates the slack-cache. There are 3 cases where we alter the slack channel/user cach...
 
-### /api/table (2/16 complete)
+### /api/table (16/16 complete)
 
 - [x] `GET /api/table` — `get-api-table` — Get all `Tables`. Optional filters: - `can-query=true` - filter to only tables the user can execute queries against - `can-write=true` - filter to only table...
-- [ ] `PUT /api/table` — `put-api-table` — Update all `Table` in `ids`. Deprecated, should use PUT /table/edit from now on.
-- [ ] `GET /api/table/card__:id/fks` — `get-api-table-card__:id-fks` — Return FK info for the 'virtual' table for a Card. This is always empty, so this endpoint serves mainly as a placeholder to avoid having to change anything o...
-- [ ] `GET /api/table/card__:id/query_metadata` — `get-api-table-card__:id-query_metadata` — Return metadata for the 'virtual' table for a Card.
+- [x] `PUT /api/table` — `put-api-table` — Update all `Table` in `ids`. Deprecated, should use PUT /table/edit from now on.
+- [x] `GET /api/table/card__:id/fks` — `get-api-table-card__:id-fks` — Return FK info for the 'virtual' table for a Card. This is always empty, so this endpoint serves mainly as a placeholder to avoid having to change anything o...
+- [x] `GET /api/table/card__:id/query_metadata` — `get-api-table-card__:id-query_metadata` — Return metadata for the 'virtual' table for a Card.
 - [x] `GET /api/table/{id}` — `get-api-table-id` — Get `Table` with ID.
-- [ ] `PUT /api/table/{id}` — `put-api-table-id` — Update `Table` with ID.
-- [ ] `POST /api/table/{id}/append-csv` — `post-api-table-id-append-csv` — Inserts the rows of an uploaded CSV file into the table identified by `:id`. The table must have been created by uploading a CSV file.
-- [ ] `POST /api/table/{id}/discard_values` — `post-api-table-id-discard_values` — Discard the FieldValues belonging to the Fields in this Table. Only applies to fields that have FieldValues. If this Table's Database is set up to automatica...
-- [ ] `PUT /api/table/{id}/fields/order` — `put-api-table-id-fields-order` — Reorder fields
-- [ ] `GET /api/table/{id}/fks` — `get-api-table-id-fks` — Get all foreign keys whose destination is a `Field` that belongs to this `Table`.
-- [ ] `GET /api/table/{id}/query_metadata` — `get-api-table-id-query_metadata` — Get metadata about a `Table` useful for running queries. Returns DB, fields, field FKs, and field values. Passing `include_hidden_fields=true` will include a...
-- [ ] `GET /api/table/{id}/related` — `get-api-table-id-related` — Return related entities.
-- [ ] `POST /api/table/{id}/replace-csv` — `post-api-table-id-replace-csv` — Replaces the contents of the table identified by `:id` with the rows of an uploaded CSV file. The table must have been created by uploading a CSV file.
-- [ ] `POST /api/table/{id}/rescan_values` — `post-api-table-id-rescan_values` — Manually trigger an update for the FieldValues for the Fields belonging to this Table. Only applies to Fields that are eligible for FieldValues.
-- [ ] `POST /api/table/{id}/sync_schema` — `post-api-table-id-sync_schema` — Trigger a manual update of the schema metadata for this `Table`.
-- [ ] `GET /api/table/{table-id}/data` — `get-api-table-table-id-data` — Get the data for the given table
+- [x] `PUT /api/table/{id}` — `put-api-table-id` — Update `Table` with ID.
+- [x] `POST /api/table/{id}/append-csv` — `post-api-table-id-append-csv` — Inserts the rows of an uploaded CSV file into the table identified by `:id`. The table must have been created by uploading a CSV file.
+- [x] `POST /api/table/{id}/discard_values` — `post-api-table-id-discard_values` — Discard the FieldValues belonging to the Fields in this Table. Only applies to fields that have FieldValues. If this Table's Database is set up to automatica...
+- [x] `PUT /api/table/{id}/fields/order` — `put-api-table-id-fields-order` — Reorder fields
+- [x] `GET /api/table/{id}/fks` — `get-api-table-id-fks` — Get all foreign keys whose destination is a `Field` that belongs to this `Table`.
+- [x] `GET /api/table/{id}/query_metadata` — `get-api-table-id-query_metadata` — Get metadata about a `Table` useful for running queries. Returns DB, fields, field FKs, and field values. Passing `include_hidden_fields=true` will include a...
+- [x] `GET /api/table/{id}/related` — `get-api-table-id-related` — Return related entities.
+- [x] `POST /api/table/{id}/replace-csv` — `post-api-table-id-replace-csv` — Replaces the contents of the table identified by `:id` with the rows of an uploaded CSV file. The table must have been created by uploading a CSV file.
+- [x] `POST /api/table/{id}/rescan_values` — `post-api-table-id-rescan_values` — Manually trigger an update for the FieldValues for the Fields belonging to this Table. Only applies to Fields that are eligible for FieldValues.
+- [x] `POST /api/table/{id}/sync_schema` — `post-api-table-id-sync_schema` — Trigger a manual update of the schema metadata for this `Table`.
+- [x] `GET /api/table/{table-id}/data` — `get-api-table-table-id-data` — Get the data for the given table
 
 ### /api/task (0/7 complete)
 
@@ -935,19 +935,19 @@ This file is a static implementation checklist derived from the latest Metabase 
 
 - [ ] `POST /api/upload/csv` — `post-api-upload-csv` — Create a table and model populated with the values from the attached CSV. Returns the model ID if successful.
 
-### /api/user (3/11 complete)
+### /api/user (11/11 complete)
 
 - [x] `GET /api/user` — `get-api-user` — Fetch a list of `Users` for admins or group managers. By default returns only active users for admins/data-analysts and only active users within groups that...
-- [ ] `POST /api/user` — `post-api-user` — Create a new `User`, return a 400 if the email address is already taken
+- [x] `POST /api/user` — `post-api-user` — Create a new `User`, return a 400 if the email address is already taken
 - [x] `GET /api/user/current` — `get-api-user-current` — Fetch the current `User`.
-- [ ] `GET /api/user/recipients` — `get-api-user-recipients` — Fetch a list of `Users`. Returns only active users. Meant for non-admins unlike GET /api/user. - If user-visibility is :all or the user is an admin, include...
+- [x] `GET /api/user/recipients` — `get-api-user-recipients` — Fetch a list of `Users`. Returns only active users. Meant for non-admins unlike GET /api/user. - If user-visibility is :all or the user is an admin, include...
 - [x] `GET /api/user/{id}` — `get-api-user-id` — Fetch a `User`. You must be fetching yourself *or* be a superuser *or* a Group Manager.
-- [ ] `PUT /api/user/{id}` — `put-api-user-id` — Update an existing, active `User`. Self or superusers can update user info and groups. Group Managers can only add/remove users from groups they are manager of.
-- [ ] `DELETE /api/user/{id}` — `delete-api-user-id` — Disable a `User`. This does not remove the `User` from the DB, but instead disables their account.
-- [ ] `PUT /api/user/{id}/modal/{modal}` — `put-api-user-id-modal-modal` — Indicate that a user has been informed about the vast intricacies of 'the' Query Builder.
-- [ ] `PUT /api/user/{id}/password` — `put-api-user-id-password` — Update a user's password.
-- [ ] `POST /api/user/{id}/password-reset-url` — `post-api-user-id-password-reset-url` — Generate a password reset URL for a user. Admins can share this URL directly with the user. The link expires in 48 hours.
-- [ ] `PUT /api/user/{id}/reactivate` — `put-api-user-id-reactivate` — Reactivate user at `:id`
+- [x] `PUT /api/user/{id}` — `put-api-user-id` — Update an existing, active `User`. Self or superusers can update user info and groups. Group Managers can only add/remove users from groups they are manager of.
+- [x] `DELETE /api/user/{id}` — `delete-api-user-id` — Disable a `User`. This does not remove the `User` from the DB, but instead disables their account.
+- [x] `PUT /api/user/{id}/modal/{modal}` — `put-api-user-id-modal-modal` — Indicate that a user has been informed about the vast intricacies of 'the' Query Builder.
+- [x] `PUT /api/user/{id}/password` — `put-api-user-id-password` — Update a user's password.
+- [x] `POST /api/user/{id}/password-reset-url` — `post-api-user-id-password-reset-url` — Generate a password reset URL for a user. Admins can share this URL directly with the user. The link expires in 48 hours.
+- [x] `PUT /api/user/{id}/reactivate` — `put-api-user-id-reactivate` — Reactivate user at `:id`
 
 ### /api/user-key-value (4/4 complete)
 

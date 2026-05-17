@@ -45,22 +45,16 @@ class GetActionRequest(EndpointRequest[Action]):
     action_id: int | str
 
     endpoint_method: ClassVar[str] = "GET"
-    endpoint_path: ClassVar[str] = "/api/action/{action-id}"
+    endpoint_path: ClassVar[str] = "/api/action/{action_id}"
     response_model: ClassVar[_ResponseModel] = Action
-
-    def resolve_path(self) -> str:
-        return f"/api/action/{self.action_id}"
 
 
 class DeleteActionRequest(EndpointRequest[ActionExecutionResponse]):
     action_id: int | str
 
     endpoint_method: ClassVar[str] = "DELETE"
-    endpoint_path: ClassVar[str] = "/api/action/{action-id}"
+    endpoint_path: ClassVar[str] = "/api/action/{action_id}"
     response_model: ClassVar[_ResponseModel] = ActionExecutionResponse
-
-    def resolve_path(self) -> str:
-        return f"/api/action/{self.action_id}"
 
 
 class GetActionExecuteRequest(EndpointRequest[ActionExecutionResponse]):
@@ -68,11 +62,8 @@ class GetActionExecuteRequest(EndpointRequest[ActionExecutionResponse]):
     parameters: dict[str, Any] = PydanticField(default_factory=dict)
 
     endpoint_method: ClassVar[str] = "GET"
-    endpoint_path: ClassVar[str] = "/api/action/{action-id}/execute"
+    endpoint_path: ClassVar[str] = "/api/action/{action_id}/execute"
     response_model: ClassVar[_ResponseModel] = ActionExecutionResponse
-
-    def resolve_path(self) -> str:
-        return f"/api/action/{self.action_id}/execute"
 
     def request_params(self) -> dict[str, QueryParamValue]:
         return self.parameters
@@ -83,11 +74,8 @@ class UpdateActionRequest(EndpointRequest[Action]):
     body: dict[str, Any]
 
     endpoint_method: ClassVar[str] = "PUT"
-    endpoint_path: ClassVar[str] = "/api/action/{id}"
+    endpoint_path: ClassVar[str] = "/api/action/{action_id}"
     response_model: ClassVar[_ResponseModel] = Action
-
-    def resolve_path(self) -> str:
-        return f"/api/action/{self.action_id}"
 
 
 class ExecuteActionRequest(EndpointRequest[ActionExecutionResponse]):
@@ -95,11 +83,8 @@ class ExecuteActionRequest(EndpointRequest[ActionExecutionResponse]):
     parameters: dict[str, Any] = PydanticField(default_factory=dict)
 
     endpoint_method: ClassVar[str] = "POST"
-    endpoint_path: ClassVar[str] = "/api/action/{id}/execute"
+    endpoint_path: ClassVar[str] = "/api/action/{action_id}/execute"
     response_model: ClassVar[_ResponseModel] = ActionExecutionResponse
-
-    def resolve_path(self) -> str:
-        return f"/api/action/{self.action_id}/execute"
 
     def request_body(self) -> JSONValue:
         return {"parameters": self.parameters}
@@ -109,19 +94,13 @@ class CreateActionPublicLinkRequest(EndpointRequest[ActionExecutionResponse]):
     action_id: int | str
 
     endpoint_method: ClassVar[str] = "POST"
-    endpoint_path: ClassVar[str] = "/api/action/{id}/public_link"
+    endpoint_path: ClassVar[str] = "/api/action/{action_id}/public_link"
     response_model: ClassVar[_ResponseModel] = ActionExecutionResponse
-
-    def resolve_path(self) -> str:
-        return f"/api/action/{self.action_id}/public_link"
 
 
 class DeleteActionPublicLinkRequest(EndpointRequest[ActionExecutionResponse]):
     action_id: int | str
 
     endpoint_method: ClassVar[str] = "DELETE"
-    endpoint_path: ClassVar[str] = "/api/action/{id}/public_link"
+    endpoint_path: ClassVar[str] = "/api/action/{action_id}/public_link"
     response_model: ClassVar[_ResponseModel] = ActionExecutionResponse
-
-    def resolve_path(self) -> str:
-        return f"/api/action/{self.action_id}/public_link"

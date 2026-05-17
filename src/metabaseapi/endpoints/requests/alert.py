@@ -27,19 +27,13 @@ class GetAlertRequest(EndpointRequest[Alert]):
     alert_id: int | str
 
     endpoint_method: ClassVar[str] = "GET"
-    endpoint_path: ClassVar[str] = "/api/alert/{id}"
+    endpoint_path: ClassVar[str] = "/api/alert/{alert_id}"
     response_model: ClassVar[_ResponseModel] = Alert
-
-    def resolve_path(self) -> str:
-        return f"/api/alert/{self.alert_id}"
 
 
 class DeleteAlertSubscriptionRequest(EndpointRequest[GenericOperationResponse]):
     alert_id: int | str
 
     endpoint_method: ClassVar[str] = "DELETE"
-    endpoint_path: ClassVar[str] = "/api/alert/{id}/subscription"
+    endpoint_path: ClassVar[str] = "/api/alert/{alert_id}/subscription"
     response_model: ClassVar[_ResponseModel] = GenericOperationResponse
-
-    def resolve_path(self) -> str:
-        return f"/api/alert/{self.alert_id}/subscription"

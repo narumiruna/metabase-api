@@ -29,11 +29,8 @@ class CreateBookmarkRequest(EndpointRequest[Bookmark]):
     item_id: int | str
 
     endpoint_method: ClassVar[str] = "POST"
-    endpoint_path: ClassVar[str] = "/api/bookmark/{model}/{id}"
+    endpoint_path: ClassVar[str] = "/api/bookmark/{model}/{item_id}"
     response_model: ClassVar[_ResponseModel] = Bookmark
-
-    def resolve_path(self) -> str:
-        return f"/api/bookmark/{self.model}/{self.item_id}"
 
 
 class DeleteBookmarkRequest(EndpointRequest[GenericOperationResponse]):
@@ -41,8 +38,5 @@ class DeleteBookmarkRequest(EndpointRequest[GenericOperationResponse]):
     item_id: int | str
 
     endpoint_method: ClassVar[str] = "DELETE"
-    endpoint_path: ClassVar[str] = "/api/bookmark/{model}/{id}"
+    endpoint_path: ClassVar[str] = "/api/bookmark/{model}/{item_id}"
     response_model: ClassVar[_ResponseModel] = GenericOperationResponse
-
-    def resolve_path(self) -> str:
-        return f"/api/bookmark/{self.model}/{self.item_id}"

@@ -38,11 +38,8 @@ class GetChannelRequest(EndpointRequest[GenericOperationResponse]):
     channel_id: int | str
 
     endpoint_method: ClassVar[str] = "GET"
-    endpoint_path: ClassVar[str] = "/api/channel/{id}"
+    endpoint_path: ClassVar[str] = "/api/channel/{channel_id}"
     response_model: ClassVar[_ResponseModel] = GenericOperationResponse
-
-    def resolve_path(self) -> str:
-        return f"/api/channel/{self.channel_id}"
 
 
 class UpdateChannelRequest(EndpointRequest[GenericOperationResponse]):
@@ -50,8 +47,5 @@ class UpdateChannelRequest(EndpointRequest[GenericOperationResponse]):
     body: dict[str, Any] = PydanticField(default_factory=dict)
 
     endpoint_method: ClassVar[str] = "PUT"
-    endpoint_path: ClassVar[str] = "/api/channel/{id}"
+    endpoint_path: ClassVar[str] = "/api/channel/{channel_id}"
     response_model: ClassVar[_ResponseModel] = GenericOperationResponse
-
-    def resolve_path(self) -> str:
-        return f"/api/channel/{self.channel_id}"

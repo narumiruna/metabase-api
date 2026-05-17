@@ -20,11 +20,8 @@ class GetAgentMetricRequest(EndpointRequest[AgentResponse]):
     metric_id: int | str
 
     endpoint_method: ClassVar[str] = "GET"
-    endpoint_path: ClassVar[str] = "/api/agent/v1/metric/{id}"
+    endpoint_path: ClassVar[str] = "/api/agent/v1/metric/{metric_id}"
     response_model: ClassVar[_ResponseModel] = AgentResponse
-
-    def resolve_path(self) -> str:
-        return f"/api/agent/v1/metric/{self.metric_id}"
 
 
 class GetAgentMetricFieldValuesRequest(EndpointRequest[AgentResponse]):
@@ -32,11 +29,8 @@ class GetAgentMetricFieldValuesRequest(EndpointRequest[AgentResponse]):
     field_id: int | str
 
     endpoint_method: ClassVar[str] = "GET"
-    endpoint_path: ClassVar[str] = "/api/agent/v1/metric/{id}/field/{field-id}/values"
+    endpoint_path: ClassVar[str] = "/api/agent/v1/metric/{metric_id}/field/{field_id}/values"
     response_model: ClassVar[_ResponseModel] = AgentResponse
-
-    def resolve_path(self) -> str:
-        return f"/api/agent/v1/metric/{self.metric_id}/field/{self.field_id}/values"
 
 
 class AgentPingRequest(EndpointRequest[AgentResponse]):
@@ -57,11 +51,8 @@ class GetAgentTableRequest(EndpointRequest[AgentResponse]):
     table_id: int | str
 
     endpoint_method: ClassVar[str] = "GET"
-    endpoint_path: ClassVar[str] = "/api/agent/v1/table/{id}"
+    endpoint_path: ClassVar[str] = "/api/agent/v1/table/{table_id}"
     response_model: ClassVar[_ResponseModel] = AgentResponse
-
-    def resolve_path(self) -> str:
-        return f"/api/agent/v1/table/{self.table_id}"
 
 
 class GetAgentTableFieldValuesRequest(EndpointRequest[AgentResponse]):
@@ -69,11 +60,8 @@ class GetAgentTableFieldValuesRequest(EndpointRequest[AgentResponse]):
     field_id: int | str
 
     endpoint_method: ClassVar[str] = "GET"
-    endpoint_path: ClassVar[str] = "/api/agent/v1/table/{id}/field/{field-id}/values"
+    endpoint_path: ClassVar[str] = "/api/agent/v1/table/{table_id}/field/{field_id}/values"
     response_model: ClassVar[_ResponseModel] = AgentResponse
-
-    def resolve_path(self) -> str:
-        return f"/api/agent/v1/table/{self.table_id}/field/{self.field_id}/values"
 
 
 class AgentConstructQueryRequest(EndpointRequest[AgentResponse]):

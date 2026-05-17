@@ -35,8 +35,5 @@ class GetDatabaseRequest(EndpointRequest[Database]):
     database_id: int | str
 
     endpoint_method: ClassVar[str] = "GET"
-    endpoint_path: ClassVar[str] = "/api/database/{id}"
+    endpoint_path: ClassVar[str] = "/api/database/{database_id}"
     response_model: ClassVar[_ResponseModel] = Database
-
-    def resolve_path(self) -> str:
-        return f"/api/database/{self.database_id}"

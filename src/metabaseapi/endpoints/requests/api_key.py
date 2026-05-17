@@ -35,30 +35,21 @@ class UpdateApiKeyRequest(EndpointRequest[ApiKey]):
     body: dict[str, Any]
 
     endpoint_method: ClassVar[str] = "PUT"
-    endpoint_path: ClassVar[str] = "/api/api-key/{id}"
+    endpoint_path: ClassVar[str] = "/api/api-key/{api_key_id}"
     response_model: ClassVar[_ResponseModel] = ApiKey
-
-    def resolve_path(self) -> str:
-        return f"/api/api-key/{self.api_key_id}"
 
 
 class DeleteApiKeyRequest(EndpointRequest[GenericOperationResponse]):
     api_key_id: int | str
 
     endpoint_method: ClassVar[str] = "DELETE"
-    endpoint_path: ClassVar[str] = "/api/api-key/{id}"
+    endpoint_path: ClassVar[str] = "/api/api-key/{api_key_id}"
     response_model: ClassVar[_ResponseModel] = GenericOperationResponse
-
-    def resolve_path(self) -> str:
-        return f"/api/api-key/{self.api_key_id}"
 
 
 class RegenerateApiKeyRequest(EndpointRequest[ApiKey]):
     api_key_id: int | str
 
     endpoint_method: ClassVar[str] = "PUT"
-    endpoint_path: ClassVar[str] = "/api/api-key/{id}/regenerate"
+    endpoint_path: ClassVar[str] = "/api/api-key/{api_key_id}/regenerate"
     response_model: ClassVar[_ResponseModel] = ApiKey
-
-    def resolve_path(self) -> str:
-        return f"/api/api-key/{self.api_key_id}/regenerate"

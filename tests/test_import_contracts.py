@@ -269,7 +269,13 @@ RESPONSE_MODULE_CONTRACTS = {
     "bookmark": ("BookmarkOrderingUpdateResponse", "DeleteBookmarkResponse", "ListBookmarksResponse"),
     "bug_reporting": ("BugReportingConnectionPoolDetailsResponse", "BugReportingDetailsResponse"),
     "card": ("CardsDashboardsResponse", "ListCardsResponse"),
-    "channel": ("ListChannelsResponse",),
+    "channel": (
+        "ChannelResponse",
+        "CreateChannelResponse",
+        "ListChannelsResponse",
+        "ChannelTestResponse",
+        "UpdateChannelResponse",
+    ),
     "cloud_migration": (
         "CancelCloudMigrationResponse",
         "CloudMigrationStatusResponse",

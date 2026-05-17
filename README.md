@@ -49,3 +49,24 @@ metabaseapi create-database my_db postgres --details '{"host":"localhost","port"
 ```
 
 所有輸出都會以可讀 JSON（縮排、排序）輸出，便於 AI / 腳本處理。
+
+## Live Test（實際打 API）
+
+使用 fixtures 中的 endpoint 清單做 smoke test（預設只測 `GET`）：
+
+```bash
+# 測所有 GET endpoint（依 OpenAPI fixture）
+just live-test GET
+
+# 只測前 50 筆
+just live-test GET 50
+
+# 測指定方法（例如 GET,POST）
+just live-test GET,POST
+```
+
+若要放寬失敗門檻，可用 `--max-failures`、`--strict`，例如：
+
+```bash
+uv run python scripts/live_endpoint_smoke_test.py --methods GET --strict --max-failures 0
+```

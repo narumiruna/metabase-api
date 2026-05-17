@@ -17,6 +17,12 @@ type:
 test:
     uv run pytest -v -s --cov=src tests
 
+# Run live endpoint smoke tests (requires METABASE_URL + METABASE_API_KEY in environment/.env)
+live-test METHODS='GET' LIMIT='':
+    [ -n "{{LIMIT}}" ] && \
+      uv run python scripts/live_endpoint_smoke_test.py --methods "{{METHODS}}" --limit "{{LIMIT}}" || \
+      uv run python scripts/live_endpoint_smoke_test.py --methods "{{METHODS}}"
+
 # Build and publish the package to PyPI
 publish:
     uv build

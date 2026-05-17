@@ -4,9 +4,17 @@ import asyncio
 import os
 
 import pytest
+from pydantic import BaseModel
 
 from metabaseapi.client import MetabaseClient
+from metabaseapi.endpoints.execution import EndpointRequest
+from metabaseapi.endpoints.requests.card import ListCardsRequest
+from metabaseapi.endpoints.requests.collection import GetCollectionTreeRequest
+from metabaseapi.endpoints.requests.collection import ListCollectionsRequest
+from metabaseapi.endpoints.requests.dashboard import ListDashboardsRequest
+from metabaseapi.endpoints.requests.database import ListDatabasesRequest
 from metabaseapi.endpoints.requests.user import CurrentUserRequest
+from metabaseapi.endpoints.requests.user import ListUsersRequest
 from metabaseapi.settings import Settings
 
 pytestmark = pytest.mark.skipif(
@@ -15,14 +23,18 @@ pytestmark = pytest.mark.skipif(
 )
 
 
-async def _fetch_current_user() -> bool:
+async def _run_request[ResponseT: BaseModel](request_model: EndpointRequest[ResponseT]) -> ResponseT:
     settings = Settings()
     settings.requires_api_key()
 
     async with MetabaseClient.from_settings(settings) as client:
-        current_user = await client.run(CurrentUserRequest())
+        return await client.run(request_model)
 
-    return any(
+
+def test_live_current_user_endpoint_returns_identity() -> None:
+    current_user = asyncio.run(_run_request(CurrentUserRequest()))
+
+    assert any(
         value is not None
         for value in (
             current_user.common_name,
@@ -32,5 +44,37 @@ async def _fetch_current_user() -> bool:
     )
 
 
-def test_live_current_user_endpoint_returns_identity() -> None:
-    assert asyncio.run(_fetch_current_user())
+def test_live_database_list_endpoint_decodes() -> None:
+    databases = asyncio.run(_run_request(ListDatabasesRequest()))
+
+    assert isinstance(databases.databases, list)
+
+
+def test_live_collection_list_endpoint_decodes() -> None:
+    collections = asyncio.run(_run_request(ListCollectionsRequest()))
+
+    assert isinstance(collections.collections, list)
+
+
+def test_live_collection_tree_endpoint_decodes() -> None:
+    tree = asyncio.run(_run_request(GetCollectionTreeRequest()))
+
+    assert isinstance(tree.children, list)
+
+
+def test_live_card_list_endpoint_decodes() -> None:
+    cards = asyncio.run(_run_request(ListCardsRequest()))
+
+    assert isinstance(cards.cards, list)
+
+
+def test_live_dashboard_list_endpoint_decodes() -> None:
+    dashboards = asyncio.run(_run_request(ListDashboardsRequest()))
+
+    assert isinstance(dashboards.dashboards, list)
+
+
+def test_live_user_list_endpoint_decodes() -> None:
+    users = asyncio.run(_run_request(ListUsersRequest()))
+
+    assert isinstance(users.users, list)

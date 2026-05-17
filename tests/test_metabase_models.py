@@ -63,6 +63,7 @@ from metabaseapi.metabase import GetCollectionRootItemsRequest
 from metabaseapi.metabase import GetCollectionRootRequest
 from metabaseapi.metabase import GetCollectionTrashRequest
 from metabaseapi.metabase import GetCollectionTreeRequest
+from metabaseapi.metabase import GetCommentMentionsRequest
 from metabaseapi.metabase import GetCommentRequest
 from metabaseapi.metabase import GetDashboardRequest
 from metabaseapi.metabase import GetDatabaseRequest
@@ -337,6 +338,11 @@ def test_action_requests_use_expected_paths_and_payloads() -> None:
             ("GET", "/api/comment", {"model": "card", "model-id": 13}, None),
         ),
         (
+            GetCommentMentionsRequest(),
+            GenericOperationResponse,
+            ("GET", "/api/comment/mentions", {}, None),
+        ),
+        (
             PostCommentRequest(body={"text": "Hi"}),
             GenericOperationResponse,
             ("POST", "/api/comment", {}, {"text": "Hi"}),
@@ -562,6 +568,7 @@ def _build_mock_endpoint_responses() -> dict[tuple[str, str], dict[str, object]]
         ("PUT", "/api/collection/7"): {"updated": True},
         ("DELETE", "/api/collection/7"): {"ok": True},
         ("GET", "/api/comment"): {"comments": [{"id": 1, "text": "Hi"}]},
+        ("GET", "/api/comment/mentions"): {"mentions": [{"id": 1, "name": "alice"}]},
         ("POST", "/api/comment"): {"ok": True},
         ("DELETE", "/api/comment/7"): {"ok": True},
         ("GET", "/api/table"): {"data": [{"id": 8, "name": "table", "schema": "public", "db_id": 1}]},
@@ -623,6 +630,7 @@ def test_typed_methods_in_client_return_models() -> None:
     updated_collection = _run(client.update_collection_typed("7", {"name": "Updated"}))
     deleted_collection = _run(client.delete_collection_typed("7"))
     comments = _run(client.get_comment_typed(model="card", model_id=13))
+    comments_mentions = _run(client.get_comment_mentions_typed())
     created_comment = _run(client.create_comment_typed({"text": "Hi"}))
     deleted_comment = _run(client.delete_comment_typed("7"))
     collection_graph = _run(client.get_collection_graph_typed())
@@ -685,6 +693,7 @@ def test_typed_methods_in_client_return_models() -> None:
     assert isinstance(updated_collection, GenericOperationResponse)
     assert isinstance(deleted_collection, GenericOperationResponse)
     assert isinstance(comments, GenericOperationResponse)
+    assert isinstance(comments_mentions, GenericOperationResponse)
     assert isinstance(created_comment, GenericOperationResponse)
     assert isinstance(deleted_comment, GenericOperationResponse)
     assert isinstance(collection_graph, GenericOperationResponse)

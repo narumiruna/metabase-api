@@ -96,6 +96,7 @@ from metabaseapi.metabase import GetCollectionRootItemsRequest
 from metabaseapi.metabase import GetCollectionRootRequest
 from metabaseapi.metabase import GetCollectionTrashRequest
 from metabaseapi.metabase import GetCollectionTreeRequest
+from metabaseapi.metabase import GetCommentMentionsRequest
 from metabaseapi.metabase import GetCommentRequest
 from metabaseapi.metabase import GetDashboardRequest
 from metabaseapi.metabase import GetDatabaseRequest
@@ -841,6 +842,9 @@ class MetabaseClient:
             params["model-id"] = model_id
         return await self.get("/api/comment", params=params or None)
 
+    async def get_comment_mentions(self) -> JSONValue | None:
+        return await self.get("/api/comment/mentions")
+
     async def create_comment(self, body: Mapping[str, object]) -> JSONValue | None:
         return await self.post("/api/comment", body=dict(body))
 
@@ -1130,6 +1134,9 @@ class MetabaseClient:
 
     async def delete_comment_typed(self, comment_id: int | str) -> GenericOperationResponse:
         return await self.run(DeleteCommentRequest(comment_id=comment_id))
+
+    async def get_comment_mentions_typed(self) -> GenericOperationResponse:
+        return await self.run(GetCommentMentionsRequest())
 
     async def get_comment_typed(
         self,

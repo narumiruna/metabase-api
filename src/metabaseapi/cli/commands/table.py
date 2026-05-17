@@ -4,7 +4,7 @@ import typer
 
 from metabaseapi.cli.runtime import app
 from metabaseapi.cli.runtime import run_client_command
-from metabaseapi.client.raw import schema as _raw_schema
+from metabaseapi.client.raw import table as _raw_table
 
 
 @app.command("list-tables")
@@ -13,7 +13,7 @@ def list_tables(ctx: typer.Context) -> None:
 
     run_client_command(
         ctx,
-        lambda client: _raw_schema.list_tables(
+        lambda client: _raw_table.list_tables(
             client,
         ),
     )
@@ -23,4 +23,4 @@ def list_tables(ctx: typer.Context) -> None:
 def get_table(ctx: typer.Context, table_id: str = typer.Argument(...)) -> None:
     """Get a table by ID."""
 
-    run_client_command(ctx, lambda client: _raw_schema.get_table(client, table_id))
+    run_client_command(ctx, lambda client: _raw_table.get_table(client, table_id))

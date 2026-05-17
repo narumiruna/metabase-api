@@ -15,7 +15,7 @@ RESPONSE_MODULES = (
     "common",
     "dashboard",
     "database",
-    "schema",
+    "table",
     "user",
 )
 

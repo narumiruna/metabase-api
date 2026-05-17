@@ -42,7 +42,7 @@ import metabaseapi.endpoints.requests.dashboard_query
 import metabaseapi.endpoints.requests.data_studio
 import metabaseapi.endpoints.requests.database
 import metabaseapi.endpoints.requests.field
-import metabaseapi.endpoints.requests.schema
+import metabaseapi.endpoints.requests.table
 import metabaseapi.endpoints.requests.user
 import metabaseapi.endpoints.requests.user_key_value
 import metabaseapi.endpoints.responses
@@ -58,7 +58,7 @@ import metabaseapi.endpoints.responses.collection
 import metabaseapi.endpoints.responses.common
 import metabaseapi.endpoints.responses.dashboard
 import metabaseapi.endpoints.responses.database
-import metabaseapi.endpoints.responses.schema
+import metabaseapi.endpoints.responses.table
 import metabaseapi.endpoints.responses.user
 import metabaseapi.wire
 
@@ -235,7 +235,7 @@ REQUEST_MODULE_CONTRACTS = {
         "GetDashboardRelatedRequest",
     ),
     "field": ("GetFieldRequest",),
-    "schema": (
+    "table": (
         "ListTablesRequest",
         "GetTableRequest",
     ),
@@ -265,7 +265,7 @@ RESPONSE_MODULE_CONTRACTS = {
     "common": ("GenericOperationResponse",),
     "dashboard": ("ListDashboardsResponse",),
     "database": ("ListDatabasesResponse",),
-    "schema": ("ListTablesResponse",),
+    "table": ("ListTablesResponse",),
     "user": ("ListUsersResponse",),
 }
 
@@ -293,7 +293,7 @@ def test_cli_command_modules_import_from_package() -> None:
     assert metabaseapi.cli.commands.DASHBOARD_QUERY_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
     assert metabaseapi.cli.commands.USER_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
     assert metabaseapi.cli.commands.USER_KEY_VALUE_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
-    assert metabaseapi.cli.commands.SCHEMA_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
+    assert metabaseapi.cli.commands.TABLE_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
     assert metabaseapi.cli.commands.FIELD_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
     assert metabaseapi.cli.commands.PLATFORM_BUG_REPORTING_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
     assert metabaseapi.cli.commands.PLATFORM_CACHE_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
@@ -430,7 +430,7 @@ def test_client_domain_modules_use_singular_names() -> None:
         "dashboard",
         "database",
         "field",
-        "schema",
+        "table",
         "user",
         "user_key_value",
     )
@@ -617,7 +617,7 @@ def test_database_lifecycle_commands_share_database_module() -> None:
     assert "create-database" in command_names[metabaseapi.cli.commands.DATABASE_COMMAND_MODULE]
     assert "get-database" in command_names[metabaseapi.cli.commands.DATABASE_COMMAND_MODULE]
     assert "list-databases" in command_names[metabaseapi.cli.commands.DATABASE_COMMAND_MODULE]
-    assert "create-database" not in command_names[metabaseapi.cli.commands.SCHEMA_COMMAND_MODULE]
+    assert "create-database" not in command_names[metabaseapi.cli.commands.TABLE_COMMAND_MODULE]
 
 
 def test_resource_list_commands_live_with_resource_modules() -> None:
@@ -626,13 +626,13 @@ def test_resource_list_commands_live_with_resource_modules() -> None:
     assert "list-collections" in command_names[metabaseapi.cli.commands.COLLECTION_COMMAND_MODULE]
     assert "list-dashboards" in command_names[metabaseapi.cli.commands.DASHBOARD_COMMAND_MODULE]
     assert "list-users" in command_names[metabaseapi.cli.commands.USER_COMMAND_MODULE]
-    assert "list-tables" in command_names[metabaseapi.cli.commands.SCHEMA_COMMAND_MODULE]
+    assert "list-tables" in command_names[metabaseapi.cli.commands.TABLE_COMMAND_MODULE]
 
 
 def test_field_commands_live_with_field_module() -> None:
     command_names = _command_names_by_module()
     assert "get-field" in command_names[metabaseapi.cli.commands.FIELD_COMMAND_MODULE]
-    assert "get-field" not in command_names[metabaseapi.cli.commands.SCHEMA_COMMAND_MODULE]
+    assert "get-field" not in command_names[metabaseapi.cli.commands.TABLE_COMMAND_MODULE]
 
 
 def test_current_user_command_lives_with_user_commands() -> None:

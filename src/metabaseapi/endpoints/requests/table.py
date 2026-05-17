@@ -5,7 +5,7 @@ from typing import ClassVar
 from metabaseapi.endpoints.entities import Table
 from metabaseapi.endpoints.execution import EndpointRequest
 from metabaseapi.endpoints.execution import MetabaseRequestClient
-from metabaseapi.endpoints.responses.schema import ListTablesResponse
+from metabaseapi.endpoints.responses.table import ListTablesResponse
 
 
 class ListTablesRequest(EndpointRequest[ListTablesResponse]):

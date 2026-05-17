@@ -30,7 +30,7 @@ from metabaseapi.client.raw import dashboard_query as raw_dashboard_query
 from metabaseapi.client.raw import data_studio as raw_data_studio
 from metabaseapi.client.raw import database as raw_database
 from metabaseapi.client.raw import field as raw_field
-from metabaseapi.client.raw import schema as raw_schema
+from metabaseapi.client.raw import table as raw_table
 from metabaseapi.client.raw import user as raw_user
 from metabaseapi.client.raw import user_key_value as raw_user_key_value
 from metabaseapi.errors import MetabaseDecodeError
@@ -451,8 +451,8 @@ def test_raw_paths_cover_handwritten_endpoint_surface() -> None:
         ),
         (raw_collection.list_collections(client), ("GET", "/api/collection", None)),
         (raw_collection.get_collection(client, "root"), ("GET", "/api/collection/root", None)),
-        (raw_schema.list_tables(client), ("GET", "/api/table", None)),
-        (raw_schema.get_table(client, 16), ("GET", "/api/table/16", None)),
+        (raw_table.list_tables(client), ("GET", "/api/table", None)),
+        (raw_table.get_table(client, 16), ("GET", "/api/table/16", None)),
         (raw_field.get_field(client, 17), ("GET", "/api/field/17", None)),
     ]
 

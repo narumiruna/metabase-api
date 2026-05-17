@@ -25,7 +25,7 @@ REQUEST_MODULES = (
     "dashboard",
     "dashboard_query",
     "field",
-    "schema",
+    "table",
     "user",
     "user_key_value",
 )

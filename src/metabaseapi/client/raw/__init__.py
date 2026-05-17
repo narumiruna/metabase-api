@@ -25,7 +25,7 @@ RAW_MODULES = (
     "data_studio",
     "database",
     "field",
-    "schema",
+    "table",
     "user",
     "user_key_value",
 )

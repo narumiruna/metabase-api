@@ -25,7 +25,7 @@ CARD_COMMAND_MODULE = "card"
 CARD_QUERY_COMMAND_MODULE = "card_query"
 DATABASE_COMMAND_MODULE = "database"
 DASHBOARD_COMMAND_MODULE = "dashboard"
-SCHEMA_COMMAND_MODULE = "schema"
+TABLE_COMMAND_MODULE = "table"
 DASHBOARD_QUERY_COMMAND_MODULE = "dashboard_query"
 DATA_STUDIO_COMMAND_MODULE = "data_studio"
 FIELD_COMMAND_MODULE = "field"
@@ -67,7 +67,7 @@ COMMAND_MODULE_REGISTRY: Final[tuple[CommandModuleSpec, ...]] = (
     CommandModuleSpec(CARD_COMMAND_MODULE, "asset_authoring"),
     CommandModuleSpec(CARD_QUERY_COMMAND_MODULE, "asset_authoring"),
     CommandModuleSpec(DASHBOARD_COMMAND_MODULE, "asset_authoring"),
-    CommandModuleSpec(SCHEMA_COMMAND_MODULE, "asset_authoring"),
+    CommandModuleSpec(TABLE_COMMAND_MODULE, "asset_authoring"),
     CommandModuleSpec(FIELD_COMMAND_MODULE, "asset_authoring"),
     CommandModuleSpec(DASHBOARD_QUERY_COMMAND_MODULE, "query_and_execution"),
     CommandModuleSpec(DATA_STUDIO_COMMAND_MODULE, "query_and_execution"),
@@ -172,7 +172,7 @@ __all__ = [
     "PLATFORM_CLOUD_MIGRATION_COMMAND_MODULE",
     "PLATFORM_OPERATIONS_MODULES",
     "QUERY_AND_EXECUTION_MODULES",
-    "SCHEMA_COMMAND_MODULE",
+    "TABLE_COMMAND_MODULE",
     "USER_COMMAND_MODULE",
     "USER_KEY_VALUE_COMMAND_MODULE",
     "CommandModuleSpec",

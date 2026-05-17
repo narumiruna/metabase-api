@@ -114,8 +114,8 @@ from metabaseapi.endpoints.requests.database import CreateDatabaseRequest
 from metabaseapi.endpoints.requests.database import GetDatabaseRequest
 from metabaseapi.endpoints.requests.database import ListDatabasesRequest
 from metabaseapi.endpoints.requests.field import GetFieldRequest
-from metabaseapi.endpoints.requests.schema import GetTableRequest
-from metabaseapi.endpoints.requests.schema import ListTablesRequest
+from metabaseapi.endpoints.requests.table import GetTableRequest
+from metabaseapi.endpoints.requests.table import ListTablesRequest
 from metabaseapi.endpoints.requests.user import CurrentUserRequest
 from metabaseapi.endpoints.requests.user import GetUserRequest
 from metabaseapi.endpoints.requests.user import ListUsersRequest
@@ -132,7 +132,7 @@ from metabaseapi.endpoints.responses.collection import ListCollectionsResponse
 from metabaseapi.endpoints.responses.common import GenericOperationResponse
 from metabaseapi.endpoints.responses.dashboard import ListDashboardsResponse
 from metabaseapi.endpoints.responses.database import ListDatabasesResponse
-from metabaseapi.endpoints.responses.schema import ListTablesResponse
+from metabaseapi.endpoints.responses.table import ListTablesResponse
 from metabaseapi.endpoints.responses.user import ListUsersResponse
 from metabaseapi.wire import QueryParamValue
 

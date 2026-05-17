@@ -28,6 +28,7 @@ DASHBOARD_COMMAND_MODULE = "dashboard"
 SCHEMA_COMMAND_MODULE = "schema"
 DASHBOARD_QUERY_COMMAND_MODULE = "dashboard_query"
 DATA_STUDIO_COMMAND_MODULE = "data_studio"
+FIELD_COMMAND_MODULE = "field"
 PLATFORM_BUG_REPORTING_COMMAND_MODULE = "bug_reporting"
 PLATFORM_CACHE_COMMAND_MODULE = "cache"
 PLATFORM_CHANNEL_COMMAND_MODULE = "channel"
@@ -67,6 +68,7 @@ COMMAND_MODULE_REGISTRY: Final[tuple[CommandModuleSpec, ...]] = (
     CommandModuleSpec(CARD_QUERY_COMMAND_MODULE, "asset_authoring"),
     CommandModuleSpec(DASHBOARD_COMMAND_MODULE, "asset_authoring"),
     CommandModuleSpec(SCHEMA_COMMAND_MODULE, "asset_authoring"),
+    CommandModuleSpec(FIELD_COMMAND_MODULE, "asset_authoring"),
     CommandModuleSpec(DASHBOARD_QUERY_COMMAND_MODULE, "query_and_execution"),
     CommandModuleSpec(DATA_STUDIO_COMMAND_MODULE, "query_and_execution"),
     CommandModuleSpec(PLATFORM_BUG_REPORTING_COMMAND_MODULE, "platform_operations"),
@@ -163,6 +165,7 @@ __all__ = [
     "DASHBOARD_QUERY_COMMAND_MODULE",
     "DATABASE_COMMAND_MODULE",
     "DATA_STUDIO_COMMAND_MODULE",
+    "FIELD_COMMAND_MODULE",
     "PLATFORM_BUG_REPORTING_COMMAND_MODULE",
     "PLATFORM_CACHE_COMMAND_MODULE",
     "PLATFORM_CHANNEL_COMMAND_MODULE",

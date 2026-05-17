@@ -22,6 +22,7 @@ REQUEST_MODULES = (
     "database",
     "data_studio",
     "dashboard",
+    "field",
     "schema",
     "user",
     "user_key_value",

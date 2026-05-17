@@ -16,12 +16,7 @@ async def get_table(client: MetabaseClient, table_id: int | str) -> JSONValue | 
     return await client.get(f"/api/table/{table_id}")
 
 
-async def get_field(client: MetabaseClient, field_id: int | str) -> JSONValue | None:
-    return await client.get(f"/api/field/{field_id}")
-
-
 __all__ = [
-    "get_field",
     "get_table",
     "list_tables",
 ]

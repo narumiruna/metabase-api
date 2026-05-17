@@ -24,6 +24,7 @@ RAW_MODULES = (
     "dashboard_query",
     "data_studio",
     "database",
+    "field",
     "schema",
     "user",
     "user_key_value",

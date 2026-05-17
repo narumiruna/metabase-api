@@ -113,7 +113,7 @@ from metabaseapi.endpoints.requests.data_studio import DataStudioTableSyncSchema
 from metabaseapi.endpoints.requests.database import CreateDatabaseRequest
 from metabaseapi.endpoints.requests.database import GetDatabaseRequest
 from metabaseapi.endpoints.requests.database import ListDatabasesRequest
-from metabaseapi.endpoints.requests.schema import GetFieldRequest
+from metabaseapi.endpoints.requests.field import GetFieldRequest
 from metabaseapi.endpoints.requests.schema import GetTableRequest
 from metabaseapi.endpoints.requests.schema import ListTablesRequest
 from metabaseapi.endpoints.requests.user import CurrentUserRequest

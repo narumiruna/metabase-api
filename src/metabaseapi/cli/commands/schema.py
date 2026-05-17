@@ -24,10 +24,3 @@ def get_table(ctx: typer.Context, table_id: str = typer.Argument(...)) -> None:
     """Get a table by ID."""
 
     run_client_command(ctx, lambda client: _raw_schema.get_table(client, table_id))
-
-
-@app.command("get-field")
-def get_field(ctx: typer.Context, field_id: str = typer.Argument(...)) -> None:
-    """Get a field by ID."""
-
-    run_client_command(ctx, lambda client: _raw_schema.get_field(client, field_id))

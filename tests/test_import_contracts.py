@@ -39,6 +39,7 @@ import metabaseapi.endpoints.requests.comment
 import metabaseapi.endpoints.requests.dashboard
 import metabaseapi.endpoints.requests.data_studio
 import metabaseapi.endpoints.requests.database
+import metabaseapi.endpoints.requests.field
 import metabaseapi.endpoints.requests.schema
 import metabaseapi.endpoints.requests.user
 import metabaseapi.endpoints.requests.user_key_value
@@ -227,10 +228,10 @@ REQUEST_MODULE_CONTRACTS = {
         "GetDashboardQueryMetadataRequest",
         "GetDashboardRelatedRequest",
     ),
+    "field": ("GetFieldRequest",),
     "schema": (
         "ListTablesRequest",
         "GetTableRequest",
-        "GetFieldRequest",
     ),
     "user": (
         "CurrentUserRequest",
@@ -287,6 +288,7 @@ def test_cli_command_modules_import_from_package() -> None:
     assert metabaseapi.cli.commands.USER_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
     assert metabaseapi.cli.commands.USER_KEY_VALUE_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
     assert metabaseapi.cli.commands.SCHEMA_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
+    assert metabaseapi.cli.commands.FIELD_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
     assert metabaseapi.cli.commands.PLATFORM_BUG_REPORTING_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
     assert metabaseapi.cli.commands.PLATFORM_CACHE_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
     assert metabaseapi.cli.commands.PLATFORM_CHANNEL_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
@@ -421,6 +423,7 @@ def test_client_domain_modules_use_singular_names() -> None:
         "comment",
         "dashboard",
         "database",
+        "field",
         "schema",
         "user",
         "user_key_value",
@@ -618,6 +621,12 @@ def test_resource_list_commands_live_with_resource_modules() -> None:
     assert "list-dashboards" in command_names[metabaseapi.cli.commands.DASHBOARD_COMMAND_MODULE]
     assert "list-users" in command_names[metabaseapi.cli.commands.USER_COMMAND_MODULE]
     assert "list-tables" in command_names[metabaseapi.cli.commands.SCHEMA_COMMAND_MODULE]
+
+
+def test_field_commands_live_with_field_module() -> None:
+    command_names = _command_names_by_module()
+    assert "get-field" in command_names[metabaseapi.cli.commands.FIELD_COMMAND_MODULE]
+    assert "get-field" not in command_names[metabaseapi.cli.commands.SCHEMA_COMMAND_MODULE]
 
 
 def test_current_user_command_lives_with_user_commands() -> None:

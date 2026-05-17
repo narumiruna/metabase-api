@@ -22,5 +22,3 @@ class ListApiKeysResponse(BaseModel):
     def normalize_payload(cls, values: object) -> dict[str, Any]:
         return normalize_list_payload(values, "api_keys")
 
-
-__all__ = ["ListApiKeysResponse"]

@@ -19,5 +19,3 @@ class AgentResponse(BaseModel):
     def normalize_payload(cls, values: object) -> dict[str, Any]:
         return normalize_unstructured_payload(values)
 
-
-__all__ = ["AgentResponse"]

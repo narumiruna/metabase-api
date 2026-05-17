@@ -22,5 +22,3 @@ class ListBookmarksResponse(BaseModel):
     def normalize_payload(cls, values: object) -> dict[str, Any]:
         return normalize_list_payload(values, "bookmarks")
 
-
-__all__ = ["ListBookmarksResponse"]

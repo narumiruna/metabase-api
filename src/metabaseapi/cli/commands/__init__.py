@@ -6,6 +6,7 @@ from types import MappingProxyType
 from types import ModuleType
 from typing import Final
 from typing import Literal
+from typing import NamedTuple
 
 ACTION_COMMAND_MODULE = "action"
 ACTIVITY_COMMAND_MODULE = "activity"
@@ -30,60 +31,62 @@ PLATFORM_CACHE_COMMAND_MODULE = "cache"
 PLATFORM_CHANNEL_COMMAND_MODULE = "channel"
 PLATFORM_CLOUD_MIGRATION_COMMAND_MODULE = "cloud_migration"
 
-CORE_RESOURCE_MODULES = (
-    ACTION_COMMAND_MODULE,
-    ACTIVITY_COMMAND_MODULE,
-    ALERT_COMMAND_MODULE,
-    ANALYTICS_COMMAND_MODULE,
-    API_KEY_COMMAND_MODULE,
-    AGENT_COMMAND_MODULE,
-    AUTOMAGIC_COMMAND_MODULE,
-    BOOKMARK_COMMAND_MODULE,
-    COMMENT_COMMAND_MODULE,
-)
-
-ASSET_AUTHORING_MODULES = (
-    USER_COMMAND_MODULE,
-    COLLECTION_COMMAND_MODULE,
-    DATABASE_COMMAND_MODULE,
-    CARD_COMMAND_MODULE,
-    CARD_QUERY_COMMAND_MODULE,
-    DASHBOARD_COMMAND_MODULE,
-    SCHEMA_COMMAND_MODULE,
-)
-
-PLATFORM_OPERATIONS_MODULES = (
-    PLATFORM_BUG_REPORTING_COMMAND_MODULE,
-    PLATFORM_CACHE_COMMAND_MODULE,
-    PLATFORM_CHANNEL_COMMAND_MODULE,
-    PLATFORM_CLOUD_MIGRATION_COMMAND_MODULE,
-)
-
-QUERY_AND_EXECUTION_MODULES = (
-    DASHBOARD_QUERY_COMMAND_MODULE,
-    DATA_STUDIO_COMMAND_MODULE,
-)
-
 CommandModuleGroup = Literal["core_resource", "asset_authoring", "query_and_execution", "platform_operations"]
+
+
+class CommandModuleSpec(NamedTuple):
+    name: str
+    group: CommandModuleGroup
+
+
 COMMAND_MODULE_GROUP_ORDER: Final[tuple[CommandModuleGroup, ...]] = (
     "core_resource",
     "asset_authoring",
     "query_and_execution",
     "platform_operations",
 )
+
+COMMAND_MODULE_REGISTRY: Final[tuple[CommandModuleSpec, ...]] = (
+    CommandModuleSpec(ACTION_COMMAND_MODULE, "core_resource"),
+    CommandModuleSpec(ACTIVITY_COMMAND_MODULE, "core_resource"),
+    CommandModuleSpec(ALERT_COMMAND_MODULE, "core_resource"),
+    CommandModuleSpec(ANALYTICS_COMMAND_MODULE, "core_resource"),
+    CommandModuleSpec(API_KEY_COMMAND_MODULE, "core_resource"),
+    CommandModuleSpec(AGENT_COMMAND_MODULE, "core_resource"),
+    CommandModuleSpec(AUTOMAGIC_COMMAND_MODULE, "core_resource"),
+    CommandModuleSpec(BOOKMARK_COMMAND_MODULE, "core_resource"),
+    CommandModuleSpec(COMMENT_COMMAND_MODULE, "core_resource"),
+    CommandModuleSpec(USER_COMMAND_MODULE, "asset_authoring"),
+    CommandModuleSpec(COLLECTION_COMMAND_MODULE, "asset_authoring"),
+    CommandModuleSpec(DATABASE_COMMAND_MODULE, "asset_authoring"),
+    CommandModuleSpec(CARD_COMMAND_MODULE, "asset_authoring"),
+    CommandModuleSpec(CARD_QUERY_COMMAND_MODULE, "asset_authoring"),
+    CommandModuleSpec(DASHBOARD_COMMAND_MODULE, "asset_authoring"),
+    CommandModuleSpec(SCHEMA_COMMAND_MODULE, "asset_authoring"),
+    CommandModuleSpec(DASHBOARD_QUERY_COMMAND_MODULE, "query_and_execution"),
+    CommandModuleSpec(DATA_STUDIO_COMMAND_MODULE, "query_and_execution"),
+    CommandModuleSpec(PLATFORM_BUG_REPORTING_COMMAND_MODULE, "platform_operations"),
+    CommandModuleSpec(PLATFORM_CACHE_COMMAND_MODULE, "platform_operations"),
+    CommandModuleSpec(PLATFORM_CHANNEL_COMMAND_MODULE, "platform_operations"),
+    CommandModuleSpec(PLATFORM_CLOUD_MIGRATION_COMMAND_MODULE, "platform_operations"),
+)
+
+
+def _module_names_for_group(group: CommandModuleGroup) -> tuple[str, ...]:
+    return tuple(module.name for module in COMMAND_MODULE_REGISTRY if module.group == group)
+
+
+CORE_RESOURCE_MODULES = _module_names_for_group("core_resource")
+ASSET_AUTHORING_MODULES = _module_names_for_group("asset_authoring")
+QUERY_AND_EXECUTION_MODULES = _module_names_for_group("query_and_execution")
+PLATFORM_OPERATIONS_MODULES = _module_names_for_group("platform_operations")
+
 COMMAND_MODULE_GROUP_REGISTRY: Final[Mapping[CommandModuleGroup, tuple[str, ...]]] = MappingProxyType(
-    {
-        "core_resource": CORE_RESOURCE_MODULES,
-        "asset_authoring": ASSET_AUTHORING_MODULES,
-        "query_and_execution": QUERY_AND_EXECUTION_MODULES,
-        "platform_operations": PLATFORM_OPERATIONS_MODULES,
-    }
+    {group: _module_names_for_group(group) for group in COMMAND_MODULE_GROUP_ORDER}
 )
 COMMAND_MODULE_GROUPS = COMMAND_MODULE_GROUP_REGISTRY
 
-COMMAND_MODULES = tuple(
-    module for module_group in COMMAND_MODULE_GROUP_ORDER for module in COMMAND_MODULE_GROUP_REGISTRY[module_group]
-)
+COMMAND_MODULES = tuple(module.name for module in COMMAND_MODULE_REGISTRY)
 
 COMMAND_MODULES_IMPORT_PATHS = tuple(f"metabaseapi.cli.commands.{module}" for module in COMMAND_MODULES)
 
@@ -148,6 +151,7 @@ __all__ = [
     "COMMAND_MODULE_GROUPS",
     "COMMAND_MODULE_GROUP_ORDER",
     "COMMAND_MODULE_GROUP_REGISTRY",
+    "COMMAND_MODULE_REGISTRY",
     "COMMENT_COMMAND_MODULE",
     "CORE_RESOURCE_MODULES",
     "DASHBOARD_COMMAND_MODULE",
@@ -162,6 +166,7 @@ __all__ = [
     "QUERY_AND_EXECUTION_MODULES",
     "SCHEMA_COMMAND_MODULE",
     "USER_COMMAND_MODULE",
+    "CommandModuleSpec",
     "command_group_names",
     "command_module_names",
     "command_module_objects",

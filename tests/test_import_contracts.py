@@ -309,6 +309,10 @@ def test_cli_command_module_groups_are_complete_and_disjoint() -> None:
     )
     assert grouped == metabaseapi.cli.commands.COMMAND_MODULES
     assert len(grouped) == len(set(grouped))
+    assert tuple(module.name for module in metabaseapi.cli.commands.COMMAND_MODULE_REGISTRY) == grouped
+    assert {
+        module.group for module in metabaseapi.cli.commands.COMMAND_MODULE_REGISTRY
+    } == set(metabaseapi.cli.commands.COMMAND_MODULE_GROUP_ORDER)
 
 
 def test_cli_command_registry_matches_package_files() -> None:

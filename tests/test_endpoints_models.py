@@ -357,6 +357,16 @@ def test_list_response_models_handle_wrapped_and_unwrapped_payloads() -> None:
     assert unwrapped.cards[0].id == 2
 
 
+def test_collection_items_response_preserves_list_metadata() -> None:
+    wrapped = CollectionItemsResponse.model_validate({"items": [], "total": 3, "limit": 2, "offset": 1})
+    data_alias = CollectionItemsResponse.model_validate({"data": [{"id": 1}], "total": 1})
+    unwrapped = CollectionItemsResponse.model_validate([{"id": 2}])
+
+    assert wrapped.model_dump(exclude_none=True) == {"items": [], "total": 3, "limit": 2, "offset": 1}
+    assert data_alias.model_dump(exclude_none=True) == {"items": [{"id": 1}], "total": 1}
+    assert unwrapped.model_dump(exclude_none=True) == {"items": [{"id": 2}]}
+
+
 def test_api_key_count_response_accepts_count_payloads() -> None:
     assert ApiKeyCountResponse.model_validate({"count": 3}).count == 3
     assert ApiKeyCountResponse.model_validate(4).count == 4

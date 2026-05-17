@@ -8,6 +8,8 @@ from pydantic import ConfigDict
 from pydantic import Field as PydanticField
 from pydantic import model_validator
 
+from metabaseapi.endpoints._response_payload import normalize_model_fields_payload
+from metabaseapi.endpoints._response_payload import normalize_model_list_payload
 from metabaseapi.endpoints._response_payload import normalize_strict_list_payload
 from metabaseapi.endpoints.entities import Card
 from metabaseapi.endpoints.entities import Collection
@@ -56,11 +58,7 @@ class CollectionGraphResponse(BaseModel):
     @model_validator(mode="before")
     @classmethod
     def normalize_payload(cls, values: object) -> dict[str, Any]:
-        if not isinstance(values, dict):
-            return {}
-
-        dict_values = cast(dict[str, object], values)
-        return {key: dict_values[key] for key in cls.model_fields if key in dict_values}
+        return normalize_model_fields_payload(values, cls.model_fields)
 
 
 class CollectionTreeResponse(BaseModel):
@@ -72,11 +70,7 @@ class CollectionTreeResponse(BaseModel):
     @model_validator(mode="before")
     @classmethod
     def normalize_payload(cls, values: object) -> dict[str, Any]:
-        if not isinstance(values, dict):
-            return {}
-
-        dict_values = cast(dict[str, object], values)
-        return {key: dict_values[key] for key in cls.model_fields if key in dict_values}
+        return normalize_model_fields_payload(values, cls.model_fields)
 
 
 class CollectionItemsResponse(BaseModel):
@@ -89,7 +83,7 @@ class CollectionItemsResponse(BaseModel):
     @model_validator(mode="before")
     @classmethod
     def normalize_payload(cls, values: object) -> dict[str, Any]:
-        return normalize_strict_list_payload(values, "items")
+        return normalize_model_list_payload(values, cls.model_fields, "items")
 
 
 class DeleteCollectionResponse(BaseModel):
@@ -101,8 +95,4 @@ class DeleteCollectionResponse(BaseModel):
     @model_validator(mode="before")
     @classmethod
     def normalize_payload(cls, values: object) -> dict[str, Any]:
-        if not isinstance(values, dict):
-            return {}
-
-        dict_values = cast(dict[str, object], values)
-        return {key: dict_values[key] for key in cls.model_fields if key in dict_values}
+        return normalize_model_fields_payload(values, cls.model_fields)

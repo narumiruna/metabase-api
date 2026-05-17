@@ -36,6 +36,37 @@ def normalize_known_payload(values: object, field_names: Iterable[str], fallback
     return known_payload
 
 
+def normalize_model_fields_payload(values: object, field_names: Iterable[str]) -> dict[str, Any]:
+    if not isinstance(values, dict):
+        return {}
+
+    dict_values = cast(dict[str, object], values)
+    return {key: dict_values[key] for key in field_names if key in dict_values}
+
+
+def normalize_model_list_payload(values: object, field_names: Iterable[str], list_key: str) -> dict[str, Any]:
+    if values is None:
+        return {list_key: []}
+
+    if isinstance(values, list):
+        return {list_key: values}
+
+    payload = normalize_model_fields_payload(values, field_names)
+    if list_key in payload and isinstance(payload[list_key], list):
+        return payload
+
+    if isinstance(values, dict):
+        dict_values = cast(dict[str, object], values)
+        if "data" in dict_values and isinstance(dict_values["data"], list):
+            payload[list_key] = dict_values["data"]
+        elif "items" in dict_values and isinstance(dict_values["items"], list):
+            payload[list_key] = dict_values["items"]
+
+    if list_key not in payload:
+        payload[list_key] = []
+    return payload
+
+
 def normalize_strict_list_payload(values: object, list_key: str) -> dict[str, Any]:
     if values is None:
         return {list_key: []}

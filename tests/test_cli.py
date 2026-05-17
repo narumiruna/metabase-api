@@ -595,6 +595,28 @@ def test_card_query_commands_default_missing_body_to_empty_object(
     assert spy.request_model.model_dump()["body"] == {}
 
 
+@pytest.mark.parametrize(
+    "command",
+    [
+        ["query-dashboard-card", "14", "22", "33"],
+        ["query-dashboard-card-export", "14", "22", "33", "xlsx"],
+        ["query-dashboard-card-pivot", "14", "22", "33"],
+    ],
+)
+def test_dashboard_query_commands_default_missing_body_to_none(
+    monkeypatch: pytest.MonkeyPatch,
+    command: list[str],
+) -> None:
+    spy = _RunSpyClient()
+    monkeypatch.setattr(cli.runtime, "create_client", lambda _settings: spy)
+
+    result = runner.invoke(cli.app, ["--base-url", "http://localhost:3000", "--api-key", "abc", *command])
+
+    assert result.exit_code == 0
+    assert spy.request_model is not None
+    assert spy.request_model.model_dump()["body"] is None
+
+
 def test_create_question_command_posts_card_json(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(cli.runtime, "create_client", lambda _settings: _ClientWithRequestMethods())
 

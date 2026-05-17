@@ -56,7 +56,7 @@ def query_dashboard_card(
     card_id: str = typer.Argument(...),
     body: str = typer.Argument(None, help="Optional query payload JSON object"),
 ) -> None:
-    payload = parse_optional_json_object(body, "body") if body else None
+    payload = parse_optional_json_object(body, "body")
     run_endpoint_command(
         ctx,
         DashboardCardQueryRequest(
@@ -79,7 +79,7 @@ def query_dashboard_card_export(
     pivot_results: bool | None = typer.Option(None, "--pivot-results"),
     format_rows: bool | None = typer.Option(None, "--format-rows"),
 ) -> None:
-    payload = parse_optional_json_object(body, "body") if body else None
+    payload = parse_optional_json_object(body, "body")
     run_endpoint_command(
         ctx,
         DashboardCardQueryExportRequest(
@@ -102,7 +102,7 @@ def query_dashboard_card_pivot(
     card_id: str = typer.Argument(...),
     body: str | None = typer.Argument(None, help="Optional query payload JSON object"),
 ) -> None:
-    payload = parse_optional_json_object(body, "body") if body else None
+    payload = parse_optional_json_object(body, "body")
     run_endpoint_command(
         ctx,
         PostDashboardPivotQueryRequest(

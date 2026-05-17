@@ -15,8 +15,8 @@ This file is a static implementation checklist derived from the latest Metabase 
 ## Coverage summary
 
 - Documented operations: 600
-- Complete hand-written endpoint implementations: 46
-- Remaining documented operations: 554
+- Complete hand-written endpoint implementations: 52
+- Remaining documented operations: 548
 - Raw `request` / `invoke`: disabled for CLI users and does not count toward TODO completion.
 
 ## Endpoint checklist
@@ -69,14 +69,14 @@ This file is a static implementation checklist derived from the latest Metabase 
 - [x] `GET /api/analytics/anonymous-stats` — `get-api-analytics-anonymous-stats` — Anonymous usage stats. Endpoint for testing, and eventually exposing this to instance admins to let them see what is being phoned home.
 - [x] `POST /api/analytics/internal` — `post-api-analytics-internal` — Receive a batch of internal analytics events from the frontend and record them as Prometheus metrics.
 
-### /api/api-key (0/6 complete)
+### /api/api-key (6/6 complete)
 
-- [ ] `POST /api/api-key` — `post-api-api-key` — Create a new API key (and an associated `User`) with the provided name and group ID.
-- [ ] `GET /api/api-key` — `get-api-api-key` — Get a list of API keys with the default scope. Non-paginated.
-- [ ] `GET /api/api-key/count` — `get-api-api-key-count` — Get the count of API keys in the DB with the default scope.
-- [ ] `PUT /api/api-key/{id}` — `put-api-api-key-id` — Update an API key by changing its group and/or its name
-- [ ] `DELETE /api/api-key/{id}` — `delete-api-api-key-id` — Delete an ApiKey
-- [ ] `PUT /api/api-key/{id}/regenerate` — `put-api-api-key-id-regenerate` — Regenerate an API Key
+- [x] `POST /api/api-key` — `post-api-api-key` — Create a new API key (and an associated `User`) with the provided name and group ID.
+- [x] `GET /api/api-key` — `get-api-api-key` — Get a list of API keys with the default scope. Non-paginated.
+- [x] `GET /api/api-key/count` — `get-api-api-key-count` — Get the count of API keys in the DB with the default scope.
+- [x] `PUT /api/api-key/{id}` — `put-api-api-key-id` — Update an API key by changing its group and/or its name
+- [x] `DELETE /api/api-key/{id}` — `delete-api-api-key-id` — Delete an ApiKey
+- [x] `PUT /api/api-key/{id}/regenerate` — `put-api-api-key-id-regenerate` — Regenerate an API Key
 
 ### /api/automagic-dashboards (0/11 complete)
 

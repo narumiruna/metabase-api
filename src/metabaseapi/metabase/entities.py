@@ -80,6 +80,11 @@ class Alert(_MetabaseEntity):
     archived: bool | None = None
 
 
+class ApiKey(_MetabaseEntity):
+    key: str | None = None
+    group_id: int | str | None = None
+
+
 class Card(_MetabaseEntity):
     display: str | None = None
     description: str | None = None
@@ -117,6 +122,7 @@ __all__ = [
     "ActivityItem",
     "AgentResource",
     "Alert",
+    "ApiKey",
     "Card",
     "Collection",
     "CurrentUserResponse",

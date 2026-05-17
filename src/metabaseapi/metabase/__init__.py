@@ -3,6 +3,7 @@
 from .entities import Action
 from .entities import ActivityItem
 from .entities import Alert
+from .entities import ApiKey
 from .entities import Card
 from .entities import Collection
 from .entities import CurrentUserResponse
@@ -17,9 +18,11 @@ from .requests import AgentPingRequest
 from .requests import AgentQueryRequest
 from .requests import AgentSearchRequest
 from .requests import AnalyzeChartRequest
+from .requests import CountApiKeysRequest
 from .requests import CreateActionPublicLinkRequest
 from .requests import CreateActionRequest
 from .requests import CreateAnalyticsEventBatchRequest
+from .requests import CreateApiKeyRequest
 from .requests import CreateCardRequest
 from .requests import CreateDatabaseRequest
 from .requests import CreateRecentRequest
@@ -27,6 +30,7 @@ from .requests import CurrentUserRequest
 from .requests import DeleteActionPublicLinkRequest
 from .requests import DeleteActionRequest
 from .requests import DeleteAlertSubscriptionRequest
+from .requests import DeleteApiKeyRequest
 from .requests import ExecuteActionRequest
 from .requests import GetActionExecuteRequest
 from .requests import GetActionRequest
@@ -46,6 +50,7 @@ from .requests import GetTableRequest
 from .requests import GetUserRequest
 from .requests import ListActionsRequest
 from .requests import ListAlertsRequest
+from .requests import ListApiKeysRequest
 from .requests import ListCardsRequest
 from .requests import ListCollectionsRequest
 from .requests import ListDashboardsRequest
@@ -57,7 +62,9 @@ from .requests import ListRecentViewsRequest
 from .requests import ListTablesRequest
 from .requests import ListUsersRequest
 from .requests import MetabaseRequestClient
+from .requests import RegenerateApiKeyRequest
 from .requests import UpdateActionRequest
+from .requests import UpdateApiKeyRequest
 from .responses import ActionExecutionResponse
 from .responses import ActivityMutationResponse
 from .responses import AgentResponse
@@ -65,6 +72,7 @@ from .responses import GenericOperationResponse
 from .responses import ListActionsResponse
 from .responses import ListActivityItemsResponse
 from .responses import ListAlertsResponse
+from .responses import ListApiKeysResponse
 from .responses import ListCardsResponse
 from .responses import ListCollectionsResponse
 from .responses import ListDashboardsResponse
@@ -85,11 +93,14 @@ __all__ = [
     "AgentSearchRequest",
     "Alert",
     "AnalyzeChartRequest",
+    "ApiKey",
     "Card",
     "Collection",
+    "CountApiKeysRequest",
     "CreateActionPublicLinkRequest",
     "CreateActionRequest",
     "CreateAnalyticsEventBatchRequest",
+    "CreateApiKeyRequest",
     "CreateCardRequest",
     "CreateDatabaseRequest",
     "CreateRecentRequest",
@@ -100,6 +111,7 @@ __all__ = [
     "DeleteActionPublicLinkRequest",
     "DeleteActionRequest",
     "DeleteAlertSubscriptionRequest",
+    "DeleteApiKeyRequest",
     "ExecuteActionRequest",
     "GenericOperationResponse",
     "GetActionExecuteRequest",
@@ -123,6 +135,8 @@ __all__ = [
     "ListActivityItemsResponse",
     "ListAlertsRequest",
     "ListAlertsResponse",
+    "ListApiKeysRequest",
+    "ListApiKeysResponse",
     "ListCardsRequest",
     "ListCardsResponse",
     "ListCollectionsRequest",
@@ -141,7 +155,9 @@ __all__ = [
     "ListUsersResponse",
     "MetabaseField",
     "MetabaseRequestClient",
+    "RegenerateApiKeyRequest",
     "Table",
     "UpdateActionRequest",
+    "UpdateApiKeyRequest",
     "User",
 ]

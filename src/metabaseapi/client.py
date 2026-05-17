@@ -22,11 +22,14 @@ from metabaseapi.metabase import AgentResponse
 from metabaseapi.metabase import AgentSearchRequest
 from metabaseapi.metabase import Alert
 from metabaseapi.metabase import AnalyzeChartRequest
+from metabaseapi.metabase import ApiKey
 from metabaseapi.metabase import Card
 from metabaseapi.metabase import Collection
+from metabaseapi.metabase import CountApiKeysRequest
 from metabaseapi.metabase import CreateActionPublicLinkRequest
 from metabaseapi.metabase import CreateActionRequest
 from metabaseapi.metabase import CreateAnalyticsEventBatchRequest
+from metabaseapi.metabase import CreateApiKeyRequest
 from metabaseapi.metabase import CreateCardRequest
 from metabaseapi.metabase import CreateDatabaseRequest
 from metabaseapi.metabase import CreateRecentRequest
@@ -37,6 +40,7 @@ from metabaseapi.metabase import Database
 from metabaseapi.metabase import DeleteActionPublicLinkRequest
 from metabaseapi.metabase import DeleteActionRequest
 from metabaseapi.metabase import DeleteAlertSubscriptionRequest
+from metabaseapi.metabase import DeleteApiKeyRequest
 from metabaseapi.metabase import ExecuteActionRequest
 from metabaseapi.metabase import GenericOperationResponse
 from metabaseapi.metabase import GetActionExecuteRequest
@@ -60,6 +64,8 @@ from metabaseapi.metabase import ListActionsResponse
 from metabaseapi.metabase import ListActivityItemsResponse
 from metabaseapi.metabase import ListAlertsRequest
 from metabaseapi.metabase import ListAlertsResponse
+from metabaseapi.metabase import ListApiKeysRequest
+from metabaseapi.metabase import ListApiKeysResponse
 from metabaseapi.metabase import ListCardsRequest
 from metabaseapi.metabase import ListCardsResponse
 from metabaseapi.metabase import ListCollectionsRequest
@@ -77,8 +83,10 @@ from metabaseapi.metabase import ListTablesResponse
 from metabaseapi.metabase import ListUsersRequest
 from metabaseapi.metabase import ListUsersResponse
 from metabaseapi.metabase import MetabaseField
+from metabaseapi.metabase import RegenerateApiKeyRequest
 from metabaseapi.metabase import Table
 from metabaseapi.metabase import UpdateActionRequest
+from metabaseapi.metabase import UpdateApiKeyRequest
 from metabaseapi.metabase import User
 from metabaseapi.models import APIRequestModel
 from metabaseapi.models import APIResponseModel
@@ -325,6 +333,24 @@ class MetabaseClient:
     async def delete_action_public_link(self, action_id: int | str) -> JSONValue | None:
         return await self.delete(f"/api/action/{action_id}/public_link")
 
+    async def create_api_key(self, body: Mapping[str, object]) -> JSONValue | None:
+        return await self.post("/api/api-key", body=dict(body))
+
+    async def list_api_keys(self) -> JSONValue | None:
+        return await self.get("/api/api-key")
+
+    async def count_api_keys(self) -> JSONValue | None:
+        return await self.get("/api/api-key/count")
+
+    async def update_api_key(self, api_key_id: int | str, body: Mapping[str, object]) -> JSONValue | None:
+        return await self.put(f"/api/api-key/{api_key_id}", body=dict(body))
+
+    async def delete_api_key(self, api_key_id: int | str) -> JSONValue | None:
+        return await self.delete(f"/api/api-key/{api_key_id}")
+
+    async def regenerate_api_key(self, api_key_id: int | str) -> JSONValue | None:
+        return await self.put(f"/api/api-key/{api_key_id}/regenerate")
+
     async def analyze_chart(self, body: Mapping[str, object]) -> JSONValue | None:
         return await self.post("/api/ai-entity-analysis/analyze-chart", body=dict(body))
 
@@ -538,6 +564,24 @@ class MetabaseClient:
 
     async def delete_action_public_link_typed(self, action_id: int | str) -> ActionExecutionResponse:
         return await self.run(DeleteActionPublicLinkRequest(action_id=action_id))
+
+    async def create_api_key_typed(self, body: dict[str, object]) -> ApiKey:
+        return await self.run(CreateApiKeyRequest(body=body))
+
+    async def list_api_keys_typed(self) -> ListApiKeysResponse:
+        return await self.run(ListApiKeysRequest())
+
+    async def count_api_keys_typed(self) -> GenericOperationResponse:
+        return await self.run(CountApiKeysRequest())
+
+    async def update_api_key_typed(self, api_key_id: int | str, body: dict[str, object]) -> ApiKey:
+        return await self.run(UpdateApiKeyRequest(api_key_id=api_key_id, body=body))
+
+    async def delete_api_key_typed(self, api_key_id: int | str) -> GenericOperationResponse:
+        return await self.run(DeleteApiKeyRequest(api_key_id=api_key_id))
+
+    async def regenerate_api_key_typed(self, api_key_id: int | str) -> ApiKey:
+        return await self.run(RegenerateApiKeyRequest(api_key_id=api_key_id))
 
     async def analyze_chart_typed(self, body: dict[str, object]) -> GenericOperationResponse:
         return await self.run(AnalyzeChartRequest(body=body))

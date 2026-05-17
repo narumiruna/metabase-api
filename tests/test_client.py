@@ -118,6 +118,15 @@ def test_convenience_paths_cover_handwritten_endpoint_surface() -> None:
         (client.create_action_public_link(11), ("POST", "/api/action/11/public_link", None)),
         (client.delete_action_public_link(11), ("DELETE", "/api/action/11/public_link", None)),
         (
+            client.create_api_key({"name": "key", "group_id": 1}),
+            ("POST", "/api/api-key", {"name": "key", "group_id": 1}),
+        ),
+        (client.list_api_keys(), ("GET", "/api/api-key", None)),
+        (client.count_api_keys(), ("GET", "/api/api-key/count", None)),
+        (client.update_api_key(7, {"name": "key"}), ("PUT", "/api/api-key/7", {"name": "key"})),
+        (client.delete_api_key(7), ("DELETE", "/api/api-key/7", None)),
+        (client.regenerate_api_key(7), ("PUT", "/api/api-key/7/regenerate", None)),
+        (
             client.analyze_chart({"image": "base64"}),
             ("POST", "/api/ai-entity-analysis/analyze-chart", {"image": "base64"}),
         ),

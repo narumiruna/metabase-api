@@ -58,6 +58,24 @@ class _ConvenienceClient(_ClientWithRequestMethods):
     async def delete_action_public_link(self, action_id: str) -> dict[str, object]:
         return {"method": "DELETE", "path": f"/api/action/{action_id}/public_link"}
 
+    async def create_api_key(self, body: dict[str, object]) -> dict[str, object]:
+        return {"method": "POST", "path": "/api/api-key", "body": body}
+
+    async def list_api_keys(self) -> dict[str, object]:
+        return {"method": "GET", "path": "/api/api-key"}
+
+    async def count_api_keys(self) -> dict[str, object]:
+        return {"method": "GET", "path": "/api/api-key/count"}
+
+    async def update_api_key(self, api_key_id: str, body: dict[str, object]) -> dict[str, object]:
+        return {"method": "PUT", "path": f"/api/api-key/{api_key_id}", "body": body}
+
+    async def delete_api_key(self, api_key_id: str) -> dict[str, object]:
+        return {"method": "DELETE", "path": f"/api/api-key/{api_key_id}"}
+
+    async def regenerate_api_key(self, api_key_id: str) -> dict[str, object]:
+        return {"method": "PUT", "path": f"/api/api-key/{api_key_id}/regenerate"}
+
     async def analyze_chart(self, body: dict[str, object]) -> dict[str, object]:
         return {"method": "POST", "path": "/api/ai-entity-analysis/analyze-chart", "body": body}
 
@@ -259,6 +277,12 @@ def test_help_lists_every_convenience_command() -> None:
         "execute-action",
         "create-action-public-link",
         "delete-action-public-link",
+        "create-api-key",
+        "list-api-keys",
+        "count-api-keys",
+        "update-api-key",
+        "delete-api-key",
+        "regenerate-api-key",
         "analyze-chart",
         "list-alerts",
         "get-alert",
@@ -345,6 +369,8 @@ def test_get_database_command_outputs_json(monkeypatch: pytest.MonkeyPatch) -> N
         (["list-public-actions"], "/api/action/public"),
         (["get-action", "11"], "/api/action/11"),
         (["get-action-execute", "11"], "/api/action/11/execute"),
+        (["list-api-keys"], "/api/api-key"),
+        (["count-api-keys"], "/api/api-key/count"),
         (["list-alerts"], "/api/alert"),
         (["get-alert", "7"], "/api/alert/7"),
         (["anonymous-stats"], "/api/analytics/anonymous-stats"),
@@ -398,6 +424,10 @@ def test_read_endpoint_commands_cover_handwritten_surface(
         (["execute-action", "11", "--parameters", '{"id":1}'], "POST", "/api/action/11/execute"),
         (["create-action-public-link", "11"], "POST", "/api/action/11/public_link"),
         (["delete-action-public-link", "11"], "DELETE", "/api/action/11/public_link"),
+        (["create-api-key", '{"name":"key","group_id":1}'], "POST", "/api/api-key"),
+        (["update-api-key", "7", '{"name":"key"}'], "PUT", "/api/api-key/7"),
+        (["delete-api-key", "7"], "DELETE", "/api/api-key/7"),
+        (["regenerate-api-key", "7"], "PUT", "/api/api-key/7/regenerate"),
         (["analyze-chart", '{"image":"base64"}'], "POST", "/api/ai-entity-analysis/analyze-chart"),
         (["delete-alert-subscription", "7"], "DELETE", "/api/alert/7/subscription"),
         (["create-analytics-event-batch", '{"events":[]}'], "POST", "/api/analytics/internal"),

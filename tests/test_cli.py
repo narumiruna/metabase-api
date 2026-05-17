@@ -467,6 +467,18 @@ class _ConvenienceClient(_ClientWithRequestMethods):
     async def get_dashboard_public(self) -> dict[str, object]:
         return {"method": "GET", "path": "/api/dashboard/public"}
 
+    async def get_dashboard_params_valid_filter_fields(
+        self,
+        *,
+        filtered: list[int | str] | None = None,
+        filtering: list[int | str] | None = None,
+    ) -> dict[str, object]:
+        return {
+            "method": "GET",
+            "path": "/api/dashboard/params/valid-filter-fields",
+            "params": {k: v for k, v in {"filtered": filtered, "filtering": filtering}.items() if v is not None},
+        }
+
     async def list_users(self) -> dict[str, object]:
         return {"method": "GET", "path": "/api/user"}
 
@@ -817,6 +829,10 @@ def test_get_database_command_outputs_json(monkeypatch: pytest.MonkeyPatch) -> N
         (["get-card-query-metadata", "13"], "/api/card/13/query_metadata"),
         (["get-card-series", "13"], "/api/card/13/series"),
         (["get-dashboard", "14"], "/api/dashboard/14"),
+        (
+            ["get-dashboard-params-valid-filter-fields", "--filtered", "11", "--filtering", "22"],
+            "/api/dashboard/params/valid-filter-fields",
+        ),
         (["get-dashboard-embeddable"], "/api/dashboard/embeddable"),
         (["get-dashboard-public"], "/api/dashboard/public"),
         (["get-user", "15"], "/api/user/15"),

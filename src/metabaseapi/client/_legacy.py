@@ -158,6 +158,7 @@ from metabaseapi.metabase import User
 from metabaseapi.models import APIRequestModel
 from metabaseapi.models import APIResponseModel
 from metabaseapi.models import JSONValue
+from metabaseapi.models import QueryParamPrimitive
 from metabaseapi.models import QueryParamValue
 from metabaseapi.settings import Settings
 
@@ -827,6 +828,21 @@ class MetabaseClient:
 
     async def get_dashboard_public(self) -> JSONValue | None:
         return await self.get("/api/dashboard/public")
+
+    async def get_dashboard_params_valid_filter_fields(
+        self,
+        *,
+        filtered: list[int | str] | None = None,
+        filtering: list[int | str] | None = None,
+    ) -> JSONValue | None:
+        params: dict[str, QueryParamValue] = {}
+        if filtered is not None:
+            filtered_values: list[QueryParamPrimitive] = list(filtered)
+            params["filtered"] = filtered_values
+        if filtering is not None:
+            filtering_values: list[QueryParamPrimitive] = list(filtering)
+            params["filtering"] = filtering_values
+        return await self.get("/api/dashboard/params/valid-filter-fields", params=params or None)
 
     async def list_users(self) -> JSONValue | None:
         return await self.get("/api/user")

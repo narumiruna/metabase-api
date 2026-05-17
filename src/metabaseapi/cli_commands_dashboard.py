@@ -10,6 +10,9 @@ from metabaseapi.cli import _run_and_print
 from metabaseapi.cli import _run_client_call
 from metabaseapi.cli import app
 
+_FILTERED_OPTION = typer.Option(None, "--filtered", help="Filtered field ID list")
+_FILTERING_OPTION = typer.Option(None, "--filtering", help="Filtering field ID list")
+
 
 @app.command("create-card")
 def create_card(
@@ -268,6 +271,27 @@ def get_dashboard(ctx: typer.Context, dashboard_id: str = typer.Argument(...)) -
     """Get a dashboard by ID."""
 
     _run_and_print(_run_client_call(ctx, lambda client: client.get_dashboard(dashboard_id)))
+
+
+@app.command("get-dashboard-params-valid-filter-fields")
+def get_dashboard_params_valid_filter_fields(
+    ctx: typer.Context,
+    filtered: list[str] | None = _FILTERED_OPTION,
+    filtering: list[str] | None = _FILTERING_OPTION,
+) -> None:
+    """Get valid filter fields for dashboard parameters."""
+
+    filtered_values = [int(item) if item.isdigit() else item for item in (filtered or [])]
+    filtering_values = [int(item) if item.isdigit() else item for item in (filtering or [])]
+    _run_and_print(
+        _run_client_call(
+            ctx,
+            lambda client: client.get_dashboard_params_valid_filter_fields(
+                filtered=filtered_values or None,
+                filtering=filtering_values or None,
+            ),
+        )
+    )
 
 
 @app.command("get-dashboard-embeddable")

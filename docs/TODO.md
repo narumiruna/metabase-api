@@ -181,12 +181,12 @@ This file is a static implementation checklist derived from the latest Metabase 
 - [x] `DELETE /api/comment/{comment-id}` — `delete-api-comment-comment-id` — Soft delete a comment
 - [x] `POST /api/comment/{comment-id}/reaction` — `post-api-comment-comment-id-reaction` — Toggle a reaction on a comment
 
-### /api/dashboard (5/25 complete)
+### /api/dashboard (6/25 complete)
 
 - [x] `GET /api/dashboard` — `get-api-dashboard` — This endpoint is currently unused by the Metabase frontend and may be out of date with the rest of the application. It only exists for backwards compatibilit...
 - [x] `POST /api/dashboard` — `post-api-dashboard` — Create a new Dashboard.
 - [x] `GET /api/dashboard/embeddable` — `get-api-dashboard-embeddable` — Fetch a list of Dashboards where `enable_embedding` is `true`. The dashboards can be embedded using the embedding endpoints and a signed JWT.
-- [ ] `GET /api/dashboard/params/valid-filter-fields` — `get-api-dashboard-params-valid-filter-fields` — Utility endpoint for powering Dashboard UI. Given some set of `filtered` Field IDs (presumably Fields used in parameters) and a set of `filtering` Field IDs...
+- [x] `GET /api/dashboard/params/valid-filter-fields` — `get-api-dashboard-params-valid-filter-fields` — Utility endpoint for powering Dashboard UI. Given some set of `filtered` Field IDs (presumably Fields used in parameters) and a set of `filtering` Field IDs...
 - [ ] `POST /api/dashboard/pivot/{dashboard-id}/dashcard/{dashcard-id}/card/{card-id}/query` — `post-api-dashboard-pivot-dashboard-id-dashcard-dashcard-id-card-card-id-query` — Run a pivot table query for a specific DashCard.
 - [x] `GET /api/dashboard/public` — `get-api-dashboard-public` — Fetch a list of Dashboards with public UUIDs. These dashboards are publicly-accessible *if* public sharing is enabled.
 - [ ] `POST /api/dashboard/save` — `post-api-dashboard-save` — Save a denormalized description of dashboard.

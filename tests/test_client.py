@@ -292,6 +292,10 @@ def test_convenience_paths_cover_handwritten_endpoint_surface() -> None:
         (client.get_card_series(13), ("GET", "/api/card/13/series", None)),
         (client.list_dashboards(), ("GET", "/api/dashboard", None)),
         (client.get_dashboard(14), ("GET", "/api/dashboard/14", None)),
+        (
+            client.get_dashboard_params_valid_filter_fields(filtered=[11], filtering=[22]),
+            ("GET", "/api/dashboard/params/valid-filter-fields", None),
+        ),
         (client.get_dashboard_embeddable(), ("GET", "/api/dashboard/embeddable", None)),
         (client.get_dashboard_public(), ("GET", "/api/dashboard/public", None)),
         (client.list_users(), ("GET", "/api/user", None)),

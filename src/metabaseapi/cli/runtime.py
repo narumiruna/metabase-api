@@ -115,7 +115,7 @@ def _get_settings(ctx: typer.Context) -> settings.Settings:
 def run_endpoint_command(ctx: typer.Context, request: EndpointCommandRequest[object]) -> None:
     async def do_request() -> object:
         async with create_client(_get_settings(ctx)) as client:
-            return await request.do(client)
+            return await client.run(request)
 
     _run_and_print(do_request())
 

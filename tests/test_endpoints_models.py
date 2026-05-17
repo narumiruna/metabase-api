@@ -6,6 +6,7 @@ from datetime import UTC
 from datetime import datetime
 
 import httpx
+import pytest
 
 from metabaseapi.client import MetabaseClient
 from metabaseapi.endpoints.entities import Action
@@ -359,6 +360,11 @@ def test_list_response_models_handle_wrapped_and_unwrapped_payloads() -> None:
 def test_api_key_count_response_accepts_count_payloads() -> None:
     assert ApiKeyCountResponse.model_validate({"count": 3}).count == 3
     assert ApiKeyCountResponse.model_validate(4).count == 4
+
+
+def test_endpoint_requests_reject_unknown_fields() -> None:
+    with pytest.raises(ValueError):
+        GetCardRequest.model_validate({"card_id": 8, "typo": True})
 
 
 def test_action_requests_use_expected_paths_and_payloads() -> None:

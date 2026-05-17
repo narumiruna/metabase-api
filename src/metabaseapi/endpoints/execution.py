@@ -28,7 +28,7 @@ _ResponseModel = type[BaseModel]
 
 
 class EndpointRequest[ResponseT](BaseModel):
-    model_config = ConfigDict(extra="allow")
+    model_config = ConfigDict(extra="forbid")
 
     endpoint_method: ClassVar[str]
     endpoint_path: ClassVar[str]

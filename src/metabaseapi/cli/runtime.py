@@ -5,6 +5,7 @@ import json
 import logging
 from collections.abc import Callable
 from collections.abc import Coroutine
+from collections.abc import Iterable
 from typing import cast
 
 import typer
@@ -82,8 +83,12 @@ def parse_optional_json_list(raw: str | None, parameter_name: str) -> list[objec
     return parsed
 
 
+def parse_id_values(values: Iterable[str]) -> list[int | str]:
+    return [value if not value.isdigit() else int(value) for value in values if value]
+
+
 def parse_id_csv(raw: str) -> list[int | str]:
-    return [value if not value.isdigit() else int(value) for value in raw.split(",") if value]
+    return parse_id_values(raw.split(","))
 
 
 def _json_payload(result: object) -> JSONValue | None:

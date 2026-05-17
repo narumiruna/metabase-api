@@ -617,6 +617,34 @@ def test_dashboard_query_commands_default_missing_body_to_none(
     assert spy.request_model.model_dump()["body"] is None
 
 
+def test_dashboard_filter_field_options_coerce_numeric_ids(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    spy = _RunSpyClient()
+    monkeypatch.setattr(cli.runtime, "create_client", lambda _settings: spy)
+
+    result = runner.invoke(
+        cli.app,
+        [
+            "--base-url",
+            "http://localhost:3000",
+            "--api-key",
+            "abc",
+            "get-dashboard-params-valid-filter-fields",
+            "--filtered",
+            "11",
+            "--filtered",
+            "abc",
+            "--filtering",
+            "22",
+        ],
+    )
+
+    assert result.exit_code == 0
+    assert spy.request_model is not None
+    assert spy.request_model.model_dump() == {"filtered": [11, "abc"], "filtering": [22]}
+
+
 def test_create_question_command_posts_card_json(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(cli.runtime, "create_client", lambda _settings: _ClientWithRequestMethods())
 

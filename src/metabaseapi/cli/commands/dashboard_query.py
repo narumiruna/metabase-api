@@ -5,6 +5,7 @@ from typing import cast
 import typer
 
 from metabaseapi.cli.runtime import app
+from metabaseapi.cli.runtime import parse_id_values
 from metabaseapi.cli.runtime import parse_optional_json_object
 from metabaseapi.cli.runtime import parse_optional_json_object_or_empty
 from metabaseapi.cli.runtime import run_endpoint_command
@@ -19,6 +20,7 @@ from metabaseapi.endpoints.requests.dashboard_query import GetDashboardDashcardE
 from metabaseapi.endpoints.requests.dashboard_query import GetDashboardQueryMetadataRequest
 from metabaseapi.endpoints.requests.dashboard_query import GetDashboardRelatedRequest
 from metabaseapi.endpoints.requests.dashboard_query import PostDashboardPivotQueryRequest
+from metabaseapi.wire import QueryParamPrimitive
 from metabaseapi.wire import QueryParamValue
 
 _FILTERED_OPTION = typer.Option(None, "--filtered", help="Filtered field ID list")
@@ -42,13 +44,11 @@ def get_dashboard_params_valid_filter_fields(
 ) -> None:
     """Get valid filter fields for dashboard parameters."""
 
-    filtered_values = [int(item) if item.isdigit() else item for item in (filtered or [])]
-    filtering_values = [int(item) if item.isdigit() else item for item in (filtering or [])]
     run_endpoint_command(
         ctx,
         DashboardParamsValidFilterFieldsRequest(
-            filtered=filtered_values or None,
-            filtering=filtering_values or None,
+            filtered=cast("list[QueryParamPrimitive] | None", parse_id_values(filtered or []) or None),
+            filtering=cast("list[QueryParamPrimitive] | None", parse_id_values(filtering or []) or None),
         ),
     )
 

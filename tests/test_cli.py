@@ -749,6 +749,35 @@ def test_create_database_command_invalid_details_fails(monkeypatch: pytest.Monke
     assert result.exit_code != 0
 
 
+def test_create_database_command_rejects_non_object_details(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(cli.runtime, "create_client", lambda _settings: _ClientWithRequestMethods())
+
+    result = runner.invoke(
+        cli.app,
+        [
+            "--base-url",
+            "http://localhost:3000",
+            "--api-key",
+            "abc",
+            "create-database",
+            "analytics",
+            "postgres",
+            "--details",
+            "[]",
+        ],
+    )
+
+    assert result.exit_code != 0
+
+
+def test_move_cards_command_rejects_non_object_body(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(cli.runtime, "create_client", lambda _settings: _ClientWithRequestMethods())
+
+    result = runner.invoke(cli.app, ["--base-url", "http://localhost:3000", "--api-key", "abc", "move-cards", "[]"])
+
+    assert result.exit_code != 0
+
+
 def test_error_response_is_reported_as_json(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(cli.runtime, "create_client", lambda _settings: _ErrorClient())
 

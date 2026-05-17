@@ -4,7 +4,6 @@ import typer
 
 from metabaseapi.cli.runtime import app
 from metabaseapi.cli.runtime import parse_id_csv
-from metabaseapi.cli.runtime import parse_json_body
 from metabaseapi.cli.runtime import parse_json_object
 from metabaseapi.cli.runtime import parse_optional_json_list
 from metabaseapi.cli.runtime import parse_optional_json_object
@@ -194,7 +193,4 @@ def copy_card(ctx: typer.Context, card_id: str = typer.Argument(...)) -> None:
 
 @app.command("move-cards")
 def move_cards(ctx: typer.Context, body: str = typer.Argument(..., help="Move payload JSON object")) -> None:
-    payload = parse_json_body(body)
-    if not isinstance(payload, dict):
-        raise typer.BadParameter("body must be a JSON object")
-    run_endpoint_command(ctx, MoveCardsRequest(body=payload))
+    run_endpoint_command(ctx, MoveCardsRequest(body=parse_json_object(body, "body")))

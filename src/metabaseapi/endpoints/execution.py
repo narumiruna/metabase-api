@@ -53,4 +53,4 @@ class EndpointRequest[ResponseT](BaseModel):
         return cast(ResponseT, self.response_model.model_validate(payload or {}))
 
 
-__all__ = ["EndpointRequest", "MetabaseRequestClient"]
+__all__ = ["EndpointRequest", "MetabaseRequestClient", "ResponseModel"]

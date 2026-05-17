@@ -1,10 +1,11 @@
 import json
 import logging
-import os
 from pathlib import Path
 from typing import Final
 
 import httpx
+
+from metabaseapi.settings import settings
 
 LATEST_OPENAPI_DOCUMENT_URL: Final[str] = "https://www.metabase.com/docs/latest/api.json"
 
@@ -30,11 +31,8 @@ def download_openapi_document(base_url: str, f: Path) -> None:
 
 
 def download_openapi_document_from_env(f: Path) -> None:
-    metabase_url = os.getenv("METABASE_URL")
-    if metabase_url is None:
-        logger.info(
-            "METABASE_URL is not set. Downloading the latest OpenAPI document from the official Metabase website."
-        )
-        metabase_url = LATEST_OPENAPI_DOCUMENT_URL
+    download_openapi_document(settings.base_url, f)
 
-    download_openapi_document(metabase_url, f)
+
+def download_latest_openapi_document(f: Path) -> None:
+    download_json(LATEST_OPENAPI_DOCUMENT_URL, f)

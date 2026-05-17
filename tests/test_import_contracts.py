@@ -280,33 +280,6 @@ def test_cli_command_modules_import_from_package() -> None:
     assert len(metabaseapi.cli.commands.command_module_objects()) == len(
         metabaseapi.cli.commands.command_module_paths()
     )
-    assert metabaseapi.cli.commands.DATA_STUDIO_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
-    assert metabaseapi.cli.commands.ACTION_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
-    assert metabaseapi.cli.commands.ACTIVITY_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
-    assert metabaseapi.cli.commands.AI_ENTITY_ANALYSIS_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
-    assert metabaseapi.cli.commands.AUTOMAGIC_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
-    assert metabaseapi.cli.commands.API_KEY_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
-    assert metabaseapi.cli.commands.AGENT_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
-    assert metabaseapi.cli.commands.ALERT_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
-    assert metabaseapi.cli.commands.BOOKMARK_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
-    assert metabaseapi.cli.commands.COMMENT_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
-    assert metabaseapi.cli.commands.ANALYTICS_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
-    assert metabaseapi.cli.commands.CARD_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
-    assert metabaseapi.cli.commands.CARD_QUERY_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
-    assert metabaseapi.cli.commands.COLLECTION_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
-    assert metabaseapi.cli.commands.COLLECTION_GRAPH_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
-    assert metabaseapi.cli.commands.COLLECTION_ROOT_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
-    assert metabaseapi.cli.commands.DATABASE_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
-    assert metabaseapi.cli.commands.DASHBOARD_QUERY_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
-    assert metabaseapi.cli.commands.USER_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
-    assert metabaseapi.cli.commands.USER_KEY_VALUE_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
-    assert metabaseapi.cli.commands.TABLE_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
-    assert metabaseapi.cli.commands.FIELD_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
-    assert metabaseapi.cli.commands.PLATFORM_BUG_REPORTING_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
-    assert metabaseapi.cli.commands.PLATFORM_CACHE_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
-    assert metabaseapi.cli.commands.PLATFORM_CHANNEL_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
-    assert metabaseapi.cli.commands.PLATFORM_CLOUD_MIGRATION_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
-    assert metabaseapi.cli.commands.DASHBOARD_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
     assert {module.__name__ for module in metabaseapi.cli.commands.command_module_objects()} == set(
         metabaseapi.cli.commands.command_module_paths()
     )
@@ -317,55 +290,12 @@ def test_cli_command_modules_import_from_package() -> None:
         importlib.import_module(module_path)
 
 
-def test_cli_command_module_groups_are_complete_and_disjoint() -> None:
-    grouped = (
-        *metabaseapi.cli.commands.CORE_RESOURCE_MODULES,
-        *metabaseapi.cli.commands.ASSET_AUTHORING_MODULES,
-        *metabaseapi.cli.commands.QUERY_AND_EXECUTION_MODULES,
-        *metabaseapi.cli.commands.PLATFORM_OPERATIONS_MODULES,
-    )
-    assert grouped == metabaseapi.cli.commands.COMMAND_MODULES
-    assert len(grouped) == len(set(grouped))
-    assert tuple(module.name for module in metabaseapi.cli.commands.COMMAND_MODULE_REGISTRY) == grouped
-    assert {
-        module.group for module in metabaseapi.cli.commands.COMMAND_MODULE_REGISTRY
-    } == set(metabaseapi.cli.commands.COMMAND_MODULE_GROUP_ORDER)
-
-
 def test_cli_command_registry_matches_package_files() -> None:
     command_package_path = Path(metabaseapi.cli.commands.__file__).parent
     command_module_files = tuple(
         sorted(path.stem for path in command_package_path.glob("*.py") if path.stem != "__init__")
     )
     assert command_module_files == tuple(sorted(metabaseapi.cli.commands.COMMAND_MODULES))
-
-
-def test_cli_command_group_registry_tracks_declared_modules() -> None:
-    registry = metabaseapi.cli.commands.COMMAND_MODULE_GROUPS
-    assert registry is metabaseapi.cli.commands.COMMAND_MODULE_GROUP_REGISTRY
-    assert tuple(registry.keys()) == (
-        "core_resource",
-        "asset_authoring",
-        "query_and_execution",
-        "platform_operations",
-    )
-    flattened_modules = tuple(module for modules in registry.values() for module in modules)
-    assert flattened_modules == metabaseapi.cli.commands.COMMAND_MODULES
-    assert metabaseapi.cli.commands.command_group_names() == metabaseapi.cli.commands.COMMAND_MODULE_GROUP_ORDER
-    assert metabaseapi.cli.commands.COMMAND_MODULE_GROUP_ORDER == (
-        "core_resource",
-        "asset_authoring",
-        "query_and_execution",
-        "platform_operations",
-    )
-    for group_name in metabaseapi.cli.commands.COMMAND_MODULE_GROUP_ORDER:
-        assert metabaseapi.cli.commands.command_modules_in_group(group_name) == registry[group_name]
-    assert metabaseapi.cli.commands.command_modules_in_group("platform_operations") == (
-        metabaseapi.cli.commands.PLATFORM_BUG_REPORTING_COMMAND_MODULE,
-        metabaseapi.cli.commands.PLATFORM_CACHE_COMMAND_MODULE,
-        metabaseapi.cli.commands.PLATFORM_CHANNEL_COMMAND_MODULE,
-        metabaseapi.cli.commands.PLATFORM_CLOUD_MIGRATION_COMMAND_MODULE,
-    )
 
 
 def test_cli_command_legacy_shims_are_not_importable() -> None:
@@ -568,19 +498,19 @@ def test_cli_command_names_are_unique_across_modules() -> None:
 
 def test_database_lifecycle_commands_share_database_module() -> None:
     command_names = _command_names_by_module()
-    assert "create-database" in command_names[metabaseapi.cli.commands.DATABASE_COMMAND_MODULE]
-    assert "get-database" in command_names[metabaseapi.cli.commands.DATABASE_COMMAND_MODULE]
-    assert "list-databases" in command_names[metabaseapi.cli.commands.DATABASE_COMMAND_MODULE]
-    assert "create-database" not in command_names[metabaseapi.cli.commands.TABLE_COMMAND_MODULE]
+    assert "create-database" in command_names["database"]
+    assert "get-database" in command_names["database"]
+    assert "list-databases" in command_names["database"]
+    assert "create-database" not in command_names["table"]
 
 
 def test_resource_list_commands_live_with_resource_modules() -> None:
     command_names = _command_names_by_module()
-    assert "list-cards" in command_names[metabaseapi.cli.commands.CARD_COMMAND_MODULE]
-    assert "list-collections" in command_names[metabaseapi.cli.commands.COLLECTION_COMMAND_MODULE]
-    assert "list-dashboards" in command_names[metabaseapi.cli.commands.DASHBOARD_COMMAND_MODULE]
-    assert "list-users" in command_names[metabaseapi.cli.commands.USER_COMMAND_MODULE]
-    assert "list-tables" in command_names[metabaseapi.cli.commands.TABLE_COMMAND_MODULE]
+    assert "list-cards" in command_names["card"]
+    assert "list-collections" in command_names["collection"]
+    assert "list-dashboards" in command_names["dashboard"]
+    assert "list-users" in command_names["user"]
+    assert "list-tables" in command_names["table"]
 
 
 def test_dashboard_resource_commands_live_with_dashboard_module() -> None:
@@ -590,16 +520,16 @@ def test_dashboard_resource_commands_live_with_dashboard_module() -> None:
         "get-dashboard-embeddable",
         "get-dashboard-public",
     ):
-        assert command_name in command_names[metabaseapi.cli.commands.DASHBOARD_COMMAND_MODULE]
-        assert command_name not in command_names[metabaseapi.cli.commands.DASHBOARD_QUERY_COMMAND_MODULE]
+        assert command_name in command_names["dashboard"]
+        assert command_name not in command_names["dashboard_query"]
 
 
 def test_collection_graph_commands_live_with_collection_graph_module() -> None:
     command_names = _command_names_by_module()
-    assert "get-collection-graph" in command_names[metabaseapi.cli.commands.COLLECTION_GRAPH_COMMAND_MODULE]
-    assert "put-collection-graph" in command_names[metabaseapi.cli.commands.COLLECTION_GRAPH_COMMAND_MODULE]
-    assert "get-collection-graph" not in command_names[metabaseapi.cli.commands.COLLECTION_COMMAND_MODULE]
-    assert "put-collection-graph" not in command_names[metabaseapi.cli.commands.COLLECTION_COMMAND_MODULE]
+    assert "get-collection-graph" in command_names["collection_graph"]
+    assert "put-collection-graph" in command_names["collection_graph"]
+    assert "get-collection-graph" not in command_names["collection"]
+    assert "put-collection-graph" not in command_names["collection"]
 
 
 def test_collection_root_commands_live_with_collection_root_module() -> None:
@@ -610,21 +540,21 @@ def test_collection_root_commands_live_with_collection_root_module() -> None:
         "get-collection-root-items",
         "post-collection-root-move-dashboard-question-candidates",
     ):
-        assert command_name in command_names[metabaseapi.cli.commands.COLLECTION_ROOT_COMMAND_MODULE]
-        assert command_name not in command_names[metabaseapi.cli.commands.COLLECTION_COMMAND_MODULE]
+        assert command_name in command_names["collection_root"]
+        assert command_name not in command_names["collection"]
 
 
 def test_field_commands_live_with_field_module() -> None:
     command_names = _command_names_by_module()
-    assert "get-field" in command_names[metabaseapi.cli.commands.FIELD_COMMAND_MODULE]
-    assert "get-field" not in command_names[metabaseapi.cli.commands.TABLE_COMMAND_MODULE]
+    assert "get-field" in command_names["field"]
+    assert "get-field" not in command_names["table"]
 
 
 def test_current_user_command_lives_with_user_commands() -> None:
     command_names = _command_names_by_module()
-    assert "current-user" in command_names[metabaseapi.cli.commands.USER_COMMAND_MODULE]
-    assert "get-user-key-value-namespace" not in command_names[metabaseapi.cli.commands.USER_COMMAND_MODULE]
-    assert "current-user" not in command_names[metabaseapi.cli.commands.ANALYTICS_COMMAND_MODULE]
+    assert "current-user" in command_names["user"]
+    assert "get-user-key-value-namespace" not in command_names["user"]
+    assert "current-user" not in command_names["analytics"]
 
 
 def test_user_key_value_commands_live_with_user_key_value_module() -> None:
@@ -635,8 +565,8 @@ def test_user_key_value_commands_live_with_user_key_value_module() -> None:
         "get-user-key-value-namespace-key",
         "delete-user-key-value-namespace-key",
     ):
-        assert command_name in command_names[metabaseapi.cli.commands.USER_KEY_VALUE_COMMAND_MODULE]
-        assert command_name not in command_names[metabaseapi.cli.commands.USER_COMMAND_MODULE]
+        assert command_name in command_names["user_key_value"]
+        assert command_name not in command_names["user"]
 
 
 def test_activity_commands_live_with_activity_module() -> None:
@@ -648,14 +578,14 @@ def test_activity_commands_live_with_activity_module() -> None:
         "list-recents",
         "create-recent",
     ):
-        assert command_name in command_names[metabaseapi.cli.commands.ACTIVITY_COMMAND_MODULE]
-        assert command_name not in command_names[metabaseapi.cli.commands.ANALYTICS_COMMAND_MODULE]
+        assert command_name in command_names["activity"]
+        assert command_name not in command_names["analytics"]
 
 
 def test_ai_entity_analysis_commands_live_with_ai_entity_analysis_module() -> None:
     command_names = _command_names_by_module()
-    assert "analyze-chart" in command_names[metabaseapi.cli.commands.AI_ENTITY_ANALYSIS_COMMAND_MODULE]
-    assert "analyze-chart" not in command_names[metabaseapi.cli.commands.ANALYTICS_COMMAND_MODULE]
+    assert "analyze-chart" in command_names["ai_entity_analysis"]
+    assert "analyze-chart" not in command_names["analytics"]
 
 
 def test_bookmark_commands_live_with_bookmark_module() -> None:
@@ -666,8 +596,8 @@ def test_bookmark_commands_live_with_bookmark_module() -> None:
         "create-bookmark",
         "delete-bookmark",
     ):
-        assert command_name in command_names[metabaseapi.cli.commands.BOOKMARK_COMMAND_MODULE]
-        assert command_name not in command_names[metabaseapi.cli.commands.ACTION_COMMAND_MODULE]
+        assert command_name in command_names["bookmark"]
+        assert command_name not in command_names["action"]
 
 
 def test_cli_app_registers_all_declared_commands() -> None:

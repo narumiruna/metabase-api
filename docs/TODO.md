@@ -15,8 +15,8 @@ This file is a static implementation checklist derived from the latest Metabase 
 ## Coverage summary
 
 - Documented operations: 600
-- Complete hand-written endpoint implementations: 231
-- Remaining documented operations: 369
+- Complete hand-written endpoint implementations: 274
+- Remaining documented operations: 326
 - Raw `request` / `invoke`: disabled for CLI users and does not count toward TODO completion.
 
 ## Endpoint checklist
@@ -502,30 +502,30 @@ This file is a static implementation checklist derived from the latest Metabase 
 
 - [ ] `POST /api/eid-translation/translate` — `post-api-eid-translation-translate` — Translate entity IDs to model IDs.
 
-### /api/email (0/3 complete)
+### /api/email (3/3 complete)
 
-- [ ] `PUT /api/email` — `put-api-email` — Update multiple email Settings. You must be a superuser or have `setting` permission to do this.
-- [ ] `DELETE /api/email` — `delete-api-email` — Clear all email related settings. You must be a superuser or have `setting` permission to do this.
-- [ ] `POST /api/email/test` — `post-api-email-test` — Send a test email using the SMTP Settings. You must be a superuser or have `setting` permission to do this. Returns `{:ok true}` if we were able to send the...
+- [x] `PUT /api/email` — `put-api-email` — Update multiple email Settings. You must be a superuser or have `setting` permission to do this.
+- [x] `DELETE /api/email` — `delete-api-email` — Clear all email related settings. You must be a superuser or have `setting` permission to do this.
+- [x] `POST /api/email/test` — `post-api-email-test` — Send a test email using the SMTP Settings. You must be a superuser or have `setting` permission to do this. Returns `{:ok true}` if we were able to send the...
 
-### /api/embed (0/16 complete)
+### /api/embed (16/16 complete)
 
-- [ ] `GET /api/embed/card/{token}` — `get-api-embed-card-token` — Fetch a Card via a JSON Web Token signed with the `embedding-secret-key`. Token should have the following format: {:resource {:question <card-id>}}
-- [ ] `GET /api/embed/card/{token}/params/{param-key}/remapping` — `get-api-embed-card-token-params-param-key-remapping` — Embedded version of api.card filter values endpoint.
-- [ ] `GET /api/embed/card/{token}/params/{param-key}/search/{prefix}` — `get-api-embed-card-token-params-param-key-search-prefix` — Embedded version of chain filter search endpoint.
-- [ ] `GET /api/embed/card/{token}/params/{param-key}/values` — `get-api-embed-card-token-params-param-key-values` — Embedded version of api.card filter values endpoint.
-- [ ] `GET /api/embed/card/{token}/query` — `get-api-embed-card-token-query` — Fetch the results of running a Card using a JSON Web Token signed with the `embedding-secret-key`. Token should have the following format: {:resource {:quest...
-- [ ] `GET /api/embed/card/{token}/query/{export-format}` — `get-api-embed-card-token-query-export-format` — Like `GET /api/embed/card/query`, but returns the results as a file in the specified format.
-- [ ] `GET /api/embed/dashboard/{token}` — `get-api-embed-dashboard-token` — Fetch a Dashboard via a JSON Web Token signed with the `embedding-secret-key`. Token should have the following format: {:resource {:dashboard <dashboard-id>}}
-- [ ] `GET /api/embed/dashboard/{token}/dashcard/{dashcard-id}/card/{card-id}` — `get-api-embed-dashboard-token-dashcard-dashcard-id-card-card-id` — Fetch the results of running a Card belonging to a Dashboard using a JSON Web Token signed with the `embedding-secret-key`
-- [ ] `GET /api/embed/dashboard/{token}/dashcard/{dashcard-id}/card/{card-id}/{export-format}` — `get-api-embed-dashboard-token-dashcard-dashcard-id-card-card-id-export-format` — Fetch the results of running a Card belonging to a Dashboard using a JSON Web Token signed with the `embedding-secret-key` return the data in one of the expo...
-- [ ] `GET /api/embed/dashboard/{token}/params/{param-key}/remapping` — `get-api-embed-dashboard-token-params-param-key-remapping` — Embedded version of the remapped dashboard param value endpoint.
-- [ ] `GET /api/embed/dashboard/{token}/params/{param-key}/search/{prefix}` — `get-api-embed-dashboard-token-params-param-key-search-prefix` — Embedded version of chain filter search endpoint.
-- [ ] `GET /api/embed/dashboard/{token}/params/{param-key}/values` — `get-api-embed-dashboard-token-params-param-key-values` — Embedded version of chain filter values endpoint.
-- [ ] `GET /api/embed/pivot/card/{token}/query` — `get-api-embed-pivot-card-token-query` — Fetch the results of running a Card using a JSON Web Token signed with the `embedding-secret-key`. Token should have the following format: {:resource {:quest...
-- [ ] `GET /api/embed/pivot/dashboard/{token}/dashcard/{dashcard-id}/card/{card-id}` — `get-api-embed-pivot-dashboard-token-dashcard-dashcard-id-card-card-id` — Fetch the results of running a Card belonging to a Dashboard using a JSON Web Token signed with the `embedding-secret-key`
-- [ ] `GET /api/embed/tiles/card/{token}/{zoom}/{x}/{y}` — `get-api-embed-tiles-card-token-zoom-x-y` — Generates a single tile image for an embedded Card using the map visualization.
-- [ ] `GET /api/embed/tiles/dashboard/{token}/dashcard/{dashcard-id}/card/{card-id}/{zoom}/{x}/{y}` — `get-api-embed-tiles-dashboard-token-dashcard-dashcard-id-card-card-id-zoom-x-y` — Generates a single tile image for a Card on an embedded Dashboard using the map visualization.
+- [x] `GET /api/embed/card/{token}` — `get-api-embed-card-token` — Fetch a Card via a JSON Web Token signed with the `embedding-secret-key`. Token should have the following format: {:resource {:question <card-id>}}
+- [x] `GET /api/embed/card/{token}/params/{param-key}/remapping` — `get-api-embed-card-token-params-param-key-remapping` — Embedded version of api.card filter values endpoint.
+- [x] `GET /api/embed/card/{token}/params/{param-key}/search/{prefix}` — `get-api-embed-card-token-params-param-key-search-prefix` — Embedded version of chain filter search endpoint.
+- [x] `GET /api/embed/card/{token}/params/{param-key}/values` — `get-api-embed-card-token-params-param-key-values` — Embedded version of api.card filter values endpoint.
+- [x] `GET /api/embed/card/{token}/query` — `get-api-embed-card-token-query` — Fetch the results of running a Card using a JSON Web Token signed with the `embedding-secret-key`. Token should have the following format: {:resource {:quest...
+- [x] `GET /api/embed/card/{token}/query/{export-format}` — `get-api-embed-card-token-query-export-format` — Like `GET /api/embed/card/query`, but returns the results as a file in the specified format.
+- [x] `GET /api/embed/dashboard/{token}` — `get-api-embed-dashboard-token` — Fetch a Dashboard via a JSON Web Token signed with the `embedding-secret-key`. Token should have the following format: {:resource {:dashboard <dashboard-id>}}
+- [x] `GET /api/embed/dashboard/{token}/dashcard/{dashcard-id}/card/{card-id}` — `get-api-embed-dashboard-token-dashcard-dashcard-id-card-card-id` — Fetch the results of running a Card belonging to a Dashboard using a JSON Web Token signed with the `embedding-secret-key`
+- [x] `GET /api/embed/dashboard/{token}/dashcard/{dashcard-id}/card/{card-id}/{export-format}` — `get-api-embed-dashboard-token-dashcard-dashcard-id-card-card-id-export-format` — Fetch the results of running a Card belonging to a Dashboard using a JSON Web Token signed with the `embedding-secret-key` return the data in one of the expo...
+- [x] `GET /api/embed/dashboard/{token}/params/{param-key}/remapping` — `get-api-embed-dashboard-token-params-param-key-remapping` — Embedded version of the remapped dashboard param value endpoint.
+- [x] `GET /api/embed/dashboard/{token}/params/{param-key}/search/{prefix}` — `get-api-embed-dashboard-token-params-param-key-search-prefix` — Embedded version of chain filter search endpoint.
+- [x] `GET /api/embed/dashboard/{token}/params/{param-key}/values` — `get-api-embed-dashboard-token-params-param-key-values` — Embedded version of chain filter values endpoint.
+- [x] `GET /api/embed/pivot/card/{token}/query` — `get-api-embed-pivot-card-token-query` — Fetch the results of running a Card using a JSON Web Token signed with the `embedding-secret-key`. Token should have the following format: {:resource {:quest...
+- [x] `GET /api/embed/pivot/dashboard/{token}/dashcard/{dashcard-id}/card/{card-id}` — `get-api-embed-pivot-dashboard-token-dashcard-dashcard-id-card-card-id` — Fetch the results of running a Card belonging to a Dashboard using the `embedding-secret-key`
+- [x] `GET /api/embed/tiles/card/{token}/{zoom}/{x}/{y}` — `get-api-embed-tiles-card-token-zoom-x-y` — Generates a single tile image for an embedded Card using the map visualization.
+- [x] `GET /api/embed/tiles/dashboard/{token}/dashcard/{dashcard-id}/card/{card-id}/{zoom}/{x}/{y}` — `get-api-embed-tiles-dashboard-token-dashcard-dashcard-id-card-card-id-zoom-x-y` — Generates a single tile image for a Card on an embedded Dashboard using the map visualization.
 
 ### /api/embed-theme (0/7 complete)
 
@@ -753,32 +753,32 @@ This file is a static implementation checklist derived from the latest Metabase 
 
 - [ ] `POST /api/product-feedback` — `post-api-product-feedback` — Endpoint to provide feedback from the product
 
-### /api/public (0/24 complete)
+### /api/public (24/24 complete)
 
-- [ ] `GET /api/public/action/{uuid}` — `get-api-public-action-uuid` — Fetch a publicly-accessible Action. Does not require auth credentials. Public sharing must be enabled.
-- [ ] `POST /api/public/action/{uuid}/execute` — `post-api-public-action-uuid-execute` — Execute the Action. `parameters` should be the mapped dashboard parameters with values.
-- [ ] `GET /api/public/card/{uuid}` — `get-api-public-card-uuid` — Fetch a publicly-accessible Card an return query results as well as `:card` information. Does not require auth credentials. Public sharing must be enabled.
-- [ ] `GET /api/public/card/{uuid}/params/{param-key}/remapping` — `get-api-public-card-uuid-params-param-key-remapping` — Fetch the remapped value for the given `value` of parameter with ID `:param-key` of card with UUID `uuid`.
-- [ ] `GET /api/public/card/{uuid}/params/{param-key}/search/{query}` — `get-api-public-card-uuid-params-param-key-search-query` — Fetch values for a parameter on a public card containing `query`.
-- [ ] `GET /api/public/card/{uuid}/params/{param-key}/values` — `get-api-public-card-uuid-params-param-key-values` — Fetch values for a parameter on a public card.
-- [ ] `GET /api/public/card/{uuid}/query` — `get-api-public-card-uuid-query` — Fetch a publicly-accessible Card an return query results as well as `:card` information. Does not require auth credentials. Public sharing must be enabled.
-- [ ] `GET /api/public/card/{uuid}/query/{export-format}` — `get-api-public-card-uuid-query-export-format` — Fetch a publicly-accessible Card and return query results in the specified format. Does not require auth credentials. Public sharing must be enabled.
-- [ ] `GET /api/public/dashboard/{uuid}` — `get-api-public-dashboard-uuid` — Fetch a publicly-accessible Dashboard. Does not require auth credentials. Public sharing must be enabled.
-- [ ] `GET /api/public/dashboard/{uuid}/dashcard/{dashcard-id}/card/{card-id}` — `get-api-public-dashboard-uuid-dashcard-dashcard-id-card-card-id` — Fetch the results for a Card in a publicly-accessible Dashboard. Does not require auth credentials. Public sharing must be enabled.
-- [ ] `POST /api/public/dashboard/{uuid}/dashcard/{dashcard-id}/card/{card-id}/{export-format}` — `post-api-public-dashboard-uuid-dashcard-dashcard-id-card-card-id-export-format` — Fetch the results of running a publicly-accessible Card belonging to a Dashboard and return the data in one of the export formats. Does not require auth cred...
-- [ ] `GET /api/public/dashboard/{uuid}/dashcard/{dashcard-id}/execute` — `get-api-public-dashboard-uuid-dashcard-dashcard-id-execute` — Fetches the values for filling in execution parameters. Pass PK parameters and values to select.
-- [ ] `POST /api/public/dashboard/{uuid}/dashcard/{dashcard-id}/execute` — `post-api-public-dashboard-uuid-dashcard-dashcard-id-execute` — Execute the associated Action in the context of a `Dashboard` and `DashboardCard` that includes it. `parameters` should be the mapped dashboard parameters wi...
-- [ ] `GET /api/public/dashboard/{uuid}/params/{param-key}/remapping` — `get-api-public-dashboard-uuid-params-param-key-remapping` — Fetch the remapped value for the given `value` of parameter with ID `:param-key` of dashboard with UUID `uuid`.
-- [ ] `GET /api/public/dashboard/{uuid}/params/{param-key}/search/{query}` — `get-api-public-dashboard-uuid-params-param-key-search-query` — Fetch filter values for dashboard parameter `param-key`, containing specified `query`.
-- [ ] `GET /api/public/dashboard/{uuid}/params/{param-key}/values` — `get-api-public-dashboard-uuid-params-param-key-values` — Fetch filter values for dashboard parameter `param-key`.
-- [ ] `GET /api/public/document/{uuid}` — `get-api-public-document-uuid` — Fetch a publicly-accessible Document. Does not require auth credentials. Public sharing must be enabled. Returns a Document with sensitive fields removed (ex...
-- [ ] `GET /api/public/document/{uuid}/card/{card-id}` — `get-api-public-document-uuid-card-card-id` — Run a query for a Card that's embedded in a public Document. Doesn't require auth credentials. Public sharing must be enabled.
-- [ ] `POST /api/public/document/{uuid}/card/{card-id}/{export-format}` — `post-api-public-document-uuid-card-card-id-export-format` — Fetch a Card embedded in a public Document and return query results in the specified format. Does not require auth credentials. Public sharing must be enabled.
-- [ ] `GET /api/public/oembed` — `get-api-public-oembed` — oEmbed endpoint used to retrieve embed code and metadata for a (public) Metabase URL.
-- [ ] `GET /api/public/pivot/card/{uuid}/query` — `get-api-public-pivot-card-uuid-query` — Fetch a publicly-accessible Card an return query results as well as `:card` information. Does not require auth credentials. Public sharing must be enabled.
-- [ ] `GET /api/public/pivot/dashboard/{uuid}/dashcard/{dashcard-id}/card/{card-id}` — `get-api-public-pivot-dashboard-uuid-dashcard-dashcard-id-card-card-id` — Fetch the results for a Card in a publicly-accessible Dashboard. Does not require auth credentials. Public sharing must be enabled.
-- [ ] `GET /api/public/tiles/card/{uuid}/{zoom}/{x}/{y}` — `get-api-public-tiles-card-uuid-zoom-x-y` — Generates a single tile image for a publicly-accessible Card using the map visualization. Does not require auth credentials. Public sharing must be enabled.
-- [ ] `GET /api/public/tiles/dashboard/{uuid}/dashcard/{dashcard-id}/card/{card-id}/{zoom}/{x}/{y}` — `get-api-public-tiles-dashboard-uuid-dashcard-dashcard-id-card-card-id-zoom-x-y` — Generates a single tile image for a Card using the map visualization in a publicly-accessible Dashboard. Does not require auth credentials. Public sharing mu...
+- [x] `GET /api/public/action/{uuid}` — `get-api-public-action-uuid` — Fetch a publicly-accessible Action. Does not require auth credentials. Public sharing must be enabled.
+- [x] `POST /api/public/action/{uuid}/execute` — `post-api-public-action-uuid-execute` — Execute the Action. `parameters` should be the mapped dashboard parameters with values.
+- [x] `GET /api/public/card/{uuid}` — `get-api-public-card-uuid` — Fetch a publicly-accessible Card an return query results as well as `:card` information. Does not require auth credentials. Public sharing must be enabled.
+- [x] `GET /api/public/card/{uuid}/params/{param-key}/remapping` — `get-api-public-card-uuid-params-param-key-remapping` — Fetch the remapped value for the given `value` of parameter with ID `:param-key` of card with UUID `uuid`.
+- [x] `GET /api/public/card/{uuid}/params/{param-key}/search/{query}` — `get-api-public-card-uuid-params-param-key-search-query` — Fetch values for a parameter on a public card containing `query`.
+- [x] `GET /api/public/card/{uuid}/params/{param-key}/values` — `get-api-public-card-uuid-params-param-key-values` — Fetch values for a parameter on a public card.
+- [x] `GET /api/public/card/{uuid}/query` — `get-api-public-card-uuid-query` — Fetch a publicly-accessible Card an return query results as well as `:card` information. Does not require auth credentials. Public sharing must be enabled.
+- [x] `GET /api/public/card/{uuid}/query/{export-format}` — `get-api-public-card-uuid-query-export-format` — Fetch a publicly-accessible Card and return query results in the specified format. Does not require auth credentials. Public sharing must be enabled.
+- [x] `GET /api/public/dashboard/{uuid}` — `get-api-public-dashboard-uuid` — Fetch a publicly-accessible Dashboard. Does not require auth credentials. Public sharing must be enabled.
+- [x] `GET /api/public/dashboard/{uuid}/dashcard/{dashcard-id}/card/{card-id}` — `get-api-public-dashboard-uuid-dashcard-dashcard-id-card-card-id` — Fetch the results for a Card in a publicly-accessible Dashboard. Does not require auth credentials. Public sharing must be enabled.
+- [x] `POST /api/public/dashboard/{uuid}/dashcard/{dashcard-id}/card/{card-id}/{export-format}` — `post-api-public-dashboard-uuid-dashcard-dashcard-id-card-card-id-export-format` — Fetch the results of running a publicly-accessible Card belonging to a Dashboard and return the data in one of the export formats. Does not require auth cred...
+- [x] `GET /api/public/dashboard/{uuid}/dashcard/{dashcard-id}/execute` — `get-api-public-dashboard-uuid-dashcard-dashcard-id-execute` — Fetches the values for filling in execution parameters. Pass PK parameters and values to select.
+- [x] `POST /api/public/dashboard/{uuid}/dashcard/{dashcard-id}/execute` — `post-api-public-dashboard-uuid-dashcard-dashcard-id-execute` — Execute the associated Action in the context of a `Dashboard` and `DashboardCard` that includes it. `parameters` should be the mapped dashboard parameters wi...
+- [x] `GET /api/public/dashboard/{uuid}/params/{param-key}/remapping` — `get-api-public-dashboard-uuid-params-param-key-remapping` — Fetch the remapped value for the given `value` of parameter with ID `:param-key` of dashboard with UUID `uuid`.
+- [x] `GET /api/public/dashboard/{uuid}/params/{param-key}/search/{query}` — `get-api-public-dashboard-uuid-params-param-key-search-query` — Fetch filter values for dashboard parameter `param-key`, containing specified `query`.
+- [x] `GET /api/public/dashboard/{uuid}/params/{param-key}/values` — `get-api-public-dashboard-uuid-params-param-key-values` — Fetch filter values for dashboard parameter `param-key`.
+- [x] `GET /api/public/document/{uuid}` — `get-api-public-document-uuid` — Fetch a publicly-accessible Document. Does not require auth credentials. Public sharing must be enabled. Returns a Document with sensitive fields removed (ex...
+- [x] `GET /api/public/document/{uuid}/card/{card-id}` — `get-api-public-document-uuid-card-card-id` — Run a query for a Card that's embedded in a public Document. Doesn't require auth credentials. Public sharing must be enabled.
+- [x] `POST /api/public/document/{uuid}/card/{card-id}/{export-format}` — `post-api-public-document-uuid-card-card-id-export-format` — Fetch a Card embedded in a public Document and return query results in the specified format. Does not require auth credentials. Public sharing must be enabled.
+- [x] `GET /api/public/oembed` — `get-api-public-oembed` — oEmbed endpoint used to retrieve embed code and metadata for a (public) Metabase URL.
+- [x] `GET /api/public/pivot/card/{uuid}/query` — `get-api-public-pivot-card-uuid-query` — Fetch a publicly-accessible Card an return query results as well as `:card` information. Does not require auth credentials. Public sharing must be enabled.
+- [x] `GET /api/public/pivot/dashboard/{uuid}/dashcard/{dashcard-id}/card/{card-id}` — `get-api-public-pivot-dashboard-uuid-dashcard-dashcard-id-card-card-id` — Fetch the results for a Card in a publicly-accessible Dashboard. Does not require auth credentials. Public sharing must be enabled.
+- [x] `GET /api/public/tiles/card/{uuid}/{zoom}/{x}/{y}` — `get-api-public-tiles-card-uuid-zoom-x-y` — Generates a single tile image for a publicly-accessible Card using the map visualization. Does not require auth credentials. Public sharing must be enabled.
+- [x] `GET /api/public/tiles/dashboard/{uuid}/dashcard/{dashcard-id}/card/{card-id}/{zoom}/{x}/{y}` — `get-api-public-tiles-dashboard-uuid-dashcard-dashcard-id-card-card-id-zoom-x-y` — Generates a single tile image for a Card using the map visualization in a publicly-accessible Dashboard. Does not require auth credentials. Public sharing mu...
 
 ### /api/pulse (0/7 complete)
 

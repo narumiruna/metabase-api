@@ -27,7 +27,10 @@ def _register_commands() -> None:
     from metabaseapi.cli.commands import database as database
     from metabaseapi.cli.commands import dataset as dataset
     from metabaseapi.cli.commands import document as document
+    from metabaseapi.cli.commands import email as email
+    from metabaseapi.cli.commands import embed as embed
     from metabaseapi.cli.commands import field as field
+    from metabaseapi.cli.commands import public as public
     from metabaseapi.cli.commands import table as table
     from metabaseapi.cli.commands import user as user
     from metabaseapi.cli.commands import user_key_value as user_key_value
@@ -58,7 +61,10 @@ def _register_commands() -> None:
         database,
         dataset,
         document,
+        email,
+        embed,
         field,
+        public,
         table,
         user,
         user_key_value,

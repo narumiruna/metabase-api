@@ -397,6 +397,12 @@ def test_endpoints_public_exports_are_submodules_only() -> None:
     assert metabaseapi.endpoints.requests is metabaseapi.endpoints.requests
     assert metabaseapi.endpoints.responses is metabaseapi.endpoints.responses
     assert not hasattr(metabaseapi.endpoints, "ListCardsRequest")
+    public_names = {
+        name
+        for name in vars(metabaseapi.endpoints)
+        if not name.startswith("_") and name != "annotations"
+    }
+    assert public_names == {"entities", "execution", "requests", "responses"}
 
 
 def test_endpoints_entities_public_exports_match_entity_models() -> None:

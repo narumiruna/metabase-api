@@ -6,7 +6,7 @@ from pydantic import BaseModel
 from pydantic import ConfigDict
 from pydantic import model_validator
 
-from metabaseapi.endpoints.response_payload import normalize_unstructured_payload
+from metabaseapi.endpoints._response_payload import normalize_unstructured_payload
 from metabaseapi.wire import JSONValue
 
 

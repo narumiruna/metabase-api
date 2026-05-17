@@ -7,8 +7,8 @@ from pydantic import ConfigDict
 from pydantic import Field as PydanticField
 from pydantic import model_validator
 
+from metabaseapi.endpoints._response_payload import normalize_list_payload
 from metabaseapi.endpoints.entities import ApiKey
-from metabaseapi.endpoints.response_payload import normalize_list_payload
 from metabaseapi.wire import JSONValue
 
 

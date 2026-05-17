@@ -3,8 +3,8 @@ from __future__ import annotations
 import typer
 
 from metabaseapi.cli.runtime import app
-from metabaseapi.cli.runtime import parse_json_object
 from metabaseapi.cli.runtime import run_endpoint_command
+from metabaseapi.cli.runtime import run_json_body_endpoint_command
 from metabaseapi.endpoints.requests.bookmark import CreateBookmarkRequest
 from metabaseapi.endpoints.requests.bookmark import DeleteBookmarkRequest
 from metabaseapi.endpoints.requests.bookmark import ListBookmarksRequest
@@ -20,8 +20,7 @@ def list_bookmarks(ctx: typer.Context) -> None:
 def update_bookmark_ordering(
     ctx: typer.Context, body: str = typer.Argument(..., help="Bookmark ordering JSON object")
 ) -> None:
-    payload = parse_json_object(body, "body")
-    run_endpoint_command(ctx, UpdateBookmarkOrderingRequest(body=payload))
+    run_json_body_endpoint_command(ctx, body, lambda payload: UpdateBookmarkOrderingRequest(body=payload))
 
 
 @app.command("create-bookmark")

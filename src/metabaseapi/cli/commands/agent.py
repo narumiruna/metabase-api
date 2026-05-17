@@ -3,8 +3,8 @@ from __future__ import annotations
 import typer
 
 from metabaseapi.cli.runtime import app
-from metabaseapi.cli.runtime import parse_json_object
 from metabaseapi.cli.runtime import run_endpoint_command
+from metabaseapi.cli.runtime import run_json_body_endpoint_command
 from metabaseapi.endpoints.requests.agent import AgentConstructQueryRequest
 from metabaseapi.endpoints.requests.agent import AgentExecuteRequest
 from metabaseapi.endpoints.requests.agent import AgentPingRequest
@@ -18,8 +18,7 @@ from metabaseapi.endpoints.requests.agent import GetAgentTableRequest
 
 @app.command("agent-execute")
 def agent_execute(ctx: typer.Context, body: str = typer.Argument(..., help="Agent execute JSON object")) -> None:
-    payload = parse_json_object(body, "body")
-    run_endpoint_command(ctx, AgentExecuteRequest(body=payload))
+    run_json_body_endpoint_command(ctx, body, lambda payload: AgentExecuteRequest(body=payload))
 
 
 @app.command("get-agent-metric")
@@ -43,8 +42,7 @@ def agent_ping(ctx: typer.Context) -> None:
 
 @app.command("agent-search")
 def agent_search(ctx: typer.Context, body: str = typer.Argument(..., help="Agent search JSON object")) -> None:
-    payload = parse_json_object(body, "body")
-    run_endpoint_command(ctx, AgentSearchRequest(body=payload))
+    run_json_body_endpoint_command(ctx, body, lambda payload: AgentSearchRequest(body=payload))
 
 
 @app.command("get-agent-table")
@@ -65,11 +63,9 @@ def get_agent_table_field_values(
 def agent_construct_query(
     ctx: typer.Context, body: str = typer.Argument(..., help="Agent construct-query JSON object")
 ) -> None:
-    payload = parse_json_object(body, "body")
-    run_endpoint_command(ctx, AgentConstructQueryRequest(body=payload))
+    run_json_body_endpoint_command(ctx, body, lambda payload: AgentConstructQueryRequest(body=payload))
 
 
 @app.command("agent-query")
 def agent_query(ctx: typer.Context, body: str = typer.Argument(..., help="Agent query JSON object")) -> None:
-    payload = parse_json_object(body, "body")
-    run_endpoint_command(ctx, AgentQueryRequest(body=payload))
+    run_json_body_endpoint_command(ctx, body, lambda payload: AgentQueryRequest(body=payload))

@@ -3,8 +3,8 @@ from __future__ import annotations
 import typer
 
 from metabaseapi.cli.runtime import app
-from metabaseapi.cli.runtime import parse_json_object
 from metabaseapi.cli.runtime import run_endpoint_command
+from metabaseapi.cli.runtime import run_json_body_endpoint_command
 from metabaseapi.endpoints.requests.activity import CreateRecentRequest
 from metabaseapi.endpoints.requests.activity import GetMostRecentlyViewedDashboardRequest
 from metabaseapi.endpoints.requests.activity import ListPopularItemsRequest
@@ -44,5 +44,4 @@ def list_recents(ctx: typer.Context, context: str | None = typer.Option(None, "-
 def create_recent(ctx: typer.Context, body: str = typer.Argument(..., help="Recent item JSON object")) -> None:
     """Add a recently selected item."""
 
-    payload = parse_json_object(body, "body")
-    run_endpoint_command(ctx, CreateRecentRequest(body=payload))
+    run_json_body_endpoint_command(ctx, body, lambda payload: CreateRecentRequest(body=payload))

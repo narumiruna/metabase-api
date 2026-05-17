@@ -3,8 +3,8 @@ from __future__ import annotations
 import typer
 
 from metabaseapi.cli.runtime import app
-from metabaseapi.cli.runtime import parse_json_object
 from metabaseapi.cli.runtime import run_endpoint_command
+from metabaseapi.cli.runtime import run_json_body_endpoint_command
 from metabaseapi.endpoints.requests.collection_root import GetCollectionRootDashboardQuestionCandidatesRequest
 from metabaseapi.endpoints.requests.collection_root import GetCollectionRootItemsRequest
 from metabaseapi.endpoints.requests.collection_root import GetCollectionRootRequest
@@ -38,5 +38,6 @@ def post_collection_root_move_dashboard_question_candidates(
 ) -> None:
     """Move candidate cards to dashboards they appear in."""
 
-    payload = parse_json_object(body, "body")
-    run_endpoint_command(ctx, PostCollectionRootMoveDashboardQuestionCandidatesRequest(body=payload))
+    run_json_body_endpoint_command(
+        ctx, body, lambda payload: PostCollectionRootMoveDashboardQuestionCandidatesRequest(body=payload)
+    )

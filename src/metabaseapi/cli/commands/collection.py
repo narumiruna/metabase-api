@@ -3,8 +3,8 @@ from __future__ import annotations
 import typer
 
 from metabaseapi.cli.runtime import app
-from metabaseapi.cli.runtime import parse_json_object
 from metabaseapi.cli.runtime import run_endpoint_command
+from metabaseapi.cli.runtime import run_json_body_endpoint_command
 from metabaseapi.endpoints.requests.collection import CreateCollectionRequest
 from metabaseapi.endpoints.requests.collection import DeleteCollectionRequest
 from metabaseapi.endpoints.requests.collection import GetCollectionDashboardQuestionCandidatesRequest
@@ -28,8 +28,7 @@ def list_collections(ctx: typer.Context) -> None:
 def create_collection(ctx: typer.Context, body: str = typer.Argument(..., help="Collection JSON object")) -> None:
     """Create a collection."""
 
-    payload = parse_json_object(body, "body")
-    run_endpoint_command(ctx, CreateCollectionRequest(body=payload))
+    run_json_body_endpoint_command(ctx, body, lambda payload: CreateCollectionRequest(body=payload))
 
 
 @app.command("get-collection")
@@ -47,8 +46,9 @@ def update_collection(
 ) -> None:
     """Update a collection."""
 
-    payload = parse_json_object(body, "body")
-    run_endpoint_command(ctx, PutCollectionRequest(collection_id=collection_id, body=payload))
+    run_json_body_endpoint_command(
+        ctx, body, lambda payload: PutCollectionRequest(collection_id=collection_id, body=payload)
+    )
 
 
 @app.command("delete-collection")
@@ -80,9 +80,10 @@ def post_collection_move_dashboard_question_candidates(
 ) -> None:
     """Move candidate cards to dashboards they appear in for a collection."""
 
-    payload = parse_json_object(body, "body")
-    run_endpoint_command(
-        ctx, PostCollectionMoveDashboardQuestionCandidatesRequest(collection_id=collection_id, body=payload)
+    run_json_body_endpoint_command(
+        ctx,
+        body,
+        lambda payload: PostCollectionMoveDashboardQuestionCandidatesRequest(collection_id=collection_id, body=payload),
     )
 
 

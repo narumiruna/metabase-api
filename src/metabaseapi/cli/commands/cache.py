@@ -8,6 +8,7 @@ import typer
 from metabaseapi.cli.runtime import app
 from metabaseapi.cli.runtime import parse_json_object
 from metabaseapi.cli.runtime import run_endpoint_command
+from metabaseapi.cli.runtime import run_json_body_endpoint_command
 from metabaseapi.endpoints.requests.cache import DeleteCacheRequest
 from metabaseapi.endpoints.requests.cache import GetCacheRequest
 from metabaseapi.endpoints.requests.cache import InvalidateCacheRequest
@@ -36,8 +37,7 @@ def get_cache(
 
 @app.command("put-cache")
 def put_cache(ctx: typer.Context, body: str = typer.Argument(..., help="Cache configuration JSON object")) -> None:
-    payload = parse_json_object(body, "body")
-    run_endpoint_command(ctx, PutCacheRequest(body=payload))
+    run_json_body_endpoint_command(ctx, body, lambda payload: PutCacheRequest(body=payload))
 
 
 @app.command("delete-cache")
@@ -45,8 +45,7 @@ def delete_cache(
     ctx: typer.Context,
     body: str = typer.Argument("{}", help="Optional cache delete payload JSON object"),
 ) -> None:
-    payload = parse_json_object(body, "body")
-    run_endpoint_command(ctx, DeleteCacheRequest(body=payload))
+    run_json_body_endpoint_command(ctx, body, lambda payload: DeleteCacheRequest(body=payload))
 
 
 @app.command("invalidate-cache")

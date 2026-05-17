@@ -3,8 +3,8 @@ from __future__ import annotations
 import typer
 
 from metabaseapi.cli.runtime import app
-from metabaseapi.cli.runtime import parse_json_object
 from metabaseapi.cli.runtime import run_endpoint_command
+from metabaseapi.cli.runtime import run_json_body_endpoint_command
 from metabaseapi.endpoints.requests.channel import CreateChannelRequest
 from metabaseapi.endpoints.requests.channel import GetChannelRequest
 from metabaseapi.endpoints.requests.channel import ListChannelsRequest
@@ -23,16 +23,14 @@ def list_channels(ctx: typer.Context) -> None:
 def create_channel(ctx: typer.Context, body: str = typer.Argument(..., help="Channel JSON object")) -> None:
     """Create a channel."""
 
-    payload = parse_json_object(body, "body")
-    run_endpoint_command(ctx, CreateChannelRequest(body=payload))
+    run_json_body_endpoint_command(ctx, body, lambda payload: CreateChannelRequest(body=payload))
 
 
 @app.command("test-channel")
 def test_channel(ctx: typer.Context, body: str = typer.Argument(..., help="Channel JSON object")) -> None:
     """Test a channel connection."""
 
-    payload = parse_json_object(body, "body")
-    run_endpoint_command(ctx, TestChannelRequest(body=payload))
+    run_json_body_endpoint_command(ctx, body, lambda payload: TestChannelRequest(body=payload))
 
 
 @app.command("get-channel")
@@ -50,5 +48,4 @@ def update_channel(
 ) -> None:
     """Update a channel."""
 
-    payload = parse_json_object(body, "body")
-    run_endpoint_command(ctx, UpdateChannelRequest(channel_id=channel_id, body=payload))
+    run_json_body_endpoint_command(ctx, body, lambda payload: UpdateChannelRequest(channel_id=channel_id, body=payload))

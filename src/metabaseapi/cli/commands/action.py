@@ -3,9 +3,9 @@ from __future__ import annotations
 import typer
 
 from metabaseapi.cli.runtime import app
-from metabaseapi.cli.runtime import parse_json_object
 from metabaseapi.cli.runtime import parse_optional_json_object
 from metabaseapi.cli.runtime import run_endpoint_command
+from metabaseapi.cli.runtime import run_json_body_endpoint_command
 from metabaseapi.endpoints.requests.action import CreateActionPublicLinkRequest
 from metabaseapi.endpoints.requests.action import CreateActionRequest
 from metabaseapi.endpoints.requests.action import DeleteActionPublicLinkRequest
@@ -29,8 +29,7 @@ def list_actions(ctx: typer.Context, model_id: str | None = typer.Option(None, "
 def create_action(ctx: typer.Context, body: str = typer.Argument(..., help="Action JSON object")) -> None:
     """Create an action."""
 
-    payload = parse_json_object(body, "body")
-    run_endpoint_command(ctx, CreateActionRequest(body=payload))
+    run_json_body_endpoint_command(ctx, body, lambda payload: CreateActionRequest(body=payload))
 
 
 @app.command("list-public-actions")
@@ -74,8 +73,7 @@ def update_action(
 ) -> None:
     """Update an action."""
 
-    payload = parse_json_object(body, "body")
-    run_endpoint_command(ctx, UpdateActionRequest(action_id=action_id, body=payload))
+    run_json_body_endpoint_command(ctx, body, lambda payload: UpdateActionRequest(action_id=action_id, body=payload))
 
 
 @app.command("execute-action")

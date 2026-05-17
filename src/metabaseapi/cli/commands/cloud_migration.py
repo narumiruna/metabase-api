@@ -3,8 +3,8 @@ from __future__ import annotations
 import typer
 
 from metabaseapi.cli.runtime import app
-from metabaseapi.cli.runtime import parse_json_object
 from metabaseapi.cli.runtime import run_endpoint_command
+from metabaseapi.cli.runtime import run_json_body_endpoint_command
 from metabaseapi.endpoints.requests.cloud_migration import CancelCloudMigrationRequest
 from metabaseapi.endpoints.requests.cloud_migration import CreateCloudMigrationRequest
 from metabaseapi.endpoints.requests.cloud_migration import GetCloudMigrationRequest
@@ -17,8 +17,7 @@ def create_cloud_migration(
 ) -> None:
     """Initiate a new cloud migration."""
 
-    payload = parse_json_object(body, "body")
-    run_endpoint_command(ctx, CreateCloudMigrationRequest(body=payload))
+    run_json_body_endpoint_command(ctx, body, lambda payload: CreateCloudMigrationRequest(body=payload))
 
 
 @app.command("get-cloud-migration")

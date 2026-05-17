@@ -8,6 +8,7 @@ from metabaseapi.cli.runtime import parse_json_object
 from metabaseapi.cli.runtime import parse_optional_json_list
 from metabaseapi.cli.runtime import parse_optional_json_object
 from metabaseapi.cli.runtime import run_endpoint_command
+from metabaseapi.cli.runtime import run_json_body_endpoint_command
 from metabaseapi.endpoints.requests.card import CopyCardRequest
 from metabaseapi.endpoints.requests.card import CreateCardPublicLinkRequest
 from metabaseapi.endpoints.requests.card import CreateCardRequest
@@ -162,8 +163,7 @@ def delete_card_public_link(ctx: typer.Context, card_id: str = typer.Argument(..
 
 @app.command("update-card")
 def update_card(ctx: typer.Context, card_id: str = typer.Argument(...), body: str = typer.Argument(...)) -> None:
-    payload = parse_json_object(body, "body")
-    run_endpoint_command(ctx, UpdateCardRequest(card_id=card_id, body=payload))
+    run_json_body_endpoint_command(ctx, body, lambda payload: UpdateCardRequest(card_id=card_id, body=payload))
 
 
 @app.command("delete-card")

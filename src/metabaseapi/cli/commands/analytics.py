@@ -3,8 +3,8 @@ from __future__ import annotations
 import typer
 
 from metabaseapi.cli.runtime import app
-from metabaseapi.cli.runtime import parse_json_object
 from metabaseapi.cli.runtime import run_endpoint_command
+from metabaseapi.cli.runtime import run_json_body_endpoint_command
 from metabaseapi.endpoints.requests.analytics import CreateAnalyticsEventBatchRequest
 from metabaseapi.endpoints.requests.analytics import GetAnonymousStatsRequest
 
@@ -18,5 +18,4 @@ def anonymous_stats(ctx: typer.Context) -> None:
 def create_analytics_event_batch(
     ctx: typer.Context, body: str = typer.Argument(..., help="Analytics event batch JSON object")
 ) -> None:
-    payload = parse_json_object(body, "body")
-    run_endpoint_command(ctx, CreateAnalyticsEventBatchRequest(body=payload))
+    run_json_body_endpoint_command(ctx, body, lambda payload: CreateAnalyticsEventBatchRequest(body=payload))

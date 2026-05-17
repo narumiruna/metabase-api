@@ -236,11 +236,56 @@ class MetabaseClient:
     async def list_databases(self) -> JSONValue | None:
         return await self.get("/api/database")
 
-    async def get_dashboard(self, dashboard_id: int | str) -> JSONValue | None:
-        return await self.get(f"/api/dashboard/{dashboard_id}")
+    async def create_database(
+        self,
+        *,
+        name: str,
+        engine: str,
+        details: Mapping[str, object] | None = None,
+    ) -> JSONValue | None:
+        body: dict[str, object] = {"name": name, "engine": engine}
+        if details is not None:
+            body["details"] = dict(details)
+        return await self.post("/api/database", body=body)
+
+    async def get_database(self, database_id: int | str) -> JSONValue | None:
+        return await self.get(f"/api/database/{database_id}")
+
+    async def list_cards(self) -> JSONValue | None:
+        return await self.get("/api/card")
 
     async def get_card(self, card_id: int | str) -> JSONValue | None:
         return await self.get(f"/api/card/{card_id}")
+
+    async def list_dashboards(self) -> JSONValue | None:
+        return await self.get("/api/dashboard")
+
+    async def get_dashboard(self, dashboard_id: int | str) -> JSONValue | None:
+        return await self.get(f"/api/dashboard/{dashboard_id}")
+
+    async def list_users(self) -> JSONValue | None:
+        return await self.get("/api/user")
+
+    async def get_user(self, user_id: int | str) -> JSONValue | None:
+        return await self.get(f"/api/user/{user_id}")
+
+    async def list_collections(self) -> JSONValue | None:
+        return await self.get("/api/collection")
+
+    async def get_collection(self, collection_id: int | str) -> JSONValue | None:
+        return await self.get(f"/api/collection/{collection_id}")
+
+    async def list_tables(self) -> JSONValue | None:
+        return await self.get("/api/table")
+
+    async def get_table(self, table_id: int | str) -> JSONValue | None:
+        return await self.get(f"/api/table/{table_id}")
+
+    async def list_fields(self) -> JSONValue | None:
+        return await self.get("/api/field")
+
+    async def get_field(self, field_id: int | str) -> JSONValue | None:
+        return await self.get(f"/api/field/{field_id}")
 
     async def run[ResponseT](self, request_model: _ExecutableRequest[ResponseT]) -> ResponseT:
         return await request_model.do(self)

@@ -38,18 +38,23 @@ metabaseapi invoke GET /api/user/current
 ```bash
 metabaseapi current-user
 metabaseapi list-databases
-metabaseapi get-dashboard 1
-metabaseapi get-card 2
-metabaseapi get-user 4
-metabaseapi get-table 8
+metabaseapi create-database my_db postgres --details '{"host":"localhost","port":5432}'
 metabaseapi get-database 1
 metabaseapi list-cards
+metabaseapi get-card 2
+metabaseapi list-dashboards
+metabaseapi get-dashboard 1
 metabaseapi list-users
+metabaseapi get-user 4
 metabaseapi list-collections
-metabaseapi create-database my_db postgres --details '{"host":"localhost","port":5432}'
+metabaseapi get-collection root
+metabaseapi list-tables
+metabaseapi get-table 8
+metabaseapi list-fields
+metabaseapi get-field 9
 ```
 
-所有輸出都會以可讀 JSON（縮排、排序）輸出，便於 AI / 腳本處理。
+所有輸出都會以可讀 JSON（縮排、排序）輸出，便於 AI / 腳本處理。未列為便利命令的 Metabase endpoint 可用 `request` 或 `invoke` 指定 HTTP method 與 path 呼叫。
 
 ## Live test
 

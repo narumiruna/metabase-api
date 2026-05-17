@@ -67,12 +67,15 @@ def test_post_sends_json_body() -> None:
     assert result == {"received": {"foo": "bar"}}
 
 
-def test_convenience_paths() -> None:
-    captured: list[str] = []
+def test_convenience_paths_cover_handwritten_endpoint_surface() -> None:
+    captured: list[tuple[str, str, object | None]] = []
 
     async def handler(_request: httpx.Request) -> httpx.Response:
-        captured.append(_request.url.path)
-        return httpx.Response(200, json={"path": _request.url.path})
+        body: object | None = None
+        if _request.content:
+            body = json.loads(_request.content.decode())
+        captured.append((_request.method, _request.url.path, body))
+        return httpx.Response(200, json={"method": _request.method, "path": _request.url.path})
 
     transport = httpx.MockTransport(handler)
     client = MetabaseClient(
@@ -81,12 +84,36 @@ def test_convenience_paths() -> None:
         client=httpx.AsyncClient(transport=transport),
     )
 
-    result1 = _run(client.get_card(12))
-    result2 = _run(client.get_dashboard(99))
+    calls = [
+        (client.current_user(), ("GET", "/api/user/current", None)),
+        (client.list_databases(), ("GET", "/api/database", None)),
+        (
+            client.create_database(name="analytics", engine="postgres", details={"host": "db.local"}),
+            (
+                "POST",
+                "/api/database",
+                {"name": "analytics", "engine": "postgres", "details": {"host": "db.local"}},
+            ),
+        ),
+        (client.get_database(12), ("GET", "/api/database/12", None)),
+        (client.list_cards(), ("GET", "/api/card", None)),
+        (client.get_card(13), ("GET", "/api/card/13", None)),
+        (client.list_dashboards(), ("GET", "/api/dashboard", None)),
+        (client.get_dashboard(14), ("GET", "/api/dashboard/14", None)),
+        (client.list_users(), ("GET", "/api/user", None)),
+        (client.get_user(15), ("GET", "/api/user/15", None)),
+        (client.list_collections(), ("GET", "/api/collection", None)),
+        (client.get_collection("root"), ("GET", "/api/collection/root", None)),
+        (client.list_tables(), ("GET", "/api/table", None)),
+        (client.get_table(16), ("GET", "/api/table/16", None)),
+        (client.list_fields(), ("GET", "/api/field", None)),
+        (client.get_field(17), ("GET", "/api/field/17", None)),
+    ]
 
-    assert result1 == {"path": "/api/card/12"}
-    assert result2 == {"path": "/api/dashboard/99"}
-    assert captured == ["/api/card/12", "/api/dashboard/99"]
+    for coro, _expected in calls:
+        _run(coro)
+
+    assert captured == [expected for _coro, expected in calls]
 
 
 def test_http_error_is_mapped_to_client_error() -> None:

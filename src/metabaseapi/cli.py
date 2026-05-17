@@ -3,6 +3,8 @@ from __future__ import annotations
 import asyncio
 import json
 import logging
+from collections.abc import Awaitable
+from collections.abc import Callable
 from collections.abc import Coroutine
 from typing import Annotated
 
@@ -120,6 +122,17 @@ def _run_raw_request(
     return do_request()
 
 
+def _run_client_call(
+    ctx: typer.Context,
+    call: Callable[[MetabaseClient], Awaitable[JSONValue | None]],
+) -> Coroutine[object, object, JSONValue | None]:
+    async def do_request() -> JSONValue | None:
+        async with create_client(_get_settings(ctx)) as client:
+            return await call(client)
+
+    return do_request()
+
+
 @app.callback()
 def configure(
     ctx: typer.Context,
@@ -175,86 +188,105 @@ def invoke(
 def get_current_user(ctx: typer.Context) -> None:
     """Get current user information."""
 
-    async def do_request() -> JSONValue:
-        async with create_client(_get_settings(ctx)) as client:
-            return await client.current_user()
-
-    _run_and_print(do_request())
+    _run_and_print(_run_client_call(ctx, lambda client: client.current_user()))
 
 
 @app.command("list-databases")
 def list_databases(ctx: typer.Context) -> None:
     """List configured databases."""
 
-    _run_and_print(_run_raw_request(_get_settings(ctx), "GET", "/api/database", None, None))
+    _run_and_print(_run_client_call(ctx, lambda client: client.list_databases()))
 
 
 @app.command("list-cards")
 def list_cards(ctx: typer.Context) -> None:
     """List cards."""
 
-    _run_and_print(_run_raw_request(_get_settings(ctx), "GET", "/api/card", None, None))
+    _run_and_print(_run_client_call(ctx, lambda client: client.list_cards()))
+
+
+@app.command("list-dashboards")
+def list_dashboards(ctx: typer.Context) -> None:
+    """List dashboards."""
+
+    _run_and_print(_run_client_call(ctx, lambda client: client.list_dashboards()))
 
 
 @app.command("list-users")
 def list_users(ctx: typer.Context) -> None:
     """List users."""
 
-    _run_and_print(_run_raw_request(_get_settings(ctx), "GET", "/api/user", None, None))
+    _run_and_print(_run_client_call(ctx, lambda client: client.list_users()))
 
 
 @app.command("list-collections")
 def list_collections(ctx: typer.Context) -> None:
     """List collections."""
 
-    _run_and_print(_run_raw_request(_get_settings(ctx), "GET", "/api/collection", None, None))
+    _run_and_print(_run_client_call(ctx, lambda client: client.list_collections()))
 
 
-@app.command("get-dashboard")
-def get_dashboard(ctx: typer.Context, dashboard_id: int = typer.Argument(...)) -> None:
-    """Get a dashboard by ID."""
+@app.command("list-tables")
+def list_tables(ctx: typer.Context) -> None:
+    """List tables."""
 
-    async def do_request() -> JSONValue:
-        async with create_client(_get_settings(ctx)) as client:
-            return await client.get_dashboard(dashboard_id)
-
-    _run_and_print(do_request())
+    _run_and_print(_run_client_call(ctx, lambda client: client.list_tables()))
 
 
-@app.command("get-card")
-def get_card(ctx: typer.Context, card_id: int = typer.Argument(...)) -> None:
-    """Get a card by ID."""
+@app.command("list-fields")
+def list_fields(ctx: typer.Context) -> None:
+    """List fields."""
 
-    async def do_request() -> JSONValue:
-        async with create_client(_get_settings(ctx)) as client:
-            return await client.get_card(card_id)
-
-    _run_and_print(do_request())
-
-
-@app.command("get-user")
-def get_user(ctx: typer.Context, user_id: int = typer.Argument(...)) -> None:
-    """Get a user by ID."""
-
-    _run_and_print(_run_raw_request(_get_settings(ctx), "GET", f"/api/user/{user_id}", None, None))
-
-
-@app.command("get-table")
-def get_table(ctx: typer.Context, table_id: int = typer.Argument(...)) -> None:
-    """Get a table by ID."""
-
-    _run_and_print(_run_raw_request(_get_settings(ctx), "GET", f"/api/table/{table_id}", None, None))
+    _run_and_print(_run_client_call(ctx, lambda client: client.list_fields()))
 
 
 @app.command("get-database")
-def get_database(ctx: typer.Context, database_id: int = typer.Argument(...)) -> None:
+def get_database(ctx: typer.Context, database_id: str = typer.Argument(...)) -> None:
     """Get a database by ID."""
 
-    async def do_request() -> JSONValue:
-        async with create_client(_get_settings(ctx)) as client:
-            return await client.get(f"/api/database/{database_id}")
+    _run_and_print(_run_client_call(ctx, lambda client: client.get_database(database_id)))
 
-    _run_and_print(do_request())
+
+@app.command("get-card")
+def get_card(ctx: typer.Context, card_id: str = typer.Argument(...)) -> None:
+    """Get a card by ID."""
+
+    _run_and_print(_run_client_call(ctx, lambda client: client.get_card(card_id)))
+
+
+@app.command("get-dashboard")
+def get_dashboard(ctx: typer.Context, dashboard_id: str = typer.Argument(...)) -> None:
+    """Get a dashboard by ID."""
+
+    _run_and_print(_run_client_call(ctx, lambda client: client.get_dashboard(dashboard_id)))
+
+
+@app.command("get-user")
+def get_user(ctx: typer.Context, user_id: str = typer.Argument(...)) -> None:
+    """Get a user by ID."""
+
+    _run_and_print(_run_client_call(ctx, lambda client: client.get_user(user_id)))
+
+
+@app.command("get-collection")
+def get_collection(ctx: typer.Context, collection_id: str = typer.Argument(...)) -> None:
+    """Get a collection by ID."""
+
+    _run_and_print(_run_client_call(ctx, lambda client: client.get_collection(collection_id)))
+
+
+@app.command("get-table")
+def get_table(ctx: typer.Context, table_id: str = typer.Argument(...)) -> None:
+    """Get a table by ID."""
+
+    _run_and_print(_run_client_call(ctx, lambda client: client.get_table(table_id)))
+
+
+@app.command("get-field")
+def get_field(ctx: typer.Context, field_id: str = typer.Argument(...)) -> None:
+    """Get a field by ID."""
+
+    _run_and_print(_run_client_call(ctx, lambda client: client.get_field(field_id)))
 
 
 @app.command("create-database")
@@ -275,15 +307,12 @@ def create_database(
             raise typer.BadParameter("details must be a JSON object")
         details_payload = parsed
 
-    body: dict[str, object] = {"name": name, "engine": engine}
-    if details_payload is not None:
-        body["details"] = details_payload
-
-    async def do_request() -> JSONValue:
-        async with create_client(_get_settings(ctx)) as client:
-            return await client.post("/api/database", body=body)
-
-    _run_and_print(do_request())
+    _run_and_print(
+        _run_client_call(
+            ctx,
+            lambda client: client.create_database(name=name, engine=engine, details=details_payload),
+        ),
+    )
 
 
 if __name__ == "__main__":

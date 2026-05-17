@@ -8,7 +8,6 @@ from pydantic import Field as PydanticField
 from metabaseapi.endpoints.execution import EndpointRequest
 from metabaseapi.endpoints.execution import _ResponseModel
 from metabaseapi.endpoints.responses.common import GenericOperationResponse
-from metabaseapi.wire import JSONValue
 from metabaseapi.wire import QueryParamValue
 
 
@@ -28,9 +27,6 @@ class UpdateCommentRequest(EndpointRequest[GenericOperationResponse]):
 
     def resolve_path(self) -> str:
         return self.endpoint_path.format(comment_id=self.comment_id)
-
-    def request_body(self) -> JSONValue:
-        return self.body
 
 
 class GetCommentRequest(EndpointRequest[GenericOperationResponse]):
@@ -57,9 +53,6 @@ class PostCommentRequest(EndpointRequest[GenericOperationResponse]):
     endpoint_path: ClassVar[str] = "/api/comment"
     response_model: ClassVar[_ResponseModel] = GenericOperationResponse
 
-    def request_body(self) -> JSONValue:
-        return self.body
-
 
 class DeleteCommentRequest(EndpointRequest[GenericOperationResponse]):
     comment_id: int | str
@@ -82,6 +75,3 @@ class PostCommentReactionRequest(EndpointRequest[GenericOperationResponse]):
 
     def resolve_path(self) -> str:
         return self.endpoint_path.format(comment_id=self.comment_id)
-
-    def request_body(self) -> JSONValue:
-        return self.body

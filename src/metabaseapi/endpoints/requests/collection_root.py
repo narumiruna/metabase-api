@@ -9,7 +9,6 @@ from metabaseapi.endpoints.entities import Collection
 from metabaseapi.endpoints.execution import EndpointRequest
 from metabaseapi.endpoints.execution import _ResponseModel
 from metabaseapi.endpoints.responses.common import GenericOperationResponse
-from metabaseapi.wire import JSONValue
 
 
 class GetCollectionRootRequest(EndpointRequest[Collection]):
@@ -36,6 +35,3 @@ class PostCollectionRootMoveDashboardQuestionCandidatesRequest(EndpointRequest[G
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/collection/root/move-dashboard-question-candidates"
     response_model: ClassVar[_ResponseModel] = GenericOperationResponse
-
-    def request_body(self) -> JSONValue:
-        return self.body

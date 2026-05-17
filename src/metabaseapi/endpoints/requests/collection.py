@@ -10,7 +10,6 @@ from metabaseapi.endpoints.execution import EndpointRequest
 from metabaseapi.endpoints.execution import _ResponseModel
 from metabaseapi.endpoints.responses.collection import ListCollectionsResponse
 from metabaseapi.endpoints.responses.common import GenericOperationResponse
-from metabaseapi.wire import JSONValue
 
 
 class CreateCollectionRequest(EndpointRequest[Collection]):
@@ -19,9 +18,6 @@ class CreateCollectionRequest(EndpointRequest[Collection]):
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/collection"
     response_model: ClassVar[_ResponseModel] = Collection
-
-    def request_body(self) -> JSONValue:
-        return self.body
 
 
 class GetCollectionTreeRequest(EndpointRequest[GenericOperationResponse]):
@@ -69,9 +65,6 @@ class PostCollectionMoveDashboardQuestionCandidatesRequest(EndpointRequest[Gener
     def resolve_path(self) -> str:
         return f"/api/collection/{self.collection_id}/move-dashboard-question-candidates"
 
-    def request_body(self) -> JSONValue:
-        return self.body
-
 
 class ListCollectionsRequest(EndpointRequest[ListCollectionsResponse]):
     endpoint_method: ClassVar[str] = "GET"
@@ -100,9 +93,6 @@ class PutCollectionRequest(EndpointRequest[GenericOperationResponse]):
 
     def resolve_path(self) -> str:
         return f"/api/collection/{self.collection_id}"
-
-    def request_body(self) -> JSONValue:
-        return self.body
 
 
 class DeleteCollectionRequest(EndpointRequest[GenericOperationResponse]):

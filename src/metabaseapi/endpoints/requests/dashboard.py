@@ -10,7 +10,6 @@ from metabaseapi.endpoints.execution import EndpointRequest
 from metabaseapi.endpoints.execution import _ResponseModel
 from metabaseapi.endpoints.responses.common import GenericOperationResponse
 from metabaseapi.endpoints.responses.dashboard import ListDashboardsResponse
-from metabaseapi.wire import JSONValue
 
 
 class ListDashboardsRequest(EndpointRequest[ListDashboardsResponse]):
@@ -25,9 +24,6 @@ class PostDashboardRequest(EndpointRequest[Dashboard]):
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/dashboard"
     response_model: ClassVar[_ResponseModel] = Dashboard
-
-    def request_body(self) -> JSONValue:
-        return self.body
 
 
 class GetDashboardRequest(EndpointRequest[Dashboard]):
@@ -60,9 +56,6 @@ class SaveDashboardRequest(EndpointRequest[GenericOperationResponse]):
     endpoint_path: ClassVar[str] = "/api/dashboard/save"
     response_model: ClassVar[_ResponseModel] = GenericOperationResponse
 
-    def request_body(self) -> JSONValue:
-        return self.body
-
 
 class SaveDashboardToCollectionRequest(EndpointRequest[GenericOperationResponse]):
     parent_collection_id: int | str
@@ -74,9 +67,6 @@ class SaveDashboardToCollectionRequest(EndpointRequest[GenericOperationResponse]
 
     def resolve_path(self) -> str:
         return f"/api/dashboard/save/collection/{self.parent_collection_id}"
-
-    def request_body(self) -> JSONValue:
-        return self.body
 
 
 class CreateDashboardPublicLinkRequest(EndpointRequest[GenericOperationResponse]):
@@ -112,9 +102,6 @@ class CopyDashboardRequest(EndpointRequest[Dashboard]):
     def resolve_path(self) -> str:
         return f"/api/dashboard/{self.from_dashboard_id}/copy"
 
-    def request_body(self) -> JSONValue | None:
-        return self.body
-
 
 class DeleteDashboardRequest(EndpointRequest[GenericOperationResponse]):
     dashboard_id: int | str
@@ -138,9 +125,6 @@ class UpdateDashboardRequest(EndpointRequest[Dashboard]):
     def resolve_path(self) -> str:
         return f"/api/dashboard/{self.dashboard_id}"
 
-    def request_body(self) -> JSONValue:
-        return self.body
-
 
 class UpdateDashboardCardsRequest(EndpointRequest[GenericOperationResponse]):
     dashboard_id: int | str
@@ -152,9 +136,6 @@ class UpdateDashboardCardsRequest(EndpointRequest[GenericOperationResponse]):
 
     def resolve_path(self) -> str:
         return f"/api/dashboard/{self.dashboard_id}/cards"
-
-    def request_body(self) -> JSONValue:
-        return self.body
 
 
 class GetDashboardItemsRequest(EndpointRequest[GenericOperationResponse]):

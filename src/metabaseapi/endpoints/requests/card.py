@@ -111,9 +111,6 @@ class UpdateCardRequest(EndpointRequest[Card]):
     def resolve_path(self) -> str:
         return f"/api/card/{self.card_id}"
 
-    def request_body(self) -> JSONValue:
-        return self.body
-
 
 class DeleteCardRequest(EndpointRequest[GenericOperationResponse]):
     card_id: int | str
@@ -147,6 +144,3 @@ class MoveCardsRequest(EndpointRequest[GenericOperationResponse]):
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/cards/move"
     response_model: ClassVar[_ResponseModel] = GenericOperationResponse
-
-    def request_body(self) -> JSONValue:
-        return self.body

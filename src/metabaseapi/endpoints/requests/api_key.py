@@ -8,7 +8,6 @@ from metabaseapi.endpoints.execution import EndpointRequest
 from metabaseapi.endpoints.execution import _ResponseModel
 from metabaseapi.endpoints.responses.api_key import ListApiKeysResponse
 from metabaseapi.endpoints.responses.common import GenericOperationResponse
-from metabaseapi.wire import JSONValue
 
 
 class CreateApiKeyRequest(EndpointRequest[ApiKey]):
@@ -17,9 +16,6 @@ class CreateApiKeyRequest(EndpointRequest[ApiKey]):
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/api-key"
     response_model: ClassVar[_ResponseModel] = ApiKey
-
-    def request_body(self) -> JSONValue:
-        return self.body
 
 
 class ListApiKeysRequest(EndpointRequest[ListApiKeysResponse]):
@@ -44,9 +40,6 @@ class UpdateApiKeyRequest(EndpointRequest[ApiKey]):
 
     def resolve_path(self) -> str:
         return f"/api/api-key/{self.api_key_id}"
-
-    def request_body(self) -> JSONValue:
-        return self.body
 
 
 class DeleteApiKeyRequest(EndpointRequest[GenericOperationResponse]):

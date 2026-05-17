@@ -34,9 +34,6 @@ class CreateActionRequest(EndpointRequest[Action]):
     endpoint_path: ClassVar[str] = "/api/action"
     response_model: ClassVar[_ResponseModel] = Action
 
-    def request_body(self) -> JSONValue:
-        return self.body
-
 
 class ListPublicActionsRequest(EndpointRequest[ListActionsResponse]):
     endpoint_method: ClassVar[str] = "GET"
@@ -91,9 +88,6 @@ class UpdateActionRequest(EndpointRequest[Action]):
 
     def resolve_path(self) -> str:
         return f"/api/action/{self.action_id}"
-
-    def request_body(self) -> JSONValue:
-        return self.body
 
 
 class ExecuteActionRequest(EndpointRequest[ActionExecutionResponse]):

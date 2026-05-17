@@ -8,7 +8,6 @@ from metabaseapi.endpoints.execution import EndpointRequest
 from metabaseapi.endpoints.execution import _ResponseModel
 from metabaseapi.endpoints.responses.activity import ActivityMutationResponse
 from metabaseapi.endpoints.responses.activity import ListActivityItemsResponse
-from metabaseapi.wire import JSONValue
 from metabaseapi.wire import QueryParamValue
 
 
@@ -49,6 +48,3 @@ class CreateRecentRequest(EndpointRequest[ActivityMutationResponse]):
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/activity/recents"
     response_model: ClassVar[_ResponseModel] = ActivityMutationResponse
-
-    def request_body(self) -> JSONValue:
-        return self.body

@@ -41,6 +41,8 @@ class EndpointRequest[ResponseT](BaseModel):
         return {}
 
     def request_body(self) -> JSONValue | None:
+        if hasattr(self, "body"):
+            return cast("JSONValue | None", self.body)
         return None
 
     async def do(self, client: _MetabaseRequestClient) -> ResponseT:

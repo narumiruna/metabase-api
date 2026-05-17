@@ -42,9 +42,6 @@ class PutCacheRequest(EndpointRequest[GenericOperationResponse]):
     endpoint_path: ClassVar[str] = "/api/cache"
     response_model: ClassVar[_ResponseModel] = GenericOperationResponse
 
-    def request_body(self) -> JSONValue:
-        return self.body
-
 
 class DeleteCacheRequest(EndpointRequest[GenericOperationResponse]):
     body: dict[str, Any] = PydanticField(default_factory=dict)

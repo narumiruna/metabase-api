@@ -6,7 +6,6 @@ from typing import ClassVar
 from metabaseapi.endpoints.execution import EndpointRequest
 from metabaseapi.endpoints.execution import _ResponseModel
 from metabaseapi.endpoints.responses.agent import AgentResponse
-from metabaseapi.wire import JSONValue
 
 
 class AgentExecuteRequest(EndpointRequest[AgentResponse]):
@@ -15,9 +14,6 @@ class AgentExecuteRequest(EndpointRequest[AgentResponse]):
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/agent/v1/execute"
     response_model: ClassVar[_ResponseModel] = AgentResponse
-
-    def request_body(self) -> JSONValue:
-        return self.body
 
 
 class GetAgentMetricRequest(EndpointRequest[AgentResponse]):
@@ -56,9 +52,6 @@ class AgentSearchRequest(EndpointRequest[AgentResponse]):
     endpoint_path: ClassVar[str] = "/api/agent/v1/search"
     response_model: ClassVar[_ResponseModel] = AgentResponse
 
-    def request_body(self) -> JSONValue:
-        return self.body
-
 
 class GetAgentTableRequest(EndpointRequest[AgentResponse]):
     table_id: int | str
@@ -90,9 +83,6 @@ class AgentConstructQueryRequest(EndpointRequest[AgentResponse]):
     endpoint_path: ClassVar[str] = "/api/agent/v2/construct-query"
     response_model: ClassVar[_ResponseModel] = AgentResponse
 
-    def request_body(self) -> JSONValue:
-        return self.body
-
 
 class AgentQueryRequest(EndpointRequest[AgentResponse]):
     body: dict[str, Any]
@@ -100,6 +90,3 @@ class AgentQueryRequest(EndpointRequest[AgentResponse]):
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/agent/v2/query"
     response_model: ClassVar[_ResponseModel] = AgentResponse
-
-    def request_body(self) -> JSONValue:
-        return self.body

@@ -8,7 +8,6 @@ from metabaseapi.endpoints.execution import EndpointRequest
 from metabaseapi.endpoints.execution import _ResponseModel
 from metabaseapi.endpoints.responses.bookmark import ListBookmarksResponse
 from metabaseapi.endpoints.responses.common import GenericOperationResponse
-from metabaseapi.wire import JSONValue
 
 
 class ListBookmarksRequest(EndpointRequest[ListBookmarksResponse]):
@@ -23,9 +22,6 @@ class UpdateBookmarkOrderingRequest(EndpointRequest[GenericOperationResponse]):
     endpoint_method: ClassVar[str] = "PUT"
     endpoint_path: ClassVar[str] = "/api/bookmark/ordering"
     response_model: ClassVar[_ResponseModel] = GenericOperationResponse
-
-    def request_body(self) -> JSONValue:
-        return self.body
 
 
 class CreateBookmarkRequest(EndpointRequest[Bookmark]):

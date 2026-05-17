@@ -43,9 +43,6 @@ class DashboardCardQueryRequest(EndpointRequest[GenericOperationResponse]):
     def resolve_path(self) -> str:
         return f"/api/dashboard/{self.dashboard_id}/dashcard/{self.dashcard_id}/card/{self.card_id}/query"
 
-    def request_body(self) -> JSONValue | None:
-        return self.body
-
 
 class DashboardCardQueryExportRequest(EndpointRequest[GenericOperationResponse]):
     dashboard_id: int | str
@@ -76,9 +73,6 @@ class DashboardCardQueryExportRequest(EndpointRequest[GenericOperationResponse])
             params["format-rows"] = self.format_rows
         return params
 
-    def request_body(self) -> JSONValue | None:
-        return self.body
-
 
 class PostDashboardPivotQueryRequest(EndpointRequest[GenericOperationResponse]):
     dashboard_id: int | str
@@ -92,9 +86,6 @@ class PostDashboardPivotQueryRequest(EndpointRequest[GenericOperationResponse]):
 
     def resolve_path(self) -> str:
         return f"/api/dashboard/pivot/{self.dashboard_id}/dashcard/{self.dashcard_id}/card/{self.card_id}/query"
-
-    def request_body(self) -> JSONValue | None:
-        return self.body
 
 
 class GetDashboardDashcardExecuteRequest(EndpointRequest[GenericOperationResponse]):

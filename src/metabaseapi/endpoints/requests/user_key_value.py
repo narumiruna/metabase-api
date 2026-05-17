@@ -31,9 +31,6 @@ class PutUserKeyValueNamespaceKeyRequest(EndpointRequest[GenericOperationRespons
     def resolve_path(self) -> str:
         return f"/api/user-key-value/namespace/{self.namespace}/key/{self.key}"
 
-    def request_body(self) -> JSONValue | None:
-        return self.body
-
 
 class GetUserKeyValueNamespaceKeyRequest(EndpointRequest[GenericOperationResponse]):
     namespace: str

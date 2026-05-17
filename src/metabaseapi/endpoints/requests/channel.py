@@ -9,7 +9,6 @@ from metabaseapi.endpoints.execution import EndpointRequest
 from metabaseapi.endpoints.execution import _ResponseModel
 from metabaseapi.endpoints.responses.channel import ListChannelsResponse
 from metabaseapi.endpoints.responses.common import GenericOperationResponse
-from metabaseapi.wire import JSONValue
 
 
 class ListChannelsRequest(EndpointRequest[ListChannelsResponse]):
@@ -25,9 +24,6 @@ class CreateChannelRequest(EndpointRequest[GenericOperationResponse]):
     endpoint_path: ClassVar[str] = "/api/channel"
     response_model: ClassVar[_ResponseModel] = GenericOperationResponse
 
-    def request_body(self) -> JSONValue:
-        return self.body
-
 
 class TestChannelRequest(EndpointRequest[GenericOperationResponse]):
     __test__ = False
@@ -36,9 +32,6 @@ class TestChannelRequest(EndpointRequest[GenericOperationResponse]):
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/channel/test"
     response_model: ClassVar[_ResponseModel] = GenericOperationResponse
-
-    def request_body(self) -> JSONValue:
-        return self.body
 
 
 class GetChannelRequest(EndpointRequest[GenericOperationResponse]):
@@ -62,6 +55,3 @@ class UpdateChannelRequest(EndpointRequest[GenericOperationResponse]):
 
     def resolve_path(self) -> str:
         return f"/api/channel/{self.channel_id}"
-
-    def request_body(self) -> JSONValue:
-        return self.body

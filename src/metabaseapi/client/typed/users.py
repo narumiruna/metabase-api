@@ -16,28 +16,30 @@ if TYPE_CHECKING:
 class _MetabaseClientTypedMixin:
     """Resource-scoped typed user helper methods."""
 
-    async def get_user_key_value_namespace_typed(self: MetabaseClient, namespace: str) -> GenericOperationResponse:
-        return await self.run(GetUserKeyValueNamespaceRequest(namespace=namespace))
+    async def get_user_key_value_namespace_typed(
+        self: MetabaseClient, namespace: int | str
+    ) -> GenericOperationResponse:
+        return await self.run(GetUserKeyValueNamespaceRequest(namespace=str(namespace)))
 
     async def put_user_key_value_namespace_key_typed(
         self: MetabaseClient,
-        namespace: str,
+        namespace: int | str,
         key: str,
         body: JSONValue,
     ) -> GenericOperationResponse:
-        return await self.run(PutUserKeyValueNamespaceKeyRequest(namespace=namespace, key=key, body=body))
+        return await self.run(PutUserKeyValueNamespaceKeyRequest(namespace=str(namespace), key=key, body=body))
 
     async def get_user_key_value_namespace_key_typed(
-        self: MetabaseClient, namespace: str, key: str
+        self: MetabaseClient, namespace: int | str, key: str
     ) -> GenericOperationResponse:
-        return await self.run(GetUserKeyValueNamespaceKeyRequest(namespace=namespace, key=key))
+        return await self.run(GetUserKeyValueNamespaceKeyRequest(namespace=str(namespace), key=key))
 
     async def delete_user_key_value_namespace_key_typed(
         self: MetabaseClient,
-        namespace: str,
+        namespace: int | str,
         key: str,
     ) -> GenericOperationResponse:
-        return await self.run(DeleteUserKeyValueNamespaceKeyRequest(namespace=namespace, key=key))
+        return await self.run(DeleteUserKeyValueNamespaceKeyRequest(namespace=str(namespace), key=key))
 
 
 __all__ = ["_MetabaseClientTypedMixin"]

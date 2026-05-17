@@ -11,21 +11,25 @@ if TYPE_CHECKING:
 class _MetabaseClientRawMixin:
     """Resource-scoped raw user helper methods."""
 
-    async def get_user_key_value_namespace(self: MetabaseClient, namespace: str) -> JSONValue | None:
+    async def get_user_key_value_namespace(self: MetabaseClient, namespace: int | str) -> JSONValue | None:
         return await self.get(f"/api/user-key-value/namespace/{namespace}")
 
-    async def get_user_key_value_namespace_key(self: MetabaseClient, namespace: str, key: str) -> JSONValue | None:
+    async def get_user_key_value_namespace_key(
+        self: MetabaseClient, namespace: int | str, key: str
+    ) -> JSONValue | None:
         return await self.get(f"/api/user-key-value/namespace/{namespace}/key/{key}")
 
     async def put_user_key_value_namespace_key(
         self: MetabaseClient,
-        namespace: str,
+        namespace: int | str,
         key: str,
         body: JSONValue,
     ) -> JSONValue | None:
         return await self.put(f"/api/user-key-value/namespace/{namespace}/key/{key}", body=body)
 
-    async def delete_user_key_value_namespace_key(self: MetabaseClient, namespace: str, key: str) -> JSONValue | None:
+    async def delete_user_key_value_namespace_key(
+        self: MetabaseClient, namespace: int | str, key: str
+    ) -> JSONValue | None:
         return await self.delete(f"/api/user-key-value/namespace/{namespace}/key/{key}")
 
 

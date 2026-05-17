@@ -406,6 +406,11 @@ def test_client_typed_package_is_not_importable() -> None:
         importlib.import_module("metabaseapi.client.typed")
 
 
+def test_client_raw_package_is_not_importable() -> None:
+    with pytest.raises(ModuleNotFoundError):
+        importlib.import_module("metabaseapi.client.raw")
+
+
 def _client_module_stems(package: object) -> tuple[str, ...]:
     package_file = getattr(package, "__file__", None)
     assert package_file is not None

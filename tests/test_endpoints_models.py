@@ -31,6 +31,8 @@ from metabaseapi.endpoints.requests.ai_entity_analysis import AnalyzeChartReques
 from metabaseapi.endpoints.requests.alert import DeleteAlertSubscriptionRequest
 from metabaseapi.endpoints.requests.analytics import CreateAnalyticsEventBatchRequest
 from metabaseapi.endpoints.requests.analytics import GetAnonymousStatsRequest
+from metabaseapi.endpoints.requests.api_key import CountApiKeysRequest
+from metabaseapi.endpoints.requests.api_key import DeleteApiKeyRequest
 from metabaseapi.endpoints.requests.bug_reporting import GetBugReportingConnectionPoolDetailsRequest
 from metabaseapi.endpoints.requests.bug_reporting import GetBugReportingDetailsRequest
 from metabaseapi.endpoints.requests.cache import DeleteCacheRequest
@@ -135,6 +137,8 @@ from metabaseapi.endpoints.responses.ai_entity_analysis import AnalyzeChartRespo
 from metabaseapi.endpoints.responses.alert import AlertSubscriptionDeleteResponse
 from metabaseapi.endpoints.responses.analytics import AnalyticsEventBatchResponse
 from metabaseapi.endpoints.responses.analytics import AnonymousStatsResponse
+from metabaseapi.endpoints.responses.api_key import ApiKeyCountResponse
+from metabaseapi.endpoints.responses.api_key import DeleteApiKeyResponse
 from metabaseapi.endpoints.responses.bug_reporting import BugReportingConnectionPoolDetailsResponse
 from metabaseapi.endpoints.responses.bug_reporting import BugReportingDetailsResponse
 from metabaseapi.endpoints.responses.card import CardsDashboardsResponse
@@ -291,6 +295,11 @@ def test_list_response_models_handle_wrapped_and_unwrapped_payloads() -> None:
     assert unwrapped.cards[0].id == 2
 
 
+def test_api_key_count_response_accepts_count_payloads() -> None:
+    assert ApiKeyCountResponse.model_validate({"count": 3}).count == 3
+    assert ApiKeyCountResponse.model_validate(4).count == 4
+
+
 def test_action_requests_use_expected_paths_and_payloads() -> None:
     cases = [
         (ListActionsRequest(model_id=42), ListActionsResponse, ("GET", "/api/action", {"model-id": 42}, None)),
@@ -335,6 +344,8 @@ def test_action_requests_use_expected_paths_and_payloads() -> None:
             AlertSubscriptionDeleteResponse,
             ("DELETE", "/api/alert/7/subscription", {}, None),
         ),
+        (CountApiKeysRequest(), ApiKeyCountResponse, ("GET", "/api/api-key/count", {}, None)),
+        (DeleteApiKeyRequest(api_key_id=7), DeleteApiKeyResponse, ("DELETE", "/api/api-key/7", {}, None)),
         (
             GetBugReportingConnectionPoolDetailsRequest(),
             BugReportingConnectionPoolDetailsResponse,

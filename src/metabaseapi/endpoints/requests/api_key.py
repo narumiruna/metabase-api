@@ -5,8 +5,9 @@ from typing import ClassVar
 
 from metabaseapi.endpoints.entities import ApiKey
 from metabaseapi.endpoints.execution import EndpointRequest
+from metabaseapi.endpoints.responses.api_key import ApiKeyCountResponse
+from metabaseapi.endpoints.responses.api_key import DeleteApiKeyResponse
 from metabaseapi.endpoints.responses.api_key import ListApiKeysResponse
-from metabaseapi.endpoints.responses.common import GenericOperationResponse
 
 
 class CreateApiKeyRequest(EndpointRequest[ApiKey]):
@@ -23,10 +24,10 @@ class ListApiKeysRequest(EndpointRequest[ListApiKeysResponse]):
     response_model = ListApiKeysResponse
 
 
-class CountApiKeysRequest(EndpointRequest[GenericOperationResponse]):
+class CountApiKeysRequest(EndpointRequest[ApiKeyCountResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/api-key/count"
-    response_model = GenericOperationResponse
+    response_model = ApiKeyCountResponse
 
 
 class UpdateApiKeyRequest(EndpointRequest[ApiKey]):
@@ -38,12 +39,12 @@ class UpdateApiKeyRequest(EndpointRequest[ApiKey]):
     response_model = ApiKey
 
 
-class DeleteApiKeyRequest(EndpointRequest[GenericOperationResponse]):
+class DeleteApiKeyRequest(EndpointRequest[DeleteApiKeyResponse]):
     api_key_id: int | str
 
     endpoint_method: ClassVar[str] = "DELETE"
     endpoint_path: ClassVar[str] = "/api/api-key/{api_key_id}"
-    response_model = GenericOperationResponse
+    response_model = DeleteApiKeyResponse
 
 
 class RegenerateApiKeyRequest(EndpointRequest[ApiKey]):

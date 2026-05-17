@@ -265,7 +265,7 @@ RESPONSE_MODULE_CONTRACTS = {
     "ai_entity_analysis": ("AnalyzeChartResponse",),
     "alert": ("AlertSubscriptionDeleteResponse", "ListAlertsResponse"),
     "analytics": ("AnalyticsEventBatchResponse", "AnonymousStatsResponse"),
-    "api_key": ("ListApiKeysResponse",),
+    "api_key": ("ApiKeyCountResponse", "DeleteApiKeyResponse", "ListApiKeysResponse"),
     "bookmark": ("ListBookmarksResponse",),
     "bug_reporting": ("BugReportingConnectionPoolDetailsResponse", "BugReportingDetailsResponse"),
     "card": ("CardsDashboardsResponse", "ListCardsResponse"),

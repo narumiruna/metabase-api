@@ -1,68 +1,185 @@
-# Metabase API
+# metabase-api
 
-A small async-first Python client and Typer CLI for the Metabase API.
+> Async-first Python client and CLI for the [Metabase](https://www.metabase.com/) REST API.
 
-此專案用手寫、明確的 client/CLI surface 支援 Metabase endpoints。`docs/TODO.md` 是依據最新 Metabase API 文件整理的靜態實作清單；具備手寫 client method、request/response `BaseModel`、以及 CLI 命令的 endpoint 才能被打勾。
+[![Python 3.14+](https://img.shields.io/badge/python-3.14%2B-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
-## 安裝
+**metabase-api** is a lightweight, hand-written Python library and command-line tool for interacting with the Metabase REST API. It provides typed request/response models, an async HTTP client built on [httpx](https://www.python-httpx.org/), and a [Typer](https://typer.tiangolo.com/) CLI — making it easy to automate, script, and integrate Metabase into your data workflows.
+
+---
+
+## Table of contents
+
+- [Features](#features)
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Quick start](#quick-start)
+- [CLI reference](#cli-reference)
+- [API coverage](#api-coverage)
+- [Development](#development)
+- [License](#license)
+
+---
+
+## Features
+
+- **Async-first HTTP client** — powered by `httpx`, suitable for high-concurrency automation scripts.
+- **Typed models** — every request and response is a hand-written `pydantic.BaseModel`; no code generation.
+- **Ergonomic CLI** — discover and run Metabase operations directly from the terminal with `metabaseapi <command>`.
+- **Pretty JSON output** — all CLI commands emit indented, sorted JSON, ready for use with `jq` or AI pipelines.
+- **API key authentication** — uses Metabase's native API key header; no session tokens to manage.
+- **TLS-aware** — configurable SSL verification for self-hosted deployments.
+
+---
+
+## Requirements
+
+- Python ≥ 3.14
+- A running Metabase instance (self-hosted or Metabase Cloud)
+- A Metabase API key (Settings → Admin → API Keys)
+
+---
+
+## Installation
+
+Install with [uv](https://docs.astral.sh/uv/) (recommended):
 
 ```bash
 uv sync
 ```
 
-## 環境變數
-
-- `METABASE_URL`：Metabase 服務網址（預設 `http://localhost:3000`）
-- `METABASE_API_KEY`：Metabase API 金鑰（API Key authentication）
-- `METABASE_TIMEOUT_SECONDS`：請求逾時秒數（預設 `30.0`）
-- `METABASE_VERIFY_SSL`：是否驗證 TLS 憑證（預設 `true`）
-
-## 使用方式
+Or install from source with pip:
 
 ```bash
-export METABASE_URL=https://your-metabase.example
+pip install .
+```
+
+---
+
+## Configuration
+
+Set the following environment variables before running any command or using the client:
+
+| Variable | Description | Default |
+|---|---|---|
+| `METABASE_URL` | Base URL of your Metabase instance | `http://localhost:3000` |
+| `METABASE_API_KEY` | Metabase API key for authentication | *(required)* |
+| `METABASE_TIMEOUT_SECONDS` | HTTP request timeout in seconds | `30.0` |
+| `METABASE_VERIFY_SSL` | Verify TLS certificates (`true`/`false`) | `true` |
+
+Export them in your shell or add them to a `.env` file (see `.env.sample`):
+
+```bash
+export METABASE_URL=https://your-metabase.example.com
 export METABASE_API_KEY=your-api-key
 ```
 
-### 手寫 CLI 命令
+---
 
-CLI 不提供 raw `request` / `invoke`。新增 API 能力時，請同時新增手寫 client method、request/response `BaseModel` 與 CLI 命令；測試可依風險補上，目前本地必要 gate 是 Ruff 與 ty。
+## Quick start
 
 ```bash
+# Who am I?
 metabaseapi current-user
+
+# List all databases
 metabaseapi list-databases
-metabaseapi create-database my_db postgres --details '{"host":"localhost","port":5432}'
-metabaseapi get-database 1
-metabaseapi list-cards
-metabaseapi create-question Orders '{"database":1,"type":"query","query":{"source-table":2}}'
-metabaseapi create-card Orders '{"database":1,"type":"query","query":{"source-table":2}}' --type question
+
+# Get a specific card (question)
 metabaseapi get-card 2
+
+# List dashboards
 metabaseapi list-dashboards
-metabaseapi get-dashboard 1
+```
+
+All output is valid JSON, so you can pipe it directly to `jq`:
+
+```bash
+metabaseapi list-databases | jq '.[].name'
+```
+
+---
+
+## CLI reference
+
+Run `metabaseapi --help` to see all available commands. Common examples:
+
+```bash
+# Users & auth
+metabaseapi current-user
 metabaseapi list-users
 metabaseapi get-user 4
+
+# Databases
+metabaseapi list-databases
+metabaseapi get-database 1
+metabaseapi create-database my_db postgres --details '{"host":"localhost","port":5432}'
+
+# Cards (questions / models)
+metabaseapi list-cards
+metabaseapi get-card 2
+metabaseapi create-card Orders '{"database":1,"type":"query","query":{"source-table":2}}' --type question
+metabaseapi create-question Orders '{"database":1,"type":"query","query":{"source-table":2}}'
+
+# Dashboards
+metabaseapi list-dashboards
+metabaseapi get-dashboard 1
+
+# Collections
 metabaseapi list-collections
 metabaseapi get-collection root
+
+# Tables & fields
 metabaseapi list-tables
 metabaseapi get-table 8
 metabaseapi get-field 9
 ```
 
-所有輸出都會以可讀 JSON（縮排、排序）輸出，便於 AI / 腳本處理。
+Every command outputs pretty-printed, sorted JSON — suitable for AI agents, shell scripts, and CI pipelines.
+
+---
 
 ## API coverage
 
-- `docs/TODO.md` 追蹤官方 Metabase API 文件中的 600 個 operations。
-- 具備手寫 client method、request/response `BaseModel` 與 CLI 命令的 endpoint 會被標記為完成；測試可依風險補上。
-- CLI 不提供 raw `request` / `invoke`；未完成的 endpoint 必須先補齊手寫 surface。
-- endpoint request/response models 維持手寫，透過 `MetabaseClient.run(EndpointRequest(...))` 執行；不從 `api.json` 產生 runtime registry 或 generated endpoint modules。
+`docs/TODO.md` tracks implementation status against the official Metabase API documentation (600 documented operations).
 
-## Live test
+**Current status: 152 / 600 endpoints fully implemented.**
 
-`.env` 設好 `METABASE_URL` 與 `METABASE_API_KEY` 後，可以執行低風險唯讀 live checks：
+An endpoint counts as complete when it has:
+1. A hand-written client method on `MetabaseClient`
+2. A typed `pydantic.BaseModel` for both request and response
+3. A corresponding CLI command
+
+Raw `request` / `invoke` passthroughs are intentionally excluded — every operation must be explicitly modelled.
+
+---
+
+## Development
 
 ```bash
+# Install all dependencies (including dev)
+uv sync
+
+# Lint
+uv run ruff check .
+
+# Type-check
+uv run ty check .
+
+# Run tests
+uv run pytest -v -s --cov=src --cov-report=xml tests
+
+# Full gate (lint + type-check + tests + coverage)
+just all
+
+# Low-risk read-only live smoke test (requires .env)
 just live-test
 ```
 
-此命令只檢查 current-user 的 convenience 與 endpoint request 路徑，輸出欄位名稱與狀態，不輸出 API key。
+---
+
+## License
+
+[MIT](LICENSE) © narumi

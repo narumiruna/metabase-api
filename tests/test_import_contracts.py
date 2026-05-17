@@ -640,10 +640,11 @@ def test_cli_command_modules_are_compact() -> None:
         assert line_count < 1000, f"{module.__name__} has {line_count} lines"
 
 
-def test_cli_command_module_objects_are_cached() -> None:
+def test_cli_command_module_objects_preserve_order() -> None:
     first = metabaseapi.cli.commands.command_module_objects()
     second = metabaseapi.cli.commands.command_module_objects()
-    assert first is second
+    assert first == second
+    assert tuple(module.__name__ for module in first) == metabaseapi.cli.commands.command_module_paths()
 
 
 def test_cli_command_modules_importable_in_multiple_orders() -> None:

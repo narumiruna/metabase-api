@@ -36,15 +36,10 @@ COMMAND_MODULES: Final[tuple[str, ...]] = (
 
 COMMAND_MODULES_IMPORT_PATHS = tuple(f"metabaseapi.cli.commands.{module}" for module in COMMAND_MODULES)
 
-_COMMAND_MODULES_OBJECTS: tuple[ModuleType, ...] | None = None
-
 
 def command_module_objects() -> tuple[ModuleType, ...]:
     """Return imported CLI command modules in seam order."""
-    global _COMMAND_MODULES_OBJECTS
-    if _COMMAND_MODULES_OBJECTS is None:
-        _COMMAND_MODULES_OBJECTS = tuple(import_module(module_path) for module_path in COMMAND_MODULES_IMPORT_PATHS)
-    return _COMMAND_MODULES_OBJECTS
+    return tuple(import_module(module_path) for module_path in COMMAND_MODULES_IMPORT_PATHS)
 
 
 def command_module_names() -> tuple[str, ...]:

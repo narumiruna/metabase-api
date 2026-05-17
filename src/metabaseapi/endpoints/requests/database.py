@@ -7,7 +7,6 @@ from pydantic import Field as PydanticField
 
 from metabaseapi.endpoints.entities import Database
 from metabaseapi.endpoints.execution import EndpointRequest
-from metabaseapi.endpoints.execution import MetabaseRequestClient
 from metabaseapi.endpoints.responses.database import ListDatabasesResponse
 from metabaseapi.wire import JSONValue
 
@@ -15,12 +14,7 @@ from metabaseapi.wire import JSONValue
 class ListDatabasesRequest(EndpointRequest[ListDatabasesResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/database"
-
-    async def do(self, client: MetabaseRequestClient) -> ListDatabasesResponse:
-        return await self.execute(client, ListDatabasesResponse)
-
-    def do_sync(self, client: MetabaseRequestClient) -> ListDatabasesResponse:
-        return self.execute_sync(client, ListDatabasesResponse)
+    response_model: ClassVar[object] = ListDatabasesResponse
 
 
 class CreateDatabaseRequest(EndpointRequest[Database]):
@@ -30,12 +24,7 @@ class CreateDatabaseRequest(EndpointRequest[Database]):
 
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/database"
-
-    async def do(self, client: MetabaseRequestClient) -> Database:
-        return await self.execute(client, Database)
-
-    def do_sync(self, client: MetabaseRequestClient) -> Database:
-        return self.execute_sync(client, Database)
+    response_model: ClassVar[object] = Database
 
     def request_body(self) -> JSONValue:
         return self.model_dump(exclude_none=True)
@@ -46,12 +35,7 @@ class GetDatabaseRequest(EndpointRequest[Database]):
 
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/database/{id}"
-
-    async def do(self, client: MetabaseRequestClient) -> Database:
-        return await self.execute(client, Database)
-
-    def do_sync(self, client: MetabaseRequestClient) -> Database:
-        return self.execute_sync(client, Database)
+    response_model: ClassVar[object] = Database
 
     def resolve_path(self) -> str:
         return f"/api/database/{self.database_id}"

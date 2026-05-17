@@ -6,7 +6,6 @@ from typing import ClassVar
 from pydantic import Field as PydanticField
 
 from metabaseapi.endpoints.execution import EndpointRequest
-from metabaseapi.endpoints.execution import MetabaseRequestClient
 from metabaseapi.endpoints.responses.common import GenericOperationResponse
 from metabaseapi.wire import JSONValue
 from metabaseapi.wire import QueryParamValue
@@ -20,12 +19,7 @@ class GetCacheRequest(EndpointRequest[GenericOperationResponse]):
 
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/cache"
-
-    async def do(self, client: MetabaseRequestClient) -> GenericOperationResponse:
-        return await self.execute(client, GenericOperationResponse)
-
-    def do_sync(self, client: MetabaseRequestClient) -> GenericOperationResponse:
-        return self.execute_sync(client, GenericOperationResponse)
+    response_model: ClassVar[object] = GenericOperationResponse
 
     def request_params(self) -> dict[str, QueryParamValue]:
         params: dict[str, QueryParamValue] = {}
@@ -45,12 +39,7 @@ class PutCacheRequest(EndpointRequest[GenericOperationResponse]):
 
     endpoint_method: ClassVar[str] = "PUT"
     endpoint_path: ClassVar[str] = "/api/cache"
-
-    async def do(self, client: MetabaseRequestClient) -> GenericOperationResponse:
-        return await self.execute(client, GenericOperationResponse)
-
-    def do_sync(self, client: MetabaseRequestClient) -> GenericOperationResponse:
-        return self.execute_sync(client, GenericOperationResponse)
+    response_model: ClassVar[object] = GenericOperationResponse
 
     def request_body(self) -> JSONValue:
         return self.body
@@ -61,12 +50,7 @@ class DeleteCacheRequest(EndpointRequest[GenericOperationResponse]):
 
     endpoint_method: ClassVar[str] = "DELETE"
     endpoint_path: ClassVar[str] = "/api/cache"
-
-    async def do(self, client: MetabaseRequestClient) -> GenericOperationResponse:
-        return await self.execute(client, GenericOperationResponse)
-
-    def do_sync(self, client: MetabaseRequestClient) -> GenericOperationResponse:
-        return self.execute_sync(client, GenericOperationResponse)
+    response_model: ClassVar[object] = GenericOperationResponse
 
     def request_body(self) -> JSONValue:
         return self.body or None
@@ -77,12 +61,7 @@ class InvalidateCacheRequest(EndpointRequest[GenericOperationResponse]):
 
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/cache/invalidate"
-
-    async def do(self, client: MetabaseRequestClient) -> GenericOperationResponse:
-        return await self.execute(client, GenericOperationResponse)
-
-    def do_sync(self, client: MetabaseRequestClient) -> GenericOperationResponse:
-        return self.execute_sync(client, GenericOperationResponse)
+    response_model: ClassVar[object] = GenericOperationResponse
 
     def request_params(self) -> dict[str, QueryParamValue]:
         return dict(self.params)

@@ -4,7 +4,6 @@ from typing import ClassVar
 
 from metabaseapi.endpoints.entities import Alert
 from metabaseapi.endpoints.execution import EndpointRequest
-from metabaseapi.endpoints.execution import MetabaseRequestClient
 from metabaseapi.endpoints.responses.alert import ListAlertsResponse
 from metabaseapi.endpoints.responses.common import GenericOperationResponse
 from metabaseapi.wire import QueryParamValue
@@ -15,12 +14,7 @@ class ListAlertsRequest(EndpointRequest[ListAlertsResponse]):
 
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/alert"
-
-    async def do(self, client: MetabaseRequestClient) -> ListAlertsResponse:
-        return await self.execute(client, ListAlertsResponse)
-
-    def do_sync(self, client: MetabaseRequestClient) -> ListAlertsResponse:
-        return self.execute_sync(client, ListAlertsResponse)
+    response_model: ClassVar[object] = ListAlertsResponse
 
     def request_params(self) -> dict[str, QueryParamValue]:
         if self.user_id is None:
@@ -33,12 +27,7 @@ class GetAlertRequest(EndpointRequest[Alert]):
 
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/alert/{id}"
-
-    async def do(self, client: MetabaseRequestClient) -> Alert:
-        return await self.execute(client, Alert)
-
-    def do_sync(self, client: MetabaseRequestClient) -> Alert:
-        return self.execute_sync(client, Alert)
+    response_model: ClassVar[object] = Alert
 
     def resolve_path(self) -> str:
         return f"/api/alert/{self.alert_id}"
@@ -49,12 +38,7 @@ class DeleteAlertSubscriptionRequest(EndpointRequest[GenericOperationResponse]):
 
     endpoint_method: ClassVar[str] = "DELETE"
     endpoint_path: ClassVar[str] = "/api/alert/{id}/subscription"
-
-    async def do(self, client: MetabaseRequestClient) -> GenericOperationResponse:
-        return await self.execute(client, GenericOperationResponse)
-
-    def do_sync(self, client: MetabaseRequestClient) -> GenericOperationResponse:
-        return self.execute_sync(client, GenericOperationResponse)
+    response_model: ClassVar[object] = GenericOperationResponse
 
     def resolve_path(self) -> str:
         return f"/api/alert/{self.alert_id}/subscription"

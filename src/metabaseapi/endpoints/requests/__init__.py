@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+from importlib import import_module
+from types import ModuleType
+
 REQUEST_MODULES = (
     "action",
     "activity",
@@ -41,8 +44,13 @@ def request_module_paths() -> tuple[str, ...]:
     return tuple(f"{__name__}.{module_name}" for module_name in REQUEST_MODULES)
 
 
+def request_module_objects() -> tuple[ModuleType, ...]:
+    return tuple(import_module(module_path) for module_path in request_module_paths())
+
+
 __all__ = [
     "REQUEST_MODULES",
     "request_module_names",
+    "request_module_objects",
     "request_module_paths",
 ]

@@ -5,7 +5,6 @@ from typing import ClassVar
 
 from metabaseapi.endpoints.entities import Bookmark
 from metabaseapi.endpoints.execution import EndpointRequest
-from metabaseapi.endpoints.execution import MetabaseRequestClient
 from metabaseapi.endpoints.responses.bookmark import ListBookmarksResponse
 from metabaseapi.endpoints.responses.common import GenericOperationResponse
 from metabaseapi.wire import JSONValue
@@ -14,12 +13,7 @@ from metabaseapi.wire import JSONValue
 class ListBookmarksRequest(EndpointRequest[ListBookmarksResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/bookmark"
-
-    async def do(self, client: MetabaseRequestClient) -> ListBookmarksResponse:
-        return await self.execute(client, ListBookmarksResponse)
-
-    def do_sync(self, client: MetabaseRequestClient) -> ListBookmarksResponse:
-        return self.execute_sync(client, ListBookmarksResponse)
+    response_model: ClassVar[object] = ListBookmarksResponse
 
 
 class UpdateBookmarkOrderingRequest(EndpointRequest[GenericOperationResponse]):
@@ -27,12 +21,7 @@ class UpdateBookmarkOrderingRequest(EndpointRequest[GenericOperationResponse]):
 
     endpoint_method: ClassVar[str] = "PUT"
     endpoint_path: ClassVar[str] = "/api/bookmark/ordering"
-
-    async def do(self, client: MetabaseRequestClient) -> GenericOperationResponse:
-        return await self.execute(client, GenericOperationResponse)
-
-    def do_sync(self, client: MetabaseRequestClient) -> GenericOperationResponse:
-        return self.execute_sync(client, GenericOperationResponse)
+    response_model: ClassVar[object] = GenericOperationResponse
 
     def request_body(self) -> JSONValue:
         return self.body
@@ -44,12 +33,7 @@ class CreateBookmarkRequest(EndpointRequest[Bookmark]):
 
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/bookmark/{model}/{id}"
-
-    async def do(self, client: MetabaseRequestClient) -> Bookmark:
-        return await self.execute(client, Bookmark)
-
-    def do_sync(self, client: MetabaseRequestClient) -> Bookmark:
-        return self.execute_sync(client, Bookmark)
+    response_model: ClassVar[object] = Bookmark
 
     def resolve_path(self) -> str:
         return f"/api/bookmark/{self.model}/{self.item_id}"
@@ -61,12 +45,7 @@ class DeleteBookmarkRequest(EndpointRequest[GenericOperationResponse]):
 
     endpoint_method: ClassVar[str] = "DELETE"
     endpoint_path: ClassVar[str] = "/api/bookmark/{model}/{id}"
-
-    async def do(self, client: MetabaseRequestClient) -> GenericOperationResponse:
-        return await self.execute(client, GenericOperationResponse)
-
-    def do_sync(self, client: MetabaseRequestClient) -> GenericOperationResponse:
-        return self.execute_sync(client, GenericOperationResponse)
+    response_model: ClassVar[object] = GenericOperationResponse
 
     def resolve_path(self) -> str:
         return f"/api/bookmark/{self.model}/{self.item_id}"

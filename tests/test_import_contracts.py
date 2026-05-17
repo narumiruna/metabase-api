@@ -487,6 +487,7 @@ def test_endpoints_request_package_does_not_reexport_request_classes() -> None:
     assert metabaseapi.endpoints.requests.__all__ == [
         "REQUEST_MODULES",
         "request_module_names",
+        "request_module_objects",
         "request_module_paths",
     ]
     assert not hasattr(metabaseapi.endpoints.requests, "ListCardsRequest")
@@ -510,6 +511,15 @@ def test_endpoints_request_registry_matches_package_files() -> None:
         f"metabaseapi.endpoints.requests.{module_name}"
         for module_name in metabaseapi.endpoints.requests.REQUEST_MODULES
     )
+
+
+def test_endpoint_requests_use_base_execution_methods() -> None:
+    for module in metabaseapi.endpoints.requests.request_module_objects():
+        for request_name in REQUEST_MODULE_CONTRACTS[module.__name__.rsplit(".", maxsplit=1)[-1]]:
+            request_class = getattr(module, request_name)
+            assert "response_model" in request_class.__dict__
+            assert "do" not in request_class.__dict__
+            assert "do_sync" not in request_class.__dict__
 
 
 def _command_names_from_sources() -> list[str]:

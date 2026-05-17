@@ -7,7 +7,6 @@ from pydantic import Field as PydanticField
 
 from metabaseapi.endpoints.entities import Dashboard
 from metabaseapi.endpoints.execution import EndpointRequest
-from metabaseapi.endpoints.execution import MetabaseRequestClient
 from metabaseapi.endpoints.responses.common import GenericOperationResponse
 from metabaseapi.endpoints.responses.dashboard import ListDashboardsResponse
 from metabaseapi.wire import JSONValue
@@ -16,12 +15,7 @@ from metabaseapi.wire import JSONValue
 class ListDashboardsRequest(EndpointRequest[ListDashboardsResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/dashboard"
-
-    async def do(self, client: MetabaseRequestClient) -> ListDashboardsResponse:
-        return await self.execute(client, ListDashboardsResponse)
-
-    def do_sync(self, client: MetabaseRequestClient) -> ListDashboardsResponse:
-        return self.execute_sync(client, ListDashboardsResponse)
+    response_model: ClassVar[object] = ListDashboardsResponse
 
 
 class PostDashboardRequest(EndpointRequest[Dashboard]):
@@ -29,12 +23,7 @@ class PostDashboardRequest(EndpointRequest[Dashboard]):
 
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/dashboard"
-
-    async def do(self, client: MetabaseRequestClient) -> Dashboard:
-        return await self.execute(client, Dashboard)
-
-    def do_sync(self, client: MetabaseRequestClient) -> Dashboard:
-        return self.execute_sync(client, Dashboard)
+    response_model: ClassVar[object] = Dashboard
 
     def request_body(self) -> JSONValue:
         return self.body
@@ -45,12 +34,7 @@ class GetDashboardRequest(EndpointRequest[Dashboard]):
 
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/dashboard/{dashboard-id}"
-
-    async def do(self, client: MetabaseRequestClient) -> Dashboard:
-        return await self.execute(client, Dashboard)
-
-    def do_sync(self, client: MetabaseRequestClient) -> Dashboard:
-        return self.execute_sync(client, Dashboard)
+    response_model: ClassVar[object] = Dashboard
 
     def resolve_path(self) -> str:
         return f"/api/dashboard/{self.dashboard_id}"
@@ -59,23 +43,13 @@ class GetDashboardRequest(EndpointRequest[Dashboard]):
 class GetDashboardEmbeddableRequest(EndpointRequest[GenericOperationResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/dashboard/embeddable"
-
-    async def do(self, client: MetabaseRequestClient) -> GenericOperationResponse:
-        return await self.execute(client, GenericOperationResponse)
-
-    def do_sync(self, client: MetabaseRequestClient) -> GenericOperationResponse:
-        return self.execute_sync(client, GenericOperationResponse)
+    response_model: ClassVar[object] = GenericOperationResponse
 
 
 class GetDashboardPublicRequest(EndpointRequest[GenericOperationResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/dashboard/public"
-
-    async def do(self, client: MetabaseRequestClient) -> GenericOperationResponse:
-        return await self.execute(client, GenericOperationResponse)
-
-    def do_sync(self, client: MetabaseRequestClient) -> GenericOperationResponse:
-        return self.execute_sync(client, GenericOperationResponse)
+    response_model: ClassVar[object] = GenericOperationResponse
 
 
 class SaveDashboardRequest(EndpointRequest[GenericOperationResponse]):
@@ -83,12 +57,7 @@ class SaveDashboardRequest(EndpointRequest[GenericOperationResponse]):
 
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/dashboard/save"
-
-    async def do(self, client: MetabaseRequestClient) -> GenericOperationResponse:
-        return await self.execute(client, GenericOperationResponse)
-
-    def do_sync(self, client: MetabaseRequestClient) -> GenericOperationResponse:
-        return self.execute_sync(client, GenericOperationResponse)
+    response_model: ClassVar[object] = GenericOperationResponse
 
     def request_body(self) -> JSONValue:
         return self.body
@@ -100,12 +69,7 @@ class SaveDashboardToCollectionRequest(EndpointRequest[GenericOperationResponse]
 
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/dashboard/save/collection/{parent-collection-id}"
-
-    async def do(self, client: MetabaseRequestClient) -> GenericOperationResponse:
-        return await self.execute(client, GenericOperationResponse)
-
-    def do_sync(self, client: MetabaseRequestClient) -> GenericOperationResponse:
-        return self.execute_sync(client, GenericOperationResponse)
+    response_model: ClassVar[object] = GenericOperationResponse
 
     def resolve_path(self) -> str:
         return f"/api/dashboard/save/collection/{self.parent_collection_id}"
@@ -119,12 +83,7 @@ class CreateDashboardPublicLinkRequest(EndpointRequest[GenericOperationResponse]
 
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/dashboard/{dashboard-id}/public_link"
-
-    async def do(self, client: MetabaseRequestClient) -> GenericOperationResponse:
-        return await self.execute(client, GenericOperationResponse)
-
-    def do_sync(self, client: MetabaseRequestClient) -> GenericOperationResponse:
-        return self.execute_sync(client, GenericOperationResponse)
+    response_model: ClassVar[object] = GenericOperationResponse
 
     def resolve_path(self) -> str:
         return f"/api/dashboard/{self.dashboard_id}/public_link"
@@ -135,12 +94,7 @@ class DeleteDashboardPublicLinkRequest(EndpointRequest[GenericOperationResponse]
 
     endpoint_method: ClassVar[str] = "DELETE"
     endpoint_path: ClassVar[str] = "/api/dashboard/{dashboard-id}/public_link"
-
-    async def do(self, client: MetabaseRequestClient) -> GenericOperationResponse:
-        return await self.execute(client, GenericOperationResponse)
-
-    def do_sync(self, client: MetabaseRequestClient) -> GenericOperationResponse:
-        return self.execute_sync(client, GenericOperationResponse)
+    response_model: ClassVar[object] = GenericOperationResponse
 
     def resolve_path(self) -> str:
         return f"/api/dashboard/{self.dashboard_id}/public_link"
@@ -152,12 +106,7 @@ class CopyDashboardRequest(EndpointRequest[Dashboard]):
 
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/dashboard/{from-dashboard-id}/copy"
-
-    async def do(self, client: MetabaseRequestClient) -> Dashboard:
-        return await self.execute(client, Dashboard)
-
-    def do_sync(self, client: MetabaseRequestClient) -> Dashboard:
-        return self.execute_sync(client, Dashboard)
+    response_model: ClassVar[object] = Dashboard
 
     def resolve_path(self) -> str:
         return f"/api/dashboard/{self.from_dashboard_id}/copy"
@@ -171,12 +120,7 @@ class DeleteDashboardRequest(EndpointRequest[GenericOperationResponse]):
 
     endpoint_method: ClassVar[str] = "DELETE"
     endpoint_path: ClassVar[str] = "/api/dashboard/{id}"
-
-    async def do(self, client: MetabaseRequestClient) -> GenericOperationResponse:
-        return await self.execute(client, GenericOperationResponse)
-
-    def do_sync(self, client: MetabaseRequestClient) -> GenericOperationResponse:
-        return self.execute_sync(client, GenericOperationResponse)
+    response_model: ClassVar[object] = GenericOperationResponse
 
     def resolve_path(self) -> str:
         return f"/api/dashboard/{self.dashboard_id}"
@@ -188,12 +132,7 @@ class UpdateDashboardRequest(EndpointRequest[Dashboard]):
 
     endpoint_method: ClassVar[str] = "PUT"
     endpoint_path: ClassVar[str] = "/api/dashboard/{id}"
-
-    async def do(self, client: MetabaseRequestClient) -> Dashboard:
-        return await self.execute(client, Dashboard)
-
-    def do_sync(self, client: MetabaseRequestClient) -> Dashboard:
-        return self.execute_sync(client, Dashboard)
+    response_model: ClassVar[object] = Dashboard
 
     def resolve_path(self) -> str:
         return f"/api/dashboard/{self.dashboard_id}"
@@ -208,12 +147,7 @@ class UpdateDashboardCardsRequest(EndpointRequest[GenericOperationResponse]):
 
     endpoint_method: ClassVar[str] = "PUT"
     endpoint_path: ClassVar[str] = "/api/dashboard/{id}/cards"
-
-    async def do(self, client: MetabaseRequestClient) -> GenericOperationResponse:
-        return await self.execute(client, GenericOperationResponse)
-
-    def do_sync(self, client: MetabaseRequestClient) -> GenericOperationResponse:
-        return self.execute_sync(client, GenericOperationResponse)
+    response_model: ClassVar[object] = GenericOperationResponse
 
     def resolve_path(self) -> str:
         return f"/api/dashboard/{self.dashboard_id}/cards"
@@ -227,13 +161,7 @@ class GetDashboardItemsRequest(EndpointRequest[GenericOperationResponse]):
 
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/dashboard/{id}/items"
-
-    async def do(self, client: MetabaseRequestClient) -> GenericOperationResponse:
-        return await self.execute(client, GenericOperationResponse)
-
-    def do_sync(self, client: MetabaseRequestClient) -> GenericOperationResponse:
-        return self.execute_sync(client, GenericOperationResponse)
+    response_model: ClassVar[object] = GenericOperationResponse
 
     def resolve_path(self) -> str:
         return f"/api/dashboard/{self.dashboard_id}/items"
-

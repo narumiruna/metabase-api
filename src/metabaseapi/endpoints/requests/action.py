@@ -7,7 +7,6 @@ from pydantic import Field as PydanticField
 
 from metabaseapi.endpoints.entities import Action
 from metabaseapi.endpoints.execution import EndpointRequest
-from metabaseapi.endpoints.execution import MetabaseRequestClient
 from metabaseapi.endpoints.responses.action import ActionExecutionResponse
 from metabaseapi.endpoints.responses.action import ListActionsResponse
 from metabaseapi.wire import JSONValue
@@ -19,12 +18,7 @@ class ListActionsRequest(EndpointRequest[ListActionsResponse]):
 
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/action"
-
-    async def do(self, client: MetabaseRequestClient) -> ListActionsResponse:
-        return await self.execute(client, ListActionsResponse)
-
-    def do_sync(self, client: MetabaseRequestClient) -> ListActionsResponse:
-        return self.execute_sync(client, ListActionsResponse)
+    response_model: ClassVar[object] = ListActionsResponse
 
     def request_params(self) -> dict[str, QueryParamValue]:
         if self.model_id is None:
@@ -37,12 +31,7 @@ class CreateActionRequest(EndpointRequest[Action]):
 
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/action"
-
-    async def do(self, client: MetabaseRequestClient) -> Action:
-        return await self.execute(client, Action)
-
-    def do_sync(self, client: MetabaseRequestClient) -> Action:
-        return self.execute_sync(client, Action)
+    response_model: ClassVar[object] = Action
 
     def request_body(self) -> JSONValue:
         return self.body
@@ -51,12 +40,7 @@ class CreateActionRequest(EndpointRequest[Action]):
 class ListPublicActionsRequest(EndpointRequest[ListActionsResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/action/public"
-
-    async def do(self, client: MetabaseRequestClient) -> ListActionsResponse:
-        return await self.execute(client, ListActionsResponse)
-
-    def do_sync(self, client: MetabaseRequestClient) -> ListActionsResponse:
-        return self.execute_sync(client, ListActionsResponse)
+    response_model: ClassVar[object] = ListActionsResponse
 
 
 class GetActionRequest(EndpointRequest[Action]):
@@ -64,12 +48,7 @@ class GetActionRequest(EndpointRequest[Action]):
 
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/action/{action-id}"
-
-    async def do(self, client: MetabaseRequestClient) -> Action:
-        return await self.execute(client, Action)
-
-    def do_sync(self, client: MetabaseRequestClient) -> Action:
-        return self.execute_sync(client, Action)
+    response_model: ClassVar[object] = Action
 
     def resolve_path(self) -> str:
         return f"/api/action/{self.action_id}"
@@ -80,12 +59,7 @@ class DeleteActionRequest(EndpointRequest[ActionExecutionResponse]):
 
     endpoint_method: ClassVar[str] = "DELETE"
     endpoint_path: ClassVar[str] = "/api/action/{action-id}"
-
-    async def do(self, client: MetabaseRequestClient) -> ActionExecutionResponse:
-        return await self.execute(client, ActionExecutionResponse)
-
-    def do_sync(self, client: MetabaseRequestClient) -> ActionExecutionResponse:
-        return self.execute_sync(client, ActionExecutionResponse)
+    response_model: ClassVar[object] = ActionExecutionResponse
 
     def resolve_path(self) -> str:
         return f"/api/action/{self.action_id}"
@@ -97,12 +71,7 @@ class GetActionExecuteRequest(EndpointRequest[ActionExecutionResponse]):
 
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/action/{action-id}/execute"
-
-    async def do(self, client: MetabaseRequestClient) -> ActionExecutionResponse:
-        return await self.execute(client, ActionExecutionResponse)
-
-    def do_sync(self, client: MetabaseRequestClient) -> ActionExecutionResponse:
-        return self.execute_sync(client, ActionExecutionResponse)
+    response_model: ClassVar[object] = ActionExecutionResponse
 
     def resolve_path(self) -> str:
         return f"/api/action/{self.action_id}/execute"
@@ -117,12 +86,7 @@ class UpdateActionRequest(EndpointRequest[Action]):
 
     endpoint_method: ClassVar[str] = "PUT"
     endpoint_path: ClassVar[str] = "/api/action/{id}"
-
-    async def do(self, client: MetabaseRequestClient) -> Action:
-        return await self.execute(client, Action)
-
-    def do_sync(self, client: MetabaseRequestClient) -> Action:
-        return self.execute_sync(client, Action)
+    response_model: ClassVar[object] = Action
 
     def resolve_path(self) -> str:
         return f"/api/action/{self.action_id}"
@@ -137,12 +101,7 @@ class ExecuteActionRequest(EndpointRequest[ActionExecutionResponse]):
 
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/action/{id}/execute"
-
-    async def do(self, client: MetabaseRequestClient) -> ActionExecutionResponse:
-        return await self.execute(client, ActionExecutionResponse)
-
-    def do_sync(self, client: MetabaseRequestClient) -> ActionExecutionResponse:
-        return self.execute_sync(client, ActionExecutionResponse)
+    response_model: ClassVar[object] = ActionExecutionResponse
 
     def resolve_path(self) -> str:
         return f"/api/action/{self.action_id}/execute"
@@ -156,12 +115,7 @@ class CreateActionPublicLinkRequest(EndpointRequest[ActionExecutionResponse]):
 
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/action/{id}/public_link"
-
-    async def do(self, client: MetabaseRequestClient) -> ActionExecutionResponse:
-        return await self.execute(client, ActionExecutionResponse)
-
-    def do_sync(self, client: MetabaseRequestClient) -> ActionExecutionResponse:
-        return self.execute_sync(client, ActionExecutionResponse)
+    response_model: ClassVar[object] = ActionExecutionResponse
 
     def resolve_path(self) -> str:
         return f"/api/action/{self.action_id}/public_link"
@@ -172,12 +126,7 @@ class DeleteActionPublicLinkRequest(EndpointRequest[ActionExecutionResponse]):
 
     endpoint_method: ClassVar[str] = "DELETE"
     endpoint_path: ClassVar[str] = "/api/action/{id}/public_link"
-
-    async def do(self, client: MetabaseRequestClient) -> ActionExecutionResponse:
-        return await self.execute(client, ActionExecutionResponse)
-
-    def do_sync(self, client: MetabaseRequestClient) -> ActionExecutionResponse:
-        return self.execute_sync(client, ActionExecutionResponse)
+    response_model: ClassVar[object] = ActionExecutionResponse
 
     def resolve_path(self) -> str:
         return f"/api/action/{self.action_id}/public_link"

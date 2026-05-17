@@ -7,7 +7,6 @@ from pydantic import Field as PydanticField
 
 from metabaseapi.endpoints.entities import Card
 from metabaseapi.endpoints.execution import EndpointRequest
-from metabaseapi.endpoints.execution import MetabaseRequestClient
 from metabaseapi.endpoints.responses.card import ListCardsResponse
 from metabaseapi.endpoints.responses.common import GenericOperationResponse
 from metabaseapi.wire import JSONValue
@@ -16,12 +15,7 @@ from metabaseapi.wire import JSONValue
 class ListCardsRequest(EndpointRequest[ListCardsResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/card"
-
-    async def do(self, client: MetabaseRequestClient) -> ListCardsResponse:
-        return await self.execute(client, ListCardsResponse)
-
-    def do_sync(self, client: MetabaseRequestClient) -> ListCardsResponse:
-        return self.execute_sync(client, ListCardsResponse)
+    response_model: ClassVar[object] = ListCardsResponse
 
 
 class CreateCardRequest(EndpointRequest[Card]):
@@ -37,12 +31,7 @@ class CreateCardRequest(EndpointRequest[Card]):
 
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/card"
-
-    async def do(self, client: MetabaseRequestClient) -> Card:
-        return await self.execute(client, Card)
-
-    def do_sync(self, client: MetabaseRequestClient) -> Card:
-        return self.execute_sync(client, Card)
+    response_model: ClassVar[object] = Card
 
     def request_body(self) -> JSONValue:
         return self.model_dump(exclude_none=True)
@@ -53,12 +42,7 @@ class GetCardRequest(EndpointRequest[Card]):
 
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/card/{card_id}"
-
-    async def do(self, client: MetabaseRequestClient) -> Card:
-        return await self.execute(client, Card)
-
-    def do_sync(self, client: MetabaseRequestClient) -> Card:
-        return self.execute_sync(client, Card)
+    response_model: ClassVar[object] = Card
 
     def resolve_path(self) -> str:
         return f"/api/card/{self.card_id}"
@@ -70,12 +54,7 @@ class GetCardCollectionsRequest(EndpointRequest[GenericOperationResponse]):
 
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/card/collections"
-
-    async def do(self, client: MetabaseRequestClient) -> GenericOperationResponse:
-        return await self.execute(client, GenericOperationResponse)
-
-    def do_sync(self, client: MetabaseRequestClient) -> GenericOperationResponse:
-        return self.execute_sync(client, GenericOperationResponse)
+    response_model: ClassVar[object] = GenericOperationResponse
 
     def request_body(self) -> JSONValue:
         body: dict[str, object] = {}
@@ -89,23 +68,13 @@ class GetCardCollectionsRequest(EndpointRequest[GenericOperationResponse]):
 class GetCardEmbeddableRequest(EndpointRequest[GenericOperationResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/card/embeddable"
-
-    async def do(self, client: MetabaseRequestClient) -> GenericOperationResponse:
-        return await self.execute(client, GenericOperationResponse)
-
-    def do_sync(self, client: MetabaseRequestClient) -> GenericOperationResponse:
-        return self.execute_sync(client, GenericOperationResponse)
+    response_model: ClassVar[object] = GenericOperationResponse
 
 
 class GetCardPublicRequest(EndpointRequest[GenericOperationResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/card/public"
-
-    async def do(self, client: MetabaseRequestClient) -> GenericOperationResponse:
-        return await self.execute(client, GenericOperationResponse)
-
-    def do_sync(self, client: MetabaseRequestClient) -> GenericOperationResponse:
-        return self.execute_sync(client, GenericOperationResponse)
+    response_model: ClassVar[object] = GenericOperationResponse
 
 
 class CreateCardPublicLinkRequest(EndpointRequest[GenericOperationResponse]):
@@ -113,12 +82,7 @@ class CreateCardPublicLinkRequest(EndpointRequest[GenericOperationResponse]):
 
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/card/{card_id}/public_link"
-
-    async def do(self, client: MetabaseRequestClient) -> GenericOperationResponse:
-        return await self.execute(client, GenericOperationResponse)
-
-    def do_sync(self, client: MetabaseRequestClient) -> GenericOperationResponse:
-        return self.execute_sync(client, GenericOperationResponse)
+    response_model: ClassVar[object] = GenericOperationResponse
 
     def resolve_path(self) -> str:
         return f"/api/card/{self.card_id}/public_link"
@@ -129,12 +93,7 @@ class DeleteCardPublicLinkRequest(EndpointRequest[GenericOperationResponse]):
 
     endpoint_method: ClassVar[str] = "DELETE"
     endpoint_path: ClassVar[str] = "/api/card/{card_id}/public_link"
-
-    async def do(self, client: MetabaseRequestClient) -> GenericOperationResponse:
-        return await self.execute(client, GenericOperationResponse)
-
-    def do_sync(self, client: MetabaseRequestClient) -> GenericOperationResponse:
-        return self.execute_sync(client, GenericOperationResponse)
+    response_model: ClassVar[object] = GenericOperationResponse
 
     def resolve_path(self) -> str:
         return f"/api/card/{self.card_id}/public_link"
@@ -146,12 +105,7 @@ class UpdateCardRequest(EndpointRequest[Card]):
 
     endpoint_method: ClassVar[str] = "PUT"
     endpoint_path: ClassVar[str] = "/api/card/{card_id}"
-
-    async def do(self, client: MetabaseRequestClient) -> Card:
-        return await self.execute(client, Card)
-
-    def do_sync(self, client: MetabaseRequestClient) -> Card:
-        return self.execute_sync(client, Card)
+    response_model: ClassVar[object] = Card
 
     def resolve_path(self) -> str:
         return f"/api/card/{self.card_id}"
@@ -165,12 +119,7 @@ class DeleteCardRequest(EndpointRequest[GenericOperationResponse]):
 
     endpoint_method: ClassVar[str] = "DELETE"
     endpoint_path: ClassVar[str] = "/api/card/{card_id}"
-
-    async def do(self, client: MetabaseRequestClient) -> GenericOperationResponse:
-        return await self.execute(client, GenericOperationResponse)
-
-    def do_sync(self, client: MetabaseRequestClient) -> GenericOperationResponse:
-        return self.execute_sync(client, GenericOperationResponse)
+    response_model: ClassVar[object] = GenericOperationResponse
 
     def resolve_path(self) -> str:
         return f"/api/card/{self.card_id}"
@@ -182,12 +131,7 @@ class CopyCardRequest(EndpointRequest[Card]):
 
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/card/{card_id}/copy"
-
-    async def do(self, client: MetabaseRequestClient) -> Card:
-        return await self.execute(client, Card)
-
-    def do_sync(self, client: MetabaseRequestClient) -> Card:
-        return self.execute_sync(client, Card)
+    response_model: ClassVar[object] = Card
 
     def resolve_path(self) -> str:
         return f"/api/card/{self.card_id}/copy"
@@ -201,12 +145,7 @@ class MoveCardsRequest(EndpointRequest[GenericOperationResponse]):
 
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/cards/move"
-
-    async def do(self, client: MetabaseRequestClient) -> GenericOperationResponse:
-        return await self.execute(client, GenericOperationResponse)
-
-    def do_sync(self, client: MetabaseRequestClient) -> GenericOperationResponse:
-        return self.execute_sync(client, GenericOperationResponse)
+    response_model: ClassVar[object] = GenericOperationResponse
 
     def request_body(self) -> JSONValue:
         return self.body

@@ -31,6 +31,16 @@ class FieldOperationResponse(BaseModel):
         return normalize_known_payload(values, cls.model_fields, "result")
 
 
+class FieldTableIdsResponse(BaseModel):
+    table_ids: list[int] = PydanticField(default_factory=list)
+    model_config = ConfigDict(extra="forbid")
+
+    @model_validator(mode="before")
+    @classmethod
+    def normalize_payload(cls, values: object) -> dict[str, Any]:
+        return normalize_known_payload(values, cls.model_fields, "table_ids")
+
+
 class FieldDimensionResponse(BaseModel):
     id: int | str | None = None
     field_id: int | str | None = None

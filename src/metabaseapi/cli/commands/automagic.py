@@ -6,6 +6,15 @@ from metabaseapi.cli.runtime import app
 from metabaseapi.cli.runtime import run_endpoint_command
 from metabaseapi.endpoints.requests.automagic import AutomagicDashboardRequest
 from metabaseapi.endpoints.requests.automagic import AutomagicDatabaseCandidatesRequest
+from metabaseapi.endpoints.requests.automagic import AutomagicEntityCellCompareRequest
+from metabaseapi.endpoints.requests.automagic import AutomagicEntityCellRequest
+from metabaseapi.endpoints.requests.automagic import AutomagicEntityCellRuleCompareRequest
+from metabaseapi.endpoints.requests.automagic import AutomagicEntityCellRuleRequest
+from metabaseapi.endpoints.requests.automagic import AutomagicEntityCompareRequest
+from metabaseapi.endpoints.requests.automagic import AutomagicEntityQueryMetadataRequest
+from metabaseapi.endpoints.requests.automagic import AutomagicEntityRequest
+from metabaseapi.endpoints.requests.automagic import AutomagicEntityRuleCompareRequest
+from metabaseapi.endpoints.requests.automagic import AutomagicEntityRuleRequest
 from metabaseapi.endpoints.requests.automagic import AutomagicModelIndexPrimaryKeyRequest
 
 
@@ -36,12 +45,15 @@ def automagic_dashboard_path(ctx: typer.Context, path: str = typer.Argument(...)
 
 @app.command("automagic-entity")
 def automagic_entity(ctx: typer.Context, entity: str, entity_id_or_query: str) -> None:
-    _run_automagic_path(ctx, f"{entity}/{entity_id_or_query}")
+    run_endpoint_command(ctx, AutomagicEntityRequest(entity=entity, entity_id_or_query=entity_id_or_query))
 
 
 @app.command("automagic-entity-cell")
 def automagic_entity_cell(ctx: typer.Context, entity: str, entity_id_or_query: str, cell_query: str) -> None:
-    _run_automagic_path(ctx, f"{entity}/{entity_id_or_query}/cell/{cell_query}")
+    run_endpoint_command(
+        ctx,
+        AutomagicEntityCellRequest(entity=entity, entity_id_or_query=entity_id_or_query, cell_query=cell_query),
+    )
 
 
 @app.command("automagic-entity-cell-compare")
@@ -53,10 +65,15 @@ def automagic_entity_cell_compare(
     comparison_entity: str,
     comparison_entity_id_or_query: str,
 ) -> None:
-    _run_automagic_path(
+    run_endpoint_command(
         ctx,
-        f"{entity}/{entity_id_or_query}/cell/{cell_query}/compare/"
-        f"{comparison_entity}/{comparison_entity_id_or_query}",
+        AutomagicEntityCellCompareRequest(
+            entity=entity,
+            entity_id_or_query=entity_id_or_query,
+            cell_query=cell_query,
+            comparison_entity=comparison_entity,
+            comparison_entity_id_or_query=comparison_entity_id_or_query,
+        ),
     )
 
 
@@ -69,9 +86,15 @@ def automagic_entity_cell_rule(
     prefix: str,
     dashboard_template: str,
 ) -> None:
-    _run_automagic_path(
+    run_endpoint_command(
         ctx,
-        f"{entity}/{entity_id_or_query}/cell/{cell_query}/rule/{prefix}/{dashboard_template}",
+        AutomagicEntityCellRuleRequest(
+            entity=entity,
+            entity_id_or_query=entity_id_or_query,
+            cell_query=cell_query,
+            prefix=prefix,
+            dashboard_template=dashboard_template,
+        ),
     )
 
 
@@ -86,10 +109,17 @@ def automagic_entity_cell_rule_compare(
     comparison_entity: str,
     comparison_entity_id_or_query: str,
 ) -> None:
-    _run_automagic_path(
+    run_endpoint_command(
         ctx,
-        f"{entity}/{entity_id_or_query}/cell/{cell_query}/rule/{prefix}/{dashboard_template}/compare/"
-        f"{comparison_entity}/{comparison_entity_id_or_query}",
+        AutomagicEntityCellRuleCompareRequest(
+            entity=entity,
+            entity_id_or_query=entity_id_or_query,
+            cell_query=cell_query,
+            prefix=prefix,
+            dashboard_template=dashboard_template,
+            comparison_entity=comparison_entity,
+            comparison_entity_id_or_query=comparison_entity_id_or_query,
+        ),
     )
 
 
@@ -101,15 +131,20 @@ def automagic_entity_compare(
     comparison_entity: str,
     comparison_entity_id_or_query: str,
 ) -> None:
-    _run_automagic_path(
+    run_endpoint_command(
         ctx,
-        f"{entity}/{entity_id_or_query}/compare/{comparison_entity}/{comparison_entity_id_or_query}",
+        AutomagicEntityCompareRequest(
+            entity=entity,
+            entity_id_or_query=entity_id_or_query,
+            comparison_entity=comparison_entity,
+            comparison_entity_id_or_query=comparison_entity_id_or_query,
+        ),
     )
 
 
 @app.command("automagic-entity-query-metadata")
 def automagic_entity_query_metadata(ctx: typer.Context, entity: str, entity_id_or_query: str) -> None:
-    _run_automagic_path(ctx, f"{entity}/{entity_id_or_query}/query_metadata")
+    run_endpoint_command(ctx, AutomagicEntityQueryMetadataRequest(entity=entity, entity_id_or_query=entity_id_or_query))
 
 
 @app.command("automagic-entity-rule")
@@ -120,9 +155,14 @@ def automagic_entity_rule(
     prefix: str,
     dashboard_template: str,
 ) -> None:
-    _run_automagic_path(
+    run_endpoint_command(
         ctx,
-        f"{entity}/{entity_id_or_query}/rule/{prefix}/{dashboard_template}",
+        AutomagicEntityRuleRequest(
+            entity=entity,
+            entity_id_or_query=entity_id_or_query,
+            prefix=prefix,
+            dashboard_template=dashboard_template,
+        ),
     )
 
 
@@ -136,8 +176,14 @@ def automagic_entity_rule_compare(
     comparison_entity: str,
     comparison_entity_id_or_query: str,
 ) -> None:
-    _run_automagic_path(
+    run_endpoint_command(
         ctx,
-        f"{entity}/{entity_id_or_query}/rule/{prefix}/{dashboard_template}/compare/"
-        f"{comparison_entity}/{comparison_entity_id_or_query}",
+        AutomagicEntityRuleCompareRequest(
+            entity=entity,
+            entity_id_or_query=entity_id_or_query,
+            prefix=prefix,
+            dashboard_template=dashboard_template,
+            comparison_entity=comparison_entity,
+            comparison_entity_id_or_query=comparison_entity_id_or_query,
+        ),
     )

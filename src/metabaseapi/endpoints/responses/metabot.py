@@ -40,6 +40,38 @@ class MetabotInstance(BaseModel):
     model_config = ConfigDict(extra="allow")
 
 
+class MetabotConversationSummary(BaseModel):
+    conversation_id: str | None = None
+    created_at: Any | None = None
+    last_message_at: Any | None = None
+    message_count: int | None = None
+    summary: str | None = None
+    user_id: int | None = None
+    model_config = ConfigDict(extra="allow")
+
+
+class ListMetabotConversationsResponse(BaseModel):
+    data: list[MetabotConversationSummary] = PydanticField(default_factory=list)
+    total: int | None = None
+    limit: int | None = None
+    offset: int | None = None
+    model_config = ConfigDict(extra="allow")
+
+    @model_validator(mode="before")
+    @classmethod
+    def normalize_payload(cls, values: object) -> dict[str, Any]:
+        return normalize_model_list_payload(values, cls.model_fields, "data")
+
+
+class MetabotConversationResponse(MetabotConversationSummary):
+    chat_messages: list[JSONValue] = PydanticField(default_factory=list)
+
+
+class MetabotSourceFeedbackResponse(MetabotGenericResponse):
+    status: int | None = None
+    body: JSONValue | None = None
+
+
 class ListMetabotsResponse(BaseModel):
     metabots: list[MetabotInstance] = PydanticField(default_factory=list)
     model_config = ConfigDict(extra="allow")

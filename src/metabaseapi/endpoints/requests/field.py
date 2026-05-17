@@ -14,8 +14,10 @@ from metabaseapi.endpoints.responses.field import FieldRelatedResponse
 from metabaseapi.endpoints.responses.field import FieldRemappingResponse
 from metabaseapi.endpoints.responses.field import FieldSearchResponse
 from metabaseapi.endpoints.responses.field import FieldSummaryResponse
+from metabaseapi.endpoints.responses.field import FieldTableIdsResponse
 from metabaseapi.endpoints.responses.field import FieldValuesResponse
 from metabaseapi.endpoints.responses.field import UpdateFieldValuesResponse
+from metabaseapi.wire import JSONValue
 from metabaseapi.wire import QueryParamValue
 
 
@@ -25,6 +27,17 @@ class GetFieldRequest(EndpointRequest[MetabaseField]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/field/{field_id}"
     response_model = MetabaseField
+
+
+class GetFieldTableIdsRequest(EndpointRequest[FieldTableIdsResponse]):
+    field_ids: list[int]
+
+    endpoint_method: ClassVar[str] = "POST"
+    endpoint_path: ClassVar[str] = "/api/field/table-ids"
+    response_model = FieldTableIdsResponse
+
+    def request_body(self) -> JSONValue:
+        return {"field_ids": self.field_ids}
 
 
 class UpdateFieldRequest(EndpointRequest[MetabaseField]):

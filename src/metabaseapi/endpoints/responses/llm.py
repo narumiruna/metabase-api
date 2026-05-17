@@ -22,6 +22,18 @@ class ExtractLlmTablesResponse(BaseModel):
         return normalize_known_payload(values, cls.model_fields, "result")
 
 
+class ExtractLlmSourcesResponse(BaseModel):
+    card_ids: list[int] = PydanticField(default_factory=list)
+    tables: list[JSONValue] = PydanticField(default_factory=list)
+    result: JSONValue | None = None
+    model_config = ConfigDict(extra="forbid")
+
+    @model_validator(mode="before")
+    @classmethod
+    def normalize_payload(cls, values: object) -> dict[str, Any]:
+        return normalize_known_payload(values, cls.model_fields, "result")
+
+
 class GenerateLlmSqlResponse(BaseModel):
     sql: str | None = None
     result: JSONValue | None = None

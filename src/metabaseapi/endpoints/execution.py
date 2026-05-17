@@ -7,6 +7,7 @@ from typing import cast
 
 from pydantic import BaseModel
 from pydantic import ConfigDict
+from pydantic import Field as PydanticField
 
 from metabaseapi.wire import JSONValue
 from metabaseapi.wire import QueryParamValue
@@ -30,6 +31,8 @@ _ResponseModel = type[BaseModel]
 class EndpointRequest[ResponseT](BaseModel):
     model_config = ConfigDict(extra="forbid")
 
+    params: dict[str, QueryParamValue] = PydanticField(default_factory=dict, exclude=True)
+
     endpoint_method: ClassVar[str]
     endpoint_path: ClassVar[str]
     response_model: ClassVar[_ResponseModel]
@@ -44,7 +47,7 @@ class EndpointRequest[ResponseT](BaseModel):
             return self.endpoint_path
 
     def request_params(self) -> dict[str, QueryParamValue]:
-        return {}
+        return self.params
 
     def request_body(self) -> JSONValue | None:
         if hasattr(self, "body"):

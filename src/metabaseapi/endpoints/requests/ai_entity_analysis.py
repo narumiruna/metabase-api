@@ -4,12 +4,12 @@ from typing import Any
 from typing import ClassVar
 
 from metabaseapi.endpoints.execution import EndpointRequest
-from metabaseapi.endpoints.responses.common import GenericOperationResponse
+from metabaseapi.endpoints.responses.ai_entity_analysis import AnalyzeChartResponse
 
 
-class AnalyzeChartRequest(EndpointRequest[GenericOperationResponse]):
+class AnalyzeChartRequest(EndpointRequest[AnalyzeChartResponse]):
     body: dict[str, Any]
 
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/ai-entity-analysis/analyze-chart"
-    response_model = GenericOperationResponse
+    response_model = AnalyzeChartResponse

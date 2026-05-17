@@ -70,7 +70,8 @@ select = [
 ]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/**.py" = ["ANN", "TRY", "PERF"]
+"**/__init__.py" = ["TID252"]
+"tests/**.py"    = ["ANN", "TRY", "PERF"]
 
 [tool.ruff.lint.isort]
 force-single-line = true

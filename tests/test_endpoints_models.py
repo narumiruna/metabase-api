@@ -125,8 +125,12 @@ from metabaseapi.endpoints.requests.data_studio import DataStudioTableRescanValu
 from metabaseapi.endpoints.requests.data_studio import DataStudioTableSelectionRequest
 from metabaseapi.endpoints.requests.data_studio import DataStudioTableSyncSchemaRequest
 from metabaseapi.endpoints.requests.database import CreateDatabaseRequest
+from metabaseapi.endpoints.requests.database import CreateSampleDatabaseRequest
+from metabaseapi.endpoints.requests.database import DeleteDatabaseRequest
 from metabaseapi.endpoints.requests.database import GetDatabaseRequest
 from metabaseapi.endpoints.requests.database import ListDatabasesRequest
+from metabaseapi.endpoints.requests.database import UpdateDatabaseRequest
+from metabaseapi.endpoints.requests.database import ValidateDatabaseRequest
 from metabaseapi.endpoints.requests.field import GetFieldRequest
 from metabaseapi.endpoints.requests.table import GetTableRequest
 from metabaseapi.endpoints.requests.table import ListTablesRequest
@@ -208,7 +212,9 @@ from metabaseapi.endpoints.responses.dashboard import SaveDashboardResponse
 from metabaseapi.endpoints.responses.dashboard import SaveDashboardToCollectionResponse
 from metabaseapi.endpoints.responses.dashboard import UpdateDashboardCardsResponse
 from metabaseapi.endpoints.responses.data_studio import DataStudioTableOperationResponse
+from metabaseapi.endpoints.responses.database import DeleteDatabaseResponse
 from metabaseapi.endpoints.responses.database import ListDatabasesResponse
+from metabaseapi.endpoints.responses.database import ValidateDatabaseResponse
 from metabaseapi.endpoints.responses.table import ListTablesResponse
 from metabaseapi.endpoints.responses.user import ListUsersResponse
 from metabaseapi.endpoints.responses.user_key_value import DeleteUserKeyValueResponse
@@ -512,6 +518,26 @@ def test_action_requests_use_expected_paths_and_payloads() -> None:
             CancelCloudMigrationRequest(),
             CancelCloudMigrationResponse,
             ("PUT", "/api/cloud-migration/cancel", {}, None),
+        ),
+        (
+            CreateSampleDatabaseRequest(),
+            Database,
+            ("POST", "/api/database/sample_database", {}, None),
+        ),
+        (
+            ValidateDatabaseRequest(body={"engine": "postgres"}),
+            ValidateDatabaseResponse,
+            ("POST", "/api/database/validate", {}, {"engine": "postgres"}),
+        ),
+        (
+            UpdateDatabaseRequest(database_id=4, body={"name": "main"}),
+            Database,
+            ("PUT", "/api/database/4", {}, {"name": "main"}),
+        ),
+        (
+            DeleteDatabaseRequest(database_id=4),
+            DeleteDatabaseResponse,
+            ("DELETE", "/api/database/4", {}, None),
         ),
         (CreateCollectionRequest(body={"name": "New"}), Collection, ("POST", "/api/collection", {}, {"name": "New"})),
         (GetCollectionGraphRequest(), CollectionGraphResponse, ("GET", "/api/collection/graph", {}, None)),
@@ -899,6 +925,10 @@ def _build_mock_endpoint_responses() -> dict[tuple[str, str], dict[str, object]]
         ("GET", "/api/cloud-migration"): {"id": "migration-1", "status": "ready"},
         ("PUT", "/api/cloud-migration/cancel"): {"id": "migration-1", "status": "canceled"},
         ("POST", "/api/database"): {"id": 9, "name": "analytics", "engine": "postgres"},
+        ("POST", "/api/database/sample_database"): {"id": 10, "name": "Sample Database", "engine": "h2"},
+        ("POST", "/api/database/validate"): {"valid": True},
+        ("PUT", "/api/database/4"): {"id": 4, "name": "db4-updated", "engine": "postgres"},
+        ("DELETE", "/api/database/4"): {"ok": True, "id": 4},
         ("POST", "/api/card"): {"id": 12, "name": "Orders", "display": "table", "type": "question"},
         ("GET", "/api/card"): {"data": [{"id": 5, "name": "card", "display": "line"}]},
         ("GET", "/api/dashboard"): {"data": [{"id": 6, "name": "dash", "collection_id": 1}]},
@@ -1091,6 +1121,10 @@ def test_client_run_endpoint_requests_return_models() -> None:
     collections = _run(client.run(ListCollectionsRequest()))
     tables = _run(client.run(ListTablesRequest()))
     db = _run(client.run(GetDatabaseRequest(database_id=4)))
+    sample_db = _run(client.run(CreateSampleDatabaseRequest()))
+    validated_db = _run(client.run(ValidateDatabaseRequest(body={"engine": "postgres"})))
+    updated_db = _run(client.run(UpdateDatabaseRequest(database_id=4, body={"name": "db4-updated"})))
+    deleted_db = _run(client.run(DeleteDatabaseRequest(database_id=4)))
     user = _run(client.run(GetUserRequest(user_id=10)))
     collection = _run(client.run(GetCollectionRequest(collection_id="c1")))
     table = _run(client.run(GetTableRequest(table_id=11)))
@@ -1188,6 +1222,14 @@ def test_client_run_endpoint_requests_return_models() -> None:
     assert isinstance(collections, ListCollectionsResponse)
     assert isinstance(tables, ListTablesResponse)
     assert db.name == "db4"
+    assert isinstance(sample_db, Database)
+    assert sample_db.name == "Sample Database"
+    assert isinstance(validated_db, ValidateDatabaseResponse)
+    assert validated_db.valid is True
+    assert isinstance(updated_db, Database)
+    assert updated_db.name == "db4-updated"
+    assert isinstance(deleted_db, DeleteDatabaseResponse)
+    assert deleted_db.ok is True
     assert isinstance(user, User)
     assert user.id == 10
     assert isinstance(collection, Collection)

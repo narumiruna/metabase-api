@@ -15,8 +15,8 @@ This file is a static implementation checklist derived from the latest Metabase 
 ## Coverage summary
 
 - Documented operations: 600
-- Complete hand-written endpoint implementations: 152
-- Remaining documented operations: 448
+- Complete hand-written endpoint implementations: 174
+- Remaining documented operations: 426
 - Raw `request` / `invoke`: disabled for CLI users and does not count toward TODO completion.
 
 ## Endpoint checklist
@@ -217,18 +217,18 @@ This file is a static implementation checklist derived from the latest Metabase 
 - [x] `POST /api/data-studio/table/selection` — `post-api-data-studio-table-selection` — Gets information about selected tables
 - [x] `POST /api/data-studio/table/sync-schema` — `post-api-data-studio-table-sync-schema` — Batch version of /table/:id/sync_schema. Takes an abstract table selection as /table/edit does. - Currently checks policy before returning (so you might rece...
 
-### /api/database (3/31 complete)
+### /api/database (7/31 complete)
 
 - [x] `GET /api/database` — `get-api-database` — Fetch all `Databases`. * `include=tables` means we should hydrate the Tables belonging to each DB. Default: `false`. * `saved` means we should include the sa...
 - [x] `POST /api/database` — `post-api-database` — Add a new `Database`.
 - [ ] `GET /api/database/field-values` — `get-api-database-field-values` — Get sampled field values for every field in the instance, streamed as a single `{"field_values": [...]}` document. Each entry carries `field_id`, `values`, o...
 - [ ] `GET /api/database/metadata` — `get-api-database-metadata` — Get metadata (databases, tables, and fields) for all databases visible to the current user. Returns a flat structure with three arrays: databases, tables, an...
 - [ ] `POST /api/database/metadata` — `post-api-database-metadata` — Import database/table/field metadata previously exported from `GET /api/database/metadata`. Entities are matched by natural key — databases by `(name, engine...
-- [ ] `POST /api/database/sample_database` — `post-api-database-sample_database` — Add the sample database as a new `Database`.
-- [ ] `POST /api/database/validate` — `post-api-database-validate` — Validate that we can connect to a database given a set of details.
+- [x] `POST /api/database/sample_database` — `post-api-database-sample_database` — Add the sample database as a new `Database`.
+- [x] `POST /api/database/validate` — `post-api-database-validate` — Validate that we can connect to a database given a set of details.
 - [x] `GET /api/database/{id}` — `get-api-database-id` — Get a single Database with `id`. Optionally pass `?include=tables` or `?include=tables.fields` to include the Tables belonging to this database, or the Table...
-- [ ] `PUT /api/database/{id}` — `put-api-database-id` — Update a `Database`.
-- [ ] `DELETE /api/database/{id}` — `delete-api-database-id` — Delete a `Database`.
+- [x] `PUT /api/database/{id}` — `put-api-database-id` — Update a `Database`.
+- [x] `DELETE /api/database/{id}` — `delete-api-database-id` — Delete a `Database`.
 - [ ] `GET /api/database/{id}/autocomplete_suggestions` — `get-api-database-id-autocomplete_suggestions` — Return a list of autocomplete suggestions for a given `prefix`, or `substring`. Should only specify one, but `substring` will have priority if both are prese...
 - [ ] `GET /api/database/{id}/card_autocomplete_suggestions` — `get-api-database-id-card_autocomplete_suggestions` — Return a list of `Card` autocomplete suggestions for a given `query` in a given `Database`. This is intended for use with the ACE Editor when the User is typ...
 - [ ] `POST /api/database/{id}/discard_values` — `post-api-database-id-discard_values` — Discards all saved field values for this `Database`.
@@ -251,29 +251,29 @@ This file is a static implementation checklist derived from the latest Metabase 
 - [ ] `GET /api/database/{virtual-db}/schema/{schema}` — `get-api-database-virtual-db-schema-schema` — Returns a list of Tables for the saved questions virtual database.
 - [ ] `GET /api/database/{virtual-db}/schemas` — `get-api-database-virtual-db-schemas` — Returns a list of all the schemas found for the saved questions virtual database.
 
-### /api/dataset (0/8 complete)
+### /api/dataset (8/8 complete)
 
-- [ ] `POST /api/dataset` — `post-api-dataset` — Execute a query and retrieve the results in the usual format. The query will not use the cache.
-- [ ] `POST /api/dataset/native` — `post-api-dataset-native` — Fetch a native version of an MBQL query.
-- [ ] `POST /api/dataset/parameter/remapping` — `post-api-dataset-parameter-remapping` — Return the remapped parameter values for cards or dashboards that are being edited.
-- [ ] `POST /api/dataset/parameter/search/{query}` — `post-api-dataset-parameter-search-query` — Return parameter values for cards or dashboards that are being edited. Expects a query string at `?query=foo`.
-- [ ] `POST /api/dataset/parameter/values` — `post-api-dataset-parameter-values` — Return parameter values for cards or dashboards that are being edited.
-- [ ] `POST /api/dataset/pivot` — `post-api-dataset-pivot` — Generate a pivoted dataset for an ad-hoc query
-- [ ] `POST /api/dataset/query_metadata` — `post-api-dataset-query_metadata` — Get all of the required query metadata for an ad-hoc query. You can pass `{:settings {:include-sensitive-fields true}}` in the query to include fields with v...
-- [ ] `POST /api/dataset/{export-format}` — `post-api-dataset-export-format` — Execute a query and download the result data as a file in the specified format.
+- [x] `POST /api/dataset` — `post-api-dataset` — Execute a query and retrieve the results in the usual format. The query will not use the cache.
+- [x] `POST /api/dataset/native` — `post-api-dataset-native` — Fetch a native version of an MBQL query.
+- [x] `POST /api/dataset/parameter/remapping` — `post-api-dataset-parameter-remapping` — Return the remapped parameter values for cards or dashboards that are being edited.
+- [x] `POST /api/dataset/parameter/search/{query}` — `post-api-dataset-parameter-search-query` — Return parameter values for cards or dashboards that are being edited. Expects a query string at `?query=foo`.
+- [x] `POST /api/dataset/parameter/values` — `post-api-dataset-parameter-values` — Return parameter values for cards or dashboards that are being edited.
+- [x] `POST /api/dataset/pivot` — `post-api-dataset-pivot` — Generate a pivoted dataset for an ad-hoc query
+- [x] `POST /api/dataset/query_metadata` — `post-api-dataset-query_metadata` — Get all of the required query metadata for an ad-hoc query. You can pass `{:settings {:include-sensitive-fields true}}` in the query to include fields with v...
+- [x] `POST /api/dataset/{export-format}` — `post-api-dataset-export-format` — Execute a query and download the result data as a file in the specified format.
 
-### /api/document (0/10 complete)
+### /api/document (10/10 complete)
 
-- [ ] `GET /api/document` — `get-api-document` — Gets existing `Documents`.
-- [ ] `POST /api/document` — `post-api-document` — Create a new `Document`.
-- [ ] `GET /api/document/public` — `get-api-document-public` — List all Documents that have public links. Returns a sequence of Documents that have been publicly shared. Each Document includes its `:id`, `:name`, and `:p...
-- [ ] `GET /api/document/{document-id}` — `get-api-document-document-id` — Returns an existing Document by ID.
-- [ ] `PUT /api/document/{document-id}` — `put-api-document-document-id` — Updates an existing `Document`.
-- [ ] `DELETE /api/document/{document-id}` — `delete-api-document-document-id` — Permanently deletes an archived Document.
-- [ ] `POST /api/document/{document-id}/card/{card-id}/query/{export-format}` — `post-api-document-document-id-card-card-id-query-export-format` — Download query results for a Card embedded in a Document. Returns query results in the requested format. The user must have read access to the document to do...
-- [ ] `POST /api/document/{document-id}/public-link` — `post-api-document-document-id-public-link` — Generate a publicly-accessible UUID for a Document. Creates a public link that allows viewing the Document without authentication. If the Document already ha...
-- [ ] `DELETE /api/document/{document-id}/public-link` — `delete-api-document-document-id-public-link` — Remove the public link for a Document. Deletes the public UUID from the Document, making it no longer accessible via the public sharing endpoint. This revoke...
-- [ ] `POST /api/document/{from-document-id}/copy` — `post-api-document-from-document-id-copy` — Copy a Document.
+- [x] `GET /api/document` — `get-api-document` — Gets existing `Documents`.
+- [x] `POST /api/document` — `post-api-document` — Create a new `Document`.
+- [x] `GET /api/document/public` — `get-api-document-public` — List all Documents that have public links. Returns a sequence of Documents that have been publicly shared. Each Document includes its `:id`, `:name`, and `:p...
+- [x] `GET /api/document/{document-id}` — `get-api-document-document-id` — Returns an existing Document by ID.
+- [x] `PUT /api/document/{document-id}` — `put-api-document-document-id` — Updates an existing `Document`.
+- [x] `DELETE /api/document/{document-id}` — `delete-api-document-document-id` — Permanently deletes an archived Document.
+- [x] `POST /api/document/{document-id}/card/{card-id}/query/{export-format}` — `post-api-document-document-id-card-card-id-query-export-format` — Download query results for a Card embedded in a Document. Returns query results in the requested format. The user must have read access to the document to do...
+- [x] `POST /api/document/{document-id}/public-link` — `post-api-document-document-id-public-link` — Generate a publicly-accessible UUID for a Document. Creates a public link that allows viewing the Document without authentication. If the Document already ha...
+- [x] `DELETE /api/document/{document-id}/public-link` — `delete-api-document-document-id-public-link` — Remove the public link for a Document. Deletes the public UUID from the Document, making it no longer accessible via the public sharing endpoint. This revoke...
+- [x] `POST /api/document/{from-document-id}/copy` — `post-api-document-from-document-id-copy` — Copy a Document.
 
 ### /api/ee/action-v2 (0/3 complete)
 

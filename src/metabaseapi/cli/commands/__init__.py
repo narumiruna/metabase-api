@@ -25,6 +25,8 @@ def _register_commands() -> None:
     from metabaseapi.cli.commands import dashboard_query as dashboard_query
     from metabaseapi.cli.commands import data_studio as data_studio
     from metabaseapi.cli.commands import database as database
+    from metabaseapi.cli.commands import dataset as dataset
+    from metabaseapi.cli.commands import document as document
     from metabaseapi.cli.commands import field as field
     from metabaseapi.cli.commands import table as table
     from metabaseapi.cli.commands import user as user
@@ -54,6 +56,8 @@ def _register_commands() -> None:
         dashboard_query,
         data_studio,
         database,
+        dataset,
+        document,
         field,
         table,
         user,

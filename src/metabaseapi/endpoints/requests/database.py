@@ -7,7 +7,9 @@ from pydantic import Field as PydanticField
 
 from metabaseapi.endpoints.entities import Database
 from metabaseapi.endpoints.execution import EndpointRequest
+from metabaseapi.endpoints.responses.database import DeleteDatabaseResponse
 from metabaseapi.endpoints.responses.database import ListDatabasesResponse
+from metabaseapi.endpoints.responses.database import ValidateDatabaseResponse
 from metabaseapi.wire import JSONValue
 
 
@@ -36,3 +38,34 @@ class GetDatabaseRequest(EndpointRequest[Database]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/database/{database_id}"
     response_model = Database
+
+
+class UpdateDatabaseRequest(EndpointRequest[Database]):
+    database_id: int | str
+    body: dict[str, Any]
+
+    endpoint_method: ClassVar[str] = "PUT"
+    endpoint_path: ClassVar[str] = "/api/database/{database_id}"
+    response_model = Database
+
+
+class DeleteDatabaseRequest(EndpointRequest[DeleteDatabaseResponse]):
+    database_id: int | str
+
+    endpoint_method: ClassVar[str] = "DELETE"
+    endpoint_path: ClassVar[str] = "/api/database/{database_id}"
+    response_model = DeleteDatabaseResponse
+
+
+class CreateSampleDatabaseRequest(EndpointRequest[Database]):
+    endpoint_method: ClassVar[str] = "POST"
+    endpoint_path: ClassVar[str] = "/api/database/sample_database"
+    response_model = Database
+
+
+class ValidateDatabaseRequest(EndpointRequest[ValidateDatabaseResponse]):
+    body: dict[str, Any]
+
+    endpoint_method: ClassVar[str] = "POST"
+    endpoint_path: ClassVar[str] = "/api/database/validate"
+    response_model = ValidateDatabaseResponse

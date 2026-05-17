@@ -44,6 +44,8 @@ import metabaseapi.endpoints.requests.dashboard
 import metabaseapi.endpoints.requests.dashboard_query
 import metabaseapi.endpoints.requests.data_studio
 import metabaseapi.endpoints.requests.database
+import metabaseapi.endpoints.requests.dataset
+import metabaseapi.endpoints.requests.document
 import metabaseapi.endpoints.requests.field
 import metabaseapi.endpoints.requests.table
 import metabaseapi.endpoints.requests.user
@@ -192,7 +194,33 @@ REQUEST_MODULE_CONTRACTS = {
     "database": (
         "ListDatabasesRequest",
         "CreateDatabaseRequest",
+        "CreateSampleDatabaseRequest",
         "GetDatabaseRequest",
+        "UpdateDatabaseRequest",
+        "DeleteDatabaseRequest",
+        "ValidateDatabaseRequest",
+    ),
+    "dataset": (
+        "DatasetQueryRequest",
+        "DatasetNativeRequest",
+        "DatasetParameterRemappingRequest",
+        "DatasetParameterSearchRequest",
+        "DatasetParameterValuesRequest",
+        "DatasetPivotRequest",
+        "DatasetQueryMetadataRequest",
+        "DatasetExportRequest",
+    ),
+    "document": (
+        "ListDocumentsRequest",
+        "CreateDocumentRequest",
+        "ListPublicDocumentsRequest",
+        "GetDocumentRequest",
+        "UpdateDocumentRequest",
+        "DeleteDocumentRequest",
+        "DocumentCardQueryExportRequest",
+        "CreateDocumentPublicLinkRequest",
+        "DeleteDocumentPublicLinkRequest",
+        "CopyDocumentRequest",
     ),
     "data_studio": (
         "DataStudioTableDiscardValuesRequest",
@@ -332,7 +360,26 @@ RESPONSE_MODULE_CONTRACTS = {
         "UpdateDashboardCardsResponse",
     ),
     "data_studio": ("DataStudioTableOperationResponse",),
-    "database": ("ListDatabasesResponse",),
+    "database": ("DeleteDatabaseResponse", "ListDatabasesResponse", "ValidateDatabaseResponse"),
+    "dataset": (
+        "DatasetExportResponse",
+        "DatasetNativeResponse",
+        "DatasetParameterRemappingResponse",
+        "DatasetParameterSearchResponse",
+        "DatasetParameterValuesResponse",
+        "DatasetPivotResponse",
+        "DatasetQueryMetadataResponse",
+        "DatasetQueryResponse",
+    ),
+    "document": (
+        "CreateDocumentPublicLinkResponse",
+        "DeleteDocumentPublicLinkResponse",
+        "DeleteDocumentResponse",
+        "DocumentQueryExportResponse",
+        "DocumentResponse",
+        "ListDocumentsResponse",
+        "ListPublicDocumentsResponse",
+    ),
     "table": ("ListTablesResponse",),
     "user": ("ListUsersResponse",),
     "user_key_value": (
@@ -621,8 +668,12 @@ def test_cli_command_names_are_unique_across_modules() -> None:
 def test_database_lifecycle_commands_share_database_module() -> None:
     command_names = _command_names_by_module()
     assert "create-database" in command_names["database"]
+    assert "create-sample-database" in command_names["database"]
+    assert "delete-database" in command_names["database"]
     assert "get-database" in command_names["database"]
     assert "list-databases" in command_names["database"]
+    assert "update-database" in command_names["database"]
+    assert "validate-database" in command_names["database"]
     assert "create-database" not in command_names["table"]
 
 

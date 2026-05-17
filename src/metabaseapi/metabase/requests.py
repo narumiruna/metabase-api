@@ -1523,6 +1523,17 @@ class GetCollectionRootRequest(_BaseMetabaseRequest[Collection]):
         return self.execute_sync(client, Collection)
 
 
+class GetCollectionTreeRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+    endpoint_method: ClassVar[str] = "GET"
+    endpoint_path: ClassVar[str] = "/api/collection/tree"
+
+    async def do(self, client: MetabaseRequestClient) -> GenericOperationResponse:
+        return await self.execute(client, GenericOperationResponse)
+
+    def do_sync(self, client: MetabaseRequestClient) -> GenericOperationResponse:
+        return self.execute_sync(client, GenericOperationResponse)
+
+
 class GetCollectionRootDashboardQuestionCandidatesRequest(_BaseMetabaseRequest[GenericOperationResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/collection/root/dashboard-question-candidates"
@@ -1709,6 +1720,7 @@ __all__ = [
     "GetCollectionRootItemsRequest",
     "GetCollectionRootRequest",
     "GetCollectionTrashRequest",
+    "GetCollectionTreeRequest",
     "GetDashboardRequest",
     "GetDatabaseRequest",
     "GetFieldRequest",

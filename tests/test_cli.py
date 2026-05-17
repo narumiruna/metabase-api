@@ -497,6 +497,9 @@ class _ConvenienceClient(_ClientWithRequestMethods):
     async def get_collection_trash(self) -> dict[str, object]:
         return {"method": "GET", "path": "/api/collection/trash"}
 
+    async def get_collection_tree(self) -> dict[str, object]:
+        return {"method": "GET", "path": "/api/collection/tree"}
+
     async def get_collection_graph(self) -> dict[str, object]:
         return {"method": "GET", "path": "/api/collection/graph"}
 
@@ -638,6 +641,7 @@ def test_help_lists_every_convenience_command() -> None:
         "get-collection-root-items",
         "post-collection-root-move-dashboard-question-candidates",
         "get-collection-trash",
+        "get-collection-tree",
         "get-collection-graph",
         "put-collection-graph",
     ]:
@@ -755,6 +759,7 @@ def test_get_database_command_outputs_json(monkeypatch: pytest.MonkeyPatch) -> N
         (["get-collection-root-dashboard-question-candidates"], "/api/collection/root/dashboard-question-candidates"),
         (["get-collection-root-items"], "/api/collection/root/items"),
         (["get-collection-trash"], "/api/collection/trash"),
+        (["get-collection-tree"], "/api/collection/tree"),
         (["get-collection-graph"], "/api/collection/graph"),
         (["get-table", "16"], "/api/table/16"),
         (["get-field", "17"], "/api/field/17"),

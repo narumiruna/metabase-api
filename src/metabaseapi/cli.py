@@ -1080,6 +1080,13 @@ def get_collection_trash(ctx: typer.Context) -> None:
     _run_and_print(_run_client_call(ctx, lambda client: client.get_collection_trash()))
 
 
+@app.command("get-collection-tree")
+def get_collection_tree(ctx: typer.Context) -> None:
+    """Fetch collections in a tree structure."""
+
+    _run_and_print(_run_client_call(ctx, lambda client: client.get_collection_tree()))
+
+
 @app.command("get-collection-graph")
 def get_collection_graph(ctx: typer.Context) -> None:
     """Fetch the collection permissions graph."""

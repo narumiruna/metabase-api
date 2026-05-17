@@ -58,6 +58,7 @@ from metabaseapi.metabase import GetCollectionRootDashboardQuestionCandidatesReq
 from metabaseapi.metabase import GetCollectionRootItemsRequest
 from metabaseapi.metabase import GetCollectionRootRequest
 from metabaseapi.metabase import GetCollectionTrashRequest
+from metabaseapi.metabase import GetCollectionTreeRequest
 from metabaseapi.metabase import GetDashboardRequest
 from metabaseapi.metabase import GetDatabaseRequest
 from metabaseapi.metabase import GetFieldRequest
@@ -329,6 +330,11 @@ def test_action_requests_use_expected_paths_and_payloads() -> None:
             ("GET", "/api/collection/trash", {}, None),
         ),
         (
+            GetCollectionTreeRequest(),
+            GenericOperationResponse,
+            ("GET", "/api/collection/tree", {}, None),
+        ),
+        (
             PostCollectionRootMoveDashboardQuestionCandidatesRequest(body={"card_ids": [1]}),
             GenericOperationResponse,
             ("POST", "/api/collection/root/move-dashboard-question-candidates", {}, {"card_ids": [1]}),
@@ -500,6 +506,7 @@ def _build_mock_endpoint_responses() -> dict[tuple[str, str], dict[str, object]]
         ("GET", "/api/collection/root/dashboard-question-candidates"): {"cards": [{"id": 1}]},
         ("GET", "/api/collection/root/items"): {"cards": [{"id": 2}]},
         ("GET", "/api/collection/trash"): {"id": "trash", "name": "Trash"},
+        ("GET", "/api/collection/tree"): {"id": "collections", "children": []},
         ("POST", "/api/collection/root/move-dashboard-question-candidates"): {"updated": True},
         ("GET", "/api/table"): {"data": [{"id": 8, "name": "table", "schema": "public", "db_id": 1}]},
         ("GET", "/api/database/4"): {"id": 4, "name": "db4", "engine": "postgres"},
@@ -566,6 +573,7 @@ def test_typed_methods_in_client_return_models() -> None:
         client.post_collection_root_move_dashboard_question_candidates_typed({"card_ids": [1]})
     )
     collection_trash = _run(client.get_collection_trash_typed())
+    collection_tree = _run(client.get_collection_tree_typed())
     cards = _run(client.list_cards_typed())
     cards_dashboards = _run(client.cards_dashboards_typed([1, 2]))
     moved_cards = _run(client.move_cards_typed({"card_ids": [1], "collection_id": "root"}))
@@ -619,6 +627,8 @@ def test_typed_methods_in_client_return_models() -> None:
     assert isinstance(collection_trash, Collection)
     assert collection_trash.id == "trash"
     assert collection_trash.name == "Trash"
+    assert isinstance(collection_tree, GenericOperationResponse)
+    assert collection_tree.model_dump(exclude_none=True) == {"id": "collections", "children": []}
     assert isinstance(cards, ListCardsResponse)
     assert isinstance(cards_dashboards, CardsDashboardsResponse)
     assert isinstance(moved_cards, GenericOperationResponse)

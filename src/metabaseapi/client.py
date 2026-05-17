@@ -91,6 +91,7 @@ from metabaseapi.metabase import GetCollectionRootDashboardQuestionCandidatesReq
 from metabaseapi.metabase import GetCollectionRootItemsRequest
 from metabaseapi.metabase import GetCollectionRootRequest
 from metabaseapi.metabase import GetCollectionTrashRequest
+from metabaseapi.metabase import GetCollectionTreeRequest
 from metabaseapi.metabase import GetDashboardRequest
 from metabaseapi.metabase import GetDatabaseRequest
 from metabaseapi.metabase import GetFieldRequest
@@ -836,6 +837,9 @@ class MetabaseClient:
     async def get_collection_trash(self) -> JSONValue | None:
         return await self.get("/api/collection/trash")
 
+    async def get_collection_tree(self) -> JSONValue | None:
+        return await self.get("/api/collection/tree")
+
     async def list_tables(self) -> JSONValue | None:
         return await self.get("/api/table")
 
@@ -1093,6 +1097,9 @@ class MetabaseClient:
 
     async def get_collection_trash_typed(self) -> Collection:
         return await self.run(GetCollectionTrashRequest())
+
+    async def get_collection_tree_typed(self) -> GenericOperationResponse:
+        return await self.run(GetCollectionTreeRequest())
 
     async def list_tables_typed(self) -> ListTablesResponse:
         return await self.run(ListTablesRequest())

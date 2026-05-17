@@ -10,7 +10,9 @@ from metabaseapi.endpoints.responses.transform_job import DeleteTransformJobResp
 from metabaseapi.endpoints.responses.transform_job import ListTransformJobsResponse
 from metabaseapi.endpoints.responses.transform_job import TransformJobOperationResponse
 from metabaseapi.endpoints.responses.transform_job import TransformJobResponse
+from metabaseapi.endpoints.responses.transform_job import TransformJobsActiveResponse
 from metabaseapi.endpoints.responses.transform_job import TransformJobTransformsResponse
+from metabaseapi.wire import JSONValue
 from metabaseapi.wire import QueryParamValue
 
 
@@ -40,6 +42,17 @@ class UpdateTransformJobRequest(EndpointRequest[TransformJobResponse]):
     endpoint_method: ClassVar[str] = "PUT"
     endpoint_path: ClassVar[str] = "/api/transform-job/{job_id}"
     response_model = TransformJobResponse
+
+
+class UpdateTransformJobsActiveRequest(EndpointRequest[TransformJobsActiveResponse]):
+    active: bool
+
+    endpoint_method: ClassVar[str] = "PUT"
+    endpoint_path: ClassVar[str] = "/api/transform-job/active"
+    response_model = TransformJobsActiveResponse
+
+    def request_body(self) -> JSONValue:
+        return {"active": self.active}
 
 
 class DeleteTransformJobRequest(EndpointRequest[DeleteTransformJobResponse]):

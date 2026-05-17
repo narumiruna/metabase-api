@@ -18,6 +18,123 @@ class AutomagicDashboardRequest(EndpointRequest[AutomagicDashboardResponse]):
         return f"/api/automagic-dashboards/{self.path.lstrip('/')}"
 
 
+class AutomagicEntityRequest(EndpointRequest[AutomagicDashboardResponse]):
+    entity: str
+    entity_id_or_query: str
+
+    endpoint_method: ClassVar[str] = "GET"
+    endpoint_path: ClassVar[str] = "/api/automagic-dashboards/{entity}/{entity_id_or_query}"
+    response_model = AutomagicDashboardResponse
+
+
+class AutomagicEntityCellRequest(EndpointRequest[AutomagicDashboardResponse]):
+    entity: str
+    entity_id_or_query: str
+    cell_query: str
+
+    endpoint_method: ClassVar[str] = "GET"
+    endpoint_path: ClassVar[str] = "/api/automagic-dashboards/{entity}/{entity_id_or_query}/cell/{cell_query}"
+    response_model = AutomagicDashboardResponse
+
+
+class AutomagicEntityCellCompareRequest(EndpointRequest[AutomagicDashboardResponse]):
+    entity: str
+    entity_id_or_query: str
+    cell_query: str
+    comparison_entity: str
+    comparison_entity_id_or_query: str
+
+    endpoint_method: ClassVar[str] = "GET"
+    endpoint_path: ClassVar[str] = (
+        "/api/automagic-dashboards/{entity}/{entity_id_or_query}/cell/{cell_query}/compare/"
+        "{comparison_entity}/{comparison_entity_id_or_query}"
+    )
+    response_model = AutomagicDashboardResponse
+
+
+class AutomagicEntityCellRuleRequest(EndpointRequest[AutomagicDashboardResponse]):
+    entity: str
+    entity_id_or_query: str
+    cell_query: str
+    prefix: str
+    dashboard_template: str
+
+    endpoint_method: ClassVar[str] = "GET"
+    endpoint_path: ClassVar[str] = (
+        "/api/automagic-dashboards/{entity}/{entity_id_or_query}/cell/{cell_query}/rule/{prefix}/{dashboard_template}"
+    )
+    response_model = AutomagicDashboardResponse
+
+
+class AutomagicEntityCellRuleCompareRequest(EndpointRequest[AutomagicDashboardResponse]):
+    entity: str
+    entity_id_or_query: str
+    cell_query: str
+    prefix: str
+    dashboard_template: str
+    comparison_entity: str
+    comparison_entity_id_or_query: str
+
+    endpoint_method: ClassVar[str] = "GET"
+    endpoint_path: ClassVar[str] = (
+        "/api/automagic-dashboards/{entity}/{entity_id_or_query}/cell/{cell_query}/rule/"
+        "{prefix}/{dashboard_template}/compare/{comparison_entity}/{comparison_entity_id_or_query}"
+    )
+    response_model = AutomagicDashboardResponse
+
+
+class AutomagicEntityCompareRequest(EndpointRequest[AutomagicDashboardResponse]):
+    entity: str
+    entity_id_or_query: str
+    comparison_entity: str
+    comparison_entity_id_or_query: str
+
+    endpoint_method: ClassVar[str] = "GET"
+    endpoint_path: ClassVar[str] = (
+        "/api/automagic-dashboards/{entity}/{entity_id_or_query}/compare/"
+        "{comparison_entity}/{comparison_entity_id_or_query}"
+    )
+    response_model = AutomagicDashboardResponse
+
+
+class AutomagicEntityQueryMetadataRequest(EndpointRequest[AutomagicDashboardResponse]):
+    entity: str
+    entity_id_or_query: str
+
+    endpoint_method: ClassVar[str] = "GET"
+    endpoint_path: ClassVar[str] = "/api/automagic-dashboards/{entity}/{entity_id_or_query}/query_metadata"
+    response_model = AutomagicDashboardResponse
+
+
+class AutomagicEntityRuleRequest(EndpointRequest[AutomagicDashboardResponse]):
+    entity: str
+    entity_id_or_query: str
+    prefix: str
+    dashboard_template: str
+
+    endpoint_method: ClassVar[str] = "GET"
+    endpoint_path: ClassVar[str] = (
+        "/api/automagic-dashboards/{entity}/{entity_id_or_query}/rule/{prefix}/{dashboard_template}"
+    )
+    response_model = AutomagicDashboardResponse
+
+
+class AutomagicEntityRuleCompareRequest(EndpointRequest[AutomagicDashboardResponse]):
+    entity: str
+    entity_id_or_query: str
+    prefix: str
+    dashboard_template: str
+    comparison_entity: str
+    comparison_entity_id_or_query: str
+
+    endpoint_method: ClassVar[str] = "GET"
+    endpoint_path: ClassVar[str] = (
+        "/api/automagic-dashboards/{entity}/{entity_id_or_query}/rule/{prefix}/{dashboard_template}/compare/"
+        "{comparison_entity}/{comparison_entity_id_or_query}"
+    )
+    response_model = AutomagicDashboardResponse
+
+
 class AutomagicDatabaseCandidatesRequest(EndpointRequest[AutomagicDatabaseCandidatesResponse]):
     database_id: int | str
 

@@ -152,6 +152,8 @@ REQUEST_MODULE_CONTRACTS = {
     "ai_entity_analysis": ("AnalyzeChartRequest",),
     "agent": (
         "AgentExecuteRequest",
+        "CreateAgentDashboardRequest",
+        "CreateAgentQuestionRequest",
         "GetAgentMetricRequest",
         "GetAgentMetricFieldValuesRequest",
         "AgentPingRequest",
@@ -180,6 +182,15 @@ REQUEST_MODULE_CONTRACTS = {
     ),
     "automagic": (
         "AutomagicDashboardRequest",
+        "AutomagicEntityRequest",
+        "AutomagicEntityCellRequest",
+        "AutomagicEntityCellCompareRequest",
+        "AutomagicEntityCellRuleRequest",
+        "AutomagicEntityCellRuleCompareRequest",
+        "AutomagicEntityCompareRequest",
+        "AutomagicEntityQueryMetadataRequest",
+        "AutomagicEntityRuleRequest",
+        "AutomagicEntityRuleCompareRequest",
         "AutomagicDatabaseCandidatesRequest",
         "AutomagicModelIndexPrimaryKeyRequest",
     ),
@@ -533,6 +544,7 @@ REQUEST_MODULE_CONTRACTS = {
     "ldap": ("UpdateLdapSettingsRequest",),
     "llm": (
         "ExtractLlmTablesRequest",
+        "ExtractLlmSourcesRequest",
         "GenerateLlmSqlRequest",
         "ListLlmModelsRequest",
     ),
@@ -555,6 +567,9 @@ REQUEST_MODULE_CONTRACTS = {
     "metabot": (
         "MetabotAgentStreamingRequest",
         "MetabotFeedbackRequest",
+        "ListMetabotConversationsRequest",
+        "GetMetabotConversationRequest",
+        "MetabotSourceFeedbackRequest",
         "GetMetabotSettingsRequest",
         "UpdateMetabotSettingsRequest",
         "GenerateMetabotDocumentContentRequest",
@@ -803,6 +818,7 @@ REQUEST_MODULE_CONTRACTS = {
         "CreateTransformJobRequest",
         "ListTransformJobsRequest",
         "UpdateTransformJobRequest",
+        "UpdateTransformJobsActiveRequest",
         "DeleteTransformJobRequest",
         "GetTransformJobRequest",
         "RunTransformJobRequest",
@@ -847,6 +863,7 @@ REQUEST_MODULE_CONTRACTS = {
     ),
     "field": (
         "GetFieldRequest",
+        "GetFieldTableIdsRequest",
         "UpdateFieldRequest",
         "SetFieldDimensionRequest",
         "DeleteFieldDimensionRequest",
@@ -1172,6 +1189,7 @@ RESPONSE_MODULE_CONTRACTS = {
     "ldap": ("LdapSettingsResponse",),
     "llm": (
         "ExtractLlmTablesResponse",
+        "ExtractLlmSourcesResponse",
         "GenerateLlmSqlResponse",
         "ListLlmModelsResponse",
     ),
@@ -1191,8 +1209,10 @@ RESPONSE_MODULE_CONTRACTS = {
     "metabot": (
         "DeleteMetabotPromptSuggestionResponse",
         "DeleteMetabotPromptSuggestionsResponse",
+        "ListMetabotConversationsResponse",
         "ListMetabotsResponse",
         "MetabotAgentStreamingResponse",
+        "MetabotConversationResponse",
         "MetabotFeedbackResponse",
         "MetabotGenerateContentResponse",
         "MetabotGenericResponse",
@@ -1203,6 +1223,7 @@ RESPONSE_MODULE_CONTRACTS = {
         "MetabotSlackEventsResponse",
         "MetabotSlackInteractiveResponse",
         "MetabotSlackSettingsResponse",
+        "MetabotSourceFeedbackResponse",
         "RegenerateMetabotPromptSuggestionsResponse",
     ),
     "metric": (
@@ -1285,6 +1306,7 @@ RESPONSE_MODULE_CONTRACTS = {
         "FieldRemappingResponse",
         "FieldSearchResponse",
         "FieldSummaryResponse",
+        "FieldTableIdsResponse",
         "FieldValuesResponse",
         "UpdateFieldValuesResponse",
     ),
@@ -1392,6 +1414,7 @@ RESPONSE_MODULE_CONTRACTS = {
         "ListTransformJobsResponse",
         "TransformJobOperationResponse",
         "TransformJobResponse",
+        "TransformJobsActiveResponse",
         "TransformJobTransformsResponse",
     ),
     "transform_tag": (

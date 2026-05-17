@@ -15,6 +15,22 @@ class AgentExecuteRequest(EndpointRequest[AgentResponse]):
     response_model = AgentResponse
 
 
+class CreateAgentDashboardRequest(EndpointRequest[AgentResponse]):
+    body: dict[str, Any]
+
+    endpoint_method: ClassVar[str] = "POST"
+    endpoint_path: ClassVar[str] = "/api/agent/v1/dashboard"
+    response_model = AgentResponse
+
+
+class CreateAgentQuestionRequest(EndpointRequest[AgentResponse]):
+    body: dict[str, Any]
+
+    endpoint_method: ClassVar[str] = "POST"
+    endpoint_path: ClassVar[str] = "/api/agent/v1/question"
+    response_model = AgentResponse
+
+
 class GetAgentMetricRequest(EndpointRequest[AgentResponse]):
     metric_id: int | str
 

@@ -6,8 +6,10 @@ from typing import ClassVar
 from metabaseapi.endpoints.execution import EndpointRequest
 from metabaseapi.endpoints.responses.metabot import DeleteMetabotPromptSuggestionResponse
 from metabaseapi.endpoints.responses.metabot import DeleteMetabotPromptSuggestionsResponse
+from metabaseapi.endpoints.responses.metabot import ListMetabotConversationsResponse
 from metabaseapi.endpoints.responses.metabot import ListMetabotsResponse
 from metabaseapi.endpoints.responses.metabot import MetabotAgentStreamingResponse
+from metabaseapi.endpoints.responses.metabot import MetabotConversationResponse
 from metabaseapi.endpoints.responses.metabot import MetabotFeedbackResponse
 from metabaseapi.endpoints.responses.metabot import MetabotGenerateContentResponse
 from metabaseapi.endpoints.responses.metabot import MetabotPermissionsResponse
@@ -17,6 +19,7 @@ from metabaseapi.endpoints.responses.metabot import MetabotSettingsResponse
 from metabaseapi.endpoints.responses.metabot import MetabotSlackEventsResponse
 from metabaseapi.endpoints.responses.metabot import MetabotSlackInteractiveResponse
 from metabaseapi.endpoints.responses.metabot import MetabotSlackSettingsResponse
+from metabaseapi.endpoints.responses.metabot import MetabotSourceFeedbackResponse
 from metabaseapi.endpoints.responses.metabot import RegenerateMetabotPromptSuggestionsResponse
 from metabaseapi.wire import QueryParamValue
 
@@ -35,6 +38,28 @@ class MetabotFeedbackRequest(EndpointRequest[MetabotFeedbackResponse]):
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/metabot/feedback"
     response_model = MetabotFeedbackResponse
+
+
+class ListMetabotConversationsRequest(EndpointRequest[ListMetabotConversationsResponse]):
+    endpoint_method: ClassVar[str] = "GET"
+    endpoint_path: ClassVar[str] = "/api/metabot/conversations"
+    response_model = ListMetabotConversationsResponse
+
+
+class GetMetabotConversationRequest(EndpointRequest[MetabotConversationResponse]):
+    id: str
+
+    endpoint_method: ClassVar[str] = "GET"
+    endpoint_path: ClassVar[str] = "/api/metabot/conversations/{id}"
+    response_model = MetabotConversationResponse
+
+
+class MetabotSourceFeedbackRequest(EndpointRequest[MetabotSourceFeedbackResponse]):
+    body: dict[str, Any]
+
+    endpoint_method: ClassVar[str] = "POST"
+    endpoint_path: ClassVar[str] = "/api/metabot/source-feedback"
+    response_model = MetabotSourceFeedbackResponse
 
 
 class GetMetabotSettingsRequest(EndpointRequest[MetabotSettingsResponse]):

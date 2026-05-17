@@ -66,6 +66,7 @@ class UpdateNotificationRequest(EndpointRequest[NotificationResponse]):
 
 class SendNotificationRequest(EndpointRequest[NotificationSendResponse]):
     notification_id: int | str
+    body: dict[str, Any] | None = None
 
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/notification/{notification_id}/send"

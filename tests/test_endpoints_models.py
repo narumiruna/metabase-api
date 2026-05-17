@@ -297,6 +297,17 @@ def test_list_databases_request_posts_to_expected_endpoint() -> None:
     assert client.calls == [("GET", "/api/database", {}, None)]
 
 
+def test_endpoint_requests_accept_generic_query_params() -> None:
+    client = _StubClient({"data": []})
+    request = ListUsersRequest(params={"status": "active", "group_id": [1, 2]})
+
+    response = _run(request.do(client))
+
+    assert isinstance(response, ListUsersResponse)
+    assert request.model_dump() == {}
+    assert client.calls == [("GET", "/api/user", {"status": "active", "group_id": [1, 2]}, None)]
+
+
 def test_create_database_request_includes_body_for_post() -> None:
     payload = {"id": 1, "name": "analytics", "engine": "postgres", "details": {"host": "db.local"}}
     client = _StubClient(payload)

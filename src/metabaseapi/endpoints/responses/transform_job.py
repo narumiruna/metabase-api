@@ -84,5 +84,16 @@ class TransformJobOperationResponse(BaseModel):
     model_config = ConfigDict(extra="allow")
 
 
+class TransformJobsActiveResponse(BaseModel):
+    updated: int | None = None
+    failed: int | None = None
+    model_config = ConfigDict(extra="forbid")
+
+    @model_validator(mode="before")
+    @classmethod
+    def normalize_payload(cls, values: object) -> dict[str, Any]:
+        return normalize_model_fields_payload(values, cls.model_fields)
+
+
 class DeleteTransformJobResponse(TransformJobOperationResponse):
     pass

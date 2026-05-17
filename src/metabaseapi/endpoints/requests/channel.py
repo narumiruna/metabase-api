@@ -14,6 +14,8 @@ from metabaseapi.endpoints.responses.channel import UpdateChannelResponse
 
 
 class ListChannelsRequest(EndpointRequest[ListChannelsResponse]):
+    body: dict[str, Any] | None = None
+
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/channel"
     response_model = ListChannelsResponse

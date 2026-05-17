@@ -7,6 +7,7 @@ from typing import cast
 
 import httpx
 
+from metabaseapi.client.raw.activity import _MetabaseClientRawMixin as _MetabaseClientActivityRawMixin
 from metabaseapi.client.raw.alerts import _MetabaseClientRawMixin as _MetabaseClientAlertsRawMixin
 from metabaseapi.client.raw.analytics import _MetabaseClientRawMixin as _MetabaseClientAnalyticsRawMixin
 from metabaseapi.client.raw.api_key import _MetabaseClientRawMixin as _MetabaseClientApiKeyRawMixin
@@ -19,6 +20,7 @@ from metabaseapi.client.raw.collections import _MetabaseClientRawMixin as _Metab
 from metabaseapi.client.raw.comments import _MetabaseClientRawMixin as _MetabaseClientCommentsRawMixin
 from metabaseapi.client.raw.tables import _MetabaseClientRawMixin as _MetabaseClientTablesRawMixin
 from metabaseapi.client.raw.users import _MetabaseClientRawMixin as _MetabaseClientUsersRawMixin
+from metabaseapi.client.typed.activity import _MetabaseClientTypedMixin as _MetabaseClientActivityTypedMixin
 from metabaseapi.client.typed.alerts import _MetabaseClientTypedMixin as _MetabaseClientAlertsTypedMixin
 from metabaseapi.client.typed.analytics import _MetabaseClientTypedMixin as _MetabaseClientAnalyticsTypedMixin
 from metabaseapi.client.typed.api_key import _MetabaseClientTypedMixin as _MetabaseClientApiKeyTypedMixin
@@ -36,8 +38,6 @@ from metabaseapi.errors import MetabaseHTTPStatusError
 from metabaseapi.errors import MetabaseNetworkError
 from metabaseapi.metabase import Action
 from metabaseapi.metabase import ActionExecutionResponse
-from metabaseapi.metabase import ActivityItem
-from metabaseapi.metabase import ActivityMutationResponse
 from metabaseapi.metabase import AgentConstructQueryRequest
 from metabaseapi.metabase import AgentExecuteRequest
 from metabaseapi.metabase import AgentPingRequest
@@ -63,7 +63,6 @@ from metabaseapi.metabase import CreateCardPublicLinkRequest
 from metabaseapi.metabase import CreateCardRequest
 from metabaseapi.metabase import CreateDashboardPublicLinkRequest
 from metabaseapi.metabase import CreateDatabaseRequest
-from metabaseapi.metabase import CreateRecentRequest
 from metabaseapi.metabase import Dashboard
 from metabaseapi.metabase import DashboardParamRemappingRequest
 from metabaseapi.metabase import DashboardParamSearchRequest
@@ -104,20 +103,15 @@ from metabaseapi.metabase import GetDashboardQueryMetadataRequest
 from metabaseapi.metabase import GetDashboardRelatedRequest
 from metabaseapi.metabase import GetDashboardRequest
 from metabaseapi.metabase import GetDatabaseRequest
-from metabaseapi.metabase import GetMostRecentlyViewedDashboardRequest
 from metabaseapi.metabase import ListActionsRequest
 from metabaseapi.metabase import ListActionsResponse
-from metabaseapi.metabase import ListActivityItemsResponse
 from metabaseapi.metabase import ListCardsRequest
 from metabaseapi.metabase import ListCardsResponse
 from metabaseapi.metabase import ListDashboardsRequest
 from metabaseapi.metabase import ListDashboardsResponse
 from metabaseapi.metabase import ListDatabasesRequest
 from metabaseapi.metabase import ListDatabasesResponse
-from metabaseapi.metabase import ListPopularItemsRequest
 from metabaseapi.metabase import ListPublicActionsRequest
-from metabaseapi.metabase import ListRecentsRequest
-from metabaseapi.metabase import ListRecentViewsRequest
 from metabaseapi.metabase import MoveCardsRequest
 from metabaseapi.metabase import PostCardPivotQueryRequest
 from metabaseapi.metabase import PostDashboardPivotQueryRequest
@@ -141,6 +135,7 @@ class _MetabaseClientRawMixin(
     _MetabaseClientAnalyticsRawMixin,
     _MetabaseClientAlertsRawMixin,
     _MetabaseClientApiKeyRawMixin,
+    _MetabaseClientActivityRawMixin,
     _MetabaseClientBookmarksRawMixin,
     _MetabaseClientCacheRawMixin,
     _MetabaseClientCollectionsRawMixin,
@@ -167,6 +162,7 @@ class _MetabaseClientTypedMixin(
     _MetabaseClientCommentsTypedMixin,
     _MetabaseClientBugReportingTypedMixin,
     _MetabaseClientTablesTypedMixin,
+    _MetabaseClientActivityTypedMixin,
 ):
     """Resource-scoped typed mixin."""
 
@@ -515,22 +511,6 @@ class MetabaseClient(_MetabaseClientTypedMixin):
 
     async def agent_query(self, body: Mapping[str, object]) -> JSONValue | None:
         return await self.post("/api/agent/v2/query", body=dict(body))
-
-    async def most_recently_viewed_dashboard(self) -> JSONValue | None:
-        return await self.get("/api/activity/most_recently_viewed_dashboard")
-
-    async def list_popular_items(self) -> JSONValue | None:
-        return await self.get("/api/activity/popular_items")
-
-    async def list_recent_views(self) -> JSONValue | None:
-        return await self.get("/api/activity/recent_views")
-
-    async def list_recents(self, *, context: str | None = None) -> JSONValue | None:
-        params = {"context": context} if context is not None else None
-        return await self.get("/api/activity/recents", params=params)
-
-    async def create_recent(self, body: Mapping[str, object]) -> JSONValue | None:
-        return await self.post("/api/activity/recents", body=dict(body))
 
     async def list_databases(self) -> JSONValue | None:
         return await self.get("/api/database")
@@ -989,21 +969,6 @@ class MetabaseClient(_MetabaseClientTypedMixin):
 
     async def agent_query_typed(self, body: dict[str, object]) -> AgentResponse:
         return await self.run(AgentQueryRequest(body=body))
-
-    async def most_recently_viewed_dashboard_typed(self) -> ActivityItem:
-        return await self.run(GetMostRecentlyViewedDashboardRequest())
-
-    async def list_popular_items_typed(self) -> ListActivityItemsResponse:
-        return await self.run(ListPopularItemsRequest())
-
-    async def list_recent_views_typed(self) -> ListActivityItemsResponse:
-        return await self.run(ListRecentViewsRequest())
-
-    async def list_recents_typed(self, *, context: str | None = None) -> ListActivityItemsResponse:
-        return await self.run(ListRecentsRequest(context=context))
-
-    async def create_recent_typed(self, body: dict[str, object]) -> ActivityMutationResponse:
-        return await self.run(CreateRecentRequest(body=body))
 
     async def list_databases_typed(self) -> ListDatabasesResponse:
         return await self.run(ListDatabasesRequest())

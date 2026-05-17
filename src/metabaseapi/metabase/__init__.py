@@ -10,6 +10,11 @@ from .entities import Database
 from .entities import MetabaseField
 from .entities import Table
 from .entities import User
+from .requests import AgentConstructQueryRequest
+from .requests import AgentExecuteRequest
+from .requests import AgentPingRequest
+from .requests import AgentQueryRequest
+from .requests import AgentSearchRequest
 from .requests import CreateActionPublicLinkRequest
 from .requests import CreateActionRequest
 from .requests import CreateCardRequest
@@ -21,6 +26,10 @@ from .requests import DeleteActionRequest
 from .requests import ExecuteActionRequest
 from .requests import GetActionExecuteRequest
 from .requests import GetActionRequest
+from .requests import GetAgentMetricFieldValuesRequest
+from .requests import GetAgentMetricRequest
+from .requests import GetAgentTableFieldValuesRequest
+from .requests import GetAgentTableRequest
 from .requests import GetCardRequest
 from .requests import GetCollectionRequest
 from .requests import GetDashboardRequest
@@ -44,6 +53,7 @@ from .requests import MetabaseRequestClient
 from .requests import UpdateActionRequest
 from .responses import ActionExecutionResponse
 from .responses import ActivityMutationResponse
+from .responses import AgentResponse
 from .responses import ListActionsResponse
 from .responses import ListActivityItemsResponse
 from .responses import ListCardsResponse
@@ -58,6 +68,12 @@ __all__ = [
     "ActionExecutionResponse",
     "ActivityItem",
     "ActivityMutationResponse",
+    "AgentConstructQueryRequest",
+    "AgentExecuteRequest",
+    "AgentPingRequest",
+    "AgentQueryRequest",
+    "AgentResponse",
+    "AgentSearchRequest",
     "Card",
     "Collection",
     "CreateActionPublicLinkRequest",
@@ -74,6 +90,10 @@ __all__ = [
     "ExecuteActionRequest",
     "GetActionExecuteRequest",
     "GetActionRequest",
+    "GetAgentMetricFieldValuesRequest",
+    "GetAgentMetricRequest",
+    "GetAgentTableFieldValuesRequest",
+    "GetAgentTableRequest",
     "GetCardRequest",
     "GetCollectionRequest",
     "GetDashboardRequest",

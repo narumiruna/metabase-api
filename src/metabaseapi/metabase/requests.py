@@ -23,6 +23,7 @@ from metabaseapi.metabase.entities import Table
 from metabaseapi.metabase.entities import User
 from metabaseapi.metabase.responses import ActionExecutionResponse
 from metabaseapi.metabase.responses import ActivityMutationResponse
+from metabaseapi.metabase.responses import AgentResponse
 from metabaseapi.metabase.responses import ListActionsResponse
 from metabaseapi.metabase.responses import ListActivityItemsResponse
 from metabaseapi.metabase.responses import ListCardsResponse
@@ -244,6 +245,147 @@ class DeleteActionPublicLinkRequest(_BaseMetabaseRequest[ActionExecutionResponse
 
     def resolve_path(self) -> str:
         return f"/api/action/{self.action_id}/public_link"
+
+
+class AgentExecuteRequest(_BaseMetabaseRequest[AgentResponse]):
+    body: dict[str, Any]
+
+    endpoint_method: ClassVar[str] = "POST"
+    endpoint_path: ClassVar[str] = "/api/agent/v1/execute"
+
+    async def do(self, client: MetabaseRequestClient) -> AgentResponse:
+        return await self.execute(client, AgentResponse)
+
+    def do_sync(self, client: MetabaseRequestClient) -> AgentResponse:
+        return self.execute_sync(client, AgentResponse)
+
+    def request_body(self) -> JSONValue:
+        return self.body
+
+
+class GetAgentMetricRequest(_BaseMetabaseRequest[AgentResponse]):
+    metric_id: int | str
+
+    endpoint_method: ClassVar[str] = "GET"
+    endpoint_path: ClassVar[str] = "/api/agent/v1/metric/{id}"
+
+    async def do(self, client: MetabaseRequestClient) -> AgentResponse:
+        return await self.execute(client, AgentResponse)
+
+    def do_sync(self, client: MetabaseRequestClient) -> AgentResponse:
+        return self.execute_sync(client, AgentResponse)
+
+    def resolve_path(self) -> str:
+        return f"/api/agent/v1/metric/{self.metric_id}"
+
+
+class GetAgentMetricFieldValuesRequest(_BaseMetabaseRequest[AgentResponse]):
+    metric_id: int | str
+    field_id: int | str
+
+    endpoint_method: ClassVar[str] = "GET"
+    endpoint_path: ClassVar[str] = "/api/agent/v1/metric/{id}/field/{field-id}/values"
+
+    async def do(self, client: MetabaseRequestClient) -> AgentResponse:
+        return await self.execute(client, AgentResponse)
+
+    def do_sync(self, client: MetabaseRequestClient) -> AgentResponse:
+        return self.execute_sync(client, AgentResponse)
+
+    def resolve_path(self) -> str:
+        return f"/api/agent/v1/metric/{self.metric_id}/field/{self.field_id}/values"
+
+
+class AgentPingRequest(_BaseMetabaseRequest[AgentResponse]):
+    endpoint_method: ClassVar[str] = "GET"
+    endpoint_path: ClassVar[str] = "/api/agent/v1/ping"
+
+    async def do(self, client: MetabaseRequestClient) -> AgentResponse:
+        return await self.execute(client, AgentResponse)
+
+    def do_sync(self, client: MetabaseRequestClient) -> AgentResponse:
+        return self.execute_sync(client, AgentResponse)
+
+
+class AgentSearchRequest(_BaseMetabaseRequest[AgentResponse]):
+    body: dict[str, Any]
+
+    endpoint_method: ClassVar[str] = "POST"
+    endpoint_path: ClassVar[str] = "/api/agent/v1/search"
+
+    async def do(self, client: MetabaseRequestClient) -> AgentResponse:
+        return await self.execute(client, AgentResponse)
+
+    def do_sync(self, client: MetabaseRequestClient) -> AgentResponse:
+        return self.execute_sync(client, AgentResponse)
+
+    def request_body(self) -> JSONValue:
+        return self.body
+
+
+class GetAgentTableRequest(_BaseMetabaseRequest[AgentResponse]):
+    table_id: int | str
+
+    endpoint_method: ClassVar[str] = "GET"
+    endpoint_path: ClassVar[str] = "/api/agent/v1/table/{id}"
+
+    async def do(self, client: MetabaseRequestClient) -> AgentResponse:
+        return await self.execute(client, AgentResponse)
+
+    def do_sync(self, client: MetabaseRequestClient) -> AgentResponse:
+        return self.execute_sync(client, AgentResponse)
+
+    def resolve_path(self) -> str:
+        return f"/api/agent/v1/table/{self.table_id}"
+
+
+class GetAgentTableFieldValuesRequest(_BaseMetabaseRequest[AgentResponse]):
+    table_id: int | str
+    field_id: int | str
+
+    endpoint_method: ClassVar[str] = "GET"
+    endpoint_path: ClassVar[str] = "/api/agent/v1/table/{id}/field/{field-id}/values"
+
+    async def do(self, client: MetabaseRequestClient) -> AgentResponse:
+        return await self.execute(client, AgentResponse)
+
+    def do_sync(self, client: MetabaseRequestClient) -> AgentResponse:
+        return self.execute_sync(client, AgentResponse)
+
+    def resolve_path(self) -> str:
+        return f"/api/agent/v1/table/{self.table_id}/field/{self.field_id}/values"
+
+
+class AgentConstructQueryRequest(_BaseMetabaseRequest[AgentResponse]):
+    body: dict[str, Any]
+
+    endpoint_method: ClassVar[str] = "POST"
+    endpoint_path: ClassVar[str] = "/api/agent/v2/construct-query"
+
+    async def do(self, client: MetabaseRequestClient) -> AgentResponse:
+        return await self.execute(client, AgentResponse)
+
+    def do_sync(self, client: MetabaseRequestClient) -> AgentResponse:
+        return self.execute_sync(client, AgentResponse)
+
+    def request_body(self) -> JSONValue:
+        return self.body
+
+
+class AgentQueryRequest(_BaseMetabaseRequest[AgentResponse]):
+    body: dict[str, Any]
+
+    endpoint_method: ClassVar[str] = "POST"
+    endpoint_path: ClassVar[str] = "/api/agent/v2/query"
+
+    async def do(self, client: MetabaseRequestClient) -> AgentResponse:
+        return await self.execute(client, AgentResponse)
+
+    def do_sync(self, client: MetabaseRequestClient) -> AgentResponse:
+        return self.execute_sync(client, AgentResponse)
+
+    def request_body(self) -> JSONValue:
+        return self.body
 
 
 class GetMostRecentlyViewedDashboardRequest(_BaseMetabaseRequest[ActivityItem]):
@@ -545,6 +687,11 @@ class GetFieldRequest(_BaseMetabaseRequest[MetabaseField]):
 
 
 __all__ = [
+    "AgentConstructQueryRequest",
+    "AgentExecuteRequest",
+    "AgentPingRequest",
+    "AgentQueryRequest",
+    "AgentSearchRequest",
     "CreateActionPublicLinkRequest",
     "CreateActionRequest",
     "CreateCardRequest",
@@ -556,6 +703,10 @@ __all__ = [
     "ExecuteActionRequest",
     "GetActionExecuteRequest",
     "GetActionRequest",
+    "GetAgentMetricFieldValuesRequest",
+    "GetAgentMetricRequest",
+    "GetAgentTableFieldValuesRequest",
+    "GetAgentTableRequest",
     "GetCardRequest",
     "GetCollectionRequest",
     "GetDashboardRequest",

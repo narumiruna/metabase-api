@@ -58,6 +58,33 @@ class _ConvenienceClient(_ClientWithRequestMethods):
     async def delete_action_public_link(self, action_id: str) -> dict[str, object]:
         return {"method": "DELETE", "path": f"/api/action/{action_id}/public_link"}
 
+    async def agent_execute(self, body: dict[str, object]) -> dict[str, object]:
+        return {"method": "POST", "path": "/api/agent/v1/execute", "body": body}
+
+    async def get_agent_metric(self, metric_id: str) -> dict[str, object]:
+        return {"method": "GET", "path": f"/api/agent/v1/metric/{metric_id}"}
+
+    async def get_agent_metric_field_values(self, metric_id: str, field_id: str) -> dict[str, object]:
+        return {"method": "GET", "path": f"/api/agent/v1/metric/{metric_id}/field/{field_id}/values"}
+
+    async def agent_ping(self) -> dict[str, object]:
+        return {"method": "GET", "path": "/api/agent/v1/ping"}
+
+    async def agent_search(self, body: dict[str, object]) -> dict[str, object]:
+        return {"method": "POST", "path": "/api/agent/v1/search", "body": body}
+
+    async def get_agent_table(self, table_id: str) -> dict[str, object]:
+        return {"method": "GET", "path": f"/api/agent/v1/table/{table_id}"}
+
+    async def get_agent_table_field_values(self, table_id: str, field_id: str) -> dict[str, object]:
+        return {"method": "GET", "path": f"/api/agent/v1/table/{table_id}/field/{field_id}/values"}
+
+    async def agent_construct_query(self, body: dict[str, object]) -> dict[str, object]:
+        return {"method": "POST", "path": "/api/agent/v2/construct-query", "body": body}
+
+    async def agent_query(self, body: dict[str, object]) -> dict[str, object]:
+        return {"method": "POST", "path": "/api/agent/v2/query", "body": body}
+
     async def most_recently_viewed_dashboard(self) -> dict[str, object]:
         return {"method": "GET", "path": "/api/activity/most_recently_viewed_dashboard"}
 
@@ -214,6 +241,15 @@ def test_help_lists_every_convenience_command() -> None:
         "execute-action",
         "create-action-public-link",
         "delete-action-public-link",
+        "agent-execute",
+        "get-agent-metric",
+        "get-agent-metric-field-values",
+        "agent-ping",
+        "agent-search",
+        "get-agent-table",
+        "get-agent-table-field-values",
+        "agent-construct-query",
+        "agent-query",
         "most-recently-viewed-dashboard",
         "list-popular-items",
         "list-recent-views",
@@ -285,6 +321,11 @@ def test_get_database_command_outputs_json(monkeypatch: pytest.MonkeyPatch) -> N
         (["list-public-actions"], "/api/action/public"),
         (["get-action", "11"], "/api/action/11"),
         (["get-action-execute", "11"], "/api/action/11/execute"),
+        (["get-agent-metric", "1"], "/api/agent/v1/metric/1"),
+        (["get-agent-metric-field-values", "1", "2"], "/api/agent/v1/metric/1/field/2/values"),
+        (["agent-ping"], "/api/agent/v1/ping"),
+        (["get-agent-table", "3"], "/api/agent/v1/table/3"),
+        (["get-agent-table-field-values", "3", "4"], "/api/agent/v1/table/3/field/4/values"),
         (["most-recently-viewed-dashboard"], "/api/activity/most_recently_viewed_dashboard"),
         (["list-popular-items"], "/api/activity/popular_items"),
         (["list-recent-views"], "/api/activity/recent_views"),
@@ -330,6 +371,10 @@ def test_read_endpoint_commands_cover_handwritten_surface(
         (["execute-action", "11", "--parameters", '{"id":1}'], "POST", "/api/action/11/execute"),
         (["create-action-public-link", "11"], "POST", "/api/action/11/public_link"),
         (["delete-action-public-link", "11"], "DELETE", "/api/action/11/public_link"),
+        (["agent-execute", '{"query":"abc"}'], "POST", "/api/agent/v1/execute"),
+        (["agent-search", '{"query":"orders"}'], "POST", "/api/agent/v1/search"),
+        (["agent-construct-query", '{"source":"x"}'], "POST", "/api/agent/v2/construct-query"),
+        (["agent-query", '{"source":"x"}'], "POST", "/api/agent/v2/query"),
         (["create-recent", '{"model":"card","model_id":1}'], "POST", "/api/activity/recents"),
     ],
 )

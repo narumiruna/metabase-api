@@ -15,8 +15,8 @@ This file is a static implementation checklist derived from the latest Metabase 
 ## Coverage summary
 
 - Documented operations: 600
-- Complete hand-written endpoint implementations: 31
-- Remaining documented operations: 569
+- Complete hand-written endpoint implementations: 40
+- Remaining documented operations: 560
 - Raw `request` / `invoke`: disabled for CLI users and does not count toward TODO completion.
 
 ## Endpoint checklist
@@ -42,17 +42,17 @@ This file is a static implementation checklist derived from the latest Metabase 
 - [x] `GET /api/activity/recents` — `get-api-activity-recents` — Get a list of recent items the current user has been viewing most recently under the `:recents` key. Allows for filtering by context: views or selections
 - [x] `POST /api/activity/recents` — `post-api-activity-recents` — Adds a model to the list of recently selected items.
 
-### /api/agent (0/9 complete)
+### /api/agent (9/9 complete)
 
-- [ ] `POST /api/agent/v1/execute` — `post-api-agent-v1-execute` — Execute an MBQL query and return results. Accepts a base64-encoded MBQL query (as returned by /v1/construct-query) and executes it, returning results with co...
-- [ ] `GET /api/agent/v1/metric/{id}` — `get-api-agent-v1-metric-id` — Get details for a metric by ID.
-- [ ] `GET /api/agent/v1/metric/{id}/field/{field-id}/values` — `get-api-agent-v1-metric-id-field-field-id-values` — Get statistics and sample values for a metric field.
-- [ ] `GET /api/agent/v1/ping` — `get-api-agent-v1-ping` — Health check endpoint for the Agent API.
-- [ ] `POST /api/agent/v1/search` — `post-api-agent-v1-search` — Search for tables and metrics. Supports both term-based and semantic search queries. Results are ranked using Reciprocal Rank Fusion when both query types ar...
-- [ ] `GET /api/agent/v1/table/{id}` — `get-api-agent-v1-table-id` — Get details for a table by ID.
-- [ ] `GET /api/agent/v1/table/{id}/field/{field-id}/values` — `get-api-agent-v1-table-id-field-field-id-values` — Get statistics and sample values for a table field.
-- [ ] `POST /api/agent/v2/construct-query` — `post-api-agent-v2-construct-query` — Construct an MBQL query from a structured agent-lib program. The body is the program itself: a JSON object with `source` (identifying the table/card/dataset/...
-- [ ] `POST /api/agent/v2/query` — `post-api-agent-v2-query` — Execute a structured program and stream the results, with continuation-token pagination. Accepts either a program (same shape as /v2/construct-query) or a `c...
+- [x] `POST /api/agent/v1/execute` — `post-api-agent-v1-execute` — Execute an MBQL query and return results. Accepts a base64-encoded MBQL query (as returned by /v1/construct-query) and executes it, returning results with co...
+- [x] `GET /api/agent/v1/metric/{id}` — `get-api-agent-v1-metric-id` — Get details for a metric by ID.
+- [x] `GET /api/agent/v1/metric/{id}/field/{field-id}/values` — `get-api-agent-v1-metric-id-field-field-id-values` — Get statistics and sample values for a metric field.
+- [x] `GET /api/agent/v1/ping` — `get-api-agent-v1-ping` — Health check endpoint for the Agent API.
+- [x] `POST /api/agent/v1/search` — `post-api-agent-v1-search` — Search for tables and metrics. Supports both term-based and semantic search queries. Results are ranked using Reciprocal Rank Fusion when both query types ar...
+- [x] `GET /api/agent/v1/table/{id}` — `get-api-agent-v1-table-id` — Get details for a table by ID.
+- [x] `GET /api/agent/v1/table/{id}/field/{field-id}/values` — `get-api-agent-v1-table-id-field-field-id-values` — Get statistics and sample values for a table field.
+- [x] `POST /api/agent/v2/construct-query` — `post-api-agent-v2-construct-query` — Construct an MBQL query from a structured agent-lib program. The body is the program itself: a JSON object with `source` (identifying the table/card/dataset/...
+- [x] `POST /api/agent/v2/query` — `post-api-agent-v2-query` — Execute a structured program and stream the results, with continuation-token pagination. Accepts either a program (same shape as /v2/construct-query) or a `c...
 
 ### /api/ai-entity-analysis (0/1 complete)
 

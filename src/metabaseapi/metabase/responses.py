@@ -53,6 +53,18 @@ class ListActivityItemsResponse(BaseModel):
         return _normalize_list_payload(values, "items")
 
 
+class AgentResponse(BaseModel):
+    raw: JSONValue | None = None
+    model_config = ConfigDict(extra="allow")
+
+    @model_validator(mode="before")
+    @classmethod
+    def normalize_payload(cls, values: object) -> dict[str, Any]:
+        if isinstance(values, dict):
+            return cast(dict[str, Any], values)
+        return {"raw": values}
+
+
 class ActivityMutationResponse(BaseModel):
     raw: JSONValue | None = None
     model_config = ConfigDict(extra="allow")
@@ -158,6 +170,7 @@ def _normalize_list_payload(values: object, list_key: str) -> dict[str, Any]:
 __all__ = [
     "ActionExecutionResponse",
     "ActivityMutationResponse",
+    "AgentResponse",
     "ListActionsResponse",
     "ListActivityItemsResponse",
     "ListCardsResponse",

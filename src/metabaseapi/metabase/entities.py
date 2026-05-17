@@ -68,6 +68,12 @@ class ActivityItem(_MetabaseEntity):
     timestamp: datetime | None = None
 
 
+class AgentResource(_MetabaseResponseBase):
+    id: int | str | None = None
+    name: str | None = None
+    raw: dict[str, Any] = PydanticField(default_factory=dict)
+
+
 class Card(_MetabaseEntity):
     display: str | None = None
     description: str | None = None
@@ -103,6 +109,7 @@ class MetabaseField(_MetabaseEntity):
 __all__ = [
     "Action",
     "ActivityItem",
+    "AgentResource",
     "Card",
     "Collection",
     "CurrentUserResponse",

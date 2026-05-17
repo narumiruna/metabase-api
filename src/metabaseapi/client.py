@@ -14,6 +14,12 @@ from metabaseapi.metabase import Action
 from metabaseapi.metabase import ActionExecutionResponse
 from metabaseapi.metabase import ActivityItem
 from metabaseapi.metabase import ActivityMutationResponse
+from metabaseapi.metabase import AgentConstructQueryRequest
+from metabaseapi.metabase import AgentExecuteRequest
+from metabaseapi.metabase import AgentPingRequest
+from metabaseapi.metabase import AgentQueryRequest
+from metabaseapi.metabase import AgentResponse
+from metabaseapi.metabase import AgentSearchRequest
 from metabaseapi.metabase import Card
 from metabaseapi.metabase import Collection
 from metabaseapi.metabase import CreateActionPublicLinkRequest
@@ -30,6 +36,10 @@ from metabaseapi.metabase import DeleteActionRequest
 from metabaseapi.metabase import ExecuteActionRequest
 from metabaseapi.metabase import GetActionExecuteRequest
 from metabaseapi.metabase import GetActionRequest
+from metabaseapi.metabase import GetAgentMetricFieldValuesRequest
+from metabaseapi.metabase import GetAgentMetricRequest
+from metabaseapi.metabase import GetAgentTableFieldValuesRequest
+from metabaseapi.metabase import GetAgentTableRequest
 from metabaseapi.metabase import GetCardRequest
 from metabaseapi.metabase import GetCollectionRequest
 from metabaseapi.metabase import GetDashboardRequest
@@ -306,6 +316,33 @@ class MetabaseClient:
     async def delete_action_public_link(self, action_id: int | str) -> JSONValue | None:
         return await self.delete(f"/api/action/{action_id}/public_link")
 
+    async def agent_execute(self, body: Mapping[str, object]) -> JSONValue | None:
+        return await self.post("/api/agent/v1/execute", body=dict(body))
+
+    async def get_agent_metric(self, metric_id: int | str) -> JSONValue | None:
+        return await self.get(f"/api/agent/v1/metric/{metric_id}")
+
+    async def get_agent_metric_field_values(self, metric_id: int | str, field_id: int | str) -> JSONValue | None:
+        return await self.get(f"/api/agent/v1/metric/{metric_id}/field/{field_id}/values")
+
+    async def agent_ping(self) -> JSONValue | None:
+        return await self.get("/api/agent/v1/ping")
+
+    async def agent_search(self, body: Mapping[str, object]) -> JSONValue | None:
+        return await self.post("/api/agent/v1/search", body=dict(body))
+
+    async def get_agent_table(self, table_id: int | str) -> JSONValue | None:
+        return await self.get(f"/api/agent/v1/table/{table_id}")
+
+    async def get_agent_table_field_values(self, table_id: int | str, field_id: int | str) -> JSONValue | None:
+        return await self.get(f"/api/agent/v1/table/{table_id}/field/{field_id}/values")
+
+    async def agent_construct_query(self, body: Mapping[str, object]) -> JSONValue | None:
+        return await self.post("/api/agent/v2/construct-query", body=dict(body))
+
+    async def agent_query(self, body: Mapping[str, object]) -> JSONValue | None:
+        return await self.post("/api/agent/v2/query", body=dict(body))
+
     async def most_recently_viewed_dashboard(self) -> JSONValue | None:
         return await self.get("/api/activity/most_recently_viewed_dashboard")
 
@@ -473,6 +510,33 @@ class MetabaseClient:
 
     async def delete_action_public_link_typed(self, action_id: int | str) -> ActionExecutionResponse:
         return await self.run(DeleteActionPublicLinkRequest(action_id=action_id))
+
+    async def agent_execute_typed(self, body: dict[str, object]) -> AgentResponse:
+        return await self.run(AgentExecuteRequest(body=body))
+
+    async def get_agent_metric_typed(self, metric_id: int | str) -> AgentResponse:
+        return await self.run(GetAgentMetricRequest(metric_id=metric_id))
+
+    async def get_agent_metric_field_values_typed(self, metric_id: int | str, field_id: int | str) -> AgentResponse:
+        return await self.run(GetAgentMetricFieldValuesRequest(metric_id=metric_id, field_id=field_id))
+
+    async def agent_ping_typed(self) -> AgentResponse:
+        return await self.run(AgentPingRequest())
+
+    async def agent_search_typed(self, body: dict[str, object]) -> AgentResponse:
+        return await self.run(AgentSearchRequest(body=body))
+
+    async def get_agent_table_typed(self, table_id: int | str) -> AgentResponse:
+        return await self.run(GetAgentTableRequest(table_id=table_id))
+
+    async def get_agent_table_field_values_typed(self, table_id: int | str, field_id: int | str) -> AgentResponse:
+        return await self.run(GetAgentTableFieldValuesRequest(table_id=table_id, field_id=field_id))
+
+    async def agent_construct_query_typed(self, body: dict[str, object]) -> AgentResponse:
+        return await self.run(AgentConstructQueryRequest(body=body))
+
+    async def agent_query_typed(self, body: dict[str, object]) -> AgentResponse:
+        return await self.run(AgentQueryRequest(body=body))
 
     async def most_recently_viewed_dashboard_typed(self) -> ActivityItem:
         return await self.run(GetMostRecentlyViewedDashboardRequest())

@@ -218,6 +218,40 @@ def delete_action_public_link(ctx: typer.Context, action_id: str = typer.Argumen
     _run_and_print(_run_client_call(ctx, lambda client: client.delete_action_public_link(action_id)))
 
 
+@app.command("analyze-chart")
+def analyze_chart(ctx: typer.Context, body: str = typer.Argument(..., help="Analyze chart JSON object")) -> None:
+    payload = _parse_json_object(body, "body")
+    _run_and_print(_run_client_call(ctx, lambda client: client.analyze_chart(payload)))
+
+
+@app.command("list-alerts")
+def list_alerts(ctx: typer.Context, user_id: str | None = typer.Option(None, "--user-id")) -> None:
+    _run_and_print(_run_client_call(ctx, lambda client: client.list_alerts(user_id=user_id)))
+
+
+@app.command("get-alert")
+def get_alert(ctx: typer.Context, alert_id: str = typer.Argument(...)) -> None:
+    _run_and_print(_run_client_call(ctx, lambda client: client.get_alert(alert_id)))
+
+
+@app.command("delete-alert-subscription")
+def delete_alert_subscription(ctx: typer.Context, alert_id: str = typer.Argument(...)) -> None:
+    _run_and_print(_run_client_call(ctx, lambda client: client.delete_alert_subscription(alert_id)))
+
+
+@app.command("anonymous-stats")
+def anonymous_stats(ctx: typer.Context) -> None:
+    _run_and_print(_run_client_call(ctx, lambda client: client.anonymous_stats()))
+
+
+@app.command("create-analytics-event-batch")
+def create_analytics_event_batch(
+    ctx: typer.Context, body: str = typer.Argument(..., help="Analytics event batch JSON object")
+) -> None:
+    payload = _parse_json_object(body, "body")
+    _run_and_print(_run_client_call(ctx, lambda client: client.create_analytics_event_batch(payload)))
+
+
 @app.command("agent-execute")
 def agent_execute(ctx: typer.Context, body: str = typer.Argument(..., help="Agent execute JSON object")) -> None:
     payload = _parse_json_object(body, "body")

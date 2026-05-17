@@ -20,10 +20,13 @@ from metabaseapi.metabase import AgentPingRequest
 from metabaseapi.metabase import AgentQueryRequest
 from metabaseapi.metabase import AgentResponse
 from metabaseapi.metabase import AgentSearchRequest
+from metabaseapi.metabase import Alert
+from metabaseapi.metabase import AnalyzeChartRequest
 from metabaseapi.metabase import Card
 from metabaseapi.metabase import Collection
 from metabaseapi.metabase import CreateActionPublicLinkRequest
 from metabaseapi.metabase import CreateActionRequest
+from metabaseapi.metabase import CreateAnalyticsEventBatchRequest
 from metabaseapi.metabase import CreateCardRequest
 from metabaseapi.metabase import CreateDatabaseRequest
 from metabaseapi.metabase import CreateRecentRequest
@@ -33,13 +36,17 @@ from metabaseapi.metabase import Dashboard
 from metabaseapi.metabase import Database
 from metabaseapi.metabase import DeleteActionPublicLinkRequest
 from metabaseapi.metabase import DeleteActionRequest
+from metabaseapi.metabase import DeleteAlertSubscriptionRequest
 from metabaseapi.metabase import ExecuteActionRequest
+from metabaseapi.metabase import GenericOperationResponse
 from metabaseapi.metabase import GetActionExecuteRequest
 from metabaseapi.metabase import GetActionRequest
 from metabaseapi.metabase import GetAgentMetricFieldValuesRequest
 from metabaseapi.metabase import GetAgentMetricRequest
 from metabaseapi.metabase import GetAgentTableFieldValuesRequest
 from metabaseapi.metabase import GetAgentTableRequest
+from metabaseapi.metabase import GetAlertRequest
+from metabaseapi.metabase import GetAnonymousStatsRequest
 from metabaseapi.metabase import GetCardRequest
 from metabaseapi.metabase import GetCollectionRequest
 from metabaseapi.metabase import GetDashboardRequest
@@ -51,6 +58,8 @@ from metabaseapi.metabase import GetUserRequest
 from metabaseapi.metabase import ListActionsRequest
 from metabaseapi.metabase import ListActionsResponse
 from metabaseapi.metabase import ListActivityItemsResponse
+from metabaseapi.metabase import ListAlertsRequest
+from metabaseapi.metabase import ListAlertsResponse
 from metabaseapi.metabase import ListCardsRequest
 from metabaseapi.metabase import ListCardsResponse
 from metabaseapi.metabase import ListCollectionsRequest
@@ -316,6 +325,25 @@ class MetabaseClient:
     async def delete_action_public_link(self, action_id: int | str) -> JSONValue | None:
         return await self.delete(f"/api/action/{action_id}/public_link")
 
+    async def analyze_chart(self, body: Mapping[str, object]) -> JSONValue | None:
+        return await self.post("/api/ai-entity-analysis/analyze-chart", body=dict(body))
+
+    async def list_alerts(self, *, user_id: int | str | None = None) -> JSONValue | None:
+        params = {"user_id": user_id} if user_id is not None else None
+        return await self.get("/api/alert", params=params)
+
+    async def get_alert(self, alert_id: int | str) -> JSONValue | None:
+        return await self.get(f"/api/alert/{alert_id}")
+
+    async def delete_alert_subscription(self, alert_id: int | str) -> JSONValue | None:
+        return await self.delete(f"/api/alert/{alert_id}/subscription")
+
+    async def anonymous_stats(self) -> JSONValue | None:
+        return await self.get("/api/analytics/anonymous-stats")
+
+    async def create_analytics_event_batch(self, body: Mapping[str, object]) -> JSONValue | None:
+        return await self.post("/api/analytics/internal", body=dict(body))
+
     async def agent_execute(self, body: Mapping[str, object]) -> JSONValue | None:
         return await self.post("/api/agent/v1/execute", body=dict(body))
 
@@ -510,6 +538,24 @@ class MetabaseClient:
 
     async def delete_action_public_link_typed(self, action_id: int | str) -> ActionExecutionResponse:
         return await self.run(DeleteActionPublicLinkRequest(action_id=action_id))
+
+    async def analyze_chart_typed(self, body: dict[str, object]) -> GenericOperationResponse:
+        return await self.run(AnalyzeChartRequest(body=body))
+
+    async def list_alerts_typed(self, *, user_id: int | str | None = None) -> ListAlertsResponse:
+        return await self.run(ListAlertsRequest(user_id=user_id))
+
+    async def get_alert_typed(self, alert_id: int | str) -> Alert:
+        return await self.run(GetAlertRequest(alert_id=alert_id))
+
+    async def delete_alert_subscription_typed(self, alert_id: int | str) -> GenericOperationResponse:
+        return await self.run(DeleteAlertSubscriptionRequest(alert_id=alert_id))
+
+    async def anonymous_stats_typed(self) -> GenericOperationResponse:
+        return await self.run(GetAnonymousStatsRequest())
+
+    async def create_analytics_event_batch_typed(self, body: dict[str, object]) -> GenericOperationResponse:
+        return await self.run(CreateAnalyticsEventBatchRequest(body=body))
 
     async def agent_execute_typed(self, body: dict[str, object]) -> AgentResponse:
         return await self.run(AgentExecuteRequest(body=body))

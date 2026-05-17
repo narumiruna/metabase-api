@@ -13,6 +13,7 @@ from pydantic import Field as PydanticField
 
 from metabaseapi.metabase.entities import Action
 from metabaseapi.metabase.entities import ActivityItem
+from metabaseapi.metabase.entities import Alert
 from metabaseapi.metabase.entities import Card
 from metabaseapi.metabase.entities import Collection
 from metabaseapi.metabase.entities import CurrentUserResponse
@@ -24,8 +25,10 @@ from metabaseapi.metabase.entities import User
 from metabaseapi.metabase.responses import ActionExecutionResponse
 from metabaseapi.metabase.responses import ActivityMutationResponse
 from metabaseapi.metabase.responses import AgentResponse
+from metabaseapi.metabase.responses import GenericOperationResponse
 from metabaseapi.metabase.responses import ListActionsResponse
 from metabaseapi.metabase.responses import ListActivityItemsResponse
+from metabaseapi.metabase.responses import ListAlertsResponse
 from metabaseapi.metabase.responses import ListCardsResponse
 from metabaseapi.metabase.responses import ListCollectionsResponse
 from metabaseapi.metabase.responses import ListDashboardsResponse
@@ -245,6 +248,99 @@ class DeleteActionPublicLinkRequest(_BaseMetabaseRequest[ActionExecutionResponse
 
     def resolve_path(self) -> str:
         return f"/api/action/{self.action_id}/public_link"
+
+
+class AnalyzeChartRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+    body: dict[str, Any]
+
+    endpoint_method: ClassVar[str] = "POST"
+    endpoint_path: ClassVar[str] = "/api/ai-entity-analysis/analyze-chart"
+
+    async def do(self, client: MetabaseRequestClient) -> GenericOperationResponse:
+        return await self.execute(client, GenericOperationResponse)
+
+    def do_sync(self, client: MetabaseRequestClient) -> GenericOperationResponse:
+        return self.execute_sync(client, GenericOperationResponse)
+
+    def request_body(self) -> JSONValue:
+        return self.body
+
+
+class ListAlertsRequest(_BaseMetabaseRequest[ListAlertsResponse]):
+    user_id: int | str | None = None
+
+    endpoint_method: ClassVar[str] = "GET"
+    endpoint_path: ClassVar[str] = "/api/alert"
+
+    async def do(self, client: MetabaseRequestClient) -> ListAlertsResponse:
+        return await self.execute(client, ListAlertsResponse)
+
+    def do_sync(self, client: MetabaseRequestClient) -> ListAlertsResponse:
+        return self.execute_sync(client, ListAlertsResponse)
+
+    def request_params(self) -> dict[str, QueryParamValue]:
+        if self.user_id is None:
+            return {}
+        return {"user_id": self.user_id}
+
+
+class GetAlertRequest(_BaseMetabaseRequest[Alert]):
+    alert_id: int | str
+
+    endpoint_method: ClassVar[str] = "GET"
+    endpoint_path: ClassVar[str] = "/api/alert/{id}"
+
+    async def do(self, client: MetabaseRequestClient) -> Alert:
+        return await self.execute(client, Alert)
+
+    def do_sync(self, client: MetabaseRequestClient) -> Alert:
+        return self.execute_sync(client, Alert)
+
+    def resolve_path(self) -> str:
+        return f"/api/alert/{self.alert_id}"
+
+
+class DeleteAlertSubscriptionRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+    alert_id: int | str
+
+    endpoint_method: ClassVar[str] = "DELETE"
+    endpoint_path: ClassVar[str] = "/api/alert/{id}/subscription"
+
+    async def do(self, client: MetabaseRequestClient) -> GenericOperationResponse:
+        return await self.execute(client, GenericOperationResponse)
+
+    def do_sync(self, client: MetabaseRequestClient) -> GenericOperationResponse:
+        return self.execute_sync(client, GenericOperationResponse)
+
+    def resolve_path(self) -> str:
+        return f"/api/alert/{self.alert_id}/subscription"
+
+
+class GetAnonymousStatsRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+    endpoint_method: ClassVar[str] = "GET"
+    endpoint_path: ClassVar[str] = "/api/analytics/anonymous-stats"
+
+    async def do(self, client: MetabaseRequestClient) -> GenericOperationResponse:
+        return await self.execute(client, GenericOperationResponse)
+
+    def do_sync(self, client: MetabaseRequestClient) -> GenericOperationResponse:
+        return self.execute_sync(client, GenericOperationResponse)
+
+
+class CreateAnalyticsEventBatchRequest(_BaseMetabaseRequest[GenericOperationResponse]):
+    body: dict[str, Any]
+
+    endpoint_method: ClassVar[str] = "POST"
+    endpoint_path: ClassVar[str] = "/api/analytics/internal"
+
+    async def do(self, client: MetabaseRequestClient) -> GenericOperationResponse:
+        return await self.execute(client, GenericOperationResponse)
+
+    def do_sync(self, client: MetabaseRequestClient) -> GenericOperationResponse:
+        return self.execute_sync(client, GenericOperationResponse)
+
+    def request_body(self) -> JSONValue:
+        return self.body
 
 
 class AgentExecuteRequest(_BaseMetabaseRequest[AgentResponse]):
@@ -692,14 +788,17 @@ __all__ = [
     "AgentPingRequest",
     "AgentQueryRequest",
     "AgentSearchRequest",
+    "AnalyzeChartRequest",
     "CreateActionPublicLinkRequest",
     "CreateActionRequest",
+    "CreateAnalyticsEventBatchRequest",
     "CreateCardRequest",
     "CreateDatabaseRequest",
     "CreateRecentRequest",
     "CurrentUserRequest",
     "DeleteActionPublicLinkRequest",
     "DeleteActionRequest",
+    "DeleteAlertSubscriptionRequest",
     "ExecuteActionRequest",
     "GetActionExecuteRequest",
     "GetActionRequest",
@@ -707,6 +806,8 @@ __all__ = [
     "GetAgentMetricRequest",
     "GetAgentTableFieldValuesRequest",
     "GetAgentTableRequest",
+    "GetAlertRequest",
+    "GetAnonymousStatsRequest",
     "GetCardRequest",
     "GetCollectionRequest",
     "GetDashboardRequest",
@@ -716,6 +817,7 @@ __all__ = [
     "GetTableRequest",
     "GetUserRequest",
     "ListActionsRequest",
+    "ListAlertsRequest",
     "ListCardsRequest",
     "ListCollectionsRequest",
     "ListDashboardsRequest",

@@ -58,6 +58,24 @@ class _ConvenienceClient(_ClientWithRequestMethods):
     async def delete_action_public_link(self, action_id: str) -> dict[str, object]:
         return {"method": "DELETE", "path": f"/api/action/{action_id}/public_link"}
 
+    async def analyze_chart(self, body: dict[str, object]) -> dict[str, object]:
+        return {"method": "POST", "path": "/api/ai-entity-analysis/analyze-chart", "body": body}
+
+    async def list_alerts(self, *, user_id: str | None = None) -> dict[str, object]:
+        return {"method": "GET", "path": "/api/alert", "params": {"user_id": user_id} if user_id else None}
+
+    async def get_alert(self, alert_id: str) -> dict[str, object]:
+        return {"method": "GET", "path": f"/api/alert/{alert_id}"}
+
+    async def delete_alert_subscription(self, alert_id: str) -> dict[str, object]:
+        return {"method": "DELETE", "path": f"/api/alert/{alert_id}/subscription"}
+
+    async def anonymous_stats(self) -> dict[str, object]:
+        return {"method": "GET", "path": "/api/analytics/anonymous-stats"}
+
+    async def create_analytics_event_batch(self, body: dict[str, object]) -> dict[str, object]:
+        return {"method": "POST", "path": "/api/analytics/internal", "body": body}
+
     async def agent_execute(self, body: dict[str, object]) -> dict[str, object]:
         return {"method": "POST", "path": "/api/agent/v1/execute", "body": body}
 
@@ -241,6 +259,12 @@ def test_help_lists_every_convenience_command() -> None:
         "execute-action",
         "create-action-public-link",
         "delete-action-public-link",
+        "analyze-chart",
+        "list-alerts",
+        "get-alert",
+        "delete-alert-subscription",
+        "anonymous-stats",
+        "create-analytics-event-batch",
         "agent-execute",
         "get-agent-metric",
         "get-agent-metric-field-values",
@@ -321,6 +345,9 @@ def test_get_database_command_outputs_json(monkeypatch: pytest.MonkeyPatch) -> N
         (["list-public-actions"], "/api/action/public"),
         (["get-action", "11"], "/api/action/11"),
         (["get-action-execute", "11"], "/api/action/11/execute"),
+        (["list-alerts"], "/api/alert"),
+        (["get-alert", "7"], "/api/alert/7"),
+        (["anonymous-stats"], "/api/analytics/anonymous-stats"),
         (["get-agent-metric", "1"], "/api/agent/v1/metric/1"),
         (["get-agent-metric-field-values", "1", "2"], "/api/agent/v1/metric/1/field/2/values"),
         (["agent-ping"], "/api/agent/v1/ping"),
@@ -371,6 +398,9 @@ def test_read_endpoint_commands_cover_handwritten_surface(
         (["execute-action", "11", "--parameters", '{"id":1}'], "POST", "/api/action/11/execute"),
         (["create-action-public-link", "11"], "POST", "/api/action/11/public_link"),
         (["delete-action-public-link", "11"], "DELETE", "/api/action/11/public_link"),
+        (["analyze-chart", '{"image":"base64"}'], "POST", "/api/ai-entity-analysis/analyze-chart"),
+        (["delete-alert-subscription", "7"], "DELETE", "/api/alert/7/subscription"),
+        (["create-analytics-event-batch", '{"events":[]}'], "POST", "/api/analytics/internal"),
         (["agent-execute", '{"query":"abc"}'], "POST", "/api/agent/v1/execute"),
         (["agent-search", '{"query":"orders"}'], "POST", "/api/agent/v1/search"),
         (["agent-construct-query", '{"source":"x"}'], "POST", "/api/agent/v2/construct-query"),

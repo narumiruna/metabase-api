@@ -15,8 +15,8 @@ This file is a static implementation checklist derived from the latest Metabase 
 ## Coverage summary
 
 - Documented operations: 600
-- Complete hand-written endpoint implementations: 40
-- Remaining documented operations: 560
+- Complete hand-written endpoint implementations: 46
+- Remaining documented operations: 554
 - Raw `request` / `invoke`: disabled for CLI users and does not count toward TODO completion.
 
 ## Endpoint checklist
@@ -54,20 +54,20 @@ This file is a static implementation checklist derived from the latest Metabase 
 - [x] `POST /api/agent/v2/construct-query` — `post-api-agent-v2-construct-query` — Construct an MBQL query from a structured agent-lib program. The body is the program itself: a JSON object with `source` (identifying the table/card/dataset/...
 - [x] `POST /api/agent/v2/query` — `post-api-agent-v2-query` — Execute a structured program and stream the results, with continuation-token pagination. Accepts either a program (same shape as /v2/construct-query) or a `c...
 
-### /api/ai-entity-analysis (0/1 complete)
+### /api/ai-entity-analysis (1/1 complete)
 
-- [ ] `POST /api/ai-entity-analysis/analyze-chart` — `post-api-ai-entity-analysis-analyze-chart` — Analyze a chart image using an AI vision model. This function sends the image data to a separate external AI service for analysis.
+- [x] `POST /api/ai-entity-analysis/analyze-chart` — `post-api-ai-entity-analysis-analyze-chart` — Analyze a chart image using an AI vision model. This function sends the image data to a separate external AI service for analysis.
 
-### /api/alert (0/3 complete)
+### /api/alert (3/3 complete)
 
-- [ ] `GET /api/alert` — `get-api-alert` — Fetch alerts which the current user has created or will receive, or all alerts if the user is an admin. The optional `user_id` will return alerts created by...
-- [ ] `GET /api/alert/{id}` — `get-api-alert-id` — Fetch an alert by ID
-- [ ] `DELETE /api/alert/{id}/subscription` — `delete-api-alert-id-subscription` — For users to unsubscribe themselves from the given alert.
+- [x] `GET /api/alert` — `get-api-alert` — Fetch alerts which the current user has created or will receive, or all alerts if the user is an admin. The optional `user_id` will return alerts created by...
+- [x] `GET /api/alert/{id}` — `get-api-alert-id` — Fetch an alert by ID
+- [x] `DELETE /api/alert/{id}/subscription` — `delete-api-alert-id-subscription` — For users to unsubscribe themselves from the given alert.
 
-### /api/analytics (0/2 complete)
+### /api/analytics (2/2 complete)
 
-- [ ] `GET /api/analytics/anonymous-stats` — `get-api-analytics-anonymous-stats` — Anonymous usage stats. Endpoint for testing, and eventually exposing this to instance admins to let them see what is being phoned home.
-- [ ] `POST /api/analytics/internal` — `post-api-analytics-internal` — Receive a batch of internal analytics events from the frontend and record them as Prometheus metrics.
+- [x] `GET /api/analytics/anonymous-stats` — `get-api-analytics-anonymous-stats` — Anonymous usage stats. Endpoint for testing, and eventually exposing this to instance admins to let them see what is being phoned home.
+- [x] `POST /api/analytics/internal` — `post-api-analytics-internal` — Receive a batch of internal analytics events from the frontend and record them as Prometheus metrics.
 
 ### /api/api-key (0/6 complete)
 

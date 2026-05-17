@@ -74,6 +74,12 @@ class AgentResource(_MetabaseResponseBase):
     raw: dict[str, Any] = PydanticField(default_factory=dict)
 
 
+class Alert(_MetabaseEntity):
+    card_id: int | str | None = None
+    user_id: int | str | None = None
+    archived: bool | None = None
+
+
 class Card(_MetabaseEntity):
     display: str | None = None
     description: str | None = None
@@ -110,6 +116,7 @@ __all__ = [
     "Action",
     "ActivityItem",
     "AgentResource",
+    "Alert",
     "Card",
     "Collection",
     "CurrentUserResponse",

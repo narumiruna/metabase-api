@@ -271,6 +271,7 @@ def test_cli_command_modules_import_from_package() -> None:
     assert metabaseapi.cli.commands.DATA_STUDIO_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
     assert metabaseapi.cli.commands.ACTION_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
     assert metabaseapi.cli.commands.ACTIVITY_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
+    assert metabaseapi.cli.commands.AI_ENTITY_ANALYSIS_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
     assert metabaseapi.cli.commands.AUTOMAGIC_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
     assert metabaseapi.cli.commands.API_KEY_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
     assert metabaseapi.cli.commands.AGENT_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
@@ -411,6 +412,7 @@ def test_client_domain_modules_use_singular_names() -> None:
     singular_domains = (
         "action",
         "alert",
+        "ai_entity_analysis",
         "bookmark",
         "card",
         "channel",
@@ -648,6 +650,12 @@ def test_activity_commands_live_with_activity_module() -> None:
     ):
         assert command_name in command_names[metabaseapi.cli.commands.ACTIVITY_COMMAND_MODULE]
         assert command_name not in command_names[metabaseapi.cli.commands.ANALYTICS_COMMAND_MODULE]
+
+
+def test_ai_entity_analysis_commands_live_with_ai_entity_analysis_module() -> None:
+    command_names = _command_names_by_module()
+    assert "analyze-chart" in command_names[metabaseapi.cli.commands.AI_ENTITY_ANALYSIS_COMMAND_MODULE]
+    assert "analyze-chart" not in command_names[metabaseapi.cli.commands.ANALYTICS_COMMAND_MODULE]
 
 
 def test_bookmark_commands_live_with_bookmark_module() -> None:

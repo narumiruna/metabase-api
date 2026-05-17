@@ -5,6 +5,7 @@ from __future__ import annotations
 RAW_MODULES = (
     "action",
     "activity",
+    "ai_entity_analysis",
     "agent",
     "alert",
     "analytics",

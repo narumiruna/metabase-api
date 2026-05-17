@@ -11,6 +11,7 @@ from metabaseapi.client import MetabaseClient
 from metabaseapi.client.raw import action as raw_action
 from metabaseapi.client.raw import activity as raw_activity
 from metabaseapi.client.raw import agent as raw_agent
+from metabaseapi.client.raw import ai_entity_analysis as raw_ai_entity_analysis
 from metabaseapi.client.raw import alert as raw_alert
 from metabaseapi.client.raw import analytics as raw_analytics
 from metabaseapi.client.raw import api_key as raw_api_key
@@ -186,7 +187,7 @@ def test_raw_paths_cover_handwritten_endpoint_surface() -> None:
         (raw_comment.delete_comment(client, 7), ("DELETE", "/api/comment/7", None)),
         (raw_api_key.regenerate_api_key(client, 7), ("PUT", "/api/api-key/7/regenerate", None)),
         (
-            raw_analytics.analyze_chart(client, {"image": "base64"}),
+            raw_ai_entity_analysis.analyze_chart(client, {"image": "base64"}),
             ("POST", "/api/ai-entity-analysis/analyze-chart", {"image": "base64"}),
         ),
         (raw_alert.list_alerts(client), ("GET", "/api/alert", None)),

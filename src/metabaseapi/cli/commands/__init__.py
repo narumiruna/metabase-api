@@ -10,6 +10,7 @@ from typing import NamedTuple
 
 ACTION_COMMAND_MODULE = "action"
 ACTIVITY_COMMAND_MODULE = "activity"
+AI_ENTITY_ANALYSIS_COMMAND_MODULE = "ai_entity_analysis"
 ALERT_COMMAND_MODULE = "alert"
 ANALYTICS_COMMAND_MODULE = "analytics"
 API_KEY_COMMAND_MODULE = "api_key"
@@ -50,6 +51,7 @@ COMMAND_MODULE_GROUP_ORDER: Final[tuple[CommandModuleGroup, ...]] = (
 COMMAND_MODULE_REGISTRY: Final[tuple[CommandModuleSpec, ...]] = (
     CommandModuleSpec(ACTION_COMMAND_MODULE, "core_resource"),
     CommandModuleSpec(ACTIVITY_COMMAND_MODULE, "core_resource"),
+    CommandModuleSpec(AI_ENTITY_ANALYSIS_COMMAND_MODULE, "core_resource"),
     CommandModuleSpec(ALERT_COMMAND_MODULE, "core_resource"),
     CommandModuleSpec(ANALYTICS_COMMAND_MODULE, "core_resource"),
     CommandModuleSpec(API_KEY_COMMAND_MODULE, "core_resource"),
@@ -138,6 +140,7 @@ __all__ = [
     "ACTION_COMMAND_MODULE",
     "ACTIVITY_COMMAND_MODULE",
     "AGENT_COMMAND_MODULE",
+    "AI_ENTITY_ANALYSIS_COMMAND_MODULE",
     "ALERT_COMMAND_MODULE",
     "ANALYTICS_COMMAND_MODULE",
     "API_KEY_COMMAND_MODULE",

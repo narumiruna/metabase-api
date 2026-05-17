@@ -8,8 +8,8 @@ from pydantic import Field as PydanticField
 from metabaseapi.endpoints.entities import Collection
 from metabaseapi.endpoints.execution import EndpointRequest
 from metabaseapi.endpoints.responses.collection import CollectionDashboardQuestionCandidatesResponse
+from metabaseapi.endpoints.responses.collection import CollectionItemsResponse
 from metabaseapi.endpoints.responses.collection import CollectionMoveDashboardQuestionCandidatesResponse
-from metabaseapi.endpoints.responses.common import GenericOperationResponse
 
 
 class GetCollectionRootRequest(EndpointRequest[Collection]):
@@ -26,10 +26,10 @@ class GetCollectionRootDashboardQuestionCandidatesRequest(
     response_model = CollectionDashboardQuestionCandidatesResponse
 
 
-class GetCollectionRootItemsRequest(EndpointRequest[GenericOperationResponse]):
+class GetCollectionRootItemsRequest(EndpointRequest[CollectionItemsResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/collection/root/items"
-    response_model = GenericOperationResponse
+    response_model = CollectionItemsResponse
 
 
 class PostCollectionRootMoveDashboardQuestionCandidatesRequest(

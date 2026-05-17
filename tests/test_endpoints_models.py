@@ -33,6 +33,9 @@ from metabaseapi.endpoints.requests.analytics import CreateAnalyticsEventBatchRe
 from metabaseapi.endpoints.requests.analytics import GetAnonymousStatsRequest
 from metabaseapi.endpoints.requests.api_key import CountApiKeysRequest
 from metabaseapi.endpoints.requests.api_key import DeleteApiKeyRequest
+from metabaseapi.endpoints.requests.automagic import AutomagicDashboardRequest
+from metabaseapi.endpoints.requests.automagic import AutomagicDatabaseCandidatesRequest
+from metabaseapi.endpoints.requests.automagic import AutomagicModelIndexPrimaryKeyRequest
 from metabaseapi.endpoints.requests.bookmark import DeleteBookmarkRequest
 from metabaseapi.endpoints.requests.bookmark import UpdateBookmarkOrderingRequest
 from metabaseapi.endpoints.requests.bug_reporting import GetBugReportingConnectionPoolDetailsRequest
@@ -141,6 +144,8 @@ from metabaseapi.endpoints.responses.analytics import AnalyticsEventBatchRespons
 from metabaseapi.endpoints.responses.analytics import AnonymousStatsResponse
 from metabaseapi.endpoints.responses.api_key import ApiKeyCountResponse
 from metabaseapi.endpoints.responses.api_key import DeleteApiKeyResponse
+from metabaseapi.endpoints.responses.automagic import AutomagicDashboardResponse
+from metabaseapi.endpoints.responses.automagic import AutomagicDatabaseCandidatesResponse
 from metabaseapi.endpoints.responses.bookmark import BookmarkOrderingUpdateResponse
 from metabaseapi.endpoints.responses.bookmark import DeleteBookmarkResponse
 from metabaseapi.endpoints.responses.bug_reporting import BugReportingConnectionPoolDetailsResponse
@@ -149,8 +154,22 @@ from metabaseapi.endpoints.responses.cache import CacheDeleteResponse
 from metabaseapi.endpoints.responses.cache import CacheInvalidationResponse
 from metabaseapi.endpoints.responses.cache import CacheResponse
 from metabaseapi.endpoints.responses.cache import CacheUpdateResponse
+from metabaseapi.endpoints.responses.card import CardCollectionsResponse
+from metabaseapi.endpoints.responses.card import CardDashboardsResponse
+from metabaseapi.endpoints.responses.card import CardEmbeddableResponse
+from metabaseapi.endpoints.responses.card import CardParameterValuesResponse
+from metabaseapi.endpoints.responses.card import CardPublicResponse
+from metabaseapi.endpoints.responses.card import CardQueryExportResponse
+from metabaseapi.endpoints.responses.card import CardQueryMetadataResponse
+from metabaseapi.endpoints.responses.card import CardQueryResponse
+from metabaseapi.endpoints.responses.card import CardRemappingResponse
 from metabaseapi.endpoints.responses.card import CardsDashboardsResponse
+from metabaseapi.endpoints.responses.card import CardSeriesResponse
+from metabaseapi.endpoints.responses.card import CreateCardPublicLinkResponse
+from metabaseapi.endpoints.responses.card import DeleteCardPublicLinkResponse
+from metabaseapi.endpoints.responses.card import DeleteCardResponse
 from metabaseapi.endpoints.responses.card import ListCardsResponse
+from metabaseapi.endpoints.responses.card import MoveCardsResponse
 from metabaseapi.endpoints.responses.channel import ChannelResponse
 from metabaseapi.endpoints.responses.channel import ChannelTestResponse
 from metabaseapi.endpoints.responses.channel import CreateChannelResponse
@@ -161,10 +180,33 @@ from metabaseapi.endpoints.responses.cloud_migration import CloudMigrationStatus
 from metabaseapi.endpoints.responses.cloud_migration import CreateCloudMigrationResponse
 from metabaseapi.endpoints.responses.collection import CollectionDashboardQuestionCandidatesResponse
 from metabaseapi.endpoints.responses.collection import CollectionGraphResponse
+from metabaseapi.endpoints.responses.collection import CollectionItemsResponse
 from metabaseapi.endpoints.responses.collection import CollectionMoveDashboardQuestionCandidatesResponse
+from metabaseapi.endpoints.responses.collection import CollectionTreeResponse
+from metabaseapi.endpoints.responses.collection import DeleteCollectionResponse
 from metabaseapi.endpoints.responses.collection import ListCollectionsResponse
-from metabaseapi.endpoints.responses.common import GenericOperationResponse
+from metabaseapi.endpoints.responses.comment import CommentMentionsResponse
+from metabaseapi.endpoints.responses.comment import CommentReactionResponse
+from metabaseapi.endpoints.responses.comment import CreateCommentResponse
+from metabaseapi.endpoints.responses.comment import DeleteCommentResponse
+from metabaseapi.endpoints.responses.comment import ListCommentsResponse
+from metabaseapi.endpoints.responses.comment import UpdateCommentResponse
+from metabaseapi.endpoints.responses.dashboard import CreateDashboardPublicLinkResponse
+from metabaseapi.endpoints.responses.dashboard import DashboardEmbeddableResponse
+from metabaseapi.endpoints.responses.dashboard import DashboardItemsResponse
+from metabaseapi.endpoints.responses.dashboard import DashboardParameterValuesResponse
+from metabaseapi.endpoints.responses.dashboard import DashboardPublicResponse
+from metabaseapi.endpoints.responses.dashboard import DashboardQueryMetadataResponse
+from metabaseapi.endpoints.responses.dashboard import DashboardQueryResponse
+from metabaseapi.endpoints.responses.dashboard import DashboardRelatedResponse
+from metabaseapi.endpoints.responses.dashboard import DashboardRemappingResponse
+from metabaseapi.endpoints.responses.dashboard import DeleteDashboardPublicLinkResponse
+from metabaseapi.endpoints.responses.dashboard import DeleteDashboardResponse
 from metabaseapi.endpoints.responses.dashboard import ListDashboardsResponse
+from metabaseapi.endpoints.responses.dashboard import SaveDashboardResponse
+from metabaseapi.endpoints.responses.dashboard import SaveDashboardToCollectionResponse
+from metabaseapi.endpoints.responses.dashboard import UpdateDashboardCardsResponse
+from metabaseapi.endpoints.responses.data_studio import DataStudioTableOperationResponse
 from metabaseapi.endpoints.responses.database import ListDatabasesResponse
 from metabaseapi.endpoints.responses.table import ListTablesResponse
 from metabaseapi.endpoints.responses.user import ListUsersResponse
@@ -366,6 +408,21 @@ def test_action_requests_use_expected_paths_and_payloads() -> None:
         (CountApiKeysRequest(), ApiKeyCountResponse, ("GET", "/api/api-key/count", {}, None)),
         (DeleteApiKeyRequest(api_key_id=7), DeleteApiKeyResponse, ("DELETE", "/api/api-key/7", {}, None)),
         (
+            AutomagicDashboardRequest(path="/table/4/cell/foo"),
+            AutomagicDashboardResponse,
+            ("GET", "/api/automagic-dashboards/table/4/cell/foo", {}, None),
+        ),
+        (
+            AutomagicDatabaseCandidatesRequest(database_id=4),
+            AutomagicDatabaseCandidatesResponse,
+            ("GET", "/api/automagic-dashboards/database/4/candidates", {}, None),
+        ),
+        (
+            AutomagicModelIndexPrimaryKeyRequest(model_index_id=2, primary_key_id=3),
+            AutomagicDashboardResponse,
+            ("GET", "/api/automagic-dashboards/model_index/2/primary_key/3", {}, None),
+        ),
+        (
             UpdateBookmarkOrderingRequest(body={"ids": [1]}),
             BookmarkOrderingUpdateResponse,
             ("PUT", "/api/bookmark/ordering", {}, {"ids": [1]}),
@@ -442,75 +499,75 @@ def test_action_requests_use_expected_paths_and_payloads() -> None:
         ),
         (
             DeleteCollectionRequest(collection_id="7"),
-            GenericOperationResponse,
+            DeleteCollectionResponse,
             ("DELETE", "/api/collection/7", {}, None),
         ),
         (
             GetCommentRequest(model="card", model_id=13),
-            GenericOperationResponse,
+            ListCommentsResponse,
             ("GET", "/api/comment", {"model": "card", "model-id": 13}, None),
         ),
         (
             GetCommentMentionsRequest(),
-            GenericOperationResponse,
+            CommentMentionsResponse,
             ("GET", "/api/comment/mentions", {}, None),
         ),
         (
             UpdateCommentRequest(comment_id="7", body={"text": "updated"}),
-            GenericOperationResponse,
+            UpdateCommentResponse,
             ("PUT", "/api/comment/7", {}, {"text": "updated"}),
         ),
         (
             PostCommentReactionRequest(comment_id="11", body={"emoji": "👍"}),
-            GenericOperationResponse,
+            CommentReactionResponse,
             ("POST", "/api/comment/11/reaction", {}, {"emoji": "👍"}),
         ),
         (
             PostCommentRequest(body={"text": "Hi"}),
-            GenericOperationResponse,
+            CreateCommentResponse,
             ("POST", "/api/comment", {}, {"text": "Hi"}),
         ),
         (GetDashboardRequest(dashboard_id=9), Dashboard, ("GET", "/api/dashboard/9", {}, None)),
-        (GetDashboardEmbeddableRequest(), GenericOperationResponse, ("GET", "/api/dashboard/embeddable", {}, None)),
-        (GetDashboardPublicRequest(), GenericOperationResponse, ("GET", "/api/dashboard/public", {}, None)),
+        (GetDashboardEmbeddableRequest(), DashboardEmbeddableResponse, ("GET", "/api/dashboard/embeddable", {}, None)),
+        (GetDashboardPublicRequest(), DashboardPublicResponse, ("GET", "/api/dashboard/public", {}, None)),
         (PostDashboardRequest(body={"name": "Sales"}), Dashboard, ("POST", "/api/dashboard", {}, {"name": "Sales"})),
         (
             PostDashboardPivotQueryRequest(dashboard_id=9, dashcard_id=10, card_id=11, body={"x": 1}),
-            GenericOperationResponse,
+            DashboardQueryResponse,
             ("POST", "/api/dashboard/pivot/9/dashcard/10/card/11/query", {}, {"x": 1}),
         ),
         (
             SaveDashboardRequest(body={"name": "Sales"}),
-            GenericOperationResponse,
+            SaveDashboardResponse,
             ("POST", "/api/dashboard/save", {}, {"name": "Sales"}),
         ),
         (
             SaveDashboardToCollectionRequest(parent_collection_id="root", body={"name": "Sales"}),
-            GenericOperationResponse,
+            SaveDashboardToCollectionResponse,
             ("POST", "/api/dashboard/save/collection/root", {}, {"name": "Sales"}),
         ),
         (
             GetDashboardDashcardExecuteRequest(dashboard_id=9, dashcard_id=10, parameters={"id": 1}),
-            GenericOperationResponse,
+            DashboardQueryResponse,
             ("GET", "/api/dashboard/9/dashcard/10/execute", {"id": 1}, None),
         ),
         (
             ExecuteDashboardDashcardRequest(dashboard_id=9, dashcard_id=10, parameters={"id": 1}),
-            GenericOperationResponse,
+            DashboardQueryResponse,
             ("POST", "/api/dashboard/9/dashcard/10/execute", {}, {"parameters": {"id": 1}}),
         ),
         (
             CreateDashboardPublicLinkRequest(dashboard_id=9),
-            GenericOperationResponse,
+            CreateDashboardPublicLinkResponse,
             ("POST", "/api/dashboard/9/public_link", {}, None),
         ),
         (
             DeleteDashboardPublicLinkRequest(dashboard_id=9),
-            GenericOperationResponse,
+            DeleteDashboardPublicLinkResponse,
             ("DELETE", "/api/dashboard/9/public_link", {}, None),
         ),
         (CopyDashboardRequest(from_dashboard_id=9), Dashboard, ("POST", "/api/dashboard/9/copy", {}, None)),
-        (DeleteDashboardRequest(dashboard_id=9), GenericOperationResponse, ("DELETE", "/api/dashboard/9", {}, None)),
+        (DeleteDashboardRequest(dashboard_id=9), DeleteDashboardResponse, ("DELETE", "/api/dashboard/9", {}, None)),
         (
             UpdateDashboardRequest(dashboard_id=9, body={"name": "Sales"}),
             Dashboard,
@@ -518,72 +575,72 @@ def test_action_requests_use_expected_paths_and_payloads() -> None:
         ),
         (
             UpdateDashboardCardsRequest(dashboard_id=9, body={"cards": []}),
-            GenericOperationResponse,
+            UpdateDashboardCardsResponse,
             ("PUT", "/api/dashboard/9/cards", {}, {"cards": []}),
         ),
         (
             GetDashboardItemsRequest(dashboard_id=9),
-            GenericOperationResponse,
+            DashboardItemsResponse,
             ("GET", "/api/dashboard/9/items", {}, None),
         ),
         (
             DashboardParamRemappingRequest(dashboard_id=9, param_key="abc", parameters={"value": 100}),
-            GenericOperationResponse,
+            DashboardRemappingResponse,
             ("GET", "/api/dashboard/9/params/abc/remapping", {"value": 100}, None),
         ),
         (
             DashboardParamSearchRequest(dashboard_id=9, param_key="abc", query="Orange", parameters={"limit": 10}),
-            GenericOperationResponse,
+            DashboardParameterValuesResponse,
             ("GET", "/api/dashboard/9/params/abc/search/Orange", {"limit": 10}, None),
         ),
         (
             DashboardParamValuesRequest(dashboard_id=9, param_key="abc", parameters={"limit": 10}),
-            GenericOperationResponse,
+            DashboardParameterValuesResponse,
             ("GET", "/api/dashboard/9/params/abc/values", {"limit": 10}, None),
         ),
         (
             GetDashboardQueryMetadataRequest(dashboard_id=9),
-            GenericOperationResponse,
+            DashboardQueryMetadataResponse,
             ("GET", "/api/dashboard/9/query_metadata", {}, None),
         ),
         (
             GetDashboardRelatedRequest(dashboard_id=9),
-            GenericOperationResponse,
+            DashboardRelatedResponse,
             ("GET", "/api/dashboard/9/related", {}, None),
         ),
         (
             DataStudioTableDiscardValuesRequest(body={"table_ids": [1]}),
-            GenericOperationResponse,
+            DataStudioTableOperationResponse,
             ("POST", "/api/data-studio/table/discard-values", {}, {"table_ids": [1]}),
         ),
         (
             DataStudioTableEditRequest(body={"table_ids": [1]}),
-            GenericOperationResponse,
+            DataStudioTableOperationResponse,
             ("POST", "/api/data-studio/table/edit", {}, {"table_ids": [1]}),
         ),
         (
             DataStudioTableRescanValuesRequest(body={"table_ids": [1]}),
-            GenericOperationResponse,
+            DataStudioTableOperationResponse,
             ("POST", "/api/data-studio/table/rescan-values", {}, {"table_ids": [1]}),
         ),
         (
             DataStudioTableSelectionRequest(body={"table_ids": [1]}),
-            GenericOperationResponse,
+            DataStudioTableOperationResponse,
             ("POST", "/api/data-studio/table/selection", {}, {"table_ids": [1]}),
         ),
         (
             DataStudioTableSyncSchemaRequest(body={"table_ids": [1]}),
-            GenericOperationResponse,
+            DataStudioTableOperationResponse,
             ("POST", "/api/data-studio/table/sync-schema", {}, {"table_ids": [1]}),
         ),
         (
             DeleteCommentRequest(comment_id="7"),
-            GenericOperationResponse,
+            DeleteCommentResponse,
             ("DELETE", "/api/comment/7", {}, None),
         ),
         (
             DeleteCommentRequest(comment_id="7"),
-            GenericOperationResponse,
+            DeleteCommentResponse,
             ("DELETE", "/api/comment/7", {}, None),
         ),
         (GetCollectionRootRequest(), Collection, ("GET", "/api/collection/root", {}, None)),
@@ -594,7 +651,7 @@ def test_action_requests_use_expected_paths_and_payloads() -> None:
         ),
         (
             GetCollectionRootItemsRequest(),
-            GenericOperationResponse,
+            CollectionItemsResponse,
             ("GET", "/api/collection/root/items", {}, None),
         ),
         (
@@ -609,12 +666,12 @@ def test_action_requests_use_expected_paths_and_payloads() -> None:
         ),
         (
             GetCollectionItemsRequest(collection_id="7"),
-            GenericOperationResponse,
+            CollectionItemsResponse,
             ("GET", "/api/collection/7/items", {}, None),
         ),
         (
             GetCollectionTreeRequest(),
-            GenericOperationResponse,
+            CollectionTreeResponse,
             ("GET", "/api/collection/tree", {}, None),
         ),
         (
@@ -634,50 +691,50 @@ def test_action_requests_use_expected_paths_and_payloads() -> None:
         ),
         (
             GetCardCollectionsRequest(card_ids=[1, 2], collection_id="root"),
-            GenericOperationResponse,
+            CardCollectionsResponse,
             ("POST", "/api/card/collections", {}, {"card_ids": [1, 2], "collection_id": "root"}),
         ),
-        (GetCardEmbeddableRequest(), GenericOperationResponse, ("GET", "/api/card/embeddable", {}, None)),
+        (GetCardEmbeddableRequest(), CardEmbeddableResponse, ("GET", "/api/card/embeddable", {}, None)),
         (
             PostCardPivotQueryRequest(card_id=13, body={"x": 1}),
-            GenericOperationResponse,
+            CardQueryResponse,
             ("POST", "/api/card/pivot/13/query", {}, {"x": 1}),
         ),
-        (GetCardPublicRequest(), GenericOperationResponse, ("GET", "/api/card/public", {}, None)),
+        (GetCardPublicRequest(), CardPublicResponse, ("GET", "/api/card/public", {}, None)),
         (
             CardParamsSearchRequest(card_id=13, param_key="abc", query="Orange"),
-            GenericOperationResponse,
+            CardParameterValuesResponse,
             ("GET", "/api/card/13/params/abc/search/Orange", {}, None),
         ),
         (
             CardParamsValuesRequest(card_id=13, param_key="abc"),
-            GenericOperationResponse,
+            CardParameterValuesResponse,
             ("GET", "/api/card/13/params/abc/values", {}, None),
         ),
         (
             CreateCardPublicLinkRequest(card_id=13),
-            GenericOperationResponse,
+            CreateCardPublicLinkResponse,
             ("POST", "/api/card/13/public_link", {}, None),
         ),
         (
             DeleteCardPublicLinkRequest(card_id=13),
-            GenericOperationResponse,
+            DeleteCardPublicLinkResponse,
             ("DELETE", "/api/card/13/public_link", {}, None),
         ),
         (
             CardQueryRequest(card_id=13, body={"x": 1}),
-            GenericOperationResponse,
+            CardQueryResponse,
             ("POST", "/api/card/13/query", {}, {"x": 1}),
         ),
         (
             CardQueryExportRequest(
                 card_id=13, export_format="csv", body={"x": 1}, pivot_results=True, format_rows=False
             ),
-            GenericOperationResponse,
+            CardQueryExportResponse,
             ("POST", "/api/card/13/query/csv", {"pivot-results": True, "format-rows": False}, {"x": 1}),
         ),
         (UpdateCardRequest(card_id=13, body={"name": "x"}), Card, ("PUT", "/api/card/13", {}, {"name": "x"})),
-        (DeleteCardRequest(card_id=13), GenericOperationResponse, ("DELETE", "/api/card/13", {}, None)),
+        (DeleteCardRequest(card_id=13), DeleteCardResponse, ("DELETE", "/api/card/13", {}, None)),
         (
             CardsDashboardsRequest(card_ids=[1, 2]),
             CardsDashboardsResponse,
@@ -685,7 +742,7 @@ def test_action_requests_use_expected_paths_and_payloads() -> None:
         ),
         (
             MoveCardsRequest(body={"card_ids": [1], "collection_id": "root"}),
-            GenericOperationResponse,
+            MoveCardsResponse,
             ("POST", "/api/cards/move", {}, {"card_ids": [1], "collection_id": "root"}),
         ),
         (
@@ -693,18 +750,18 @@ def test_action_requests_use_expected_paths_and_payloads() -> None:
             Card,
             ("POST", "/api/card/13/copy", {}, {"name": "Copy"}),
         ),
-        (GetCardDashboardsRequest(card_id=13), GenericOperationResponse, ("GET", "/api/card/13/dashboards", {}, None)),
+        (GetCardDashboardsRequest(card_id=13), CardDashboardsResponse, ("GET", "/api/card/13/dashboards", {}, None)),
         (
             CardRemappingRequest(card_id=13, param_key="abc"),
-            GenericOperationResponse,
+            CardRemappingResponse,
             ("GET", "/api/card/13/params/abc/remapping", {}, None),
         ),
         (
             GetCardQueryMetadataRequest(card_id=13),
-            GenericOperationResponse,
+            CardQueryMetadataResponse,
             ("GET", "/api/card/13/query_metadata", {}, None),
         ),
-        (GetCardSeriesRequest(card_id=13), GenericOperationResponse, ("GET", "/api/card/13/series", {}, None)),
+        (GetCardSeriesRequest(card_id=13), CardSeriesResponse, ("GET", "/api/card/13/series", {}, None)),
         (
             GetUserKeyValueNamespaceRequest(namespace="user"),
             UserKeyValueNamespaceResponse,
@@ -1049,13 +1106,13 @@ def test_client_run_endpoint_requests_return_models() -> None:
     assert created_dashboard.name == "Sales"
     assert isinstance(updated_collection, Collection)
     assert updated_collection.name == "Updated"
-    assert isinstance(deleted_collection, GenericOperationResponse)
-    assert isinstance(comments, GenericOperationResponse)
-    assert isinstance(comments_mentions, GenericOperationResponse)
-    assert isinstance(created_comment, GenericOperationResponse)
-    assert isinstance(updated_comment, GenericOperationResponse)
-    assert isinstance(reaction_comment, GenericOperationResponse)
-    assert isinstance(deleted_comment, GenericOperationResponse)
+    assert isinstance(deleted_collection, DeleteCollectionResponse)
+    assert isinstance(comments, ListCommentsResponse)
+    assert isinstance(comments_mentions, CommentMentionsResponse)
+    assert isinstance(created_comment, CreateCommentResponse)
+    assert isinstance(updated_comment, UpdateCommentResponse)
+    assert isinstance(reaction_comment, CommentReactionResponse)
+    assert isinstance(deleted_comment, DeleteCommentResponse)
     assert isinstance(user_key_values, UserKeyValueNamespaceResponse)
     assert isinstance(put_user_key_value, UserKeyValueStoreResponse)
     assert isinstance(get_user_key_value, UserKeyValueResponse)
@@ -1066,44 +1123,44 @@ def test_client_run_endpoint_requests_return_models() -> None:
     assert collection_root.id == "root"
     assert collection_root.name == "Root"
     assert isinstance(collection_root_candidates, CollectionDashboardQuestionCandidatesResponse)
-    assert isinstance(collection_root_items, GenericOperationResponse)
+    assert isinstance(collection_root_items, CollectionItemsResponse)
     assert isinstance(collection_root_candidates_moved, CollectionMoveDashboardQuestionCandidatesResponse)
     assert isinstance(collection_move_candidates, CollectionMoveDashboardQuestionCandidatesResponse)
     assert isinstance(collection_dashboard_question_candidates, CollectionDashboardQuestionCandidatesResponse)
-    assert isinstance(collection_items, GenericOperationResponse)
+    assert isinstance(collection_items, CollectionItemsResponse)
     assert isinstance(collection_trash, Collection)
     assert collection_trash.id == "trash"
     assert collection_trash.name == "Trash"
-    assert isinstance(collection_tree, GenericOperationResponse)
+    assert isinstance(collection_tree, CollectionTreeResponse)
     assert collection_tree.model_dump(exclude_none=True) == {"id": "collections", "children": []}
     assert isinstance(cards, ListCardsResponse)
     assert isinstance(cards_dashboards, CardsDashboardsResponse)
-    assert isinstance(moved_cards, GenericOperationResponse)
+    assert isinstance(moved_cards, MoveCardsResponse)
     assert isinstance(dashboards, ListDashboardsResponse)
-    assert isinstance(dashboard_embeddable, GenericOperationResponse)
-    assert isinstance(dashboard_public, GenericOperationResponse)
-    assert isinstance(dashboard_pivot, GenericOperationResponse)
-    assert isinstance(saved_dashboard, GenericOperationResponse)
-    assert isinstance(saved_dashboard_to_collection, GenericOperationResponse)
-    assert isinstance(dashboard_dashcard_execute, GenericOperationResponse)
-    assert isinstance(executed_dashboard_dashcard, GenericOperationResponse)
-    assert isinstance(dashboard_public_link, GenericOperationResponse)
-    assert isinstance(deleted_dashboard_public_link, GenericOperationResponse)
+    assert isinstance(dashboard_embeddable, DashboardEmbeddableResponse)
+    assert isinstance(dashboard_public, DashboardPublicResponse)
+    assert isinstance(dashboard_pivot, DashboardQueryResponse)
+    assert isinstance(saved_dashboard, SaveDashboardResponse)
+    assert isinstance(saved_dashboard_to_collection, SaveDashboardToCollectionResponse)
+    assert isinstance(dashboard_dashcard_execute, DashboardQueryResponse)
+    assert isinstance(executed_dashboard_dashcard, DashboardQueryResponse)
+    assert isinstance(dashboard_public_link, CreateDashboardPublicLinkResponse)
+    assert isinstance(deleted_dashboard_public_link, DeleteDashboardPublicLinkResponse)
     assert isinstance(copied_dashboard, Dashboard)
-    assert isinstance(deleted_dashboard, GenericOperationResponse)
+    assert isinstance(deleted_dashboard, DeleteDashboardResponse)
     assert isinstance(updated_dashboard, Dashboard)
-    assert isinstance(updated_dashboard_cards, GenericOperationResponse)
-    assert isinstance(dashboard_items, GenericOperationResponse)
-    assert isinstance(dashboard_param_remapping, GenericOperationResponse)
-    assert isinstance(dashboard_param_search, GenericOperationResponse)
-    assert isinstance(dashboard_param_values, GenericOperationResponse)
-    assert isinstance(dashboard_query_metadata, GenericOperationResponse)
-    assert isinstance(dashboard_related, GenericOperationResponse)
-    assert isinstance(data_studio_table_discard_values, GenericOperationResponse)
-    assert isinstance(data_studio_table_edit, GenericOperationResponse)
-    assert isinstance(data_studio_table_rescan_values, GenericOperationResponse)
-    assert isinstance(data_studio_table_selection, GenericOperationResponse)
-    assert isinstance(data_studio_table_sync_schema, GenericOperationResponse)
+    assert isinstance(updated_dashboard_cards, UpdateDashboardCardsResponse)
+    assert isinstance(dashboard_items, DashboardItemsResponse)
+    assert isinstance(dashboard_param_remapping, DashboardRemappingResponse)
+    assert isinstance(dashboard_param_search, DashboardParameterValuesResponse)
+    assert isinstance(dashboard_param_values, DashboardParameterValuesResponse)
+    assert isinstance(dashboard_query_metadata, DashboardQueryMetadataResponse)
+    assert isinstance(dashboard_related, DashboardRelatedResponse)
+    assert isinstance(data_studio_table_discard_values, DataStudioTableOperationResponse)
+    assert isinstance(data_studio_table_edit, DataStudioTableOperationResponse)
+    assert isinstance(data_studio_table_rescan_values, DataStudioTableOperationResponse)
+    assert isinstance(data_studio_table_selection, DataStudioTableOperationResponse)
+    assert isinstance(data_studio_table_sync_schema, DataStudioTableOperationResponse)
     assert isinstance(users, ListUsersResponse)
     assert isinstance(collections, ListCollectionsResponse)
     assert isinstance(tables, ListTablesResponse)

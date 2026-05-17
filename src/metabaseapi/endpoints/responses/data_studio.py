@@ -10,7 +10,7 @@ from metabaseapi.endpoints._response_payload import normalize_unstructured_paylo
 from metabaseapi.wire import JSONValue
 
 
-class GenericOperationResponse(BaseModel):
+class DataStudioTableOperationResponse(BaseModel):
     raw: JSONValue | None = None
     model_config = ConfigDict(extra="allow")
 
@@ -18,4 +18,3 @@ class GenericOperationResponse(BaseModel):
     @classmethod
     def normalize_payload(cls, values: object) -> dict[str, Any]:
         return normalize_unstructured_payload(values)
-

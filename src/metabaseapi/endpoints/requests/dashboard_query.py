@@ -6,19 +6,25 @@ from typing import ClassVar
 from pydantic import Field as PydanticField
 
 from metabaseapi.endpoints.execution import EndpointRequest
-from metabaseapi.endpoints.responses.common import GenericOperationResponse
+from metabaseapi.endpoints.responses.dashboard import DashboardParameterValuesResponse
+from metabaseapi.endpoints.responses.dashboard import DashboardQueryExportResponse
+from metabaseapi.endpoints.responses.dashboard import DashboardQueryMetadataResponse
+from metabaseapi.endpoints.responses.dashboard import DashboardQueryResponse
+from metabaseapi.endpoints.responses.dashboard import DashboardRelatedResponse
+from metabaseapi.endpoints.responses.dashboard import DashboardRemappingResponse
+from metabaseapi.endpoints.responses.dashboard import DashboardValidFilterFieldsResponse
 from metabaseapi.wire import JSONValue
 from metabaseapi.wire import QueryParamPrimitive
 from metabaseapi.wire import QueryParamValue
 
 
-class DashboardParamsValidFilterFieldsRequest(EndpointRequest[GenericOperationResponse]):
+class DashboardParamsValidFilterFieldsRequest(EndpointRequest[DashboardValidFilterFieldsResponse]):
     filtered: list[QueryParamPrimitive] | None = None
     filtering: list[QueryParamPrimitive] | None = None
 
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/dashboard/params/valid-filter-fields"
-    response_model = GenericOperationResponse
+    response_model = DashboardValidFilterFieldsResponse
 
     def request_params(self) -> dict[str, QueryParamValue]:
         params: dict[str, QueryParamValue] = {}
@@ -29,7 +35,7 @@ class DashboardParamsValidFilterFieldsRequest(EndpointRequest[GenericOperationRe
         return params
 
 
-class DashboardCardQueryRequest(EndpointRequest[GenericOperationResponse]):
+class DashboardCardQueryRequest(EndpointRequest[DashboardQueryResponse]):
     dashboard_id: int | str
     dashcard_id: int | str
     card_id: int | str
@@ -37,10 +43,10 @@ class DashboardCardQueryRequest(EndpointRequest[GenericOperationResponse]):
 
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/dashboard/{dashboard_id}/dashcard/{dashcard_id}/card/{card_id}/query"
-    response_model = GenericOperationResponse
+    response_model = DashboardQueryResponse
 
 
-class DashboardCardQueryExportRequest(EndpointRequest[GenericOperationResponse]):
+class DashboardCardQueryExportRequest(EndpointRequest[DashboardQueryExportResponse]):
     dashboard_id: int | str
     dashcard_id: int | str
     card_id: int | str
@@ -53,7 +59,7 @@ class DashboardCardQueryExportRequest(EndpointRequest[GenericOperationResponse])
     endpoint_path: ClassVar[str] = (
         "/api/dashboard/{dashboard_id}/dashcard/{dashcard_id}/card/{card_id}/query/{export_format}"
     )
-    response_model = GenericOperationResponse
+    response_model = DashboardQueryExportResponse
 
     def request_params(self) -> dict[str, QueryParamValue]:
         params: dict[str, QueryParamValue] = {}
@@ -64,7 +70,7 @@ class DashboardCardQueryExportRequest(EndpointRequest[GenericOperationResponse])
         return params
 
 
-class PostDashboardPivotQueryRequest(EndpointRequest[GenericOperationResponse]):
+class PostDashboardPivotQueryRequest(EndpointRequest[DashboardQueryResponse]):
     dashboard_id: int | str
     dashcard_id: int | str
     card_id: int | str
@@ -72,49 +78,49 @@ class PostDashboardPivotQueryRequest(EndpointRequest[GenericOperationResponse]):
 
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/dashboard/pivot/{dashboard_id}/dashcard/{dashcard_id}/card/{card_id}/query"
-    response_model = GenericOperationResponse
+    response_model = DashboardQueryResponse
 
 
-class GetDashboardDashcardExecuteRequest(EndpointRequest[GenericOperationResponse]):
+class GetDashboardDashcardExecuteRequest(EndpointRequest[DashboardQueryResponse]):
     dashboard_id: int | str
     dashcard_id: int | str
     parameters: dict[str, QueryParamValue] = PydanticField(default_factory=dict)
 
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/dashboard/{dashboard_id}/dashcard/{dashcard_id}/execute"
-    response_model = GenericOperationResponse
+    response_model = DashboardQueryResponse
 
     def request_params(self) -> dict[str, QueryParamValue]:
         return self.parameters
 
 
-class ExecuteDashboardDashcardRequest(EndpointRequest[GenericOperationResponse]):
+class ExecuteDashboardDashcardRequest(EndpointRequest[DashboardQueryResponse]):
     dashboard_id: int | str
     dashcard_id: int | str
     parameters: dict[str, Any] = PydanticField(default_factory=dict)
 
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/dashboard/{dashboard_id}/dashcard/{dashcard_id}/execute"
-    response_model = GenericOperationResponse
+    response_model = DashboardQueryResponse
 
     def request_body(self) -> JSONValue:
         return {"parameters": self.parameters}
 
 
-class DashboardParamRemappingRequest(EndpointRequest[GenericOperationResponse]):
+class DashboardParamRemappingRequest(EndpointRequest[DashboardRemappingResponse]):
     dashboard_id: int | str
     param_key: str
     parameters: dict[str, QueryParamValue] = PydanticField(default_factory=dict)
 
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/dashboard/{dashboard_id}/params/{param_key}/remapping"
-    response_model = GenericOperationResponse
+    response_model = DashboardRemappingResponse
 
     def request_params(self) -> dict[str, QueryParamValue]:
         return self.parameters
 
 
-class DashboardParamSearchRequest(EndpointRequest[GenericOperationResponse]):
+class DashboardParamSearchRequest(EndpointRequest[DashboardParameterValuesResponse]):
     dashboard_id: int | str
     param_key: str
     query: str
@@ -122,36 +128,36 @@ class DashboardParamSearchRequest(EndpointRequest[GenericOperationResponse]):
 
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/dashboard/{dashboard_id}/params/{param_key}/search/{query}"
-    response_model = GenericOperationResponse
+    response_model = DashboardParameterValuesResponse
 
     def request_params(self) -> dict[str, QueryParamValue]:
         return self.parameters
 
 
-class DashboardParamValuesRequest(EndpointRequest[GenericOperationResponse]):
+class DashboardParamValuesRequest(EndpointRequest[DashboardParameterValuesResponse]):
     dashboard_id: int | str
     param_key: str
     parameters: dict[str, QueryParamValue] = PydanticField(default_factory=dict)
 
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/dashboard/{dashboard_id}/params/{param_key}/values"
-    response_model = GenericOperationResponse
+    response_model = DashboardParameterValuesResponse
 
     def request_params(self) -> dict[str, QueryParamValue]:
         return self.parameters
 
 
-class GetDashboardQueryMetadataRequest(EndpointRequest[GenericOperationResponse]):
+class GetDashboardQueryMetadataRequest(EndpointRequest[DashboardQueryMetadataResponse]):
     dashboard_id: int | str
 
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/dashboard/{dashboard_id}/query_metadata"
-    response_model = GenericOperationResponse
+    response_model = DashboardQueryMetadataResponse
 
 
-class GetDashboardRelatedRequest(EndpointRequest[GenericOperationResponse]):
+class GetDashboardRelatedRequest(EndpointRequest[DashboardRelatedResponse]):
     dashboard_id: int | str
 
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/dashboard/{dashboard_id}/related"
-    response_model = GenericOperationResponse
+    response_model = DashboardRelatedResponse

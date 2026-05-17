@@ -6,56 +6,62 @@ from typing import ClassVar
 from pydantic import Field as PydanticField
 
 from metabaseapi.endpoints.execution import EndpointRequest
+from metabaseapi.endpoints.responses.card import CardDashboardsResponse
+from metabaseapi.endpoints.responses.card import CardParameterValuesResponse
+from metabaseapi.endpoints.responses.card import CardQueryExportResponse
+from metabaseapi.endpoints.responses.card import CardQueryMetadataResponse
+from metabaseapi.endpoints.responses.card import CardQueryResponse
+from metabaseapi.endpoints.responses.card import CardRemappingResponse
 from metabaseapi.endpoints.responses.card import CardsDashboardsResponse
-from metabaseapi.endpoints.responses.common import GenericOperationResponse
+from metabaseapi.endpoints.responses.card import CardSeriesResponse
 from metabaseapi.wire import JSONValue
 from metabaseapi.wire import QueryParamValue
 
 
-class PostCardPivotQueryRequest(EndpointRequest[GenericOperationResponse]):
+class PostCardPivotQueryRequest(EndpointRequest[CardQueryResponse]):
     card_id: int | str
     body: dict[str, Any] = PydanticField(default_factory=dict)
 
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/card/pivot/{card-id}/query"
-    response_model = GenericOperationResponse
+    response_model = CardQueryResponse
 
     def request_body(self) -> JSONValue:
         return self.body or None
 
 
-class CardParamsSearchRequest(EndpointRequest[GenericOperationResponse]):
+class CardParamsSearchRequest(EndpointRequest[CardParameterValuesResponse]):
     card_id: int | str
     param_key: str
     query: str
 
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/card/{card_id}/params/{param_key}/search/{query}"
-    response_model = GenericOperationResponse
+    response_model = CardParameterValuesResponse
 
 
-class CardParamsValuesRequest(EndpointRequest[GenericOperationResponse]):
+class CardParamsValuesRequest(EndpointRequest[CardParameterValuesResponse]):
     card_id: int | str
     param_key: str
 
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/card/{card_id}/params/{param_key}/values"
-    response_model = GenericOperationResponse
+    response_model = CardParameterValuesResponse
 
 
-class CardQueryRequest(EndpointRequest[GenericOperationResponse]):
+class CardQueryRequest(EndpointRequest[CardQueryResponse]):
     card_id: int | str
     body: dict[str, Any] = PydanticField(default_factory=dict)
 
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/card/{card_id}/query"
-    response_model = GenericOperationResponse
+    response_model = CardQueryResponse
 
     def request_body(self) -> JSONValue:
         return self.body or None
 
 
-class CardQueryExportRequest(EndpointRequest[GenericOperationResponse]):
+class CardQueryExportRequest(EndpointRequest[CardQueryExportResponse]):
     card_id: int | str
     export_format: str
     body: dict[str, Any] = PydanticField(default_factory=dict)
@@ -64,7 +70,7 @@ class CardQueryExportRequest(EndpointRequest[GenericOperationResponse]):
 
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/card/{card_id}/query/{export_format}"
-    response_model = GenericOperationResponse
+    response_model = CardQueryExportResponse
 
     def request_body(self) -> JSONValue:
         return self.body or None
@@ -78,37 +84,37 @@ class CardQueryExportRequest(EndpointRequest[GenericOperationResponse]):
         return params
 
 
-class GetCardDashboardsRequest(EndpointRequest[GenericOperationResponse]):
+class GetCardDashboardsRequest(EndpointRequest[CardDashboardsResponse]):
     card_id: int | str
 
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/card/{card_id}/dashboards"
-    response_model = GenericOperationResponse
+    response_model = CardDashboardsResponse
 
 
-class CardRemappingRequest(EndpointRequest[GenericOperationResponse]):
+class CardRemappingRequest(EndpointRequest[CardRemappingResponse]):
     card_id: int | str
     param_key: str
 
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/card/{card_id}/params/{param_key}/remapping"
-    response_model = GenericOperationResponse
+    response_model = CardRemappingResponse
 
 
-class GetCardQueryMetadataRequest(EndpointRequest[GenericOperationResponse]):
+class GetCardQueryMetadataRequest(EndpointRequest[CardQueryMetadataResponse]):
     card_id: int | str
 
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/card/{card_id}/query_metadata"
-    response_model = GenericOperationResponse
+    response_model = CardQueryMetadataResponse
 
 
-class GetCardSeriesRequest(EndpointRequest[GenericOperationResponse]):
+class GetCardSeriesRequest(EndpointRequest[CardSeriesResponse]):
     card_id: int | str
 
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/card/{card_id}/series"
-    response_model = GenericOperationResponse
+    response_model = CardSeriesResponse
 
 
 class CardsDashboardsRequest(EndpointRequest[CardsDashboardsResponse]):

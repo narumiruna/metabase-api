@@ -53,13 +53,15 @@ import metabaseapi.endpoints.responses.activity
 import metabaseapi.endpoints.responses.agent
 import metabaseapi.endpoints.responses.alert
 import metabaseapi.endpoints.responses.api_key
+import metabaseapi.endpoints.responses.automagic
 import metabaseapi.endpoints.responses.bookmark
 import metabaseapi.endpoints.responses.cache
 import metabaseapi.endpoints.responses.card
 import metabaseapi.endpoints.responses.channel
 import metabaseapi.endpoints.responses.collection
-import metabaseapi.endpoints.responses.common
+import metabaseapi.endpoints.responses.comment
 import metabaseapi.endpoints.responses.dashboard
+import metabaseapi.endpoints.responses.data_studio
 import metabaseapi.endpoints.responses.database
 import metabaseapi.endpoints.responses.table
 import metabaseapi.endpoints.responses.user
@@ -268,6 +270,7 @@ RESPONSE_MODULE_CONTRACTS = {
     "alert": ("AlertSubscriptionDeleteResponse", "ListAlertsResponse"),
     "analytics": ("AnalyticsEventBatchResponse", "AnonymousStatsResponse"),
     "api_key": ("ApiKeyCountResponse", "DeleteApiKeyResponse", "ListApiKeysResponse"),
+    "automagic": ("AutomagicDashboardResponse", "AutomagicDatabaseCandidatesResponse"),
     "bookmark": ("BookmarkOrderingUpdateResponse", "DeleteBookmarkResponse", "ListBookmarksResponse"),
     "bug_reporting": ("BugReportingConnectionPoolDetailsResponse", "BugReportingDetailsResponse"),
     "cache": (
@@ -276,7 +279,24 @@ RESPONSE_MODULE_CONTRACTS = {
         "CacheResponse",
         "CacheUpdateResponse",
     ),
-    "card": ("CardsDashboardsResponse", "ListCardsResponse"),
+    "card": (
+        "CardCollectionsResponse",
+        "CardDashboardsResponse",
+        "CardEmbeddableResponse",
+        "CardParameterValuesResponse",
+        "CardPublicResponse",
+        "CardQueryExportResponse",
+        "CardQueryMetadataResponse",
+        "CardQueryResponse",
+        "CardRemappingResponse",
+        "CardSeriesResponse",
+        "CardsDashboardsResponse",
+        "CreateCardPublicLinkResponse",
+        "DeleteCardPublicLinkResponse",
+        "DeleteCardResponse",
+        "ListCardsResponse",
+        "MoveCardsResponse",
+    ),
     "channel": (
         "ChannelResponse",
         "CreateChannelResponse",
@@ -292,11 +312,40 @@ RESPONSE_MODULE_CONTRACTS = {
     "collection": (
         "CollectionDashboardQuestionCandidatesResponse",
         "CollectionGraphResponse",
+        "CollectionItemsResponse",
         "CollectionMoveDashboardQuestionCandidatesResponse",
+        "CollectionTreeResponse",
+        "DeleteCollectionResponse",
         "ListCollectionsResponse",
     ),
-    "common": ("GenericOperationResponse",),
-    "dashboard": ("ListDashboardsResponse",),
+    "comment": (
+        "CommentMentionsResponse",
+        "CommentReactionResponse",
+        "CreateCommentResponse",
+        "DeleteCommentResponse",
+        "ListCommentsResponse",
+        "UpdateCommentResponse",
+    ),
+    "dashboard": (
+        "CreateDashboardPublicLinkResponse",
+        "DashboardEmbeddableResponse",
+        "DashboardItemsResponse",
+        "DashboardParameterValuesResponse",
+        "DashboardPublicResponse",
+        "DashboardQueryExportResponse",
+        "DashboardQueryMetadataResponse",
+        "DashboardQueryResponse",
+        "DashboardRelatedResponse",
+        "DashboardRemappingResponse",
+        "DashboardValidFilterFieldsResponse",
+        "DeleteDashboardPublicLinkResponse",
+        "DeleteDashboardResponse",
+        "ListDashboardsResponse",
+        "SaveDashboardResponse",
+        "SaveDashboardToCollectionResponse",
+        "UpdateDashboardCardsResponse",
+    ),
+    "data_studio": ("DataStudioTableOperationResponse",),
     "database": ("ListDatabasesResponse",),
     "table": ("ListTablesResponse",),
     "user": ("ListUsersResponse",),

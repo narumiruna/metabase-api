@@ -7,8 +7,14 @@ from pydantic import Field as PydanticField
 
 from metabaseapi.endpoints.entities import Card
 from metabaseapi.endpoints.execution import EndpointRequest
+from metabaseapi.endpoints.responses.card import CardCollectionsResponse
+from metabaseapi.endpoints.responses.card import CardEmbeddableResponse
+from metabaseapi.endpoints.responses.card import CardPublicResponse
+from metabaseapi.endpoints.responses.card import CreateCardPublicLinkResponse
+from metabaseapi.endpoints.responses.card import DeleteCardPublicLinkResponse
+from metabaseapi.endpoints.responses.card import DeleteCardResponse
 from metabaseapi.endpoints.responses.card import ListCardsResponse
-from metabaseapi.endpoints.responses.common import GenericOperationResponse
+from metabaseapi.endpoints.responses.card import MoveCardsResponse
 from metabaseapi.wire import JSONValue
 
 
@@ -45,13 +51,13 @@ class GetCardRequest(EndpointRequest[Card]):
     response_model = Card
 
 
-class GetCardCollectionsRequest(EndpointRequest[GenericOperationResponse]):
+class GetCardCollectionsRequest(EndpointRequest[CardCollectionsResponse]):
     card_ids: list[int | str] | None = None
     collection_id: int | str | None = None
 
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/card/collections"
-    response_model = GenericOperationResponse
+    response_model = CardCollectionsResponse
 
     def request_body(self) -> JSONValue:
         body: dict[str, object] = {}
@@ -62,32 +68,32 @@ class GetCardCollectionsRequest(EndpointRequest[GenericOperationResponse]):
         return body or None
 
 
-class GetCardEmbeddableRequest(EndpointRequest[GenericOperationResponse]):
+class GetCardEmbeddableRequest(EndpointRequest[CardEmbeddableResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/card/embeddable"
-    response_model = GenericOperationResponse
+    response_model = CardEmbeddableResponse
 
 
-class GetCardPublicRequest(EndpointRequest[GenericOperationResponse]):
+class GetCardPublicRequest(EndpointRequest[CardPublicResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/card/public"
-    response_model = GenericOperationResponse
+    response_model = CardPublicResponse
 
 
-class CreateCardPublicLinkRequest(EndpointRequest[GenericOperationResponse]):
+class CreateCardPublicLinkRequest(EndpointRequest[CreateCardPublicLinkResponse]):
     card_id: int | str
 
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/card/{card_id}/public_link"
-    response_model = GenericOperationResponse
+    response_model = CreateCardPublicLinkResponse
 
 
-class DeleteCardPublicLinkRequest(EndpointRequest[GenericOperationResponse]):
+class DeleteCardPublicLinkRequest(EndpointRequest[DeleteCardPublicLinkResponse]):
     card_id: int | str
 
     endpoint_method: ClassVar[str] = "DELETE"
     endpoint_path: ClassVar[str] = "/api/card/{card_id}/public_link"
-    response_model = GenericOperationResponse
+    response_model = DeleteCardPublicLinkResponse
 
 
 class UpdateCardRequest(EndpointRequest[Card]):
@@ -99,12 +105,12 @@ class UpdateCardRequest(EndpointRequest[Card]):
     response_model = Card
 
 
-class DeleteCardRequest(EndpointRequest[GenericOperationResponse]):
+class DeleteCardRequest(EndpointRequest[DeleteCardResponse]):
     card_id: int | str
 
     endpoint_method: ClassVar[str] = "DELETE"
     endpoint_path: ClassVar[str] = "/api/card/{card_id}"
-    response_model = GenericOperationResponse
+    response_model = DeleteCardResponse
 
 
 class CopyCardRequest(EndpointRequest[Card]):
@@ -119,9 +125,9 @@ class CopyCardRequest(EndpointRequest[Card]):
         return self.body or None
 
 
-class MoveCardsRequest(EndpointRequest[GenericOperationResponse]):
+class MoveCardsRequest(EndpointRequest[MoveCardsResponse]):
     body: dict[str, object]
 
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/cards/move"
-    response_model = GenericOperationResponse
+    response_model = MoveCardsResponse

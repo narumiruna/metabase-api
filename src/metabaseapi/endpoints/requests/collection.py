@@ -8,9 +8,11 @@ from pydantic import Field as PydanticField
 from metabaseapi.endpoints.entities import Collection
 from metabaseapi.endpoints.execution import EndpointRequest
 from metabaseapi.endpoints.responses.collection import CollectionDashboardQuestionCandidatesResponse
+from metabaseapi.endpoints.responses.collection import CollectionItemsResponse
 from metabaseapi.endpoints.responses.collection import CollectionMoveDashboardQuestionCandidatesResponse
+from metabaseapi.endpoints.responses.collection import CollectionTreeResponse
+from metabaseapi.endpoints.responses.collection import DeleteCollectionResponse
 from metabaseapi.endpoints.responses.collection import ListCollectionsResponse
-from metabaseapi.endpoints.responses.common import GenericOperationResponse
 
 
 class CreateCollectionRequest(EndpointRequest[Collection]):
@@ -21,10 +23,10 @@ class CreateCollectionRequest(EndpointRequest[Collection]):
     response_model = Collection
 
 
-class GetCollectionTreeRequest(EndpointRequest[GenericOperationResponse]):
+class GetCollectionTreeRequest(EndpointRequest[CollectionTreeResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/collection/tree"
-    response_model = GenericOperationResponse
+    response_model = CollectionTreeResponse
 
 
 class GetCollectionDashboardQuestionCandidatesRequest(EndpointRequest[CollectionDashboardQuestionCandidatesResponse]):
@@ -35,12 +37,12 @@ class GetCollectionDashboardQuestionCandidatesRequest(EndpointRequest[Collection
     response_model = CollectionDashboardQuestionCandidatesResponse
 
 
-class GetCollectionItemsRequest(EndpointRequest[GenericOperationResponse]):
+class GetCollectionItemsRequest(EndpointRequest[CollectionItemsResponse]):
     collection_id: int | str
 
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/collection/{collection_id}/items"
-    response_model = GenericOperationResponse
+    response_model = CollectionItemsResponse
 
 
 class GetCollectionTrashRequest(EndpointRequest[Collection]):
@@ -83,9 +85,9 @@ class PutCollectionRequest(EndpointRequest[Collection]):
     response_model = Collection
 
 
-class DeleteCollectionRequest(EndpointRequest[GenericOperationResponse]):
+class DeleteCollectionRequest(EndpointRequest[DeleteCollectionResponse]):
     collection_id: int | str
 
     endpoint_method: ClassVar[str] = "DELETE"
     endpoint_path: ClassVar[str] = "/api/collection/{collection_id}"
-    response_model = GenericOperationResponse
+    response_model = DeleteCollectionResponse

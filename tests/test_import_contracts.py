@@ -48,6 +48,7 @@ import metabaseapi.endpoints.requests.dataset
 import metabaseapi.endpoints.requests.document
 import metabaseapi.endpoints.requests.email
 import metabaseapi.endpoints.requests.embed
+import metabaseapi.endpoints.requests.embed_theme
 import metabaseapi.endpoints.requests.field
 import metabaseapi.endpoints.requests.geojson
 import metabaseapi.endpoints.requests.glossary
@@ -58,12 +59,20 @@ import metabaseapi.endpoints.requests.metric
 import metabaseapi.endpoints.requests.permissions
 import metabaseapi.endpoints.requests.preview_embed
 import metabaseapi.endpoints.requests.public
+import metabaseapi.endpoints.requests.pulse
+import metabaseapi.endpoints.requests.revision
+import metabaseapi.endpoints.requests.search
 import metabaseapi.endpoints.requests.segment
 import metabaseapi.endpoints.requests.session
 import metabaseapi.endpoints.requests.setting
 import metabaseapi.endpoints.requests.table
+import metabaseapi.endpoints.requests.task
+import metabaseapi.endpoints.requests.tiles
+import metabaseapi.endpoints.requests.timeline
+import metabaseapi.endpoints.requests.timeline_event
 import metabaseapi.endpoints.requests.user
 import metabaseapi.endpoints.requests.user_key_value
+import metabaseapi.endpoints.requests.util
 import metabaseapi.endpoints.responses
 import metabaseapi.wire
 
@@ -283,6 +292,15 @@ REQUEST_MODULE_CONTRACTS = {
         "GetEmbedTilesCardRequest",
         "GetEmbedTilesDashboardDashcardCardRequest",
     ),
+    "embed_theme": (
+        "ListEmbedThemesRequest",
+        "CreateEmbedThemeRequest",
+        "SeedDefaultEmbedThemesRequest",
+        "GetEmbedThemeRequest",
+        "UpdateEmbedThemeRequest",
+        "DeleteEmbedThemeRequest",
+        "CopyEmbedThemeRequest",
+    ),
     "geojson": (
         "GetGeojsonRequest",
         "GetGeojsonByKeyRequest",
@@ -382,6 +400,29 @@ REQUEST_MODULE_CONTRACTS = {
         "GetPublicCardTileRequest",
         "GetPublicDashboardCardTileRequest",
     ),
+    "pulse": (
+        "ListPulsesRequest",
+        "CreatePulseRequest",
+        "GetPulseFormInputRequest",
+        "TestPulseRequest",
+        "GetPulseRequest",
+        "UpdatePulseRequest",
+        "DeletePulseSubscriptionRequest",
+        "UnsubscribePulseRequest",
+        "UndoPulseUnsubscribeRequest",
+    ),
+    "revision": (
+        "GetRevisionsRequest",
+        "RevertRevisionRequest",
+        "GetEntityRevisionsRequest",
+    ),
+    "search": (
+        "SearchRequest",
+        "ForceSearchReindexRequest",
+        "ReInitSearchRequest",
+        "GetSearchWeightsRequest",
+        "UpdateSearchWeightsRequest",
+    ),
     "segment": (
         "CreateSegmentRequest",
         "ListSegmentsRequest",
@@ -406,6 +447,36 @@ REQUEST_MODULE_CONTRACTS = {
         "GetSettingRequest",
         "UpdateSettingRequest",
     ),
+    "task": (
+        "ListTasksRequest",
+        "GetTaskInfoRequest",
+        "ListTaskRunsRequest",
+        "ListTaskRunEntitiesRequest",
+        "GetTaskRunRequest",
+        "GetUniqueTasksRequest",
+        "GetTaskRequest",
+    ),
+    "tiles": (
+        "GetSavedCardTileRequest",
+        "GetDashboardCardTileRequest",
+        "GetAdHocQueryTileRequest",
+    ),
+    "timeline": (
+        "CreateTimelineRequest",
+        "ListTimelinesRequest",
+        "GetTimelineCollectionRootRequest",
+        "GetTimelineCollectionRequest",
+        "GetTimelineRequest",
+        "UpdateTimelineRequest",
+        "DeleteTimelineRequest",
+    ),
+    "timeline_event": (
+        "CreateTimelineEventRequest",
+        "GetTimelineEventRequest",
+        "UpdateTimelineEventRequest",
+        "DeleteTimelineEventRequest",
+    ),
+    "util": ("GetRandomTokenRequest",),
     "dashboard": (
         "ListDashboardsRequest",
         "PostDashboardRequest",
@@ -631,6 +702,11 @@ RESPONSE_MODULE_CONTRACTS = {
         "GetEmbedTilesCardResponse",
         "GetEmbedTilesDashboardDashcardCardResponse",
     ),
+    "embed_theme": (
+        "DeleteEmbedThemeResponse",
+        "ListEmbedThemesResponse",
+        "SeedDefaultEmbedThemesResponse",
+    ),
     "geojson": (
         "GeojsonByKeyResponse",
         "GeojsonResponse",
@@ -714,6 +790,25 @@ RESPONSE_MODULE_CONTRACTS = {
         "PublicRemappingResponse",
         "PublicTileResponse",
     ),
+    "pulse": (
+        "ListPulsesResponse",
+        "PulseFormInputResponse",
+        "PulseResponse",
+        "PulseSubscriptionDeleteResponse",
+        "PulseTestResponse",
+        "PulseUnsubscribeResponse",
+        "PulseUnsubscribeUndoResponse",
+    ),
+    "revision": (
+        "RevertRevisionResponse",
+        "RevisionsResponse",
+    ),
+    "search": (
+        "SearchReindexResponse",
+        "SearchResponse",
+        "SearchWeightsResponse",
+        "UpdateSearchWeightsResponse",
+    ),
     "segment": (
         "DeleteSegmentResponse",
         "ListSegmentsResponse",
@@ -735,6 +830,34 @@ RESPONSE_MODULE_CONTRACTS = {
         "UpdateSettingResponse",
         "UpdateSettingsResponse",
     ),
+    "task": (
+        "GetTaskResponse",
+        "ListTaskRunsResponse",
+        "ListTasksResponse",
+        "TaskInfoResponse",
+        "TaskRunEntitiesResponse",
+        "TaskRunEntityResponse",
+        "TaskRunResponse",
+        "TaskRunWithTasksResponse",
+        "TaskResponse",
+        "UniqueTasksResponse",
+    ),
+    "tiles": (
+        "AdHocQueryTileResponse",
+        "DashboardCardTileResponse",
+        "SavedCardTileResponse",
+        "TileResponse",
+    ),
+    "timeline": (
+        "DeleteTimelineResponse",
+        "ListTimelinesResponse",
+        "TimelineResponse",
+    ),
+    "timeline_event": (
+        "DeleteTimelineEventResponse",
+        "TimelineEventResponse",
+    ),
+    "util": ("RandomTokenResponse",),
     "table": (
         "ListTablesResponse",
         "TableDataResponse",

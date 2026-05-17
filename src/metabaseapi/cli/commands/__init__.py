@@ -29,6 +29,7 @@ def _register_commands() -> None:
     from metabaseapi.cli.commands import document as document
     from metabaseapi.cli.commands import email as email
     from metabaseapi.cli.commands import embed as embed
+    from metabaseapi.cli.commands import embed_theme as embed_theme
     from metabaseapi.cli.commands import field as field
     from metabaseapi.cli.commands import geojson as geojson
     from metabaseapi.cli.commands import glossary as glossary
@@ -39,12 +40,20 @@ def _register_commands() -> None:
     from metabaseapi.cli.commands import permissions as permissions
     from metabaseapi.cli.commands import preview_embed as preview_embed
     from metabaseapi.cli.commands import public as public
+    from metabaseapi.cli.commands import pulse as pulse
+    from metabaseapi.cli.commands import revision as revision
+    from metabaseapi.cli.commands import search as search
     from metabaseapi.cli.commands import segment as segment
     from metabaseapi.cli.commands import session as session
     from metabaseapi.cli.commands import setting as setting
     from metabaseapi.cli.commands import table as table
+    from metabaseapi.cli.commands import task as task
+    from metabaseapi.cli.commands import tiles as tiles
+    from metabaseapi.cli.commands import timeline as timeline
+    from metabaseapi.cli.commands import timeline_event as timeline_event
     from metabaseapi.cli.commands import user as user
     from metabaseapi.cli.commands import user_key_value as user_key_value
+    from metabaseapi.cli.commands import util as util
 
     _ = (
         action,
@@ -74,6 +83,7 @@ def _register_commands() -> None:
         document,
         email,
         embed,
+        embed_theme,
         field,
         geojson,
         glossary,
@@ -84,10 +94,18 @@ def _register_commands() -> None:
         permissions,
         preview_embed,
         public,
+        pulse,
+        revision,
+        search,
         segment,
         session,
         setting,
         table,
+        task,
+        tiles,
+        timeline,
+        timeline_event,
+        util,
         user,
         user_key_value,
     )

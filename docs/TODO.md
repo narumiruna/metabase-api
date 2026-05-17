@@ -15,8 +15,8 @@ This file is a static implementation checklist derived from the latest Metabase 
 ## Coverage summary
 
 - Documented operations: 600
-- Complete hand-written endpoint implementations: 344
-- Remaining documented operations: 256
+- Complete hand-written endpoint implementations: 390
+- Remaining documented operations: 210
 - Raw `request` / `invoke`: disabled for CLI users and does not count toward TODO completion.
 
 ## Endpoint checklist
@@ -527,15 +527,15 @@ This file is a static implementation checklist derived from the latest Metabase 
 - [x] `GET /api/embed/tiles/card/{token}/{zoom}/{x}/{y}` — `get-api-embed-tiles-card-token-zoom-x-y` — Generates a single tile image for an embedded Card using the map visualization.
 - [x] `GET /api/embed/tiles/dashboard/{token}/dashcard/{dashcard-id}/card/{card-id}/{zoom}/{x}/{y}` — `get-api-embed-tiles-dashboard-token-dashcard-dashcard-id-card-card-id-zoom-x-y` — Generates a single tile image for a Card on an embedded Dashboard using the map visualization.
 
-### /api/embed-theme (0/7 complete)
+### /api/embed-theme (7/7 complete)
 
-- [ ] `GET /api/embed-theme` — `get-api-embed-theme` — Fetch a list of all embedding themes.
-- [ ] `POST /api/embed-theme` — `post-api-embed-theme` — Create a new embedding theme.
-- [ ] `POST /api/embed-theme/seed-defaults` — `post-api-embed-theme-seed-defaults` — Seed default embedding themes on first call, using the payloads built by the frontend from the `METABASE_LIGHT_THEME` / `METABASE_DARK_THEME` constants. Idem...
-- [ ] `GET /api/embed-theme/{id}` — `get-api-embed-theme-id` — Fetch a single embedding theme by ID.
-- [ ] `PUT /api/embed-theme/{id}` — `put-api-embed-theme-id` — Update an embedding theme.
-- [ ] `DELETE /api/embed-theme/{id}` — `delete-api-embed-theme-id` — Delete an embedding theme.
-- [ ] `POST /api/embed-theme/{id}/copy` — `post-api-embed-theme-id-copy` — Copy an embedding theme.
+- [x] `GET /api/embed-theme` — `get-api-embed-theme` — Fetch a list of all embedding themes.
+- [x] `POST /api/embed-theme` — `post-api-embed-theme` — Create a new embedding theme.
+- [x] `POST /api/embed-theme/seed-defaults` — `post-api-embed-theme-seed-defaults` — Seed default embedding themes on first call, using the payloads built by the frontend from the `METABASE_LIGHT_THEME` / `METABASE_DARK_THEME` constants. Idem...
+- [x] `GET /api/embed-theme/{id}` — `get-api-embed-theme-id` — Fetch a single embedding theme by ID.
+- [x] `PUT /api/embed-theme/{id}` — `put-api-embed-theme-id` — Update an embedding theme.
+- [x] `DELETE /api/embed-theme/{id}` — `delete-api-embed-theme-id` — Delete an embedding theme.
+- [x] `POST /api/embed-theme/{id}/copy` — `post-api-embed-theme-id-copy` — Copy an embedding theme.
 
 ### /api/field (12/12 complete)
 
@@ -780,34 +780,34 @@ This file is a static implementation checklist derived from the latest Metabase 
 - [x] `GET /api/public/tiles/card/{uuid}/{zoom}/{x}/{y}` — `get-api-public-tiles-card-uuid-zoom-x-y` — Generates a single tile image for a publicly-accessible Card using the map visualization. Does not require auth credentials. Public sharing must be enabled.
 - [x] `GET /api/public/tiles/dashboard/{uuid}/dashcard/{dashcard-id}/card/{card-id}/{zoom}/{x}/{y}` — `get-api-public-tiles-dashboard-uuid-dashcard-dashcard-id-card-card-id-zoom-x-y` — Generates a single tile image for a Card using the map visualization in a publicly-accessible Dashboard. Does not require auth credentials. Public sharing mu...
 
-### /api/pulse (0/7 complete)
+### /api/pulse (7/7 complete)
 
-- [ ] `GET /api/pulse` — `get-api-pulse` — Fetch all dashboard subscriptions. By default, returns only subscriptions for which the current user has write permissions. For admins, this is all subscript...
-- [ ] `POST /api/pulse` — `post-api-pulse` — Create a new `Pulse`.
-- [ ] `GET /api/pulse/form_input` — `get-api-pulse-form_input` — Provides relevant configuration information and user choices for creating/updating Pulses.
-- [ ] `POST /api/pulse/test` — `post-api-pulse-test` — Test send an unsaved pulse.
-- [ ] `GET /api/pulse/{id}` — `get-api-pulse-id` — Fetch `Pulse` with ID. If the user is a recipient of the Pulse but does not have read permissions for its collection, we still return it but with some sensit...
-- [ ] `PUT /api/pulse/{id}` — `put-api-pulse-id` — Update a Pulse with `id`.
-- [ ] `DELETE /api/pulse/{id}/subscription` — `delete-api-pulse-id-subscription` — For users to unsubscribe themselves from a pulse subscription.
+- [x] `GET /api/pulse` — `get-api-pulse` — Fetch all dashboard subscriptions. By default, returns only subscriptions for which the current user has write permissions. For admins, this is all subscript...
+- [x] `POST /api/pulse` — `post-api-pulse` — Create a new `Pulse`.
+- [x] `GET /api/pulse/form_input` — `get-api-pulse-form_input` — Provides relevant configuration information and user choices for creating/updating Pulses.
+- [x] `POST /api/pulse/test` — `post-api-pulse-test` — Test send an unsaved pulse.
+- [x] `GET /api/pulse/{id}` — `get-api-pulse-id` — Fetch `Pulse` with ID. If the user is a recipient of the Pulse but does not have read permissions for its collection, we still return it but with some sensit...
+- [x] `PUT /api/pulse/{id}` — `put-api-pulse-id` — Update a Pulse with `id`.
+- [x] `DELETE /api/pulse/{id}/subscription` — `delete-api-pulse-id-subscription` — For users to unsubscribe themselves from a pulse subscription.
 
-### /api/pulse/unsubscribe (0/2 complete)
+### /api/pulse/unsubscribe (2/2 complete)
 
-- [ ] `POST /api/pulse/unsubscribe` — `post-api-pulse-unsubscribe` — Allow non-users to unsubscribe from pulses/subscriptions, with the hash given through email.
-- [ ] `POST /api/pulse/unsubscribe/undo` — `post-api-pulse-unsubscribe-undo` — Allow non-users to undo an unsubscribe from pulses/subscriptions, with the hash given through email.
+- [x] `POST /api/pulse/unsubscribe` — `post-api-pulse-unsubscribe` — Allow non-users to unsubscribe from pulses/subscriptions, with the hash given through email.
+- [x] `POST /api/pulse/unsubscribe/undo` — `post-api-pulse-unsubscribe-undo` — Allow non-users to undo an unsubscribe from pulses/subscriptions, with the hash given through email.
 
-### /api/revision (0/3 complete)
+### /api/revision (3/3 complete)
 
-- [ ] `GET /api/revision` — `get-api-revision` — Get revisions of an object.
-- [ ] `POST /api/revision/revert` — `post-api-revision-revert` — Revert an object to a prior revision.
-- [ ] `GET /api/revision/{entity}/{id}` — `get-api-revision-entity-id` — Fetch `Revisions` for an object with ID.
+- [x] `GET /api/revision` — `get-api-revision` — Get revisions of an object.
+- [x] `POST /api/revision/revert` — `post-api-revision-revert` — Revert an object to a prior revision.
+- [x] `GET /api/revision/{entity}/{id}` — `get-api-revision-entity-id` — Fetch `Revisions` for an object with ID.
 
-### /api/search (0/5 complete)
+### /api/search (5/5 complete)
 
-- [ ] `GET /api/search` — `get-api-search` — Search for items in Metabase. For the list of supported models, check [[metabase.search.config/all-models]]. Filters: - `archived`: set to true to search arc...
-- [ ] `POST /api/search/force-reindex` — `post-api-search-force-reindex` — This will trigger an immediate reindexing, if we are using search index.
-- [ ] `POST /api/search/re-init` — `post-api-search-re-init` — This will blow away any search indexes, re-create, and re-populate them.
-- [ ] `GET /api/search/weights` — `get-api-search-weights` — Return the current weights being used to rank the search results
-- [ ] `PUT /api/search/weights` — `put-api-search-weights` — Update the current weights being used to rank the search results
+- [x] `GET /api/search` — `get-api-search` — Search for items in Metabase. For the list of supported models, check [[metabase.search.config/all-models]]. Filters: - `archived`: set to true to search arc...
+- [x] `POST /api/search/force-reindex` — `post-api-search-force-reindex` — This will trigger an immediate reindexing, if we are using search index.
+- [x] `POST /api/search/re-init` — `post-api-search-re-init` — This will blow away any search indexes, re-create, and re-populate them.
+- [x] `GET /api/search/weights` — `get-api-search-weights` — Return the current weights being used to rank the search results
+- [x] `PUT /api/search/weights` — `put-api-search-weights` — Update the current weights being used to rank the search results
 
 ### /api/segment (6/6 complete)
 
@@ -866,38 +866,38 @@ This file is a static implementation checklist derived from the latest Metabase 
 - [x] `POST /api/table/{id}/sync_schema` — `post-api-table-id-sync_schema` — Trigger a manual update of the schema metadata for this `Table`.
 - [x] `GET /api/table/{table-id}/data` — `get-api-table-table-id-data` — Get the data for the given table
 
-### /api/task (0/7 complete)
+### /api/task (7/7 complete)
 
-- [ ] `GET /api/task` — `get-api-task` — Fetch a list of recent tasks stored as Task History
-- [ ] `GET /api/task/info` — `get-api-task-info` — Return raw data about all scheduled tasks (i.e., Quartz Jobs and Triggers).
-- [ ] `GET /api/task/runs` — `get-api-task-runs` — List task runs with optional filters. Returns runs with hydrated entity names and task counts.
-- [ ] `GET /api/task/runs/entities` — `get-api-task-runs-entities` — Get distinct entities that have task runs for a given run type. Used for populating entity filter picker.
-- [ ] `GET /api/task/runs/{id}` — `get-api-task-runs-id` — Get a single task run with all its child tasks.
-- [ ] `GET /api/task/unique-tasks` — `get-api-task-unique-tasks` — Returns possibly empty vector of unique task names in alphabetical order. It is expected that number of unique tasks is small, hence no need for pagination....
-- [ ] `GET /api/task/{id}` — `get-api-task-id` — Get `TaskHistory` entry with ID.
+- [x] `GET /api/task` — `get-api-task` — Fetch a list of recent tasks stored as Task History
+- [x] `GET /api/task/info` — `get-api-task-info` — Return raw data about all scheduled tasks (i.e., Quartz Jobs and Triggers).
+- [x] `GET /api/task/runs` — `get-api-task-runs` — List task runs with optional filters. Returns runs with hydrated entity names and task counts.
+- [x] `GET /api/task/runs/entities` — `get-api-task-runs-entities` — Get distinct entities that have task runs for a given run type. Used for populating entity filter picker.
+- [x] `GET /api/task/runs/{id}` — `get-api-task-runs-id` — Get a single task run with all its child tasks.
+- [x] `GET /api/task/unique-tasks` — `get-api-task-unique-tasks` — Returns possibly empty vector of unique task names in alphabetical order. It is expected that number of unique tasks is small, hence no need for pagination....
+- [x] `GET /api/task/{id}` — `get-api-task-id` — Get `TaskHistory` entry with ID.
 
-### /api/tiles (0/3 complete)
+### /api/tiles (3/3 complete)
 
-- [ ] `GET /api/tiles/{card-id}/{zoom}/{x}/{y}` — `get-api-tiles-card-id-zoom-x-y` — Generates a single tile image for a saved Card.
-- [ ] `GET /api/tiles/{dashboard-id}/dashcard/{dashcard-id}/card/{card-id}/{zoom}/{x}/{y}` — `get-api-tiles-dashboard-id-dashcard-dashcard-id-card-card-id-zoom-x-y` — Generates a single tile image for a dashcard.
-- [ ] `GET /api/tiles/{zoom}/{x}/{y}` — `get-api-tiles-zoom-x-y` — Generates a single tile image for an ad-hoc query.
+- [x] `GET /api/tiles/{card-id}/{zoom}/{x}/{y}` — `get-api-tiles-card-id-zoom-x-y` — Generates a single tile image for a saved Card.
+- [x] `GET /api/tiles/{dashboard-id}/dashcard/{dashcard-id}/card/{card-id}/{zoom}/{x}/{y}` — `get-api-tiles-dashboard-id-dashcard-dashcard-id-card-card-id-zoom-x-y` — Generates a single tile image for a dashcard.
+- [x] `GET /api/tiles/{zoom}/{x}/{y}` — `get-api-tiles-zoom-x-y` — Generates a single tile image for an ad-hoc query.
 
-### /api/timeline (0/7 complete)
+### /api/timeline (7/7 complete)
 
-- [ ] `POST /api/timeline` — `post-api-timeline` — Create a new [[Timeline]].
-- [ ] `GET /api/timeline` — `get-api-timeline` — Fetch a list of `Timeline`s. Can include `archived=true` to return archived timelines.
-- [ ] `GET /api/timeline/collection/root` — `get-api-timeline-collection-root` — Fetch the root Collection's timelines.
-- [ ] `GET /api/timeline/collection/{id}` — `get-api-timeline-collection-id` — Fetch a specific Collection's timelines.
-- [ ] `GET /api/timeline/{id}` — `get-api-timeline-id` — Fetch the `Timeline` with `id`. Include `include=events` to unarchived events included on the timeline. Add `archived=true` to return all events on the timel...
-- [ ] `PUT /api/timeline/{id}` — `put-api-timeline-id` — Update the [[Timeline]] with `id`. Returns the timeline without events. Archiving a timeline will archive all of the events in that timeline.
-- [ ] `DELETE /api/timeline/{id}` — `delete-api-timeline-id` — Delete a [[Timeline]]. Will cascade delete its events as well.
+- [x] `POST /api/timeline` — `post-api-timeline` — Create a new [[Timeline]].
+- [x] `GET /api/timeline` — `get-api-timeline` — Fetch a list of `Timeline`s. Can include `archived=true` to return archived timelines.
+- [x] `GET /api/timeline/collection/root` — `get-api-timeline-collection-root` — Fetch the root Collection's timelines.
+- [x] `GET /api/timeline/collection/{id}` — `get-api-timeline-collection-id` — Fetch a specific Collection's timelines.
+- [x] `GET /api/timeline/{id}` — `get-api-timeline-id` — Fetch the `Timeline` with `id`. Include `include=events` to unarchived events included on the timeline. Add `archived=true` to return all events on the timel...
+- [x] `PUT /api/timeline/{id}` — `put-api-timeline-id` — Update the [[Timeline]] with `id`. Returns the timeline without events. Archiving a timeline will archive all of the events in that timeline.
+- [x] `DELETE /api/timeline/{id}` — `delete-api-timeline-id` — Delete a [[Timeline]]. Will cascade delete its events as well.
 
-### /api/timeline-event (0/4 complete)
+### /api/timeline-event (4/4 complete)
 
-- [ ] `POST /api/timeline-event` — `post-api-timeline-event` — Create a new [[TimelineEvent]].
-- [ ] `GET /api/timeline-event/{id}` — `get-api-timeline-event-id` — Fetch the [[TimelineEvent]] with `id`.
-- [ ] `PUT /api/timeline-event/{id}` — `put-api-timeline-event-id` — Update a [[TimelineEvent]].
-- [ ] `DELETE /api/timeline-event/{id}` — `delete-api-timeline-event-id` — Delete a [[TimelineEvent]].
+- [x] `POST /api/timeline-event` — `post-api-timeline-event` — Create a new [[TimelineEvent]].
+- [x] `GET /api/timeline-event/{id}` — `get-api-timeline-event-id` — Fetch the [[TimelineEvent]] with `id`.
+- [x] `PUT /api/timeline-event/{id}` — `put-api-timeline-event-id` — Update a [[TimelineEvent]].
+- [x] `DELETE /api/timeline-event/{id}` — `delete-api-timeline-event-id` — Delete a [[TimelineEvent]].
 
 ### /api/transform (0/12 complete)
 
@@ -956,6 +956,6 @@ This file is a static implementation checklist derived from the latest Metabase 
 - [x] `GET /api/user-key-value/namespace/{namespace}/key/{key}` — `get-api-user-key-value-namespace-namespace-key-key` — Get a value for the user
 - [x] `DELETE /api/user-key-value/namespace/{namespace}/key/{key}` — `delete-api-user-key-value-namespace-namespace-key-key` — Deletes a KV-pair for the user
 
-### /api/util (0/1 complete)
+### /api/util (1/1 complete)
 
-- [ ] `GET /api/util/random_token` — `get-api-util-random_token` — Return a cryptographically secure random 32-byte token, encoded as a hexadecimal string. Intended for use when creating a value for `embedding-secret-key`.
+- [x] `GET /api/util/random_token` — `get-api-util-random_token` — Return a cryptographically secure random 32-byte token, encoded as a hexadecimal string. Intended for use when creating a value for `embedding-secret-key`.

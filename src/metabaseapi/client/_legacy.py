@@ -10,6 +10,7 @@ import httpx
 from metabaseapi.client.raw.alerts import _MetabaseClientRawMixin as _MetabaseClientAlertsRawMixin
 from metabaseapi.client.raw.analytics import _MetabaseClientRawMixin as _MetabaseClientAnalyticsRawMixin
 from metabaseapi.client.raw.api_key import _MetabaseClientRawMixin as _MetabaseClientApiKeyRawMixin
+from metabaseapi.client.raw.bug_reporting import _MetabaseClientRawMixin as _MetabaseClientBugReportingRawMixin
 from metabaseapi.client.raw.channels import _MetabaseClientRawMixin as _MetabaseClientChannelsRawMixin
 from metabaseapi.client.raw.cloud import _MetabaseClientRawMixin as _MetabaseClientCloudRawMixin
 from metabaseapi.client.raw.collections import _MetabaseClientRawMixin as _MetabaseClientCollectionsRawMixin
@@ -18,6 +19,7 @@ from metabaseapi.client.raw.users import _MetabaseClientRawMixin as _MetabaseCli
 from metabaseapi.client.typed.alerts import _MetabaseClientTypedMixin as _MetabaseClientAlertsTypedMixin
 from metabaseapi.client.typed.analytics import _MetabaseClientTypedMixin as _MetabaseClientAnalyticsTypedMixin
 from metabaseapi.client.typed.api_key import _MetabaseClientTypedMixin as _MetabaseClientApiKeyTypedMixin
+from metabaseapi.client.typed.bug_reporting import _MetabaseClientTypedMixin as _MetabaseClientBugReportingTypedMixin
 from metabaseapi.client.typed.channels import _MetabaseClientTypedMixin as _MetabaseClientChannelsTypedMixin
 from metabaseapi.client.typed.cloud import _MetabaseClientTypedMixin as _MetabaseClientCloudTypedMixin
 from metabaseapi.client.typed.collections import _MetabaseClientTypedMixin as _MetabaseClientCollectionsTypedMixin
@@ -85,8 +87,6 @@ from metabaseapi.metabase import GetAgentMetricFieldValuesRequest
 from metabaseapi.metabase import GetAgentMetricRequest
 from metabaseapi.metabase import GetAgentTableFieldValuesRequest
 from metabaseapi.metabase import GetAgentTableRequest
-from metabaseapi.metabase import GetBugReportingConnectionPoolDetailsRequest
-from metabaseapi.metabase import GetBugReportingDetailsRequest
 from metabaseapi.metabase import GetCacheRequest
 from metabaseapi.metabase import GetCardCollectionsRequest
 from metabaseapi.metabase import GetCardDashboardsRequest
@@ -155,6 +155,7 @@ class _MetabaseClientRawMixin(
     _MetabaseClientChannelsRawMixin,
     _MetabaseClientCloudRawMixin,
     _MetabaseClientCommentsRawMixin,
+    _MetabaseClientBugReportingRawMixin,
 ):
     """Resource-scoped raw mixin."""
 
@@ -169,6 +170,7 @@ class _MetabaseClientTypedMixin(
     _MetabaseClientChannelsTypedMixin,
     _MetabaseClientCloudTypedMixin,
     _MetabaseClientCommentsTypedMixin,
+    _MetabaseClientBugReportingTypedMixin,
 ):
     """Resource-scoped typed mixin."""
 
@@ -422,12 +424,6 @@ class MetabaseClient(_MetabaseClientTypedMixin):
 
     async def delete_bookmark(self, model: str, item_id: int | str) -> JSONValue | None:
         return await self.delete(f"/api/bookmark/{model}/{item_id}")
-
-    async def bug_reporting_connection_pool_details(self) -> JSONValue | None:
-        return await self.get("/api/bug-reporting/connection-pool-details")
-
-    async def bug_reporting_details(self) -> JSONValue | None:
-        return await self.get("/api/bug-reporting/details")
 
     async def get_cache(
         self,
@@ -1016,12 +1012,6 @@ class MetabaseClient(_MetabaseClientTypedMixin):
 
     async def delete_bookmark_typed(self, model: str, item_id: int | str) -> GenericOperationResponse:
         return await self.run(DeleteBookmarkRequest(model=model, item_id=item_id))
-
-    async def bug_reporting_connection_pool_details_typed(self) -> GenericOperationResponse:
-        return await self.run(GetBugReportingConnectionPoolDetailsRequest())
-
-    async def bug_reporting_details_typed(self) -> GenericOperationResponse:
-        return await self.run(GetBugReportingDetailsRequest())
 
     async def get_cache_typed(
         self,

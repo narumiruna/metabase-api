@@ -112,7 +112,7 @@ Common repository commands:
 ```bash
 just format      # format Python code with Ruff
 just lint        # run Ruff lint fixes
-just type        # run ty type checking
+just type        # run `ty` type checking
 just test        # run pytest with coverage
 just all         # run format, lint, type, and tests
 ```

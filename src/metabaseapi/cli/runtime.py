@@ -7,12 +7,14 @@ from collections.abc import Awaitable
 from collections.abc import Callable
 from collections.abc import Coroutine
 
+from pydantic import BaseModel
 import typer
 
 from metabaseapi import settings
 from metabaseapi.cli.error_adapter import error_payload
 from metabaseapi.cli.output import render_payload
 from metabaseapi.client import MetabaseClient
+from metabaseapi.endpoints.execution import EndpointRequest
 from metabaseapi.errors import MetabaseError
 from metabaseapi.wire import JSONValue
 
@@ -76,13 +78,19 @@ def parse_optional_json_list(raw: str | None, parameter_name: str) -> list[objec
     return parsed
 
 
-def _run_async(coro: Coroutine[object, object, JSONValue | None]) -> JSONValue | None:
+def _json_payload(result: object) -> JSONValue | None:
+    if isinstance(result, BaseModel):
+        return result.model_dump(mode="json", exclude_none=True)
+    return result  # type: ignore[return-value]
+
+
+def _run_async(coro: Coroutine[object, object, object]) -> JSONValue | None:
     return asyncio.run(coro)
 
 
-def _run_and_print(coro: Coroutine[object, object, JSONValue | None]) -> None:
+def _run_and_print(coro: Coroutine[object, object, object]) -> None:
     try:
-        result = _run_async(coro)
+        result = _json_payload(_run_async(coro))
     except (MetabaseError, ValueError) as exc:
         typer.echo(render_payload(error_payload(exc)), err=True)
         raise typer.Exit(code=1) from exc
@@ -113,6 +121,14 @@ def run_client_command(
     call: Callable[[MetabaseClient], Awaitable[JSONValue | None]],
 ) -> None:
     _run_and_print(_client_call(ctx, call))
+
+
+def run_endpoint_command(ctx: typer.Context, request: EndpointRequest[object]) -> None:
+    async def do_request() -> object:
+        async with create_client(_get_settings(ctx)) as client:
+            return await client.run(request)
+
+    _run_and_print(do_request())
 
 
 @app.callback()

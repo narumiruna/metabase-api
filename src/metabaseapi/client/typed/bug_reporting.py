@@ -2,22 +2,23 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from metabaseapi.metabase import GenericOperationResponse
-from metabaseapi.metabase import GetBugReportingConnectionPoolDetailsRequest
-from metabaseapi.metabase import GetBugReportingDetailsRequest
+from metabaseapi.endpoints.requests.bug_reporting import GetBugReportingConnectionPoolDetailsRequest
+from metabaseapi.endpoints.requests.bug_reporting import GetBugReportingDetailsRequest
+from metabaseapi.endpoints.responses import GenericOperationResponse
 
 if TYPE_CHECKING:
     from metabaseapi.client.http import MetabaseClient
 
 
-class _MetabaseClientTypedMixin:
-    """Resource-scoped typed mixin for bug-reporting endpoints."""
-
-    async def bug_reporting_connection_pool_details_typed(self: MetabaseClient) -> GenericOperationResponse:
-        return await self.run(GetBugReportingConnectionPoolDetailsRequest())
-
-    async def bug_reporting_details_typed(self: MetabaseClient) -> GenericOperationResponse:
-        return await self.run(GetBugReportingDetailsRequest())
+async def bug_reporting_connection_pool_details_typed(client: MetabaseClient) -> GenericOperationResponse:
+    return await client.run(GetBugReportingConnectionPoolDetailsRequest())
 
 
-__all__ = ["_MetabaseClientTypedMixin"]
+async def bug_reporting_details_typed(client: MetabaseClient) -> GenericOperationResponse:
+    return await client.run(GetBugReportingDetailsRequest())
+
+
+__all__ = [
+    "bug_reporting_connection_pool_details_typed",
+    "bug_reporting_details_typed",
+]

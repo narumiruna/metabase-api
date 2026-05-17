@@ -11,41 +11,42 @@ from textwrap import dedent
 import pytest
 
 import metabaseapi.cli
-import metabaseapi.cli_commands
+import metabaseapi.cli.commands
+import metabaseapi.cli.runtime
 import metabaseapi.client
 import metabaseapi.client.http
 import metabaseapi.client.raw
 import metabaseapi.client.typed
-import metabaseapi.metabase
-import metabaseapi.metabase.endpoint_requests
-import metabaseapi.metabase.endpoint_requests.action
-import metabaseapi.metabase.endpoint_requests.activity
-import metabaseapi.metabase.endpoint_requests.agent
-import metabaseapi.metabase.endpoint_requests.ai_entity_analysis
-import metabaseapi.metabase.endpoint_requests.alert
-import metabaseapi.metabase.endpoint_requests.analytics
-import metabaseapi.metabase.endpoint_requests.api_key
-import metabaseapi.metabase.endpoint_requests.automagic
-import metabaseapi.metabase.endpoint_requests.bookmark
-import metabaseapi.metabase.endpoint_requests.bug_reporting
-import metabaseapi.metabase.endpoint_requests.cache
-import metabaseapi.metabase.endpoint_requests.card
-import metabaseapi.metabase.endpoint_requests.channel
-import metabaseapi.metabase.endpoint_requests.cloud_migration
-import metabaseapi.metabase.endpoint_requests.collection
-import metabaseapi.metabase.endpoint_requests.comment
-import metabaseapi.metabase.endpoint_requests.dashboard
-import metabaseapi.metabase.endpoint_requests.data_studio
-import metabaseapi.metabase.endpoint_requests.database
-import metabaseapi.metabase.endpoint_requests.schema
-import metabaseapi.metabase.endpoint_requests.user
-import metabaseapi.metabase.endpoint_requests.user_key_value
-import metabaseapi.metabase.entities
-import metabaseapi.metabase.request_base
-import metabaseapi.metabase.requests
-import metabaseapi.metabase.responses
+import metabaseapi.endpoints
+import metabaseapi.endpoints.entities
+import metabaseapi.endpoints.execution
+import metabaseapi.endpoints.requests
+import metabaseapi.endpoints.requests.action
+import metabaseapi.endpoints.requests.activity
+import metabaseapi.endpoints.requests.agent
+import metabaseapi.endpoints.requests.ai_entity_analysis
+import metabaseapi.endpoints.requests.alert
+import metabaseapi.endpoints.requests.analytics
+import metabaseapi.endpoints.requests.api_key
+import metabaseapi.endpoints.requests.automagic
+import metabaseapi.endpoints.requests.bookmark
+import metabaseapi.endpoints.requests.bug_reporting
+import metabaseapi.endpoints.requests.cache
+import metabaseapi.endpoints.requests.card
+import metabaseapi.endpoints.requests.channel
+import metabaseapi.endpoints.requests.cloud_migration
+import metabaseapi.endpoints.requests.collection
+import metabaseapi.endpoints.requests.comment
+import metabaseapi.endpoints.requests.dashboard
+import metabaseapi.endpoints.requests.data_studio
+import metabaseapi.endpoints.requests.database
+import metabaseapi.endpoints.requests.schema
+import metabaseapi.endpoints.requests.user
+import metabaseapi.endpoints.requests.user_key_value
+import metabaseapi.endpoints.responses
+import metabaseapi.wire
 
-ENDPOINT_REQUEST_MODULE_CONTRACTS = {
+REQUEST_MODULE_CONTRACTS = {
     "action": (
         "ListActionsRequest",
         "CreateActionRequest",
@@ -233,36 +234,36 @@ ENDPOINT_REQUEST_MODULE_CONTRACTS = {
 
 
 def test_cli_command_modules_import_from_package() -> None:
-    assert len(metabaseapi.cli_commands.command_module_names()) == len(metabaseapi.cli_commands.command_module_paths())
-    assert len(metabaseapi.cli_commands.command_module_objects()) == len(
-        metabaseapi.cli_commands.command_module_paths()
+    assert len(metabaseapi.cli.commands.command_module_names()) == len(metabaseapi.cli.commands.command_module_paths())
+    assert len(metabaseapi.cli.commands.command_module_objects()) == len(
+        metabaseapi.cli.commands.command_module_paths()
     )
-    assert metabaseapi.cli_commands.DATA_STUDIO_COMMAND_MODULE in metabaseapi.cli_commands.COMMAND_MODULES
-    assert metabaseapi.cli_commands.ACTION_COMMAND_MODULE in metabaseapi.cli_commands.COMMAND_MODULES
-    assert metabaseapi.cli_commands.ACTIVITY_COMMAND_MODULE in metabaseapi.cli_commands.COMMAND_MODULES
-    assert metabaseapi.cli_commands.AUTOMAGIC_COMMAND_MODULE in metabaseapi.cli_commands.COMMAND_MODULES
-    assert metabaseapi.cli_commands.API_KEY_COMMAND_MODULE in metabaseapi.cli_commands.COMMAND_MODULES
-    assert metabaseapi.cli_commands.AGENT_COMMAND_MODULE in metabaseapi.cli_commands.COMMAND_MODULES
-    assert metabaseapi.cli_commands.ALERT_COMMAND_MODULE in metabaseapi.cli_commands.COMMAND_MODULES
-    assert metabaseapi.cli_commands.COMMENT_COMMAND_MODULE in metabaseapi.cli_commands.COMMAND_MODULES
-    assert metabaseapi.cli_commands.ANALYTICS_COMMAND_MODULE in metabaseapi.cli_commands.COMMAND_MODULES
-    assert metabaseapi.cli_commands.CARD_COMMAND_MODULE in metabaseapi.cli_commands.COMMAND_MODULES
-    assert metabaseapi.cli_commands.CARD_QUERY_COMMAND_MODULE in metabaseapi.cli_commands.COMMAND_MODULES
-    assert metabaseapi.cli_commands.COLLECTION_COMMAND_MODULE in metabaseapi.cli_commands.COMMAND_MODULES
-    assert metabaseapi.cli_commands.DATABASE_COMMAND_MODULE in metabaseapi.cli_commands.COMMAND_MODULES
-    assert metabaseapi.cli_commands.DASHBOARD_QUERY_COMMAND_MODULE in metabaseapi.cli_commands.COMMAND_MODULES
-    assert metabaseapi.cli_commands.USER_COMMAND_MODULE in metabaseapi.cli_commands.COMMAND_MODULES
-    assert metabaseapi.cli_commands.SCHEMA_COMMAND_MODULE in metabaseapi.cli_commands.COMMAND_MODULES
-    assert metabaseapi.cli_commands.PLATFORM_BUG_REPORTING_COMMAND_MODULE in metabaseapi.cli_commands.COMMAND_MODULES
-    assert metabaseapi.cli_commands.PLATFORM_CACHE_COMMAND_MODULE in metabaseapi.cli_commands.COMMAND_MODULES
-    assert metabaseapi.cli_commands.PLATFORM_CHANNEL_COMMAND_MODULE in metabaseapi.cli_commands.COMMAND_MODULES
-    assert metabaseapi.cli_commands.PLATFORM_CLOUD_MIGRATION_COMMAND_MODULE in metabaseapi.cli_commands.COMMAND_MODULES
-    assert metabaseapi.cli_commands.DASHBOARD_COMMAND_MODULE in metabaseapi.cli_commands.COMMAND_MODULES
-    assert {module.__name__ for module in metabaseapi.cli_commands.command_module_objects()} == set(
-        metabaseapi.cli_commands.command_module_paths()
+    assert metabaseapi.cli.commands.DATA_STUDIO_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
+    assert metabaseapi.cli.commands.ACTION_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
+    assert metabaseapi.cli.commands.ACTIVITY_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
+    assert metabaseapi.cli.commands.AUTOMAGIC_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
+    assert metabaseapi.cli.commands.API_KEY_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
+    assert metabaseapi.cli.commands.AGENT_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
+    assert metabaseapi.cli.commands.ALERT_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
+    assert metabaseapi.cli.commands.COMMENT_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
+    assert metabaseapi.cli.commands.ANALYTICS_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
+    assert metabaseapi.cli.commands.CARD_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
+    assert metabaseapi.cli.commands.CARD_QUERY_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
+    assert metabaseapi.cli.commands.COLLECTION_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
+    assert metabaseapi.cli.commands.DATABASE_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
+    assert metabaseapi.cli.commands.DASHBOARD_QUERY_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
+    assert metabaseapi.cli.commands.USER_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
+    assert metabaseapi.cli.commands.SCHEMA_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
+    assert metabaseapi.cli.commands.PLATFORM_BUG_REPORTING_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
+    assert metabaseapi.cli.commands.PLATFORM_CACHE_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
+    assert metabaseapi.cli.commands.PLATFORM_CHANNEL_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
+    assert metabaseapi.cli.commands.PLATFORM_CLOUD_MIGRATION_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
+    assert metabaseapi.cli.commands.DASHBOARD_COMMAND_MODULE in metabaseapi.cli.commands.COMMAND_MODULES
+    assert {module.__name__ for module in metabaseapi.cli.commands.command_module_objects()} == set(
+        metabaseapi.cli.commands.command_module_paths()
     )
-    module_names = metabaseapi.cli_commands.command_module_names()
-    module_paths = metabaseapi.cli_commands.command_module_paths()
+    module_names = metabaseapi.cli.commands.command_module_names()
+    module_paths = metabaseapi.cli.commands.command_module_paths()
     assert all(path.endswith(f".{module}") for module, path in zip(module_names, module_paths, strict=True))
     for module_path in module_paths:
         importlib.import_module(module_path)
@@ -270,24 +271,26 @@ def test_cli_command_modules_import_from_package() -> None:
 
 def test_cli_command_module_groups_are_complete_and_disjoint() -> None:
     grouped = (
-        *metabaseapi.cli_commands.CORE_RESOURCE_MODULES,
-        *metabaseapi.cli_commands.ASSET_AUTHORING_MODULES,
-        *metabaseapi.cli_commands.QUERY_AND_EXECUTION_MODULES,
-        *metabaseapi.cli_commands.PLATFORM_OPERATIONS_MODULES,
+        *metabaseapi.cli.commands.CORE_RESOURCE_MODULES,
+        *metabaseapi.cli.commands.ASSET_AUTHORING_MODULES,
+        *metabaseapi.cli.commands.QUERY_AND_EXECUTION_MODULES,
+        *metabaseapi.cli.commands.PLATFORM_OPERATIONS_MODULES,
     )
-    assert grouped == metabaseapi.cli_commands.COMMAND_MODULES
+    assert grouped == metabaseapi.cli.commands.COMMAND_MODULES
     assert len(grouped) == len(set(grouped))
 
 
 def test_cli_command_registry_matches_package_files() -> None:
-    command_package_path = Path(metabaseapi.cli_commands.__file__).parent
-    command_module_files = tuple(sorted(path.stem for path in command_package_path.glob("*_commands.py")))
-    assert command_module_files == tuple(sorted(metabaseapi.cli_commands.COMMAND_MODULES))
+    command_package_path = Path(metabaseapi.cli.commands.__file__).parent
+    command_module_files = tuple(
+        sorted(path.stem for path in command_package_path.glob("*.py") if path.stem != "__init__")
+    )
+    assert command_module_files == tuple(sorted(metabaseapi.cli.commands.COMMAND_MODULES))
 
 
 def test_cli_command_group_registry_tracks_declared_modules() -> None:
-    registry = metabaseapi.cli_commands.COMMAND_MODULE_GROUPS
-    assert registry is metabaseapi.cli_commands.COMMAND_MODULE_GROUP_REGISTRY
+    registry = metabaseapi.cli.commands.COMMAND_MODULE_GROUPS
+    assert registry is metabaseapi.cli.commands.COMMAND_MODULE_GROUP_REGISTRY
     assert tuple(registry.keys()) == (
         "core_resource",
         "asset_authoring",
@@ -295,40 +298,62 @@ def test_cli_command_group_registry_tracks_declared_modules() -> None:
         "platform_operations",
     )
     flattened_modules = tuple(module for modules in registry.values() for module in modules)
-    assert flattened_modules == metabaseapi.cli_commands.COMMAND_MODULES
-    assert metabaseapi.cli_commands.command_group_names() == metabaseapi.cli_commands.COMMAND_MODULE_GROUP_ORDER
-    assert metabaseapi.cli_commands.COMMAND_MODULE_GROUP_ORDER == (
+    assert flattened_modules == metabaseapi.cli.commands.COMMAND_MODULES
+    assert metabaseapi.cli.commands.command_group_names() == metabaseapi.cli.commands.COMMAND_MODULE_GROUP_ORDER
+    assert metabaseapi.cli.commands.COMMAND_MODULE_GROUP_ORDER == (
         "core_resource",
         "asset_authoring",
         "query_and_execution",
         "platform_operations",
     )
-    for group_name in metabaseapi.cli_commands.COMMAND_MODULE_GROUP_ORDER:
-        assert metabaseapi.cli_commands.command_modules_in_group(group_name) == registry[group_name]
-    assert metabaseapi.cli_commands.command_modules_in_group("platform_operations") == (
-        metabaseapi.cli_commands.PLATFORM_BUG_REPORTING_COMMAND_MODULE,
-        metabaseapi.cli_commands.PLATFORM_CACHE_COMMAND_MODULE,
-        metabaseapi.cli_commands.PLATFORM_CHANNEL_COMMAND_MODULE,
-        metabaseapi.cli_commands.PLATFORM_CLOUD_MIGRATION_COMMAND_MODULE,
+    for group_name in metabaseapi.cli.commands.COMMAND_MODULE_GROUP_ORDER:
+        assert metabaseapi.cli.commands.command_modules_in_group(group_name) == registry[group_name]
+    assert metabaseapi.cli.commands.command_modules_in_group("platform_operations") == (
+        metabaseapi.cli.commands.PLATFORM_BUG_REPORTING_COMMAND_MODULE,
+        metabaseapi.cli.commands.PLATFORM_CACHE_COMMAND_MODULE,
+        metabaseapi.cli.commands.PLATFORM_CHANNEL_COMMAND_MODULE,
+        metabaseapi.cli.commands.PLATFORM_CLOUD_MIGRATION_COMMAND_MODULE,
     )
 
 
 def test_cli_command_legacy_shims_are_not_importable() -> None:
     with pytest.raises(ModuleNotFoundError):
+        importlib.import_module("metabaseapi.cli_commands")
+    with pytest.raises(ModuleNotFoundError):
         importlib.import_module("metabaseapi.cli_commands_core")
     with pytest.raises(ModuleNotFoundError):
         importlib.import_module("metabaseapi.cli_commands_dashboard")
+    with pytest.raises(ModuleNotFoundError):
+        importlib.import_module("metabaseapi.cli_commands.action_commands")
+    with pytest.raises(ModuleNotFoundError):
+        importlib.import_module("metabaseapi.cli_commands.platform_cache_commands")
+
+
+def test_legacy_endpoint_package_name_is_not_importable() -> None:
+    with pytest.raises(ModuleNotFoundError):
+        importlib.import_module("metabaseapi.metabase")
+
+
+def test_legacy_wire_module_name_is_not_importable() -> None:
+    assert metabaseapi.wire.APIRequestModel.__module__ == "metabaseapi.wire"
+    with pytest.raises(ModuleNotFoundError):
+        importlib.import_module("metabaseapi.models")
 
 
 def test_client_public_exports_use_http_implementation() -> None:
+    assert metabaseapi.client.__all__ == ["MetabaseClient"]
     assert metabaseapi.client.MetabaseClient is metabaseapi.client.http.MetabaseClient
-    assert metabaseapi.client._MetabaseClientRawMixin is metabaseapi.client.http._MetabaseClientRawMixin
-    assert metabaseapi.client._MetabaseClientTypedMixin is metabaseapi.client.http._MetabaseClientTypedMixin
+    assert not hasattr(metabaseapi.client, "_MetabaseClientRawMixin")
+    assert not hasattr(metabaseapi.client, "_MetabaseClientTypedMixin")
+    with pytest.raises(ModuleNotFoundError):
+        importlib.import_module("metabaseapi.client.mixins")
 
 
-def test_client_raw_shim_reuses_http_export() -> None:
-    assert metabaseapi.client.raw._MetabaseClientRawMixin is metabaseapi.client.http._MetabaseClientRawMixin
-    assert metabaseapi.client.typed._MetabaseClientTypedMixin is metabaseapi.client.http._MetabaseClientTypedMixin
+def test_client_raw_and_typed_packages_do_not_reexport_aggregate_mixins() -> None:
+    assert metabaseapi.client.raw.__all__ == []
+    assert metabaseapi.client.typed.__all__ == []
+    assert not hasattr(metabaseapi.client.raw, "_MetabaseClientRawMixin")
+    assert not hasattr(metabaseapi.client.typed, "_MetabaseClientTypedMixin")
 
 
 def test_client_data_studio_replaces_misc_module_name() -> None:
@@ -389,58 +414,59 @@ def _client_module_stems(package: object) -> tuple[str, ...]:
 def test_client_raw_and_typed_module_names_match_registry() -> None:
     raw_modules = _client_module_stems(metabaseapi.client.raw)
     typed_modules = _client_module_stems(metabaseapi.client.typed)
-    registry_modules = tuple(sorted(metabaseapi.client.http.client_mixin_group_names()))
 
     assert raw_modules == typed_modules
-    assert raw_modules == registry_modules
-
-
-def test_client_mixin_groups_are_explicit_and_stable() -> None:
-    assert metabaseapi.client.http.client_mixin_layers() == metabaseapi.client.http.CLIENT_MIXIN_LAYERS
-    assert tuple(metabaseapi.client.http.client_mixin_group_names()) == (
+    assert raw_modules == (
         "action",
-        "user",
-        "analytics",
-        "alert",
-        "api_key",
-        "agent",
         "activity",
+        "agent",
+        "alert",
+        "analytics",
+        "api_key",
+        "automagic",
         "bookmark",
+        "bug_reporting",
         "cache",
-        "collection",
+        "card",
         "channel",
         "cloud_migration",
-        "card",
-        "database",
-        "automagic",
-        "dashboard",
+        "collection",
         "comment",
-        "bug_reporting",
+        "dashboard",
         "data_studio",
+        "database",
         "schema",
+        "user",
     )
-    raw_groups = metabaseapi.client.http.CLIENT_RAW_MIXIN_GROUPS
-    typed_groups = metabaseapi.client.http.CLIENT_TYPED_MIXIN_GROUPS
-    assert metabaseapi.client.http.client_mixin_layers() == ("raw", "typed")
-    assert tuple(raw_groups.keys()) == tuple(typed_groups.keys())
-    assert tuple(raw_groups.keys()) == metabaseapi.client.http.client_mixin_group_names()
-    assert tuple(raw_groups.keys()) == metabaseapi.client.http.client_mixin_group_names(layer="raw")
-    assert tuple(typed_groups.keys()) == metabaseapi.client.http.client_mixin_group_names(layer="typed")
-    raw_mixins_flat = tuple(mixin for mixins in raw_groups.values() for mixin in mixins)
-    typed_mixins_flat = tuple(mixin for mixins in typed_groups.values() for mixin in mixins)
-    assert raw_mixins_flat == metabaseapi.client.http.CLIENT_RAW_MIXINS
-    assert typed_mixins_flat == metabaseapi.client.http.CLIENT_TYPED_MIXINS
-    assert raw_mixins_flat == metabaseapi.client.http.client_mixins_in_layer()
-    assert typed_mixins_flat == metabaseapi.client.http.client_mixins_in_layer(layer="typed")
-    for group_name in metabaseapi.client.http.client_mixin_group_names():
-        assert metabaseapi.client.http.client_mixins_for_group(group_name) == raw_groups[group_name]
-    for group_name in metabaseapi.client.http.client_mixin_group_names(layer="typed"):
-        assert metabaseapi.client.http.client_mixins_for_group(group_name, layer="typed") == typed_groups[group_name]
-    assert metabaseapi.client.http._MetabaseClientRawMixin.__bases__ == metabaseapi.client.http.CLIENT_RAW_MIXINS
-    assert metabaseapi.client.http._MetabaseClientTypedMixin.__bases__ == (
-        metabaseapi.client.http._MetabaseClientRawMixin,
-        *metabaseapi.client.http.CLIENT_TYPED_MIXINS,
-    )
+
+
+def test_typed_client_imports_endpoint_symbols_directly() -> None:
+    typed_package_path = Path(metabaseapi.client.typed.__file__).parent
+    for source_path in typed_package_path.glob("*.py"):
+        if source_path.stem == "__init__":
+            continue
+        source = source_path.read_text(encoding="utf-8")
+        assert not re.search(r"^from metabaseapi\\.endpoints import ", source, flags=re.MULTILINE)
+
+
+def test_cli_command_modules_depend_on_runtime_not_cli_facade() -> None:
+    command_package_path = Path(metabaseapi.cli.commands.__file__).parent
+    for source_path in command_package_path.glob("*.py"):
+        if source_path.stem == "__init__":
+            continue
+        source = source_path.read_text(encoding="utf-8")
+        assert "from metabaseapi.cli import " not in source
+
+
+def test_client_domain_modules_expose_functions_not_mixins() -> None:
+    for package in (metabaseapi.client.raw, metabaseapi.client.typed):
+        package_path = Path(package.__file__).parent
+        for source_path in package_path.glob("*.py"):
+            if source_path.stem == "__init__":
+                continue
+            source = source_path.read_text(encoding="utf-8")
+            assert "class _" not in source
+            assert "Mixin" not in source
 
 
 def test_cli_entrypoint_importable() -> None:
@@ -449,66 +475,58 @@ def test_cli_entrypoint_importable() -> None:
 
 def test_client_public_module_exports_concrete_http_implementation() -> None:
     assert metabaseapi.client.MetabaseClient.__module__ == "metabaseapi.client.http"
-    assert metabaseapi.client._MetabaseClientRawMixin.__module__ == "metabaseapi.client.http"
-    assert metabaseapi.client._MetabaseClientTypedMixin.__module__ == "metabaseapi.client.http"
+    assert metabaseapi.client.__all__ == ["MetabaseClient"]
+    assert not hasattr(metabaseapi.client, "_MetabaseClientRawMixin")
+    assert not hasattr(metabaseapi.client, "_MetabaseClientTypedMixin")
 
 
-def test_metabase_request_base_owns_execution_interface() -> None:
-    assert metabaseapi.metabase.MetabaseRequestClient is metabaseapi.metabase.request_base.MetabaseRequestClient
-    assert (
-        metabaseapi.metabase.requests.MetabaseRequestClient is metabaseapi.metabase.request_base.MetabaseRequestClient
+def test_endpoints_execution_owns_request_interface() -> None:
+    assert metabaseapi.endpoints.requests.card.ListCardsRequest.__mro__[1].__module__ == (
+        "metabaseapi.endpoints.execution"
     )
-    assert metabaseapi.metabase.requests.ListCardsRequest.__mro__[1].__module__ == "metabaseapi.metabase.request_base"
 
 
-def test_metabase_public_exports_are_composed_from_source_modules() -> None:
-    expected_exports = sorted(
-        (
-            *metabaseapi.metabase.entities.__all__,
-            *metabaseapi.metabase.requests.__all__,
-            *metabaseapi.metabase.responses.__all__,
-            "MetabaseRequestClient",
-        )
-    )
-    assert metabaseapi.metabase.__all__ == expected_exports
-    for name in expected_exports:
-        if name == "MetabaseRequestClient":
-            expected_symbol = metabaseapi.metabase.request_base.MetabaseRequestClient
-        elif hasattr(metabaseapi.metabase.entities, name):
-            expected_symbol = getattr(metabaseapi.metabase.entities, name)
-        elif hasattr(metabaseapi.metabase.requests, name):
-            expected_symbol = getattr(metabaseapi.metabase.requests, name)
-        else:
-            expected_symbol = getattr(metabaseapi.metabase.responses, name)
-        assert getattr(metabaseapi.metabase, name) is expected_symbol
+def test_endpoints_public_exports_are_submodules_only() -> None:
+    assert metabaseapi.endpoints.__all__ == ["entities", "execution", "requests", "responses"]
+    assert metabaseapi.endpoints.entities is metabaseapi.endpoints.entities
+    assert metabaseapi.endpoints.execution is metabaseapi.endpoints.execution
+    assert metabaseapi.endpoints.requests is metabaseapi.endpoints.requests
+    assert metabaseapi.endpoints.responses is metabaseapi.endpoints.responses
+    assert not hasattr(metabaseapi.endpoints, "ListCardsRequest")
 
 
-def test_metabase_endpoint_request_modules_reexport_through_requests_aggregate() -> None:
-    for module_name, request_names in ENDPOINT_REQUEST_MODULE_CONTRACTS.items():
-        domain_module = importlib.import_module(f"metabaseapi.metabase.endpoint_requests.{module_name}")
+def test_endpoints_request_package_does_not_reexport_request_classes() -> None:
+    assert metabaseapi.endpoints.requests.__all__ == [
+        "REQUEST_MODULES",
+        "request_module_names",
+        "request_module_paths",
+    ]
+    assert not hasattr(metabaseapi.endpoints.requests, "ListCardsRequest")
+
+
+def test_endpoints_request_modules_own_request_classes() -> None:
+    for module_name, request_names in REQUEST_MODULE_CONTRACTS.items():
+        domain_module = importlib.import_module(f"metabaseapi.endpoints.requests.{module_name}")
         for request_name in request_names:
-            assert getattr(metabaseapi.metabase.requests, request_name) is getattr(domain_module, request_name)
+            assert getattr(domain_module, request_name).__module__ == domain_module.__name__
 
 
-def test_metabase_endpoint_request_registry_matches_package_files() -> None:
-    endpoint_package_path = Path(metabaseapi.metabase.endpoint_requests.__file__).parent
+def test_endpoints_request_registry_matches_package_files() -> None:
+    endpoint_package_path = Path(metabaseapi.endpoints.requests.__file__).parent
     endpoint_module_files = tuple(
         sorted(path.stem for path in endpoint_package_path.glob("*.py") if path.stem != "__init__")
     )
-    assert endpoint_module_files == tuple(sorted(metabaseapi.metabase.endpoint_requests.ENDPOINT_REQUEST_MODULES))
-    assert (
-        tuple(ENDPOINT_REQUEST_MODULE_CONTRACTS)
-        == metabaseapi.metabase.endpoint_requests.endpoint_request_module_names()
-    )
-    assert metabaseapi.metabase.endpoint_requests.endpoint_request_module_paths() == tuple(
-        f"metabaseapi.metabase.endpoint_requests.{module_name}"
-        for module_name in metabaseapi.metabase.endpoint_requests.ENDPOINT_REQUEST_MODULES
+    assert endpoint_module_files == tuple(sorted(metabaseapi.endpoints.requests.REQUEST_MODULES))
+    assert tuple(REQUEST_MODULE_CONTRACTS) == metabaseapi.endpoints.requests.request_module_names()
+    assert metabaseapi.endpoints.requests.request_module_paths() == tuple(
+        f"metabaseapi.endpoints.requests.{module_name}"
+        for module_name in metabaseapi.endpoints.requests.REQUEST_MODULES
     )
 
 
 def _command_names_from_sources() -> list[str]:
     command_names: list[str] = []
-    for module in metabaseapi.cli_commands.command_module_objects():
+    for module in metabaseapi.cli.commands.command_module_objects():
         source_path = Path(module.__file__) if module.__file__ else None
         if source_path is None:
             continue
@@ -519,7 +537,7 @@ def _command_names_from_sources() -> list[str]:
 
 def _command_names_by_module() -> dict[str, tuple[str, ...]]:
     command_names: dict[str, tuple[str, ...]] = {}
-    for module in metabaseapi.cli_commands.command_module_objects():
+    for module in metabaseapi.cli.commands.command_module_objects():
         source_path = Path(module.__file__) if module.__file__ else None
         if source_path is None:
             continue
@@ -537,25 +555,25 @@ def test_cli_command_names_are_unique_across_modules() -> None:
 
 def test_database_lifecycle_commands_share_database_module() -> None:
     command_names = _command_names_by_module()
-    assert "create-database" in command_names[metabaseapi.cli_commands.DATABASE_COMMAND_MODULE]
-    assert "get-database" in command_names[metabaseapi.cli_commands.DATABASE_COMMAND_MODULE]
-    assert "list-databases" in command_names[metabaseapi.cli_commands.DATABASE_COMMAND_MODULE]
-    assert "create-database" not in command_names[metabaseapi.cli_commands.SCHEMA_COMMAND_MODULE]
+    assert "create-database" in command_names[metabaseapi.cli.commands.DATABASE_COMMAND_MODULE]
+    assert "get-database" in command_names[metabaseapi.cli.commands.DATABASE_COMMAND_MODULE]
+    assert "list-databases" in command_names[metabaseapi.cli.commands.DATABASE_COMMAND_MODULE]
+    assert "create-database" not in command_names[metabaseapi.cli.commands.SCHEMA_COMMAND_MODULE]
 
 
 def test_resource_list_commands_live_with_resource_modules() -> None:
     command_names = _command_names_by_module()
-    assert "list-cards" in command_names[metabaseapi.cli_commands.CARD_COMMAND_MODULE]
-    assert "list-collections" in command_names[metabaseapi.cli_commands.COLLECTION_COMMAND_MODULE]
-    assert "list-dashboards" in command_names[metabaseapi.cli_commands.DASHBOARD_COMMAND_MODULE]
-    assert "list-users" in command_names[metabaseapi.cli_commands.USER_COMMAND_MODULE]
-    assert "list-tables" in command_names[metabaseapi.cli_commands.SCHEMA_COMMAND_MODULE]
+    assert "list-cards" in command_names[metabaseapi.cli.commands.CARD_COMMAND_MODULE]
+    assert "list-collections" in command_names[metabaseapi.cli.commands.COLLECTION_COMMAND_MODULE]
+    assert "list-dashboards" in command_names[metabaseapi.cli.commands.DASHBOARD_COMMAND_MODULE]
+    assert "list-users" in command_names[metabaseapi.cli.commands.USER_COMMAND_MODULE]
+    assert "list-tables" in command_names[metabaseapi.cli.commands.SCHEMA_COMMAND_MODULE]
 
 
 def test_current_user_command_lives_with_user_commands() -> None:
     command_names = _command_names_by_module()
-    assert "current-user" in command_names[metabaseapi.cli_commands.USER_COMMAND_MODULE]
-    assert "current-user" not in command_names[metabaseapi.cli_commands.ANALYTICS_COMMAND_MODULE]
+    assert "current-user" in command_names[metabaseapi.cli.commands.USER_COMMAND_MODULE]
+    assert "current-user" not in command_names[metabaseapi.cli.commands.ANALYTICS_COMMAND_MODULE]
 
 
 def test_activity_commands_live_with_activity_module() -> None:
@@ -567,8 +585,8 @@ def test_activity_commands_live_with_activity_module() -> None:
         "list-recents",
         "create-recent",
     ):
-        assert command_name in command_names[metabaseapi.cli_commands.ACTIVITY_COMMAND_MODULE]
-        assert command_name not in command_names[metabaseapi.cli_commands.ANALYTICS_COMMAND_MODULE]
+        assert command_name in command_names[metabaseapi.cli.commands.ACTIVITY_COMMAND_MODULE]
+        assert command_name not in command_names[metabaseapi.cli.commands.ANALYTICS_COMMAND_MODULE]
 
 
 def test_cli_app_registers_all_declared_commands() -> None:
@@ -582,7 +600,7 @@ def test_cli_app_registers_all_declared_commands() -> None:
 
 
 def test_cli_command_modules_are_compact() -> None:
-    for module in metabaseapi.cli_commands.command_module_objects():
+    for module in metabaseapi.cli.commands.command_module_objects():
         source_path = Path(module.__file__) if module.__file__ else None
         assert source_path is not None
         line_count = len(source_path.read_text(encoding="utf-8").splitlines())
@@ -590,8 +608,8 @@ def test_cli_command_modules_are_compact() -> None:
 
 
 def test_cli_command_module_objects_are_cached() -> None:
-    first = metabaseapi.cli_commands.command_module_objects()
-    second = metabaseapi.cli_commands.command_module_objects()
+    first = metabaseapi.cli.commands.command_module_objects()
+    second = metabaseapi.cli.commands.command_module_objects()
     assert first is second
 
 
@@ -604,21 +622,21 @@ def test_cli_command_modules_importable_in_multiple_orders() -> None:
     import_order_cases = [
         dedent(
             """
-            import metabaseapi.cli_commands
+            import metabaseapi.cli.commands
             import metabaseapi.cli
-            print(len(metabaseapi.cli_commands.command_module_objects()), len(metabaseapi.cli.app.registered_commands))
+            print(len(metabaseapi.cli.commands.command_module_objects()), len(metabaseapi.cli.app.registered_commands))
             """
         ).strip(),
         dedent(
             """
             import metabaseapi.cli
-            import metabaseapi.cli_commands
-            print(len(metabaseapi.cli_commands.command_module_objects()), len(metabaseapi.cli.app.registered_commands))
+            import metabaseapi.cli.commands
+            print(len(metabaseapi.cli.commands.command_module_objects()), len(metabaseapi.cli.app.registered_commands))
             """
         ).strip(),
         dedent(
             """
-            from metabaseapi.cli_commands import *  # noqa: F401
+            from metabaseapi.cli.commands import *  # noqa: F401
             import metabaseapi.cli
             print(len(COMMAND_MODULES), len(COMMAND_MODULES_OBJECTS), len(metabaseapi.cli.app.registered_commands))
             """
@@ -638,5 +656,5 @@ def test_cli_command_modules_importable_in_multiple_orders() -> None:
         values = [int(item) for item in lines[0].split()]
         assert len(values) in (2, 3)
         assert all(value > 0 for value in values)
-        expected_modules = len(metabaseapi.cli_commands.command_module_objects())
+        expected_modules = len(metabaseapi.cli.commands.command_module_objects())
         assert values[0] == expected_modules

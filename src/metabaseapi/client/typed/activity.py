@@ -2,36 +2,43 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from metabaseapi.metabase import ActivityItem
-from metabaseapi.metabase import ActivityMutationResponse
-from metabaseapi.metabase import CreateRecentRequest
-from metabaseapi.metabase import GetMostRecentlyViewedDashboardRequest
-from metabaseapi.metabase import ListActivityItemsResponse
-from metabaseapi.metabase import ListPopularItemsRequest
-from metabaseapi.metabase import ListRecentsRequest
-from metabaseapi.metabase import ListRecentViewsRequest
+from metabaseapi.endpoints.entities import ActivityItem
+from metabaseapi.endpoints.requests.activity import CreateRecentRequest
+from metabaseapi.endpoints.requests.activity import GetMostRecentlyViewedDashboardRequest
+from metabaseapi.endpoints.requests.activity import ListPopularItemsRequest
+from metabaseapi.endpoints.requests.activity import ListRecentsRequest
+from metabaseapi.endpoints.requests.activity import ListRecentViewsRequest
+from metabaseapi.endpoints.responses import ActivityMutationResponse
+from metabaseapi.endpoints.responses import ListActivityItemsResponse
 
 if TYPE_CHECKING:
     from metabaseapi.client.http import MetabaseClient
 
 
-class _MetabaseClientTypedMixin:
-    """Resource-scoped typed mixin for activity endpoints."""
-
-    async def most_recently_viewed_dashboard_typed(self: MetabaseClient) -> ActivityItem:
-        return await self.run(GetMostRecentlyViewedDashboardRequest())
-
-    async def list_popular_items_typed(self: MetabaseClient) -> ListActivityItemsResponse:
-        return await self.run(ListPopularItemsRequest())
-
-    async def list_recent_views_typed(self: MetabaseClient) -> ListActivityItemsResponse:
-        return await self.run(ListRecentViewsRequest())
-
-    async def list_recents_typed(self: MetabaseClient, *, context: str | None = None) -> ListActivityItemsResponse:
-        return await self.run(ListRecentsRequest(context=context))
-
-    async def create_recent_typed(self: MetabaseClient, body: dict[str, object]) -> ActivityMutationResponse:
-        return await self.run(CreateRecentRequest(body=body))
+async def most_recently_viewed_dashboard_typed(client: MetabaseClient) -> ActivityItem:
+    return await client.run(GetMostRecentlyViewedDashboardRequest())
 
 
-__all__ = ["_MetabaseClientTypedMixin"]
+async def list_popular_items_typed(client: MetabaseClient) -> ListActivityItemsResponse:
+    return await client.run(ListPopularItemsRequest())
+
+
+async def list_recent_views_typed(client: MetabaseClient) -> ListActivityItemsResponse:
+    return await client.run(ListRecentViewsRequest())
+
+
+async def list_recents_typed(client: MetabaseClient, *, context: str | None = None) -> ListActivityItemsResponse:
+    return await client.run(ListRecentsRequest(context=context))
+
+
+async def create_recent_typed(client: MetabaseClient, body: dict[str, object]) -> ActivityMutationResponse:
+    return await client.run(CreateRecentRequest(body=body))
+
+
+__all__ = [
+    "create_recent_typed",
+    "list_popular_items_typed",
+    "list_recent_views_typed",
+    "list_recents_typed",
+    "most_recently_viewed_dashboard_typed",
+]

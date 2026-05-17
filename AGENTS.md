@@ -3,18 +3,25 @@
 ## Project scope
 
 - `src/metabaseapi/cli/__init__.py` is the Typer CLI entry point; every CLI command should map to an explicit function.
-- `src/metabaseapi/client/http.py` owns async Metabase HTTP calls and is the canonical implementation module.
-- `src/metabaseapi/client` exposes the public client exports by re-exporting the canonical implementation.
-- `src/metabaseapi/cli_commands` owns command implementations; command modules are discoverable through `src/metabaseapi/cli_commands/__init__.py`.
-- `src/metabaseapi/models.py` contains generic raw request/response wrappers; `src/metabaseapi/metabase/` contains hand-written typed endpoint models and request helpers split by concern.
+- `src/metabaseapi/cli/runtime.py` owns the Typer app object, shared CLI parsing helpers, client execution helper, and callback configuration.
+- `src/metabaseapi/client/http.py` owns async Metabase HTTP calls and exports only the canonical concrete `MetabaseClient`.
+- `src/metabaseapi/client` exposes exactly one public client interface: `MetabaseClient`.
+- `src/metabaseapi/client/raw` and `src/metabaseapi/client/typed` contain internal module-level endpoint functions; do not expose or reintroduce client mixins.
+- `src/metabaseapi/cli/commands` owns command implementations; command module filenames use domain/action stems such as `card.py`, `card_query.py`, and `cloud_migration.py`, without a redundant `_commands.py` suffix.
+- `src/metabaseapi/wire.py` contains HTTP wire types and generic raw request/response wrappers; `src/metabaseapi/endpoints/` contains hand-written typed endpoint models and request helpers split by concern.
+- `src/metabaseapi/endpoints/__init__.py` exposes only endpoint submodules (`entities`, `execution`, `requests`, `responses`); do not re-export every endpoint symbol at the package top level.
+- `src/metabaseapi/endpoints/requests/__init__.py` owns only the request module registry; request classes must live in domain modules such as `endpoints/requests/card.py`.
 - Do not reintroduce `api.json`, OpenAPI snapshot fixtures, runtime endpoint registries, or file-scanning behavior to decide API capabilities.
-- 命名規範：對外公開進入點只使用 `metabaseapi.cli`（package）與 `metabaseapi.client`；`metabaseapi.client.http` 為唯一實作入口；`metabaseapi.client.raw`、`metabaseapi.client.typed` 僅作模組化拆分，並不作向下相容入口。
+- This is a new project with no compatibility users; prefer breaking refactors that produce a cleaner interface over preserving shims or transitional APIs.
+- 命名規範：對外公開進入點只使用 `metabaseapi.cli`（package）、`metabaseapi.client` 與 `metabaseapi.endpoints`；`metabaseapi.client.http` 為唯一 concrete client 實作入口；`metabaseapi.client.raw`、`metabaseapi.client.typed` 僅作模組化拆分，並不作向下相容入口。
 
 ## Commands
 
 - Run commands from the repository root. Use `uv sync` to install dependencies.
 - Keep `uv run metabaseapi --help` working so users can discover every command and option.
-- Use `just all` as the local aggregate gate; it runs Ruff format, Ruff lint with fixes, ty type checking, and pytest with coverage.
+- Current local required gate is Ruff plus ty only: run `uv run ruff check .` and `uv run ty check .` before finishing code changes.
+- Do not run pytest unless the user explicitly asks for tests or the change specifically needs test evidence.
+- `just all` remains the full aggregate gate; it also runs pytest with coverage, so do not use it for routine verification under the current workflow.
 - CI also runs `uv run ruff check .`, `uv run ty check .`, and `uv run pytest -v -s --cov=src --cov-report=xml tests`.
 - All Python execution and script entrypoints in this repo must use `uv run python` (or `UV_CACHE_DIR=/tmp/uv-cache uv run python`); never use bare `python` or `python3` directly for project code paths.
 - 確認：專案中的 Python 路徑、腳本、臨時執行都**一定要**用 `uv run python`（可配 `UV_CACHE_DIR=/tmp/uv-cache`）執行。
@@ -29,6 +36,7 @@
 
 - Tests live in `tests/test_*.py`; add or update focused tests for model validation, client dispatch, CLI behavior, and settings changes.
 - Prefer `httpx.MockTransport` and Typer CLI tests over live Metabase API calls in unit tests.
+- Current refactor work may finish without pytest as long as `uv run ruff check .` and `uv run ty check .` pass.
 
 ## MEMORY.md
 

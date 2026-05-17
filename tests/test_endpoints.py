@@ -8,9 +8,9 @@ import pytest
 from pydantic import ValidationError
 
 from metabaseapi.client import MetabaseClient
-from metabaseapi.models import APIRequestModel
-from metabaseapi.models import APIResponseModel
-from metabaseapi.models import JSONValue
+from metabaseapi.wire import APIRequestModel
+from metabaseapi.wire import APIResponseModel
+from metabaseapi.wire import JSONValue
 
 
 def _run(coro: Coroutine[object, object, JSONValue | None]) -> JSONValue | None:

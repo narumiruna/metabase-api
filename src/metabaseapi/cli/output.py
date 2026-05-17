@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 
-from metabaseapi.models import JSONValue
+from metabaseapi.wire import JSONValue
 
 
 def format_json(payload: JSONValue) -> str:

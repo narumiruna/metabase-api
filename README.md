@@ -2,7 +2,7 @@
 
 A small async-first Python client and Typer CLI for the Metabase API.
 
-此專案用手寫、明確的 client/CLI surface 支援 Metabase endpoints。`docs/TODO.md` 是依據最新 Metabase API 文件整理的靜態實作清單；只有具備手寫 client method、request/response `BaseModel`、以及 CLI 命令的 endpoint 才能被打勾。
+此專案用手寫、明確的 client/CLI surface 支援 Metabase endpoints。`docs/TODO.md` 是依據最新 Metabase API 文件整理的靜態實作清單；具備手寫 client method、request/response `BaseModel`、以及 CLI 命令的 endpoint 才能被打勾。
 
 ## 安裝
 
@@ -26,7 +26,7 @@ export METABASE_API_KEY=your-api-key
 
 ### 手寫 CLI 命令
 
-CLI 不提供 raw `request` / `invoke`。新增 API 能力時，請同時新增手寫 client method、request/response `BaseModel`、CLI 命令與測試。
+CLI 不提供 raw `request` / `invoke`。新增 API 能力時，請同時新增手寫 client method、request/response `BaseModel` 與 CLI 命令；測試可依風險補上，目前本地必要 gate 是 Ruff 與 ty。
 
 ```bash
 metabaseapi current-user
@@ -53,7 +53,7 @@ metabaseapi get-field 9
 ## API coverage
 
 - `docs/TODO.md` 追蹤官方 Metabase API 文件中的 600 個 operations。
-- 只有具備手寫 client method、request/response `BaseModel`、CLI 命令與測試的 endpoint 會被標記為完成。
+- 具備手寫 client method、request/response `BaseModel` 與 CLI 命令的 endpoint 會被標記為完成；測試可依風險補上。
 - CLI 不提供 raw `request` / `invoke`；未完成的 endpoint 必須先補齊手寫 surface。
 - typed endpoint models 維持手寫，不從 `api.json` 產生 runtime registry 或 generated endpoint modules。
 

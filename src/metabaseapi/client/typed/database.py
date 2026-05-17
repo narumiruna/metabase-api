@@ -2,34 +2,37 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from metabaseapi.metabase import CreateDatabaseRequest
-from metabaseapi.metabase import Database
-from metabaseapi.metabase import GetDatabaseRequest
-from metabaseapi.metabase import ListDatabasesRequest
-from metabaseapi.metabase import ListDatabasesResponse
+from metabaseapi.endpoints.entities import Database
+from metabaseapi.endpoints.requests.database import CreateDatabaseRequest
+from metabaseapi.endpoints.requests.database import GetDatabaseRequest
+from metabaseapi.endpoints.requests.database import ListDatabasesRequest
+from metabaseapi.endpoints.responses import ListDatabasesResponse
 
 if TYPE_CHECKING:
     from metabaseapi.client.http import MetabaseClient
 
 
-class _MetabaseClientTypedMixin:
-    """Resource-scoped typed mixin for database endpoints."""
-
-    async def list_databases_typed(self: MetabaseClient) -> ListDatabasesResponse:
-        return await self.run(ListDatabasesRequest())
-
-    async def create_database_typed(
-        self: MetabaseClient,
-        *,
-        name: str,
-        engine: str,
-        details: dict[str, object] | None = None,
-    ) -> Database:
-        request = CreateDatabaseRequest(name=name, engine=engine, details=details or {})
-        return await self.run(request)
-
-    async def get_database_typed(self: MetabaseClient, database_id: int | str) -> Database:
-        return await self.run(GetDatabaseRequest(database_id=database_id))
+async def list_databases_typed(client: MetabaseClient) -> ListDatabasesResponse:
+    return await client.run(ListDatabasesRequest())
 
 
-__all__ = ["_MetabaseClientTypedMixin"]
+async def create_database_typed(
+    client: MetabaseClient,
+    *,
+    name: str,
+    engine: str,
+    details: dict[str, object] | None = None,
+) -> Database:
+    request = CreateDatabaseRequest(name=name, engine=engine, details=details or {})
+    return await client.run(request)
+
+
+async def get_database_typed(client: MetabaseClient, database_id: int | str) -> Database:
+    return await client.run(GetDatabaseRequest(database_id=database_id))
+
+
+__all__ = [
+    "create_database_typed",
+    "get_database_typed",
+    "list_databases_typed",
+]

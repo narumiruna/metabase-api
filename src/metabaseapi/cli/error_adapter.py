@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from metabaseapi.errors import MetabaseError
-from metabaseapi.models import JSONValue
+from metabaseapi.wire import JSONValue
 
 
 def error_payload(exc: Exception) -> JSONValue:

@@ -1,1 +1,1 @@
-# CLI domain-locality tests live in package modules under `metabaseapi.cli_commands`.
+# CLI domain-locality tests live in package modules under `metabaseapi.cli.commands`.

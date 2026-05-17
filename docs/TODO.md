@@ -8,7 +8,7 @@ This file is a static implementation checklist derived from the latest Metabase 
 
 ## Legend
 
-- `[x]` = this endpoint has all required hand-written support: a focused client method, request `BaseModel`, response `BaseModel`, CLI command, and tests.
+- `[x]` = this endpoint has all required hand-written support: a focused client method, request `BaseModel`, response `BaseModel`, and CLI command. Tests can be added based on risk, but pytest is not part of the current required local gate.
 - `[ ]` = this endpoint is not complete yet. Raw `request` / `invoke` usage is intentionally forbidden and does not count as completion.
 - Add focused models and convenience commands by hand only; do not add `api.json`, generated endpoint modules, runtime endpoint registries, or file-scanning endpoint discovery.
 

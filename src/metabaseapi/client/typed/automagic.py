@@ -2,34 +2,37 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from metabaseapi.metabase import AutomagicDashboardRequest
-from metabaseapi.metabase import AutomagicDatabaseCandidatesRequest
-from metabaseapi.metabase import AutomagicModelIndexPrimaryKeyRequest
-from metabaseapi.metabase import GenericOperationResponse
+from metabaseapi.endpoints.requests.automagic import AutomagicDashboardRequest
+from metabaseapi.endpoints.requests.automagic import AutomagicDatabaseCandidatesRequest
+from metabaseapi.endpoints.requests.automagic import AutomagicModelIndexPrimaryKeyRequest
+from metabaseapi.endpoints.responses import GenericOperationResponse
 
 if TYPE_CHECKING:
     from metabaseapi.client.http import MetabaseClient
 
 
-class _MetabaseClientTypedMixin:
-    """Resource-scoped typed mixin for automagic endpoints."""
-
-    async def automagic_database_candidates_typed(
-        self: MetabaseClient, database_id: int | str
-    ) -> GenericOperationResponse:
-        return await self.run(AutomagicDatabaseCandidatesRequest(database_id=database_id))
-
-    async def automagic_model_index_primary_key_typed(
-        self: MetabaseClient,
-        model_index_id: int | str,
-        primary_key_id: int | str,
-    ) -> GenericOperationResponse:
-        return await self.run(
-            AutomagicModelIndexPrimaryKeyRequest(model_index_id=model_index_id, primary_key_id=primary_key_id),
-        )
-
-    async def automagic_dashboard_path_typed(self: MetabaseClient, path: str) -> GenericOperationResponse:
-        return await self.run(AutomagicDashboardRequest(path=path))
+async def automagic_database_candidates_typed(
+    client: MetabaseClient, database_id: int | str
+) -> GenericOperationResponse:
+    return await client.run(AutomagicDatabaseCandidatesRequest(database_id=database_id))
 
 
-__all__ = ["_MetabaseClientTypedMixin"]
+async def automagic_model_index_primary_key_typed(
+    client: MetabaseClient,
+    model_index_id: int | str,
+    primary_key_id: int | str,
+) -> GenericOperationResponse:
+    return await client.run(
+        AutomagicModelIndexPrimaryKeyRequest(model_index_id=model_index_id, primary_key_id=primary_key_id),
+    )
+
+
+async def automagic_dashboard_path_typed(client: MetabaseClient, path: str) -> GenericOperationResponse:
+    return await client.run(AutomagicDashboardRequest(path=path))
+
+
+__all__ = [
+    "automagic_dashboard_path_typed",
+    "automagic_database_candidates_typed",
+    "automagic_model_index_primary_key_typed",
+]

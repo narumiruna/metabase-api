@@ -2,74 +2,103 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from metabaseapi.models import JSONValue
+from metabaseapi.wire import JSONValue
 
 if TYPE_CHECKING:
     from metabaseapi.client.http import MetabaseClient
 
 
-class _MetabaseClientRawMixin:
-    """Resource-scoped raw mixin for collection endpoints."""
-
-    async def list_collections(self: MetabaseClient) -> JSONValue | None:
-        return await self.get("/api/collection")
-
-    async def create_collection(self: MetabaseClient, body: dict[str, object]) -> JSONValue | None:
-        return await self.post("/api/collection", body=dict(body))
-
-    async def get_collection(self: MetabaseClient, collection_id: int | str) -> JSONValue | None:
-        return await self.get(f"/api/collection/{collection_id}")
-
-    async def update_collection(
-        self: MetabaseClient, collection_id: int | str, body: dict[str, object]
-    ) -> JSONValue | None:
-        return await self.put(f"/api/collection/{collection_id}", body=dict(body))
-
-    async def delete_collection(self: MetabaseClient, collection_id: int | str) -> JSONValue | None:
-        return await self.delete(f"/api/collection/{collection_id}")
-
-    async def get_collection_dashboard_question_candidates(
-        self: MetabaseClient,
-        collection_id: int | str,
-    ) -> JSONValue | None:
-        return await self.get(f"/api/collection/{collection_id}/dashboard-question-candidates")
-
-    async def get_collection_items(self: MetabaseClient, collection_id: int | str) -> JSONValue | None:
-        return await self.get(f"/api/collection/{collection_id}/items")
-
-    async def post_collection_move_dashboard_question_candidates(
-        self: MetabaseClient,
-        collection_id: int | str,
-        body: dict[str, object],
-    ) -> JSONValue | None:
-        return await self.post(f"/api/collection/{collection_id}/move-dashboard-question-candidates", body=dict(body))
-
-    async def get_collection_graph(self: MetabaseClient) -> JSONValue | None:
-        return await self.get("/api/collection/graph")
-
-    async def put_collection_graph(self: MetabaseClient, body: dict[str, object]) -> JSONValue | None:
-        return await self.put("/api/collection/graph", body=dict(body))
-
-    async def get_collection_root(self: MetabaseClient) -> JSONValue | None:
-        return await self.get("/api/collection/root")
-
-    async def get_collection_root_dashboard_question_candidates(self: MetabaseClient) -> JSONValue | None:
-        return await self.get("/api/collection/root/dashboard-question-candidates")
-
-    async def get_collection_root_items(self: MetabaseClient) -> JSONValue | None:
-        return await self.get("/api/collection/root/items")
-
-    async def post_collection_root_move_dashboard_question_candidates(
-        self: MetabaseClient,
-        body: dict[str, object],
-    ) -> JSONValue | None:
-        return await self.post("/api/collection/root/move-dashboard-question-candidates", body=dict(body))
-
-    async def get_collection_trash(self: MetabaseClient) -> JSONValue | None:
-        return await self.get("/api/collection/trash")
-
-    async def get_collection_tree(self: MetabaseClient) -> JSONValue | None:
-        return await self.get("/api/collection/tree")
+async def list_collections(client: MetabaseClient) -> JSONValue | None:
+    return await client.get("/api/collection")
 
 
-__all__ = ["_MetabaseClientRawMixin"]
+async def create_collection(client: MetabaseClient, body: dict[str, object]) -> JSONValue | None:
+    return await client.post("/api/collection", body=dict(body))
+
+
+async def get_collection(client: MetabaseClient, collection_id: int | str) -> JSONValue | None:
+    return await client.get(f"/api/collection/{collection_id}")
+
+
+async def update_collection(
+    client: MetabaseClient, collection_id: int | str, body: dict[str, object]
+) -> JSONValue | None:
+    return await client.put(f"/api/collection/{collection_id}", body=dict(body))
+
+
+async def delete_collection(client: MetabaseClient, collection_id: int | str) -> JSONValue | None:
+    return await client.delete(f"/api/collection/{collection_id}")
+
+
+async def get_collection_dashboard_question_candidates(
+    client: MetabaseClient,
+    collection_id: int | str,
+) -> JSONValue | None:
+    return await client.get(f"/api/collection/{collection_id}/dashboard-question-candidates")
+
+
+async def get_collection_items(client: MetabaseClient, collection_id: int | str) -> JSONValue | None:
+    return await client.get(f"/api/collection/{collection_id}/items")
+
+
+async def post_collection_move_dashboard_question_candidates(
+    client: MetabaseClient,
+    collection_id: int | str,
+    body: dict[str, object],
+) -> JSONValue | None:
+    return await client.post(f"/api/collection/{collection_id}/move-dashboard-question-candidates", body=dict(body))
+
+
+async def get_collection_graph(client: MetabaseClient) -> JSONValue | None:
+    return await client.get("/api/collection/graph")
+
+
+async def put_collection_graph(client: MetabaseClient, body: dict[str, object]) -> JSONValue | None:
+    return await client.put("/api/collection/graph", body=dict(body))
+
+
+async def get_collection_root(client: MetabaseClient) -> JSONValue | None:
+    return await client.get("/api/collection/root")
+
+
+async def get_collection_root_dashboard_question_candidates(client: MetabaseClient) -> JSONValue | None:
+    return await client.get("/api/collection/root/dashboard-question-candidates")
+
+
+async def get_collection_root_items(client: MetabaseClient) -> JSONValue | None:
+    return await client.get("/api/collection/root/items")
+
+
+async def post_collection_root_move_dashboard_question_candidates(
+    client: MetabaseClient,
+    body: dict[str, object],
+) -> JSONValue | None:
+    return await client.post("/api/collection/root/move-dashboard-question-candidates", body=dict(body))
+
+
+async def get_collection_trash(client: MetabaseClient) -> JSONValue | None:
+    return await client.get("/api/collection/trash")
+
+
+async def get_collection_tree(client: MetabaseClient) -> JSONValue | None:
+    return await client.get("/api/collection/tree")
+
+
+__all__ = [
+    "create_collection",
+    "delete_collection",
+    "get_collection",
+    "get_collection_dashboard_question_candidates",
+    "get_collection_graph",
+    "get_collection_items",
+    "get_collection_root",
+    "get_collection_root_dashboard_question_candidates",
+    "get_collection_root_items",
+    "get_collection_trash",
+    "get_collection_tree",
+    "list_collections",
+    "post_collection_move_dashboard_question_candidates",
+    "post_collection_root_move_dashboard_question_candidates",
+    "put_collection_graph",
+    "update_collection",
+]

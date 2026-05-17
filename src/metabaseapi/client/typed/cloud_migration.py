@@ -2,26 +2,29 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from metabaseapi.metabase import CancelCloudMigrationRequest
-from metabaseapi.metabase import CreateCloudMigrationRequest
-from metabaseapi.metabase import GenericOperationResponse
-from metabaseapi.metabase import GetCloudMigrationRequest
+from metabaseapi.endpoints.requests.cloud_migration import CancelCloudMigrationRequest
+from metabaseapi.endpoints.requests.cloud_migration import CreateCloudMigrationRequest
+from metabaseapi.endpoints.requests.cloud_migration import GetCloudMigrationRequest
+from metabaseapi.endpoints.responses import GenericOperationResponse
 
 if TYPE_CHECKING:
     from metabaseapi.client.http import MetabaseClient
 
 
-class _MetabaseClientTypedMixin:
-    """Resource-scoped typed mixin for cloud migration endpoints."""
-
-    async def create_cloud_migration_typed(self: MetabaseClient, body: dict[str, object]) -> GenericOperationResponse:
-        return await self.run(CreateCloudMigrationRequest(body=body))
-
-    async def get_cloud_migration_typed(self: MetabaseClient) -> GenericOperationResponse:
-        return await self.run(GetCloudMigrationRequest())
-
-    async def cancel_cloud_migration_typed(self: MetabaseClient) -> GenericOperationResponse:
-        return await self.run(CancelCloudMigrationRequest())
+async def create_cloud_migration_typed(client: MetabaseClient, body: dict[str, object]) -> GenericOperationResponse:
+    return await client.run(CreateCloudMigrationRequest(body=body))
 
 
-__all__ = ["_MetabaseClientTypedMixin"]
+async def get_cloud_migration_typed(client: MetabaseClient) -> GenericOperationResponse:
+    return await client.run(GetCloudMigrationRequest())
+
+
+async def cancel_cloud_migration_typed(client: MetabaseClient) -> GenericOperationResponse:
+    return await client.run(CancelCloudMigrationRequest())
+
+
+__all__ = [
+    "cancel_cloud_migration_typed",
+    "create_cloud_migration_typed",
+    "get_cloud_migration_typed",
+]

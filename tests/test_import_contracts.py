@@ -523,6 +523,20 @@ def test_endpoints_response_modules_own_response_classes() -> None:
             assert getattr(domain_module, response_name).__module__ == domain_module.__name__
 
 
+def test_endpoints_response_contracts_cover_module_response_classes() -> None:
+    for module_name, response_names in RESPONSE_MODULE_CONTRACTS.items():
+        domain_module = importlib.import_module(f"metabaseapi.endpoints.responses.{module_name}")
+        module_response_names = tuple(
+            sorted(
+                name
+                for name, value in inspect.getmembers(domain_module, inspect.isclass)
+                if name.endswith("Response") and not name.startswith("_") and value.__module__ == domain_module.__name__
+            )
+        )
+
+        assert module_response_names == tuple(sorted(response_names))
+
+
 def test_endpoints_request_package_does_not_reexport_request_classes() -> None:
     assert metabaseapi.endpoints.requests.__all__ == []
     assert not hasattr(metabaseapi.endpoints.requests, "ListCardsRequest")

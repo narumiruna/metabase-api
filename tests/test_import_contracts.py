@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib
+import inspect
 import os
 import re
 import subprocess
@@ -235,6 +236,9 @@ REQUEST_MODULE_CONTRACTS = {
         "GetDashboardItemsRequest",
     ),
     "dashboard_query": (
+        "DashboardParamsValidFilterFieldsRequest",
+        "DashboardCardQueryRequest",
+        "DashboardCardQueryExportRequest",
         "PostDashboardPivotQueryRequest",
         "GetDashboardDashcardExecuteRequest",
         "ExecuteDashboardDashcardRequest",
@@ -529,6 +533,20 @@ def test_endpoints_request_modules_own_request_classes() -> None:
         domain_module = importlib.import_module(f"metabaseapi.endpoints.requests.{module_name}")
         for request_name in request_names:
             assert getattr(domain_module, request_name).__module__ == domain_module.__name__
+
+
+def test_endpoints_request_contracts_cover_module_request_classes() -> None:
+    for module_name, request_names in REQUEST_MODULE_CONTRACTS.items():
+        domain_module = importlib.import_module(f"metabaseapi.endpoints.requests.{module_name}")
+        module_request_names = tuple(
+            sorted(
+                name
+                for name, value in inspect.getmembers(domain_module, inspect.isclass)
+                if name.endswith("Request") and value.__module__ == domain_module.__name__
+            )
+        )
+
+        assert module_request_names == tuple(sorted(request_names))
 
 
 def test_endpoints_request_inventory_matches_package_files() -> None:

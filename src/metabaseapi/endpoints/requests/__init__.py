@@ -15,6 +15,7 @@ REQUEST_MODULES = (
     "bug_reporting",
     "cache",
     "card",
+    "card_query",
     "channel",
     "comment",
     "cloud_migration",

@@ -32,6 +32,7 @@ import metabaseapi.endpoints.requests.bookmark
 import metabaseapi.endpoints.requests.bug_reporting
 import metabaseapi.endpoints.requests.cache
 import metabaseapi.endpoints.requests.card
+import metabaseapi.endpoints.requests.card_query
 import metabaseapi.endpoints.requests.channel
 import metabaseapi.endpoints.requests.cloud_migration
 import metabaseapi.endpoints.requests.collection
@@ -136,23 +137,25 @@ REQUEST_MODULE_CONTRACTS = {
         "GetCardRequest",
         "GetCardCollectionsRequest",
         "GetCardEmbeddableRequest",
-        "PostCardPivotQueryRequest",
         "GetCardPublicRequest",
-        "CardParamsSearchRequest",
-        "CardParamsValuesRequest",
         "CreateCardPublicLinkRequest",
         "DeleteCardPublicLinkRequest",
-        "CardQueryRequest",
-        "CardQueryExportRequest",
         "UpdateCardRequest",
         "DeleteCardRequest",
         "CopyCardRequest",
+        "MoveCardsRequest",
+    ),
+    "card_query": (
+        "PostCardPivotQueryRequest",
+        "CardParamsSearchRequest",
+        "CardParamsValuesRequest",
+        "CardQueryRequest",
+        "CardQueryExportRequest",
         "GetCardDashboardsRequest",
         "CardRemappingRequest",
         "GetCardQueryMetadataRequest",
         "GetCardSeriesRequest",
         "CardsDashboardsRequest",
-        "MoveCardsRequest",
     ),
     "channel": (
         "ListChannelsRequest",

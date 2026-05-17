@@ -588,6 +588,34 @@ def test_create_question_command_posts_card_json(monkeypatch: pytest.MonkeyPatch
     assert '\n    "collection_id": "root"' in result.stdout
 
 
+def test_create_card_command_preserves_card_type(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(cli.runtime, "create_client", lambda _settings: _ClientWithRequestMethods())
+
+    result = runner.invoke(
+        cli.app,
+        [
+            "--base-url",
+            "http://localhost:3000",
+            "--api-key",
+            "abc",
+            "create-card",
+            "Orders",
+            '{"database": 1, "type": "query", "query": {"source-table": 2}}',
+            "--type",
+            "model",
+        ],
+    )
+
+    assert result.exit_code == 0
+    assert _LAST_CALL["body"] == {
+        "name": "Orders",
+        "dataset_query": {"database": 1, "type": "query", "query": {"source-table": 2}},
+        "display": "table",
+        "visualization_settings": {},
+        "type": "model",
+    }
+
+
 def test_create_card_command_rejects_non_object_dataset_query(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(cli.runtime, "create_client", lambda _settings: _ClientWithRequestMethods())
 

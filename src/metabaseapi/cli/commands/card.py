@@ -24,6 +24,35 @@ from metabaseapi.endpoints.requests.card import MoveCardsRequest
 from metabaseapi.endpoints.requests.card import UpdateCardRequest
 
 
+def _build_create_card_request(
+    *,
+    name: str,
+    dataset_query: str,
+    display: str,
+    visualization_settings: str | None,
+    card_type: str | None,
+    collection_id: str | None,
+    description: str | None,
+    parameters: str | None,
+    result_metadata: str | None,
+) -> CreateCardRequest:
+    visualization_settings_payload = parse_optional_json_object(
+        visualization_settings,
+        "visualization-settings",
+    )
+    return CreateCardRequest(
+        name=name,
+        dataset_query=parse_json_object(dataset_query, "dataset-query"),
+        display=display,
+        visualization_settings=visualization_settings_payload or {},
+        type=card_type,
+        collection_id=collection_id,
+        description=description,
+        parameters=parse_optional_json_list(parameters, "parameters"),
+        result_metadata=parse_optional_json_list(result_metadata, "result-metadata"),
+    )
+
+
 @app.command("list-cards")
 def list_cards(ctx: typer.Context) -> None:
     """List cards."""
@@ -50,26 +79,18 @@ def create_card(
 ) -> None:
     """Create a card/question/model."""
 
-    dataset_query_payload = parse_json_object(dataset_query, "dataset-query")
-    visualization_settings_payload = parse_optional_json_object(
-        visualization_settings,
-        "visualization-settings",
-    )
-    parameters_payload = parse_optional_json_list(parameters, "parameters")
-    result_metadata_payload = parse_optional_json_list(result_metadata, "result-metadata")
-
     run_endpoint_command(
         ctx,
-        CreateCardRequest(
+        _build_create_card_request(
             name=name,
-            dataset_query=dataset_query_payload,
             display=display,
-            visualization_settings=visualization_settings_payload or {},
-            type=card_type,
+            dataset_query=dataset_query,
+            visualization_settings=visualization_settings,
+            card_type=card_type,
             collection_id=collection_id,
             description=description,
-            parameters=parameters_payload,
-            result_metadata=result_metadata_payload,
+            parameters=parameters,
+            result_metadata=result_metadata,
         ),
     )
 
@@ -92,26 +113,18 @@ def create_question(
 ) -> None:
     """Create a question."""
 
-    dataset_query_payload = parse_json_object(dataset_query, "dataset-query")
-    visualization_settings_payload = parse_optional_json_object(
-        visualization_settings,
-        "visualization-settings",
-    )
-    parameters_payload = parse_optional_json_list(parameters, "parameters")
-    result_metadata_payload = parse_optional_json_list(result_metadata, "result-metadata")
-
     run_endpoint_command(
         ctx,
-        CreateCardRequest(
+        _build_create_card_request(
             name=name,
-            dataset_query=dataset_query_payload,
             display=display,
-            visualization_settings=visualization_settings_payload or {},
-            type="question",
+            dataset_query=dataset_query,
+            visualization_settings=visualization_settings,
+            card_type="question",
             collection_id=collection_id,
             description=description,
-            parameters=parameters_payload,
-            result_metadata=result_metadata_payload,
+            parameters=parameters,
+            result_metadata=result_metadata,
         ),
     )
 

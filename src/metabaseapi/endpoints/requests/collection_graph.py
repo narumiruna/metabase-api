@@ -6,18 +6,18 @@ from typing import ClassVar
 from pydantic import Field as PydanticField
 
 from metabaseapi.endpoints.execution import EndpointRequest
-from metabaseapi.endpoints.responses.common import GenericOperationResponse
+from metabaseapi.endpoints.responses.collection import CollectionGraphResponse
 
 
-class GetCollectionGraphRequest(EndpointRequest[GenericOperationResponse]):
+class GetCollectionGraphRequest(EndpointRequest[CollectionGraphResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/collection/graph"
-    response_model = GenericOperationResponse
+    response_model = CollectionGraphResponse
 
 
-class PutCollectionGraphRequest(EndpointRequest[GenericOperationResponse]):
+class PutCollectionGraphRequest(EndpointRequest[CollectionGraphResponse]):
     body: dict[str, Any] = PydanticField(default_factory=dict)
 
     endpoint_method: ClassVar[str] = "PUT"
     endpoint_path: ClassVar[str] = "/api/collection/graph"
-    response_model = GenericOperationResponse
+    response_model = CollectionGraphResponse

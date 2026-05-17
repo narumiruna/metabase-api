@@ -156,6 +156,7 @@ from metabaseapi.endpoints.responses.cloud_migration import CancelCloudMigration
 from metabaseapi.endpoints.responses.cloud_migration import CloudMigrationStatusResponse
 from metabaseapi.endpoints.responses.cloud_migration import CreateCloudMigrationResponse
 from metabaseapi.endpoints.responses.collection import CollectionDashboardQuestionCandidatesResponse
+from metabaseapi.endpoints.responses.collection import CollectionGraphResponse
 from metabaseapi.endpoints.responses.collection import CollectionMoveDashboardQuestionCandidatesResponse
 from metabaseapi.endpoints.responses.collection import ListCollectionsResponse
 from metabaseapi.endpoints.responses.common import GenericOperationResponse
@@ -425,7 +426,7 @@ def test_action_requests_use_expected_paths_and_payloads() -> None:
             ("PUT", "/api/cloud-migration/cancel", {}, None),
         ),
         (CreateCollectionRequest(body={"name": "New"}), Collection, ("POST", "/api/collection", {}, {"name": "New"})),
-        (GetCollectionGraphRequest(), GenericOperationResponse, ("GET", "/api/collection/graph", {}, None)),
+        (GetCollectionGraphRequest(), CollectionGraphResponse, ("GET", "/api/collection/graph", {}, None)),
         (
             PutCollectionRequest(collection_id="7", body={"name": "Updated"}),
             Collection,
@@ -620,7 +621,7 @@ def test_action_requests_use_expected_paths_and_payloads() -> None:
         ),
         (
             PutCollectionGraphRequest(body={"groups": ["admin"]}),
-            GenericOperationResponse,
+            CollectionGraphResponse,
             ("PUT", "/api/collection/graph", {}, {"groups": ["admin"]}),
         ),
         (
@@ -1059,8 +1060,8 @@ def test_client_run_endpoint_requests_return_models() -> None:
     assert isinstance(put_user_key_value, GenericOperationResponse)
     assert isinstance(get_user_key_value, GenericOperationResponse)
     assert isinstance(delete_user_key_value, GenericOperationResponse)
-    assert isinstance(collection_graph, GenericOperationResponse)
-    assert isinstance(collection_graph_update, GenericOperationResponse)
+    assert isinstance(collection_graph, CollectionGraphResponse)
+    assert isinstance(collection_graph_update, CollectionGraphResponse)
     assert isinstance(collection_root, Collection)
     assert collection_root.id == "root"
     assert collection_root.name == "Root"

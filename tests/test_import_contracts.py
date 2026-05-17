@@ -283,6 +283,7 @@ RESPONSE_MODULE_CONTRACTS = {
     ),
     "collection": (
         "CollectionDashboardQuestionCandidatesResponse",
+        "CollectionGraphResponse",
         "CollectionMoveDashboardQuestionCandidatesResponse",
         "ListCollectionsResponse",
     ),

@@ -44,3 +44,15 @@ class CollectionMoveDashboardQuestionCandidatesResponse(BaseModel):
     @classmethod
     def normalize_payload(cls, values: object) -> dict[str, Any]:
         return normalize_unstructured_payload(values)
+
+
+class CollectionGraphResponse(BaseModel):
+    revision: int | None = None
+    groups: JSONValue | None = None
+    raw: JSONValue | None = None
+    model_config = ConfigDict(extra="allow")
+
+    @model_validator(mode="before")
+    @classmethod
+    def normalize_payload(cls, values: object) -> dict[str, Any]:
+        return normalize_unstructured_payload(values)

@@ -10,6 +10,7 @@ import httpx
 from metabaseapi.client.raw.alerts import _MetabaseClientRawMixin as _MetabaseClientAlertsRawMixin
 from metabaseapi.client.raw.analytics import _MetabaseClientRawMixin as _MetabaseClientAnalyticsRawMixin
 from metabaseapi.client.raw.api_key import _MetabaseClientRawMixin as _MetabaseClientApiKeyRawMixin
+from metabaseapi.client.raw.bookmarks import _MetabaseClientRawMixin as _MetabaseClientBookmarksRawMixin
 from metabaseapi.client.raw.bug_reporting import _MetabaseClientRawMixin as _MetabaseClientBugReportingRawMixin
 from metabaseapi.client.raw.channels import _MetabaseClientRawMixin as _MetabaseClientChannelsRawMixin
 from metabaseapi.client.raw.cloud import _MetabaseClientRawMixin as _MetabaseClientCloudRawMixin
@@ -19,6 +20,7 @@ from metabaseapi.client.raw.users import _MetabaseClientRawMixin as _MetabaseCli
 from metabaseapi.client.typed.alerts import _MetabaseClientTypedMixin as _MetabaseClientAlertsTypedMixin
 from metabaseapi.client.typed.analytics import _MetabaseClientTypedMixin as _MetabaseClientAnalyticsTypedMixin
 from metabaseapi.client.typed.api_key import _MetabaseClientTypedMixin as _MetabaseClientApiKeyTypedMixin
+from metabaseapi.client.typed.bookmarks import _MetabaseClientTypedMixin as _MetabaseClientBookmarksTypedMixin
 from metabaseapi.client.typed.bug_reporting import _MetabaseClientTypedMixin as _MetabaseClientBugReportingTypedMixin
 from metabaseapi.client.typed.channels import _MetabaseClientTypedMixin as _MetabaseClientChannelsTypedMixin
 from metabaseapi.client.typed.cloud import _MetabaseClientTypedMixin as _MetabaseClientCloudTypedMixin
@@ -41,7 +43,6 @@ from metabaseapi.metabase import AgentSearchRequest
 from metabaseapi.metabase import AutomagicDashboardRequest
 from metabaseapi.metabase import AutomagicDatabaseCandidatesRequest
 from metabaseapi.metabase import AutomagicModelIndexPrimaryKeyRequest
-from metabaseapi.metabase import Bookmark
 from metabaseapi.metabase import Card
 from metabaseapi.metabase import CardParamsSearchRequest
 from metabaseapi.metabase import CardParamsValuesRequest
@@ -54,7 +55,6 @@ from metabaseapi.metabase import CopyCardRequest
 from metabaseapi.metabase import CopyDashboardRequest
 from metabaseapi.metabase import CreateActionPublicLinkRequest
 from metabaseapi.metabase import CreateActionRequest
-from metabaseapi.metabase import CreateBookmarkRequest
 from metabaseapi.metabase import CreateCardPublicLinkRequest
 from metabaseapi.metabase import CreateCardRequest
 from metabaseapi.metabase import CreateDashboardPublicLinkRequest
@@ -72,7 +72,6 @@ from metabaseapi.metabase import DataStudioTableSelectionRequest
 from metabaseapi.metabase import DataStudioTableSyncSchemaRequest
 from metabaseapi.metabase import DeleteActionPublicLinkRequest
 from metabaseapi.metabase import DeleteActionRequest
-from metabaseapi.metabase import DeleteBookmarkRequest
 from metabaseapi.metabase import DeleteCacheRequest
 from metabaseapi.metabase import DeleteCardPublicLinkRequest
 from metabaseapi.metabase import DeleteCardRequest
@@ -110,8 +109,6 @@ from metabaseapi.metabase import InvalidateCacheRequest
 from metabaseapi.metabase import ListActionsRequest
 from metabaseapi.metabase import ListActionsResponse
 from metabaseapi.metabase import ListActivityItemsResponse
-from metabaseapi.metabase import ListBookmarksRequest
-from metabaseapi.metabase import ListBookmarksResponse
 from metabaseapi.metabase import ListCardsRequest
 from metabaseapi.metabase import ListCardsResponse
 from metabaseapi.metabase import ListDashboardsRequest
@@ -134,7 +131,6 @@ from metabaseapi.metabase import SaveDashboardRequest
 from metabaseapi.metabase import SaveDashboardToCollectionRequest
 from metabaseapi.metabase import Table
 from metabaseapi.metabase import UpdateActionRequest
-from metabaseapi.metabase import UpdateBookmarkOrderingRequest
 from metabaseapi.metabase import UpdateCardRequest
 from metabaseapi.metabase import UpdateDashboardCardsRequest
 from metabaseapi.metabase import UpdateDashboardRequest
@@ -151,6 +147,7 @@ class _MetabaseClientRawMixin(
     _MetabaseClientAnalyticsRawMixin,
     _MetabaseClientAlertsRawMixin,
     _MetabaseClientApiKeyRawMixin,
+    _MetabaseClientBookmarksRawMixin,
     _MetabaseClientCollectionsRawMixin,
     _MetabaseClientChannelsRawMixin,
     _MetabaseClientCloudRawMixin,
@@ -166,6 +163,7 @@ class _MetabaseClientTypedMixin(
     _MetabaseClientAnalyticsTypedMixin,
     _MetabaseClientAlertsTypedMixin,
     _MetabaseClientApiKeyTypedMixin,
+    _MetabaseClientBookmarksTypedMixin,
     _MetabaseClientCollectionsTypedMixin,
     _MetabaseClientChannelsTypedMixin,
     _MetabaseClientCloudTypedMixin,
@@ -412,18 +410,6 @@ class MetabaseClient(_MetabaseClientTypedMixin):
 
     async def delete_action_public_link(self, action_id: int | str) -> JSONValue | None:
         return await self.delete(f"/api/action/{action_id}/public_link")
-
-    async def list_bookmarks(self) -> JSONValue | None:
-        return await self.get("/api/bookmark")
-
-    async def update_bookmark_ordering(self, body: Mapping[str, object]) -> JSONValue | None:
-        return await self.put("/api/bookmark/ordering", body=dict(body))
-
-    async def create_bookmark(self, model: str, item_id: int | str) -> JSONValue | None:
-        return await self.post(f"/api/bookmark/{model}/{item_id}")
-
-    async def delete_bookmark(self, model: str, item_id: int | str) -> JSONValue | None:
-        return await self.delete(f"/api/bookmark/{model}/{item_id}")
 
     async def get_cache(
         self,
@@ -1000,18 +986,6 @@ class MetabaseClient(_MetabaseClientTypedMixin):
 
     async def delete_action_public_link_typed(self, action_id: int | str) -> ActionExecutionResponse:
         return await self.run(DeleteActionPublicLinkRequest(action_id=action_id))
-
-    async def list_bookmarks_typed(self) -> ListBookmarksResponse:
-        return await self.run(ListBookmarksRequest())
-
-    async def update_bookmark_ordering_typed(self, body: dict[str, object]) -> GenericOperationResponse:
-        return await self.run(UpdateBookmarkOrderingRequest(body=body))
-
-    async def create_bookmark_typed(self, model: str, item_id: int | str) -> Bookmark:
-        return await self.run(CreateBookmarkRequest(model=model, item_id=item_id))
-
-    async def delete_bookmark_typed(self, model: str, item_id: int | str) -> GenericOperationResponse:
-        return await self.run(DeleteBookmarkRequest(model=model, item_id=item_id))
 
     async def get_cache_typed(
         self,

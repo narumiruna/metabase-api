@@ -33,11 +33,6 @@ class _ClientWithRequestMethods:
     async def __aexit__(self, *_: object) -> None:
         return None
 
-    async def get(self, path: str, *, params: object | None = None) -> dict[str, object]:
-        if path == "/api/user/current":
-            return {"name": "Alice"}
-        return {"method": "GET", "path": path, "params": params}
-
     async def request(
         self,
         method: str,
@@ -50,775 +45,9 @@ class _ClientWithRequestMethods:
             return {"name": "Alice"}
         return {"method": method, "path": path, "params": params, "body": json_data}
 
-    async def post(
-        self,
-        path: str,
-        *,
-        params: object | None = None,
-        body: object | None = None,
-    ) -> dict[str, object]:
-        return {"method": "POST", "path": path, "params": params, "body": body}
-
-    async def put(self, path: str, *, body: object | None = None) -> dict[str, object]:
-        return {"method": "PUT", "path": path, "body": body}
-
-    async def delete(self, path: str, *, body: object | None = None) -> dict[str, object]:
-        return {"method": "DELETE", "path": path, "body": body}
-
-
-class _ConvenienceClient(_ClientWithRequestMethods):
-    async def list_actions(self, *, model_id: str | None = None) -> dict[str, object]:
-        return {"method": "GET", "path": "/api/action", "params": {"model-id": model_id} if model_id else None}
-
-    async def create_action(self, body: dict[str, object]) -> dict[str, object]:
-        return {"method": "POST", "path": "/api/action", "body": body}
-
-    async def list_public_actions(self) -> dict[str, object]:
-        return {"method": "GET", "path": "/api/action/public"}
-
-    async def get_action(self, action_id: str) -> dict[str, object]:
-        return {"method": "GET", "path": f"/api/action/{action_id}"}
-
-    async def delete_action(self, action_id: str) -> dict[str, object]:
-        return {"method": "DELETE", "path": f"/api/action/{action_id}"}
-
-    async def get_action_execute(
-        self,
-        action_id: str,
-        *,
-        parameters: dict[str, object] | None = None,
-    ) -> dict[str, object]:
-        return {"method": "GET", "path": f"/api/action/{action_id}/execute", "params": parameters}
-
-    async def update_action(self, action_id: str, body: dict[str, object]) -> dict[str, object]:
-        return {"method": "PUT", "path": f"/api/action/{action_id}", "body": body}
-
-    async def execute_action(
-        self,
-        action_id: str,
-        *,
-        parameters: dict[str, object] | None = None,
-    ) -> dict[str, object]:
-        return {"method": "POST", "path": f"/api/action/{action_id}/execute", "body": {"parameters": parameters or {}}}
-
-    async def create_action_public_link(self, action_id: str) -> dict[str, object]:
-        return {"method": "POST", "path": f"/api/action/{action_id}/public_link"}
-
-    async def delete_action_public_link(self, action_id: str) -> dict[str, object]:
-        return {"method": "DELETE", "path": f"/api/action/{action_id}/public_link"}
-
-    async def list_bookmarks(self) -> dict[str, object]:
-        return {"method": "GET", "path": "/api/bookmark"}
-
-    async def update_bookmark_ordering(self, body: dict[str, object]) -> dict[str, object]:
-        return {"method": "PUT", "path": "/api/bookmark/ordering", "body": body}
-
-    async def create_bookmark(self, model: str, item_id: str) -> dict[str, object]:
-        return {"method": "POST", "path": f"/api/bookmark/{model}/{item_id}"}
-
-    async def delete_bookmark(self, model: str, item_id: str) -> dict[str, object]:
-        return {"method": "DELETE", "path": f"/api/bookmark/{model}/{item_id}"}
-
-    async def bug_reporting_connection_pool_details(self) -> dict[str, object]:
-        return {"method": "GET", "path": "/api/bug-reporting/connection-pool-details"}
-
-    async def bug_reporting_details(self) -> dict[str, object]:
-        return {"method": "GET", "path": "/api/bug-reporting/details"}
-
-    async def get_cache(
-        self,
-        *,
-        limit: int | None = None,
-        offset: int | None = None,
-        sort_column: str | None = None,
-        sort_direction: str | None = None,
-    ) -> dict[str, object]:
-        return {
-            "method": "GET",
-            "path": "/api/cache",
-            "params": {
-                k: v
-                for k, v in {
-                    "limit": limit,
-                    "offset": offset,
-                    "sort_column": sort_column,
-                    "sort_direction": sort_direction,
-                }.items()
-                if v is not None
-            }
-            or None,
-        }
-
-    async def put_cache(self, body: dict[str, object]) -> dict[str, object]:
-        return {"method": "PUT", "path": "/api/cache", "body": body}
-
-    async def delete_cache(self, body: dict[str, object]) -> dict[str, object]:
-        return {"method": "DELETE", "path": "/api/cache", "body": body}
-
-    async def invalidate_cache(self, params: dict[str, object]) -> dict[str, object]:
-        return {"method": "POST", "path": "/api/cache/invalidate", "params": params}
-
-    async def automagic_database_candidates(self, database_id: str) -> dict[str, object]:
-        return {"method": "GET", "path": f"/api/automagic-dashboards/database/{database_id}/candidates"}
-
-    async def automagic_model_index_primary_key(self, model_index_id: str, primary_key_id: str) -> dict[str, object]:
-        return {
-            "method": "GET",
-            "path": f"/api/automagic-dashboards/model_index/{model_index_id}/primary_key/{primary_key_id}",
-        }
-
-    async def automagic_dashboard_path(self, path: str) -> dict[str, object]:
-        return {"method": "GET", "path": f"/api/automagic-dashboards/{path}"}
-
-    async def automagic_entity(self, entity: str, entity_id_or_query: str) -> dict[str, object]:
-        return await self.automagic_dashboard_path(f"{entity}/{entity_id_or_query}")
-
-    async def automagic_entity_cell(self, entity: str, entity_id_or_query: str, cell_query: str) -> dict[str, object]:
-        return await self.automagic_dashboard_path(f"{entity}/{entity_id_or_query}/cell/{cell_query}")
-
-    async def automagic_entity_cell_compare(
-        self,
-        entity: str,
-        entity_id_or_query: str,
-        cell_query: str,
-        comparison_entity: str,
-        comparison_entity_id_or_query: str,
-    ) -> dict[str, object]:
-        return await self.automagic_dashboard_path(
-            f"{entity}/{entity_id_or_query}/cell/{cell_query}/compare/{comparison_entity}/{comparison_entity_id_or_query}"
-        )
-
-    async def automagic_entity_cell_rule(
-        self, entity: str, entity_id_or_query: str, cell_query: str, prefix: str, dashboard_template: str
-    ) -> dict[str, object]:
-        return await self.automagic_dashboard_path(
-            f"{entity}/{entity_id_or_query}/cell/{cell_query}/rule/{prefix}/{dashboard_template}"
-        )
-
-    async def automagic_entity_cell_rule_compare(
-        self,
-        entity: str,
-        entity_id_or_query: str,
-        cell_query: str,
-        prefix: str,
-        dashboard_template: str,
-        comparison_entity: str,
-        comparison_entity_id_or_query: str,
-    ) -> dict[str, object]:
-        return await self.automagic_dashboard_path(
-            f"{entity}/{entity_id_or_query}/cell/{cell_query}/rule/{prefix}/{dashboard_template}/compare/{comparison_entity}/{comparison_entity_id_or_query}"
-        )
-
-    async def automagic_entity_compare(
-        self, entity: str, entity_id_or_query: str, comparison_entity: str, comparison_entity_id_or_query: str
-    ) -> dict[str, object]:
-        return await self.automagic_dashboard_path(
-            f"{entity}/{entity_id_or_query}/compare/{comparison_entity}/{comparison_entity_id_or_query}"
-        )
-
-    async def automagic_entity_query_metadata(self, entity: str, entity_id_or_query: str) -> dict[str, object]:
-        return await self.automagic_dashboard_path(f"{entity}/{entity_id_or_query}/query_metadata")
-
-    async def automagic_entity_rule(
-        self, entity: str, entity_id_or_query: str, prefix: str, dashboard_template: str
-    ) -> dict[str, object]:
-        return await self.automagic_dashboard_path(f"{entity}/{entity_id_or_query}/rule/{prefix}/{dashboard_template}")
-
-    async def automagic_entity_rule_compare(
-        self,
-        entity: str,
-        entity_id_or_query: str,
-        prefix: str,
-        dashboard_template: str,
-        comparison_entity: str,
-        comparison_entity_id_or_query: str,
-    ) -> dict[str, object]:
-        return await self.automagic_dashboard_path(
-            f"{entity}/{entity_id_or_query}/rule/{prefix}/{dashboard_template}/compare/{comparison_entity}/{comparison_entity_id_or_query}"
-        )
-
-    async def create_api_key(self, body: dict[str, object]) -> dict[str, object]:
-        return {"method": "POST", "path": "/api/api-key", "body": body}
-
-    async def list_api_keys(self) -> dict[str, object]:
-        return {"method": "GET", "path": "/api/api-key"}
-
-    async def count_api_keys(self) -> dict[str, object]:
-        return {"method": "GET", "path": "/api/api-key/count"}
-
-    async def update_api_key(self, api_key_id: str, body: dict[str, object]) -> dict[str, object]:
-        return {"method": "PUT", "path": f"/api/api-key/{api_key_id}", "body": body}
-
-    async def delete_api_key(self, api_key_id: str) -> dict[str, object]:
-        return {"method": "DELETE", "path": f"/api/api-key/{api_key_id}"}
-
-    async def regenerate_api_key(self, api_key_id: str) -> dict[str, object]:
-        return {"method": "PUT", "path": f"/api/api-key/{api_key_id}/regenerate"}
-
-    async def analyze_chart(self, body: dict[str, object]) -> dict[str, object]:
-        return {"method": "POST", "path": "/api/ai-entity-analysis/analyze-chart", "body": body}
-
-    async def list_alerts(self, *, user_id: str | None = None) -> dict[str, object]:
-        return {"method": "GET", "path": "/api/alert", "params": {"user_id": user_id} if user_id else None}
-
-    async def get_alert(self, alert_id: str) -> dict[str, object]:
-        return {"method": "GET", "path": f"/api/alert/{alert_id}"}
-
-    async def delete_alert_subscription(self, alert_id: str) -> dict[str, object]:
-        return {"method": "DELETE", "path": f"/api/alert/{alert_id}/subscription"}
-
-    async def anonymous_stats(self) -> dict[str, object]:
-        return {"method": "GET", "path": "/api/analytics/anonymous-stats"}
-
-    async def create_analytics_event_batch(self, body: dict[str, object]) -> dict[str, object]:
-        return {"method": "POST", "path": "/api/analytics/internal", "body": body}
-
-    async def agent_execute(self, body: dict[str, object]) -> dict[str, object]:
-        return {"method": "POST", "path": "/api/agent/v1/execute", "body": body}
-
-    async def get_agent_metric(self, metric_id: str) -> dict[str, object]:
-        return {"method": "GET", "path": f"/api/agent/v1/metric/{metric_id}"}
-
-    async def get_agent_metric_field_values(self, metric_id: str, field_id: str) -> dict[str, object]:
-        return {"method": "GET", "path": f"/api/agent/v1/metric/{metric_id}/field/{field_id}/values"}
-
-    async def agent_ping(self) -> dict[str, object]:
-        return {"method": "GET", "path": "/api/agent/v1/ping"}
-
-    async def agent_search(self, body: dict[str, object]) -> dict[str, object]:
-        return {"method": "POST", "path": "/api/agent/v1/search", "body": body}
-
-    async def get_agent_table(self, table_id: str) -> dict[str, object]:
-        return {"method": "GET", "path": f"/api/agent/v1/table/{table_id}"}
-
-    async def get_agent_table_field_values(self, table_id: str, field_id: str) -> dict[str, object]:
-        return {"method": "GET", "path": f"/api/agent/v1/table/{table_id}/field/{field_id}/values"}
-
-    async def agent_construct_query(self, body: dict[str, object]) -> dict[str, object]:
-        return {"method": "POST", "path": "/api/agent/v2/construct-query", "body": body}
-
-    async def agent_query(self, body: dict[str, object]) -> dict[str, object]:
-        return {"method": "POST", "path": "/api/agent/v2/query", "body": body}
-
-    async def most_recently_viewed_dashboard(self) -> dict[str, object]:
-        return {"method": "GET", "path": "/api/activity/most_recently_viewed_dashboard"}
-
-    async def list_popular_items(self) -> dict[str, object]:
-        return {"method": "GET", "path": "/api/activity/popular_items"}
-
-    async def list_recent_views(self) -> dict[str, object]:
-        return {"method": "GET", "path": "/api/activity/recent_views"}
-
-    async def list_recents(self, *, context: str | None = None) -> dict[str, object]:
-        return {"method": "GET", "path": "/api/activity/recents", "params": {"context": context} if context else None}
-
-    async def create_recent(self, body: dict[str, object]) -> dict[str, object]:
-        return {"method": "POST", "path": "/api/activity/recents", "body": body}
-
-    async def current_user(self) -> dict[str, str]:
-        return {"name": "Alice"}
-
-    async def list_databases(self) -> dict[str, object]:
-        return {"method": "GET", "path": "/api/database"}
-
-    async def data_studio_table_discard_values(self, body: dict[str, object]) -> dict[str, object]:
-        return {"method": "POST", "path": "/api/data-studio/table/discard-values", "body": body}
-
-    async def data_studio_table_edit(self, body: dict[str, object]) -> dict[str, object]:
-        return {"method": "POST", "path": "/api/data-studio/table/edit", "body": body}
-
-    async def data_studio_table_rescan_values(self, body: dict[str, object]) -> dict[str, object]:
-        return {"method": "POST", "path": "/api/data-studio/table/rescan-values", "body": body}
-
-    async def data_studio_table_selection(self, body: dict[str, object]) -> dict[str, object]:
-        return {"method": "POST", "path": "/api/data-studio/table/selection", "body": body}
-
-    async def data_studio_table_sync_schema(self, body: dict[str, object]) -> dict[str, object]:
-        return {"method": "POST", "path": "/api/data-studio/table/sync-schema", "body": body}
-
-    async def list_channels(self) -> dict[str, object]:
-        return {"method": "GET", "path": "/api/channel"}
-
-    async def create_channel(self, body: dict[str, object]) -> dict[str, object]:
-        return {"method": "POST", "path": "/api/channel", "body": body}
-
-    async def test_channel(self, body: dict[str, object]) -> dict[str, object]:
-        return {"method": "POST", "path": "/api/channel/test", "body": body}
-
-    async def get_channel(self, channel_id: str) -> dict[str, object]:
-        return {"method": "GET", "path": f"/api/channel/{channel_id}"}
-
-    async def update_channel(self, channel_id: str, body: dict[str, object]) -> dict[str, object]:
-        return {"method": "PUT", "path": f"/api/channel/{channel_id}", "body": body}
-
-    async def create_cloud_migration(self, body: dict[str, object]) -> dict[str, object]:
-        return {"method": "POST", "path": "/api/cloud-migration", "body": body}
-
-    async def get_cloud_migration(self) -> dict[str, object]:
-        return {"method": "GET", "path": "/api/cloud-migration"}
-
-    async def cancel_cloud_migration(self) -> dict[str, object]:
-        return {"method": "PUT", "path": "/api/cloud-migration/cancel"}
-
-    async def create_database(
-        self,
-        *,
-        name: str,
-        engine: str,
-        details: dict[str, object] | None = None,
-    ) -> dict[str, object]:
-        body: dict[str, object] = {"name": name, "engine": engine}
-        if details is not None:
-            body["details"] = details
-        return {"method": "POST", "path": "/api/database", "body": body}
-
-    async def get_database(self, database_id: str) -> dict[str, object]:
-        return {"method": "GET", "path": f"/api/database/{database_id}"}
-
-    async def list_cards(self) -> dict[str, object]:
-        return {"method": "GET", "path": "/api/card"}
-
-    async def create_card(
-        self,
-        *,
-        name: str,
-        dataset_query: dict[str, object],
-        display: str,
-        visualization_settings: dict[str, object] | None = None,
-        card_type: str | None = "question",
-        collection_id: str | None = None,
-        description: str | None = None,
-        parameters: list[object] | None = None,
-        result_metadata: list[object] | None = None,
-    ) -> dict[str, object]:
-        body: dict[str, object] = {
-            "name": name,
-            "dataset_query": dataset_query,
-            "display": display,
-            "visualization_settings": visualization_settings or {},
-        }
-        if card_type is not None:
-            body["type"] = card_type
-        if collection_id is not None:
-            body["collection_id"] = collection_id
-        if description is not None:
-            body["description"] = description
-        if parameters is not None:
-            body["parameters"] = parameters
-        if result_metadata is not None:
-            body["result_metadata"] = result_metadata
-        return {"method": "POST", "path": "/api/card", "body": body}
-
-    async def create_question(
-        self,
-        *,
-        name: str,
-        dataset_query: dict[str, object],
-        display: str,
-        visualization_settings: dict[str, object] | None = None,
-        collection_id: str | None = None,
-        description: str | None = None,
-        parameters: list[object] | None = None,
-        result_metadata: list[object] | None = None,
-    ) -> dict[str, object]:
-        return await self.create_card(
-            name=name,
-            dataset_query=dataset_query,
-            display=display,
-            visualization_settings=visualization_settings,
-            card_type="question",
-            collection_id=collection_id,
-            description=description,
-            parameters=parameters,
-            result_metadata=result_metadata,
-        )
-
-    async def get_card(self, card_id: str) -> dict[str, object]:
-        return {"method": "GET", "path": f"/api/card/{card_id}"}
-
-    async def card_collections(
-        self,
-        card_ids: list[int] | list[str],
-        collection_id: str | None = None,
-    ) -> dict[str, object]:
-        return {
-            "method": "POST",
-            "path": "/api/card/collections",
-            "body": {"card_ids": card_ids, **({"collection_id": collection_id} if collection_id else {})},
-        }
-
-    async def list_embeddable_cards(self) -> dict[str, object]:
-        return {"method": "GET", "path": "/api/card/embeddable"}
-
-    async def pivot_query(self, card_id: str, body: dict[str, object] | None = None) -> dict[str, object]:
-        return {"method": "POST", "path": f"/api/card/pivot/{card_id}/query", "body": body}
-
-    async def list_public_cards(self) -> dict[str, object]:
-        return {"method": "GET", "path": "/api/card/public"}
-
-    async def get_card_param_search_values(self, card_id: str, param_key: str, query: str) -> dict[str, object]:
-        return {"method": "GET", "path": f"/api/card/{card_id}/params/{param_key}/search/{query}"}
-
-    async def get_card_param_values(self, card_id: str, param_key: str) -> dict[str, object]:
-        return {"method": "GET", "path": f"/api/card/{card_id}/params/{param_key}/values"}
-
-    async def create_card_public_link(self, card_id: str) -> dict[str, object]:
-        return {"method": "POST", "path": f"/api/card/{card_id}/public_link"}
-
-    async def delete_card_public_link(self, card_id: str) -> dict[str, object]:
-        return {"method": "DELETE", "path": f"/api/card/{card_id}/public_link"}
-
-    async def query_card(self, card_id: str, body: dict[str, object] | None = None) -> dict[str, object]:
-        return {"method": "POST", "path": f"/api/card/{card_id}/query", "body": body}
-
-    async def query_card_export(
-        self,
-        card_id: str,
-        export_format: str,
-        body: dict[str, object] | None = None,
-        *,
-        pivot_results: bool | None = None,
-        format_rows: bool | None = None,
-    ) -> dict[str, object]:
-        params: dict[str, object] = {}
-        if pivot_results is not None:
-            params["pivot-results"] = pivot_results
-        if format_rows is not None:
-            params["format-rows"] = format_rows
-        payload: dict[str, object] = {"method": "POST", "path": f"/api/card/{card_id}/query/{export_format}"}
-        if params:
-            payload["params"] = params
-        if body is not None:
-            payload["body"] = body
-        return payload
-
-    async def update_card(self, card_id: str, body: dict[str, object]) -> dict[str, object]:
-        return {"method": "PUT", "path": f"/api/card/{card_id}", "body": body}
-
-    async def delete_card(self, card_id: str) -> dict[str, object]:
-        return {"method": "DELETE", "path": f"/api/card/{card_id}"}
-
-    async def copy_card(self, card_id: str) -> dict[str, object]:
-        return {"method": "POST", "path": f"/api/card/{card_id}/copy"}
-
-    async def cards_dashboards(self, card_ids: list[int] | list[str]) -> dict[str, object]:
-        return {"method": "POST", "path": "/api/cards/dashboards", "body": {"card_ids": card_ids}}
-
-    async def move_cards(self, body: dict[str, object]) -> dict[str, object]:
-        return {"method": "POST", "path": "/api/cards/move", "body": body}
-
-    async def get_card_dashboards(self, card_id: str) -> dict[str, object]:
-        return {"method": "GET", "path": f"/api/card/{card_id}/dashboards"}
-
-    async def get_card_param_remapping(self, card_id: str, param_key: str) -> dict[str, object]:
-        return {"method": "GET", "path": f"/api/card/{card_id}/params/{param_key}/remapping"}
-
-    async def get_card_query_metadata(self, card_id: str) -> dict[str, object]:
-        return {"method": "GET", "path": f"/api/card/{card_id}/query_metadata"}
-
-    async def get_card_series(self, card_id: str) -> dict[str, object]:
-        return {"method": "GET", "path": f"/api/card/{card_id}/series"}
-
-    async def list_dashboards(self) -> dict[str, object]:
-        return {"method": "GET", "path": "/api/dashboard"}
-
-    async def get_dashboard(self, dashboard_id: str) -> dict[str, object]:
-        return {"method": "GET", "path": f"/api/dashboard/{dashboard_id}"}
-
-    async def query_dashboard_card(
-        self,
-        dashboard_id: str,
-        dashcard_id: str,
-        card_id: str,
-        body: dict[str, object] | None = None,
-    ) -> dict[str, object]:
-        return {
-            "method": "POST",
-            "path": f"/api/dashboard/{dashboard_id}/dashcard/{dashcard_id}/card/{card_id}/query",
-            "body": body,
-        }
-
-    async def query_dashboard_card_export(
-        self,
-        dashboard_id: str,
-        dashcard_id: str,
-        card_id: str,
-        export_format: str,
-        body: dict[str, object] | None = None,
-        *,
-        pivot_results: bool | None = None,
-        format_rows: bool | None = None,
-    ) -> dict[str, object]:
-        response: dict[str, object] = {
-            "method": "POST",
-            "path": f"/api/dashboard/{dashboard_id}/dashcard/{dashcard_id}/card/{card_id}/query/{export_format}",
-        }
-        if body is not None:
-            response["body"] = body
-        params: dict[str, object] = {}
-        if pivot_results is not None:
-            params["pivot-results"] = pivot_results
-        if format_rows is not None:
-            params["format-rows"] = format_rows
-        if params:
-            response["params"] = params
-        return response
-
-    async def query_dashboard_card_pivot(
-        self,
-        dashboard_id: str,
-        dashcard_id: str,
-        card_id: str,
-        body: dict[str, object] | None = None,
-    ) -> dict[str, object]:
-        return {
-            "method": "POST",
-            "path": f"/api/dashboard/pivot/{dashboard_id}/dashcard/{dashcard_id}/card/{card_id}/query",
-            "body": body,
-        }
-
-    async def save_dashboard(self, body: dict[str, object]) -> dict[str, object]:
-        return {"method": "POST", "path": "/api/dashboard/save", "body": body}
-
-    async def save_dashboard_to_collection(
-        self,
-        parent_collection_id: str,
-        body: dict[str, object],
-    ) -> dict[str, object]:
-        return {"method": "POST", "path": f"/api/dashboard/save/collection/{parent_collection_id}", "body": body}
-
-    async def get_dashboard_dashcard_execute(
-        self,
-        dashboard_id: str,
-        dashcard_id: str,
-        *,
-        parameters: dict[str, object] | None = None,
-    ) -> dict[str, object]:
-        return {
-            "method": "GET",
-            "path": f"/api/dashboard/{dashboard_id}/dashcard/{dashcard_id}/execute",
-            "params": parameters,
-        }
-
-    async def execute_dashboard_dashcard(
-        self,
-        dashboard_id: str,
-        dashcard_id: str,
-        *,
-        parameters: dict[str, object] | None = None,
-    ) -> dict[str, object]:
-        return {
-            "method": "POST",
-            "path": f"/api/dashboard/{dashboard_id}/dashcard/{dashcard_id}/execute",
-            "body": {"parameters": parameters or {}},
-        }
-
-    async def create_dashboard_public_link(self, dashboard_id: str) -> dict[str, object]:
-        return {"method": "POST", "path": f"/api/dashboard/{dashboard_id}/public_link"}
-
-    async def delete_dashboard_public_link(self, dashboard_id: str) -> dict[str, object]:
-        return {"method": "DELETE", "path": f"/api/dashboard/{dashboard_id}/public_link"}
-
-    async def copy_dashboard(self, from_dashboard_id: str, body: dict[str, object] | None = None) -> dict[str, object]:
-        response: dict[str, object] = {"method": "POST", "path": f"/api/dashboard/{from_dashboard_id}/copy"}
-        if body is not None:
-            response["body"] = body
-        return response
-
-    async def delete_dashboard(self, dashboard_id: str) -> dict[str, object]:
-        return {"method": "DELETE", "path": f"/api/dashboard/{dashboard_id}"}
-
-    async def update_dashboard(self, dashboard_id: str, body: dict[str, object]) -> dict[str, object]:
-        return {"method": "PUT", "path": f"/api/dashboard/{dashboard_id}", "body": body}
-
-    async def update_dashboard_cards(self, dashboard_id: str, body: dict[str, object]) -> dict[str, object]:
-        return {"method": "PUT", "path": f"/api/dashboard/{dashboard_id}/cards", "body": body}
-
-    async def get_dashboard_items(self, dashboard_id: str) -> dict[str, object]:
-        return {"method": "GET", "path": f"/api/dashboard/{dashboard_id}/items"}
-
-    async def get_dashboard_param_remapping(
-        self,
-        dashboard_id: str,
-        param_key: str,
-        *,
-        parameters: dict[str, object] | None = None,
-    ) -> dict[str, object]:
-        return {
-            "method": "GET",
-            "path": f"/api/dashboard/{dashboard_id}/params/{param_key}/remapping",
-            "params": parameters,
-        }
-
-    async def get_dashboard_param_search_values(
-        self,
-        dashboard_id: str,
-        param_key: str,
-        query: str,
-        *,
-        parameters: dict[str, object] | None = None,
-    ) -> dict[str, object]:
-        return {
-            "method": "GET",
-            "path": f"/api/dashboard/{dashboard_id}/params/{param_key}/search/{query}",
-            "params": parameters,
-        }
-
-    async def get_dashboard_param_values(
-        self,
-        dashboard_id: str,
-        param_key: str,
-        *,
-        parameters: dict[str, object] | None = None,
-    ) -> dict[str, object]:
-        return {
-            "method": "GET",
-            "path": f"/api/dashboard/{dashboard_id}/params/{param_key}/values",
-            "params": parameters,
-        }
-
-    async def get_dashboard_query_metadata(self, dashboard_id: str) -> dict[str, object]:
-        return {"method": "GET", "path": f"/api/dashboard/{dashboard_id}/query_metadata"}
-
-    async def get_dashboard_related(self, dashboard_id: str) -> dict[str, object]:
-        return {"method": "GET", "path": f"/api/dashboard/{dashboard_id}/related"}
-
-    async def get_dashboard_embeddable(self) -> dict[str, object]:
-        return {"method": "GET", "path": "/api/dashboard/embeddable"}
-
-    async def get_dashboard_public(self) -> dict[str, object]:
-        return {"method": "GET", "path": "/api/dashboard/public"}
-
-    async def get_dashboard_params_valid_filter_fields(
-        self,
-        *,
-        filtered: list[int | str] | None = None,
-        filtering: list[int | str] | None = None,
-    ) -> dict[str, object]:
-        return {
-            "method": "GET",
-            "path": "/api/dashboard/params/valid-filter-fields",
-            "params": {k: v for k, v in {"filtered": filtered, "filtering": filtering}.items() if v is not None},
-        }
-
-    async def list_users(self) -> dict[str, object]:
-        return {"method": "GET", "path": "/api/user"}
-
-    async def get_user(self, user_id: str) -> dict[str, object]:
-        return {"method": "GET", "path": f"/api/user/{user_id}"}
-
-    async def get_user_key_value_namespace(self, namespace: str) -> dict[str, object]:
-        return {"method": "GET", "path": f"/api/user-key-value/namespace/{namespace}"}
-
-    async def put_user_key_value_namespace_key(self, namespace: str, key: str, body: object) -> dict[str, object]:
-        return {"method": "PUT", "path": f"/api/user-key-value/namespace/{namespace}/key/{key}", "body": body}
-
-    async def get_user_key_value_namespace_key(self, namespace: str, key: str) -> dict[str, object]:
-        return {"method": "GET", "path": f"/api/user-key-value/namespace/{namespace}/key/{key}"}
-
-    async def delete_user_key_value_namespace_key(self, namespace: str, key: str) -> dict[str, object]:
-        return {"method": "DELETE", "path": f"/api/user-key-value/namespace/{namespace}/key/{key}"}
-
-    async def list_collections(self) -> dict[str, object]:
-        return {"method": "GET", "path": "/api/collection"}
-
-    async def create_collection(self, body: dict[str, object]) -> dict[str, object]:
-        return {"method": "POST", "path": "/api/collection", "body": body}
-
-    async def create_dashboard(self, body: dict[str, object]) -> dict[str, object]:
-        return {"method": "POST", "path": "/api/dashboard", "body": body}
-
-    async def get_collection(self, collection_id: str) -> dict[str, object]:
-        return {"method": "GET", "path": f"/api/collection/{collection_id}"}
-
-    async def update_collection(self, collection_id: str, body: dict[str, object]) -> dict[str, object]:
-        return {"method": "PUT", "path": f"/api/collection/{collection_id}", "body": body}
-
-    async def delete_collection(self, collection_id: str) -> dict[str, object]:
-        return {"method": "DELETE", "path": f"/api/collection/{collection_id}"}
-
-    async def get_comment(self, model: str | None = None, model_id: str | None = None) -> dict[str, object]:
-        del model, model_id
-        return {"method": "GET", "path": "/api/comment"}
-
-    async def get_comment_mentions(self) -> dict[str, object]:
-        return {"method": "GET", "path": "/api/comment/mentions"}
-
-    async def create_comment(self, body: dict[str, object]) -> dict[str, object]:
-        return {"method": "POST", "path": "/api/comment", "body": body}
-
-    async def update_comment(self, comment_id: str, body: dict[str, object]) -> dict[str, object]:
-        return {"method": "PUT", "path": f"/api/comment/{comment_id}", "body": body}
-
-    async def post_comment_reaction(self, comment_id: str, body: dict[str, object]) -> dict[str, object]:
-        return {"method": "POST", "path": f"/api/comment/{comment_id}/reaction", "body": body}
-
-    async def delete_comment(self, comment_id: str) -> dict[str, object]:
-        return {"method": "DELETE", "path": f"/api/comment/{comment_id}"}
-
-    async def get_collection_dashboard_question_candidates(self, collection_id: str) -> dict[str, object]:
-        return {"method": "GET", "path": f"/api/collection/{collection_id}/dashboard-question-candidates"}
-
-    async def get_collection_items(self, collection_id: str) -> dict[str, object]:
-        return {"method": "GET", "path": f"/api/collection/{collection_id}/items"}
-
-    async def get_collection_root(self) -> dict[str, object]:
-        return {"method": "GET", "path": "/api/collection/root"}
-
-    async def get_collection_root_dashboard_question_candidates(self) -> dict[str, object]:
-        return {"method": "GET", "path": "/api/collection/root/dashboard-question-candidates"}
-
-    async def get_collection_root_items(self) -> dict[str, object]:
-        return {"method": "GET", "path": "/api/collection/root/items"}
-
-    async def post_collection_root_move_dashboard_question_candidates(
-        self, body: dict[str, object]
-    ) -> dict[str, object]:
-        return {
-            "method": "POST",
-            "path": "/api/collection/root/move-dashboard-question-candidates",
-            "body": body,
-        }
-
-    async def post_collection_move_dashboard_question_candidates(
-        self, collection_id: str, body: dict[str, object]
-    ) -> dict[str, object]:
-        return {
-            "method": "POST",
-            "path": f"/api/collection/{collection_id}/move-dashboard-question-candidates",
-            "body": body,
-        }
-
-    async def get_collection_trash(self) -> dict[str, object]:
-        return {"method": "GET", "path": "/api/collection/trash"}
-
-    async def get_collection_tree(self) -> dict[str, object]:
-        return {"method": "GET", "path": "/api/collection/tree"}
-
-    async def get_collection_graph(self) -> dict[str, object]:
-        return {"method": "GET", "path": "/api/collection/graph"}
-
-    async def put_collection_graph(self, body: dict[str, object]) -> dict[str, object]:
-        return {"method": "PUT", "path": "/api/collection/graph", "body": body}
-
-    async def list_tables(self) -> dict[str, object]:
-        return {"method": "GET", "path": "/api/table"}
-
-    async def get_table(self, table_id: str) -> dict[str, object]:
-        return {"method": "GET", "path": f"/api/table/{table_id}"}
-
-    async def get_field(self, field_id: str) -> dict[str, object]:
-        return {"method": "GET", "path": f"/api/field/{field_id}"}
-
 
 class _ErrorClient(_ClientWithRequestMethods):
     async def request(self, *_: object, **__: object) -> dict[str, object]:
-        raise MetabaseHTTPStatusError(401, {"message": "unauthorized"})
-
-    async def get(self, *_: object, **__: object) -> dict[str, object]:
-        raise MetabaseHTTPStatusError(401, {"message": "unauthorized"})
-
-    async def current_user(self) -> dict[str, str]:
         raise MetabaseHTTPStatusError(401, {"message": "unauthorized"})
 
 
@@ -830,7 +59,7 @@ def test_help_omits_raw_request_commands() -> None:
     assert "invoke" not in result.stdout
 
 
-def test_help_lists_every_convenience_command() -> None:
+def test_help_lists_every_endpoint_command() -> None:
     result = runner.invoke(cli.app, ["--help"])
 
     assert result.exit_code == 0
@@ -989,7 +218,7 @@ def test_help_lists_every_convenience_command() -> None:
 
 
 def test_current_user_command_outputs_json(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(cli.runtime, "create_client", lambda _settings: _ConvenienceClient())
+    monkeypatch.setattr(cli.runtime, "create_client", lambda _settings: _ClientWithRequestMethods())
 
     result = runner.invoke(
         cli.app,
@@ -1007,7 +236,7 @@ def test_current_user_command_outputs_json(monkeypatch: pytest.MonkeyPatch) -> N
 
 
 def test_get_database_command_outputs_json(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(cli.runtime, "create_client", lambda _settings: _ConvenienceClient())
+    monkeypatch.setattr(cli.runtime, "create_client", lambda _settings: _ClientWithRequestMethods())
 
     result = runner.invoke(
         cli.app,
@@ -1128,7 +357,7 @@ def test_read_endpoint_commands_cover_handwritten_surface(
     command: list[str],
     expected_path: str,
 ) -> None:
-    monkeypatch.setattr(cli.runtime, "create_client", lambda _settings: _ConvenienceClient())
+    monkeypatch.setattr(cli.runtime, "create_client", lambda _settings: _ClientWithRequestMethods())
 
     result = runner.invoke(
         cli.app,
@@ -1271,7 +500,7 @@ def test_action_mutation_commands_cover_handwritten_surface(
     expected_method: str,
     expected_path: str,
 ) -> None:
-    monkeypatch.setattr(cli.runtime, "create_client", lambda _settings: _ConvenienceClient())
+    monkeypatch.setattr(cli.runtime, "create_client", lambda _settings: _ClientWithRequestMethods())
 
     result = runner.invoke(cli.app, ["--base-url", "http://localhost:3000", "--api-key", "abc", *command])
 
@@ -1280,7 +509,7 @@ def test_action_mutation_commands_cover_handwritten_surface(
 
 
 def test_create_question_command_posts_card_json(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(cli.runtime, "create_client", lambda _settings: _ConvenienceClient())
+    monkeypatch.setattr(cli.runtime, "create_client", lambda _settings: _ClientWithRequestMethods())
 
     result = runner.invoke(
         cli.app,
@@ -1310,7 +539,7 @@ def test_create_question_command_posts_card_json(monkeypatch: pytest.MonkeyPatch
 
 
 def test_create_card_command_rejects_non_object_dataset_query(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(cli.runtime, "create_client", lambda _settings: _ConvenienceClient())
+    monkeypatch.setattr(cli.runtime, "create_client", lambda _settings: _ClientWithRequestMethods())
 
     result = runner.invoke(
         cli.app,
@@ -1329,7 +558,7 @@ def test_create_card_command_rejects_non_object_dataset_query(monkeypatch: pytes
 
 
 def test_create_database_command_posts_json(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(cli.runtime, "create_client", lambda _settings: _ConvenienceClient())
+    monkeypatch.setattr(cli.runtime, "create_client", lambda _settings: _ClientWithRequestMethods())
 
     result = runner.invoke(
         cli.app,
@@ -1352,7 +581,7 @@ def test_create_database_command_posts_json(monkeypatch: pytest.MonkeyPatch) -> 
 
 
 def test_create_database_command_invalid_details_fails(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(cli.runtime, "create_client", lambda _settings: _ConvenienceClient())
+    monkeypatch.setattr(cli.runtime, "create_client", lambda _settings: _ClientWithRequestMethods())
 
     result = runner.invoke(
         cli.app,

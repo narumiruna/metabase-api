@@ -9,7 +9,7 @@ from pydantic import model_validator
 
 from metabaseapi.endpoints.entities import ActivityItem
 from metabaseapi.endpoints.response_payload import normalize_list_payload
-from metabaseapi.endpoints.response_payload import normalize_raw_payload
+from metabaseapi.endpoints.response_payload import normalize_unstructured_payload
 from metabaseapi.wire import JSONValue
 
 
@@ -31,7 +31,7 @@ class ActivityMutationResponse(BaseModel):
     @model_validator(mode="before")
     @classmethod
     def normalize_payload(cls, values: object) -> dict[str, Any]:
-        return normalize_raw_payload(values)
+        return normalize_unstructured_payload(values)
 
 
 __all__ = ["ActivityMutationResponse", "ListActivityItemsResponse"]

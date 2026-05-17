@@ -6,7 +6,7 @@ from pydantic import BaseModel
 from pydantic import ConfigDict
 from pydantic import model_validator
 
-from metabaseapi.endpoints.response_payload import normalize_raw_payload
+from metabaseapi.endpoints.response_payload import normalize_unstructured_payload
 from metabaseapi.wire import JSONValue
 
 
@@ -17,7 +17,7 @@ class AgentResponse(BaseModel):
     @model_validator(mode="before")
     @classmethod
     def normalize_payload(cls, values: object) -> dict[str, Any]:
-        return normalize_raw_payload(values)
+        return normalize_unstructured_payload(values)
 
 
 __all__ = ["AgentResponse"]

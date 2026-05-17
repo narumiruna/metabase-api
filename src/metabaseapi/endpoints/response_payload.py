@@ -4,7 +4,7 @@ from typing import Any
 from typing import cast
 
 
-def normalize_raw_payload(values: object) -> dict[str, Any]:
+def normalize_unstructured_payload(values: object) -> dict[str, Any]:
     if isinstance(values, dict):
         return cast(dict[str, Any], values)
     return {"raw": values}
@@ -36,5 +36,5 @@ def normalize_list_payload(values: object, list_key: str) -> dict[str, Any]:
 
 __all__ = [
     "normalize_list_payload",
-    "normalize_raw_payload",
+    "normalize_unstructured_payload",
 ]

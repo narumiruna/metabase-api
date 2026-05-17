@@ -7,7 +7,7 @@ from pydantic import Field as PydanticField
 
 from metabaseapi.endpoints.entities import Card
 from metabaseapi.endpoints.execution import EndpointRequest
-from metabaseapi.endpoints.execution import ResponseModel
+from metabaseapi.endpoints.execution import _ResponseModel
 from metabaseapi.endpoints.responses.card import ListCardsResponse
 from metabaseapi.endpoints.responses.common import GenericOperationResponse
 from metabaseapi.wire import JSONValue
@@ -16,7 +16,7 @@ from metabaseapi.wire import JSONValue
 class ListCardsRequest(EndpointRequest[ListCardsResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/card"
-    response_model: ClassVar[ResponseModel] = ListCardsResponse
+    response_model: ClassVar[_ResponseModel] = ListCardsResponse
 
 
 class CreateCardRequest(EndpointRequest[Card]):
@@ -32,7 +32,7 @@ class CreateCardRequest(EndpointRequest[Card]):
 
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/card"
-    response_model: ClassVar[ResponseModel] = Card
+    response_model: ClassVar[_ResponseModel] = Card
 
     def request_body(self) -> JSONValue:
         return self.model_dump(exclude_none=True)
@@ -43,7 +43,7 @@ class GetCardRequest(EndpointRequest[Card]):
 
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/card/{card_id}"
-    response_model: ClassVar[ResponseModel] = Card
+    response_model: ClassVar[_ResponseModel] = Card
 
     def resolve_path(self) -> str:
         return f"/api/card/{self.card_id}"
@@ -55,7 +55,7 @@ class GetCardCollectionsRequest(EndpointRequest[GenericOperationResponse]):
 
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/card/collections"
-    response_model: ClassVar[ResponseModel] = GenericOperationResponse
+    response_model: ClassVar[_ResponseModel] = GenericOperationResponse
 
     def request_body(self) -> JSONValue:
         body: dict[str, object] = {}
@@ -69,13 +69,13 @@ class GetCardCollectionsRequest(EndpointRequest[GenericOperationResponse]):
 class GetCardEmbeddableRequest(EndpointRequest[GenericOperationResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/card/embeddable"
-    response_model: ClassVar[ResponseModel] = GenericOperationResponse
+    response_model: ClassVar[_ResponseModel] = GenericOperationResponse
 
 
 class GetCardPublicRequest(EndpointRequest[GenericOperationResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/card/public"
-    response_model: ClassVar[ResponseModel] = GenericOperationResponse
+    response_model: ClassVar[_ResponseModel] = GenericOperationResponse
 
 
 class CreateCardPublicLinkRequest(EndpointRequest[GenericOperationResponse]):
@@ -83,7 +83,7 @@ class CreateCardPublicLinkRequest(EndpointRequest[GenericOperationResponse]):
 
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/card/{card_id}/public_link"
-    response_model: ClassVar[ResponseModel] = GenericOperationResponse
+    response_model: ClassVar[_ResponseModel] = GenericOperationResponse
 
     def resolve_path(self) -> str:
         return f"/api/card/{self.card_id}/public_link"
@@ -94,7 +94,7 @@ class DeleteCardPublicLinkRequest(EndpointRequest[GenericOperationResponse]):
 
     endpoint_method: ClassVar[str] = "DELETE"
     endpoint_path: ClassVar[str] = "/api/card/{card_id}/public_link"
-    response_model: ClassVar[ResponseModel] = GenericOperationResponse
+    response_model: ClassVar[_ResponseModel] = GenericOperationResponse
 
     def resolve_path(self) -> str:
         return f"/api/card/{self.card_id}/public_link"
@@ -106,7 +106,7 @@ class UpdateCardRequest(EndpointRequest[Card]):
 
     endpoint_method: ClassVar[str] = "PUT"
     endpoint_path: ClassVar[str] = "/api/card/{card_id}"
-    response_model: ClassVar[ResponseModel] = Card
+    response_model: ClassVar[_ResponseModel] = Card
 
     def resolve_path(self) -> str:
         return f"/api/card/{self.card_id}"
@@ -120,7 +120,7 @@ class DeleteCardRequest(EndpointRequest[GenericOperationResponse]):
 
     endpoint_method: ClassVar[str] = "DELETE"
     endpoint_path: ClassVar[str] = "/api/card/{card_id}"
-    response_model: ClassVar[ResponseModel] = GenericOperationResponse
+    response_model: ClassVar[_ResponseModel] = GenericOperationResponse
 
     def resolve_path(self) -> str:
         return f"/api/card/{self.card_id}"
@@ -132,7 +132,7 @@ class CopyCardRequest(EndpointRequest[Card]):
 
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/card/{card_id}/copy"
-    response_model: ClassVar[ResponseModel] = Card
+    response_model: ClassVar[_ResponseModel] = Card
 
     def resolve_path(self) -> str:
         return f"/api/card/{self.card_id}/copy"
@@ -146,7 +146,7 @@ class MoveCardsRequest(EndpointRequest[GenericOperationResponse]):
 
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/cards/move"
-    response_model: ClassVar[ResponseModel] = GenericOperationResponse
+    response_model: ClassVar[_ResponseModel] = GenericOperationResponse
 
     def request_body(self) -> JSONValue:
         return self.body

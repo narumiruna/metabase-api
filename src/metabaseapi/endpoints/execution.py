@@ -24,7 +24,7 @@ class _MetabaseRequestClient(Protocol):
 
 
 ResponseT = TypeVar("ResponseT", bound=BaseModel)
-ResponseModel = type[BaseModel]
+_ResponseModel = type[BaseModel]
 
 
 class EndpointRequest[ResponseT](BaseModel):
@@ -32,7 +32,7 @@ class EndpointRequest[ResponseT](BaseModel):
 
     endpoint_method: ClassVar[str]
     endpoint_path: ClassVar[str]
-    response_model: ClassVar[ResponseModel]
+    response_model: ClassVar[_ResponseModel]
 
     def resolve_path(self) -> str:
         return self.endpoint_path
@@ -53,4 +53,4 @@ class EndpointRequest[ResponseT](BaseModel):
         return cast(ResponseT, self.response_model.model_validate(payload or {}))
 
 
-__all__ = ["EndpointRequest", "ResponseModel"]
+__all__ = ["EndpointRequest"]

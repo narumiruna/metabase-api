@@ -6,7 +6,7 @@ from typing import ClassVar
 from pydantic import Field as PydanticField
 
 from metabaseapi.endpoints.execution import EndpointRequest
-from metabaseapi.endpoints.execution import ResponseModel
+from metabaseapi.endpoints.execution import _ResponseModel
 from metabaseapi.endpoints.responses.common import GenericOperationResponse
 from metabaseapi.wire import JSONValue
 from metabaseapi.wire import QueryParamValue
@@ -15,7 +15,7 @@ from metabaseapi.wire import QueryParamValue
 class GetCommentMentionsRequest(EndpointRequest[GenericOperationResponse]):
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/comment/mentions"
-    response_model: ClassVar[ResponseModel] = GenericOperationResponse
+    response_model: ClassVar[_ResponseModel] = GenericOperationResponse
 
 
 class UpdateCommentRequest(EndpointRequest[GenericOperationResponse]):
@@ -24,7 +24,7 @@ class UpdateCommentRequest(EndpointRequest[GenericOperationResponse]):
 
     endpoint_method: ClassVar[str] = "PUT"
     endpoint_path: ClassVar[str] = "/api/comment/{comment_id}"
-    response_model: ClassVar[ResponseModel] = GenericOperationResponse
+    response_model: ClassVar[_ResponseModel] = GenericOperationResponse
 
     def resolve_path(self) -> str:
         return self.endpoint_path.format(comment_id=self.comment_id)
@@ -39,7 +39,7 @@ class GetCommentRequest(EndpointRequest[GenericOperationResponse]):
 
     endpoint_method: ClassVar[str] = "GET"
     endpoint_path: ClassVar[str] = "/api/comment"
-    response_model: ClassVar[ResponseModel] = GenericOperationResponse
+    response_model: ClassVar[_ResponseModel] = GenericOperationResponse
 
     def request_params(self) -> dict[str, QueryParamValue]:
         params: dict[str, QueryParamValue] = {}
@@ -55,7 +55,7 @@ class PostCommentRequest(EndpointRequest[GenericOperationResponse]):
 
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/comment"
-    response_model: ClassVar[ResponseModel] = GenericOperationResponse
+    response_model: ClassVar[_ResponseModel] = GenericOperationResponse
 
     def request_body(self) -> JSONValue:
         return self.body
@@ -66,7 +66,7 @@ class DeleteCommentRequest(EndpointRequest[GenericOperationResponse]):
 
     endpoint_method: ClassVar[str] = "DELETE"
     endpoint_path: ClassVar[str] = "/api/comment/{comment_id}"
-    response_model: ClassVar[ResponseModel] = GenericOperationResponse
+    response_model: ClassVar[_ResponseModel] = GenericOperationResponse
 
     def resolve_path(self) -> str:
         return f"/api/comment/{self.comment_id}"
@@ -78,7 +78,7 @@ class PostCommentReactionRequest(EndpointRequest[GenericOperationResponse]):
 
     endpoint_method: ClassVar[str] = "POST"
     endpoint_path: ClassVar[str] = "/api/comment/{comment_id}/reaction"
-    response_model: ClassVar[ResponseModel] = GenericOperationResponse
+    response_model: ClassVar[_ResponseModel] = GenericOperationResponse
 
     def resolve_path(self) -> str:
         return self.endpoint_path.format(comment_id=self.comment_id)

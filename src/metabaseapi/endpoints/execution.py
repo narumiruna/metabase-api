@@ -49,6 +49,18 @@ class EndpointRequest[ResponseT](BaseModel):
     def request_params(self) -> dict[str, QueryParamValue]:
         return self.params
 
+    def merged_request_params(self) -> dict[str, QueryParamValue]:
+        """Merge generic query params with class-specific params.
+
+        Class-specific params from request_params() take precedence when keys collide.
+        """
+        request_params = self.request_params()
+        if not self.params:
+            return request_params
+        if not request_params:
+            return dict(self.params)
+        return {**self.params, **request_params}
+
     def request_body(self) -> JSONValue | None:
         if hasattr(self, "body"):
             return cast("JSONValue | None", self.body)
@@ -58,7 +70,7 @@ class EndpointRequest[ResponseT](BaseModel):
         payload = await client._request(
             self.endpoint_method,
             self.resolve_path(),
-            params=self.request_params(),
+            params=self.merged_request_params(),
             json_data=self.request_body(),
         )
         return cast(ResponseT, self.response_model.model_validate(payload or {}))

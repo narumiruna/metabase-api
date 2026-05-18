@@ -54,7 +54,7 @@ A successful audit requires all four gap counters to be `0`:
 - `missing_openapi_operations`: an OpenAPI method + path does not have a matching request class.
 - `placeholder_gaps`: an `endpoint_path` placeholder, such as `{id}`, does not have a corresponding Pydantic model field.
 - `request_body_gaps`: OpenAPI declares `requestBody`, but the request class has no `body` field and does not override `request_body()`.
-- `query_param_gaps`: OpenAPI declares query parameters, but the request class has no generic `params` field, no matching named fields, and no custom `request_params()` implementation.
+- `query_param_gaps`: OpenAPI declares query parameters, but the request class has no matching named fields, no custom `request_params()` implementation, and cannot transport inherited generic `params` through the base `EndpointRequest.do()` implementation.
 
 `implemented_unique_operations` may be larger than `openapi_operations` because this package can include newer, enterprise, or otherwise environment-specific endpoints that are not present in the downloaded OpenAPI document.
 

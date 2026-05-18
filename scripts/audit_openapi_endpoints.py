@@ -110,6 +110,26 @@ def request_body_gaps(
     return gaps
 
 
+def static_class_attr(cls: type[object], name: str) -> object:
+    return inspect.getattr_static(cls, name)
+
+
+def supports_generic_query_params(request_class: type[EndpointRequest[Any]]) -> bool:
+    has_base_do = static_class_attr(request_class, "do") is EndpointRequest.do
+    has_base_param_merge = (
+        static_class_attr(
+            request_class,
+            "merged_request_params",
+        )
+        is EndpointRequest.merged_request_params
+    )
+    if "params" not in request_class.model_fields:
+        return False
+    if not has_base_do:
+        return False
+    return has_base_param_merge
+
+
 def query_param_gaps(
     openapi_operations: OpenAPIOperations,
     implemented_operations: ImplementedOperations,
@@ -119,8 +139,6 @@ def query_param_gaps(
         for openapi_route, _operation, params in operations:
             for module_name, class_name, request_class, path in implemented_operations.get(key, []):
                 fields = set(request_class.model_fields)
-                if "params" in fields or request_class.request_params is not EndpointRequest.request_params:
-                    continue
                 missing_query = [
                     param["name"]
                     for param in params
@@ -129,8 +147,12 @@ def query_param_gaps(
                     and param["name"] not in fields
                     and python_field_name(param["name"]) not in fields
                 ]
-                if missing_query:
-                    gaps.append((module_name, class_name, path, openapi_route, missing_query))
+                if not missing_query:
+                    continue
+                has_custom_query_params = request_class.request_params is not EndpointRequest.request_params
+                if has_custom_query_params or supports_generic_query_params(request_class):
+                    continue
+                gaps.append((module_name, class_name, path, openapi_route, missing_query))
     return gaps
 
 
@@ -158,7 +180,7 @@ def main() -> int:
     args = parse_args()
     openapi_path: Path = args.output
     download_openapi_document_from_env(openapi_path)
-    document = json.loads(openapi_path.read_text())
+    document = json.loads(openapi_path.read_text(encoding="utf-8"))
 
     openapi_operations = load_openapi_operations(document)
     implemented_operations = load_implemented_operations()

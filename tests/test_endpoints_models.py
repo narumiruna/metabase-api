@@ -308,6 +308,16 @@ def test_endpoint_requests_accept_generic_query_params() -> None:
     assert client.calls == [("GET", "/api/user", {"status": "active", "group_id": [1, 2]}, None)]
 
 
+def test_endpoint_requests_merge_generic_query_params_with_custom_params() -> None:
+    client = _StubClient([])
+    request = ListActionsRequest(model_id=7, params={"include": "details", "model-id": 99})
+
+    response = _run(request.do(client))
+
+    assert isinstance(response, ListActionsResponse)
+    assert client.calls == [("GET", "/api/action", {"include": "details", "model-id": 7}, None)]
+
+
 def test_create_database_request_includes_body_for_post() -> None:
     payload = {"id": 1, "name": "analytics", "engine": "postgres", "details": {"host": "db.local"}}
     client = _StubClient(payload)

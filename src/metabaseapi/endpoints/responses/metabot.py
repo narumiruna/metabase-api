@@ -67,9 +67,10 @@ class MetabotConversationResponse(MetabotConversationSummary):
     chat_messages: list[JSONValue] = PydanticField(default_factory=list)
 
 
-class MetabotSourceFeedbackResponse(MetabotGenericResponse):
+class MetabotSourceFeedbackResponse(BaseModel):
     status: int | None = None
     body: JSONValue | None = None
+    model_config = ConfigDict(extra="allow")
 
 
 class ListMetabotsResponse(BaseModel):

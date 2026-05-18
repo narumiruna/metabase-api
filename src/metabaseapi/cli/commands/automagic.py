@@ -144,7 +144,10 @@ def automagic_entity_compare(
 
 @app.command("automagic-entity-query-metadata")
 def automagic_entity_query_metadata(ctx: typer.Context, entity: str, entity_id_or_query: str) -> None:
-    run_endpoint_command(ctx, AutomagicEntityQueryMetadataRequest(entity=entity, entity_id_or_query=entity_id_or_query))
+    run_endpoint_command(
+        ctx,
+        AutomagicEntityQueryMetadataRequest(entity=entity, entity_id_or_query=entity_id_or_query),
+    )
 
 
 @app.command("automagic-entity-rule")
